@@ -1,6 +1,33 @@
 import React, { Component } from 'react';
+import img1 from '../images/avatars/user.jpg';
+import img2 from '../images/avatars/avatar2.png';
+import img3 from '../images/guardian.png';
 
 class baselayout extends React.Component {
+	constructor(props) {
+		super(props);
+	
+		this.toggle = this.toggle.bind(this);
+		this.onMouseEnter = this.onMouseEnter.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.state = {
+		  dropdownOpen: false
+		};
+	  }
+	
+	  toggle() {
+		this.setState(prevState => ({
+		  dropdownOpen: !prevState.dropdownOpen
+		}));
+	  }
+	
+	  onMouseEnter() {
+		this.setState({dropdownOpen: true});
+	  }
+	
+	  onMouseLeave() {
+		this.setState({dropdownOpen: false});
+	  }
 
     render() {
     return(
@@ -16,7 +43,7 @@ class baselayout extends React.Component {
         </a>
         <button className="pull-right navbar-toggle navbar-toggle-img collapsed" type="button" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
           <span className="sr-only">Toggle user menu</span>
-          <img src="<?php echo MEDIA; ?>/images/avatars/user.jpg" alt="Jason's Photo" />
+          <img src={img1} alt="Jason's Photo" />
         </button>
         <button className="pull-right navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#sidebar">
           <span className="sr-only">Toggle sidebar</span>
@@ -29,7 +56,7 @@ class baselayout extends React.Component {
         <ul className="nav ace-nav">
           <li className="light-blue dropdown-modal">
             <a data-toggle="dropdown" href="#" className="dropdown-toggle">
-              <img className="nav-user-photo" src="<?php echo MEDIA; ?>/images/avatars/avatar2.png" alt="User's Photo" />
+              <img className="nav-user-photo" src={img2} alt="User's Photo" />
               <span className="user-info">
                 <small>Welcome,</small>
                 {/*?php echo ucwords(strtolower($fullName)); ?*/}
@@ -44,14 +71,14 @@ class baselayout extends React.Component {
 									</a>
 								</li>*/}
               <li>
-                <a href="<?php echo APPNAME; ?>/preference/profile/">
+                <a href="/preference/profile/">
                   <i className="ace-icon fa fa-user" />
                   My Profile
                 </a>
               </li>
               {/*?php if( $stakeholderName == 'RRT' ){ ?*/}
               <li>
-                <a href="<?php echo APPNAME; ?>/preference/createcase/">
+                <a href="/preference/createcase/">
                   <i className="ace-icon fa fa-pencil" />
                   Create New Case
                 </a>
@@ -59,7 +86,7 @@ class baselayout extends React.Component {
               {/*?php } ?*/}
               <li className="divider" />
               <li>
-                <a href="<?php echo APPNAME; ?>/login/signout/">
+                <a href="/login/signout/">
                   <i className="ace-icon fa fa-power-off" />
                   Sign Out
                 </a>
@@ -70,47 +97,10 @@ class baselayout extends React.Component {
       </div>
       <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
         <ul className="nav navbar-nav">
-          {/*<li>
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								Overview &nbsp;
-								<i class="ace-icon fa fa-angle-down bigger-110"></i>
-							</a>
-
-							<ul class="dropdown-menu dropdown-light-blue dropdown-caret">
-								<li>
-									<a href="#">
-										<i class="ace-icon fa fa-eye bigger-110 blue"></i>
-										Monthly Visitors
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<i class="ace-icon fa fa-user bigger-110 blue"></i>
-										Active Users
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<i class="ace-icon fa fa-cog bigger-110 blue"></i>
-										Settings
-									</a>
-								</li>
-							</ul>
-						</li>
-
-						<li>
-							<a href="#">
-								<i class="ace-icon fa fa-envelope"></i>
-								Messages
-								<span class="badge badge-warning">5</span>
-							</a>
-						</li>*/}
         </ul>
-        <form className="navbar-form navbar-left form-search" role="search" method="POST" action="<?php echo APPNAME; ?>/search/quick/">
+        <form className="navbar-form navbar-left form-search" role="search" method="POST" action="/search/quick/">
           <div className="form-group">
-            <input type="text" name="keywords" placeholder="search" style={{width: 250}} defaultValue="<?php echo (isset($keywords) ) ? $keywords : ''; ?>" />
+            <input type="text" name="keywords" placeholder="search" style={{width: 250}} />
           </div>
           <button type="submit" className="btn btn-mini btn-info2">
             <i className="ace-icon fa fa-search icon-only bigger-110" />
@@ -122,221 +112,22 @@ class baselayout extends React.Component {
   <div className="main-container ace-save-state" id="main-container">
     <div id="sidebar" className="sidebar h-sidebar navbar-collapse collapse ace-save-state">
       <div className="sidebar-shortcuts" id="sidebar-shortcuts" style={{width: 150}}>
-        <img src="<?php echo MEDIA; ?>/images/guardian.png" width={125} />					
+        <img src={img3} width={125} />					
       </div>{/* /.sidebar-shortcuts */}
       <ul className="nav nav-list">
         <li className="<?php echo ( isset($dashboardTab) ) ? 'active open hover' : 'hover'; ?>">
-          <a href="<?php echo APPNAME; ?>/dashboard/overall/">
+          <a href="/dashboard/overall/">
             <i className="menu-icon fa fa-tachometer" />
-            <span className="menu-text"> Dashboard </span>
+            <span className="nav_menu-item"> Dashboard </span>
           </a>
-          <b className="arrow" />
         </li>
-        {/*<li class="hover">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-desktop"></i>
-							<span class="menu-text">
-								UI &amp; Elements
-							</span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="active open hover">
-								<a href="#" class="dropdown-toggle">
-									<i class="menu-icon fa fa-caret-right"></i>
-
-									Layouts
-									<b class="arrow fa fa-angle-down"></b>
-								</a>
-
-								<b class="arrow"></b>
-
-								<ul class="submenu">
-									<li class="active hover">
-										<a href="top-menu.html">
-											<i class="menu-icon fa fa-caret-right"></i>
-											Top Menu
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-
-									<li class="hover">
-										<a href="two-menu-1.html">
-											<i class="menu-icon fa fa-caret-right"></i>
-											Two Menus 1
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-
-									<li class="hover">
-										<a href="two-menu-2.html">
-											<i class="menu-icon fa fa-caret-right"></i>
-											Two Menus 2
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-
-									<li class="hover">
-										<a href="mobile-menu-1.html">
-											<i class="menu-icon fa fa-caret-right"></i>
-											Default Mobile Menu
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-
-									<li class="hover">
-										<a href="mobile-menu-2.html">
-											<i class="menu-icon fa fa-caret-right"></i>
-											Mobile Menu 2
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-
-									<li class="hover">
-										<a href="mobile-menu-3.html">
-											<i class="menu-icon fa fa-caret-right"></i>
-											Mobile Menu 3
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-								</ul>
-							</li>
-
-							<li class="hover">
-								<a href="typography.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Typography
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="elements.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Elements
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="buttons.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Buttons &amp; Icons
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="content-slider.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Content Sliders
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="treeview.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Treeview
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="jquery-ui.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									jQuery UI
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="nestable-list.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Nestable Lists
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="#" class="dropdown-toggle">
-									<i class="menu-icon fa fa-caret-right"></i>
-
-									Three Level Menu
-									<b class="arrow fa fa-angle-down"></b>
-								</a>
-
-								<b class="arrow"></b>
-
-								<ul class="submenu">
-									<li class="hover">
-										<a href="#">
-											<i class="menu-icon fa fa-leaf green"></i>
-											Item #1
-										</a>
-
-										<b class="arrow"></b>
-									</li>
-
-									<li class="hover">
-										<a href="#" class="dropdown-toggle">
-											<i class="menu-icon fa fa-pencil orange"></i>
-
-											4th level
-											<b class="arrow fa fa-angle-down"></b>
-										</a>
-
-										<b class="arrow"></b>
-
-										<ul class="submenu">
-											<li class="hover">
-												<a href="#">
-													<i class="menu-icon fa fa-plus purple"></i>
-													Add Product
-												</a>
-
-												<b class="arrow"></b>
-											</li>
-
-											<li class="hover">
-												<a href="#">
-													<i class="menu-icon fa fa-eye pink"></i>
-													View Products
-												</a>
-
-												<b class="arrow"></b>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>*/}
-        <li className="<?php echo ( isset($myAssignmentTab) ) ? 'active open hover' : 'hover'; ?>">
-          <a href="<?php echo APPNAME; ?>/assignment/self/assigned/">
-            <i className="menu-icon fa fa-list" />
+        <li className="assignment-menu" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle} >
+          <a href="/assignment/self/assigned/">
+            <i className="menu-icon fa fa-list"  />
             <span className="menu-text"> My Assignments </span>
             <b className="arrow fa fa-angle-down" />
           </a>
-          <b className="arrow" />
-          <ul className="submenu">
+		  <ul className="submenu">
             <li className="hover">
               <a href="<?php echo APPNAME; ?>/assignment/self/assigned/">
                 <i className="menu-icon fa fa-caret-right" />
@@ -358,7 +149,7 @@ class baselayout extends React.Component {
               </a>
               <b className="arrow" />
             </li>
-          </ul>
+          </ul>       
         </li>
         <li className="<?php echo ( isset($myCollaborationTab) ) ? 'active open hover' : 'hover'; ?>">
           <a href="<?php echo APPNAME; ?>/assignment/collaboration/assigned/">
@@ -366,7 +157,6 @@ class baselayout extends React.Component {
             <span className="menu-text"> My Collaboration </span>
             <b className="arrow fa fa-angle-down" />
           </a>
-          <b className="arrow" />
           <ul className="submenu">
             <li className="hover">
               <a href="<?php echo APPNAME; ?>/assignment/collaboration/assigned/">
@@ -859,7 +649,10 @@ class baselayout extends React.Component {
 
     );
     }
+
+	
 }
+
 
 
 export default baselayout;

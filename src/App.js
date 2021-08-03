@@ -6,12 +6,12 @@ import Function from './pages/Login';
 import './App.css';
 import Loginbox from './pages/Loginbox';
 import Dashboard from './pages/Dashboard';
-import baselayout from './pages/baselayout';
+import GOTHnavbar from './pages/LayoutBase';
 
 function App() {
   return ( 
     <div className="App">
-  <Dashboard />
+  <GOTHnavbar />
   {/* <Forgot />
   <Activate />
   <SignUp /> */}
