@@ -7,6 +7,7 @@ import './App.css';
 import Loginbox from './pages/Loginbox';
 import Dashboard from './pages/Dashboard';
 import GOTHnavbar from './pages/LayoutBase';
+import AdvancedSearch from './pages/AdvancedSearch';
 
 function App() {
   return ( 

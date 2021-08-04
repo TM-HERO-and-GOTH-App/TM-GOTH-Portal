@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
+import Dashboard from './Dashboard';
+import AdvancedSearch from './AdvancedSearch';
 
 class Baselayout extends React.Component {
   constructor(props) {
@@ -13,9 +15,13 @@ class Baselayout extends React.Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
+    this.showDashboard = this.showDashboard.bind(this);
+    this.showAdvancedSearch = this.showAdvancedSearch.bind(this);
     this.state = {
       dropdownOpen: false,
-      collabDropdown: false
+      collabDropdown: false,
+      Dashboard: true,
+      AdvancedSearch: false
     };
   }
 
@@ -46,6 +52,19 @@ class Baselayout extends React.Component {
   onMouseLeaveCollab() {
     this.setState({ collabDropdown: false });
   }
+
+  showDashboard(e) {
+    this.setState({
+      Dashboard: true, AdvancedSearch: false 
+    });
+  }
+
+  showAdvancedSearch(e) {
+    this.setState({
+      Dashboard: false, AdvancedSearch: true
+    });
+  }
+
 
   render() {
     return (
@@ -133,13 +152,13 @@ class Baselayout extends React.Component {
               <img src={img3} width={125} />
             </div>{/* /.sidebar-shortcuts */}
             <ul className="nav nav-list">
-              <li className="<?php echo ( isset($dashboardTab) ) ? 'active open hover' : 'hover'; ?>">
-                <a href="/dashboard/overall/">
+              <li className="active open hover">
+                <a href="#" onClick={this.props.showDashboard}>
                   <i className="menu-icon fa fa-tachometer" />
                   <span className="nav_menu-item"> Dashboard </span>
                 </a>
               </li>
-              <li className="<?php echo ( isset($myCollaborationTab) ) ? 'active open hover' : 'hover'; ?>" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 <a href="#">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Assignments </span>
@@ -169,8 +188,8 @@ class Baselayout extends React.Component {
                   </li>
                 </ul>}
               </li>
-              <li className="<?php echo ( isset($myCollaborationTab) ) ? 'active open hover' : 'hover'; ?>" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
-                <a href="#" onClick={this.collabToggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
+                <a href="#">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Collaboration </span>
                   <b className="arrow fa fa-angle-down" />
@@ -192,14 +211,13 @@ class Baselayout extends React.Component {
                   </li>
                 </ul>}
               </li>
-              <li className="<?php echo ( isset($groupAssignmentTab) ) ? 'active open hover' : 'hover'; ?>">
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
                 <a href="<?php echo APPNAME; ?>/assignment/group/assigned/">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> Group Assignments </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
-                <b className="arrow" />
-                <ul className="submenu">
+                {this.state.collabDropdown && <ul className="submenu">
                   <li className="hover">
                     <a href="<?php echo APPNAME; ?>/assignment/group/assigned/">
                       <i className="menu-icon fa fa-caret-right" />
@@ -228,17 +246,16 @@ class Baselayout extends React.Component {
                     </a>
                     <b className="arrow" />
                   </li>
-                </ul>
+                </ul>}
               </li>
               {/*?php if( $shGroup != 'SALES' ){ ?*/}
-              <li className="<?php echo ( isset($allAssignmentTab) ) ? 'active open hover' : 'hover'; ?>">
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
                 <a href="<?php echo APPNAME; ?>/assignment/all/unassigned/">
                   <i className="menu-icon glyphicon glyphicon-globe" />
                   <span className="menu-text"> ALL Assignments </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
-                <b className="arrow" />
-                <ul className="submenu">
+                {this.state.collabDropdown && <ul className="submenu">
                   {/*<li class="hover">
 								<a href="<?php //echo APPNAME; ?>/assignment/all/">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -275,18 +292,17 @@ class Baselayout extends React.Component {
                     </a>
                     <b className="arrow" />
                   </li>
-                </ul>
+                </ul>}
               </li>
               {/*?php } ?*/}
               {/*?php if( strtoupper($position) == 'ADMIN' ){ ?*/}
-              <li className="<?php echo ( isset($adminTab) ) ? 'active open hover' : 'hover'; ?>">
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
                 <a href="<?php echo APPNAME; ?>/admin/groupmembers/">
                   <i className="menu-icon fa fa-users" />
                   <span className="menu-text"> Manage Users </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
-                <b className="arrow" />
-                <ul className="submenu">
+                {this.state.collabDropdown && <ul className="submenu">
                   <li className="hover">
                     <a href="<?php echo APPNAME; ?>/admin/alluser/">
                       <i className="menu-icon fa fa-caret-right" />
@@ -301,11 +317,11 @@ class Baselayout extends React.Component {
                     </a>
                     <b className="arrow" />
                   </li>
-                </ul>
+                </ul>}
               </li>
               {/*?php } ?*/}
-              <li className="<?php echo ( isset($searchTab) ) ? 'active open hover' : 'hover'; ?>">
-                <a href="<?php echo APPNAME; ?>/search/enquiry/">
+              <li className="active open hover">
+                <a href="#" onClick={this.props.showAdvancedSearch}>
                   <i className="menu-icon glyphicon glyphicon-search" />
                   <span className="menu-text"> Advanced Search </span>
                   <b className="arrow fa fa-angle-down" />
@@ -589,6 +605,9 @@ class Baselayout extends React.Component {
                 <div className="row">
                   <div className="col-xs-12">
                     {/* PAGE CONTENT BEGINS */}
+                    {this.state.AdvancedSearch === true ? <AdvancedSearch onClick={this.showDashboard}/> :
+                <Dashboard showAdvancedSearch={this.showAdvancedSearch}/>
+                  }
                     <div className="alert alert-info visible-sm visible-xs">
                       <button type="button" className="close" data-dismiss="alert">
                         <i className="ace-icon fa fa-times" />
