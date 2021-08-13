@@ -4,36 +4,38 @@ class AdvancedSearch extends React.Component{
 
     render(){
         return(
-            <div>
+      <div className="row">
+      <div className="page-header">
+      <h1> AdvancedSearch </h1>
+      </div>
   <div className="col-sm-12">Please enter your keywords...</div>
   <div className="space-2" />
-  <div className="row">
     <form name="form" method="POST" action="<?php echo APPNAME; ?>/search/enquiry/">
       <div className="col-sm-2">
-        <input type="text" name="inputs[keyFullname]" placeholder="HERO Name" defaultValue="<?php echo ( isset($keyFullname) ) ? $keyFullname : ''; ?>" />
+        <input type="text" name="inputs[keyFullname]" placeholder="HERO Name" />
       </div>	
       <div className="col-sm-2" style={{paddingLeft: 10}}>
-        <input type="text" name="inputs[keyEmail]" placeholder="Email" defaultValue="<?php echo ( isset($keyEmail) ) ? $keyEmail : ''; ?>" />
+        <input type="text" name="inputs[keyEmail]" placeholder="Email" />
       </div>	
       <div className="col-sm-2" style={{paddingLeft: 10}}>
-        <input type="text" name="inputs[keyNricNum]" placeholder="NRIC Number" defaultValue="<?php echo ( isset($keyNricNum) ) ? $keyNricNum : ''; ?>" />
+        <input type="text" name="inputs[keyNricNum]" placeholder="NRIC Number" />
       </div>	
       <div className="col-sm-2" style={{paddingLeft: 10}}>
-        <input type="text" name="inputs[keyCaseNum]" placeholder="Case ID" defaultValue="<?php echo ( isset($keyCaseNum) ) ? $keyCaseNum : ''; ?>" />
+        <input type="text" name="inputs[keyCaseNum]" placeholder="Case ID" />
       </div>	
       <div className="space-20" />
       <br />
       <div className="col-sm-2">
-        <input type="text" name="inputs[keyVipName]" placeholder="VIP Name" defaultValue="<?php echo (isset($keyVipName)) ? $keyVipName : ''; ?>" />
+        <input type="text" name="inputs[keyVipName]" placeholder="VIP Name" />
       </div>	
       <div className="col-sm-2" style={{paddingLeft: 10}}>
-        <input type="text" name="inputs[keyCustomerName]" placeholder="Customer Name" defaultValue="<?php echo (isset($keyCustomerName)) ? $keyCustomerName : ''; ?>" />
+        <input type="text" name="inputs[keyCustomerName]" placeholder="Customer Name" />
       </div>	
       <div className="col-sm-2" style={{paddingLeft: 10}}>
-        <input type="text" name="inputs[keySrNum]" placeholder="SR Number" defaultValue="<?php echo (isset($keySrNum)) ? $keySrNum : ''; ?>" />
+        <input type="text" name="inputs[keySrNum]" placeholder="SR Number" />
       </div>	
       <div className="col-sm-2" style={{paddingLeft: 10}}>
-        <input type="text" name="inputs[keyTtNum]" placeholder="TT Number" defaultValue="<?php echo (isset($keyTtNum)) ? $keyTtNum : ''; ?>" />
+        <input type="text" name="inputs[keyTtNum]" placeholder="TT Number" />
       </div>	
       <div className="col-sm-3" style={{paddingLeft: 10}}>
         <button type="button" className="btn btn-sm btn-inverse" onclick="redirect('<?php echo APPNAME; ?>/search/enquiry/')">
@@ -50,7 +52,7 @@ class AdvancedSearch extends React.Component{
       <div className="clearfix">
         <div className="pull-right tableTools-container-search" style={{paddingTop: 10}} />
       </div>
-      <div>
+      {/* <div>
         30 ) ? 'danger' : 'warning';
         $ownerName = ( !empty($caseLs[$i]['ownerName']) ) ? ucwords($caseLs[$i]['ownerName']) : '<i style={{color: 'red'}}>Un-Assigned</i>';
         if( $caseLs[$i]['caseStatus'] == 'NEW' ) {'{'}
@@ -71,9 +73,9 @@ class AdvancedSearch extends React.Component{
         {'}'} else {'{'}
         $statusLabel = 'TBD';
         $statusBadge = 'pink';												
-        {'}'}
+        {'}'} 
         $sh = '<span className="badge badge-info">' . $caseLs[$i]['stakeholderName'] . '</span>';
-        ?&gt;
+        ?&gt;*/}
         <table id="dynamic-table-search" className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
@@ -122,7 +124,7 @@ class AdvancedSearch extends React.Component{
               <td>{/*?php echo nl2br($caseLs[$i]['remark']); ?*/}</td>					
               <td>
                 <div align="center">
-                  {/*?php echo ( $caseLs[$i]['totalNewAlert'] */} 0 ) ? '<span style={{fontSize: 10}} className="badge badge-warning">' . $caseLs[$i]['totalNewAlert'] . '</span>' : 0; ?&gt;
+                  {/*?php echo ( $caseLs[$i]['totalNewAlert']  0 ) ? '<span style={{fontSize: 10}} className="badge badge-warning">' . $caseLs[$i]['totalNewAlert'] . '</span>' : 0; ?&gt; */}
                 </div>
               </td>
               <td>
@@ -137,14 +139,15 @@ class AdvancedSearch extends React.Component{
             {/*?php }} ?*/}
           </tbody>
         </table>
-      </div>
-    </div>{/* /.span */}
-  </div>{/* /.row */}
-</div>
+      </div>{/* /.span */}
+  {/* /.row */}
+  </div>
 
 
         );
     }
-}
+  }
+
+
 
 export default AdvancedSearch;

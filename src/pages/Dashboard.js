@@ -3,7 +3,11 @@ import React from 'react';
 class Dashboard extends React.Component {
 render() {
 return (
+  
     <div className="row">
+    <div className="page-header">
+      <h1>Dashboard</h1>
+      </div>
       <form name="form" method="POST">
         <div className="pull-right col-sm-4">
           <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." onchange="submitForm('<?php echo APPNAME; ?>/dashboard/overall/')">
