@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import {Link}  from 'react-router-dom';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
 import Dashboard from './Dashboard';
 import AdvancedSearch from './AdvancedSearch';
+
 
 class Baselayout extends React.Component {
   constructor(props) {
@@ -319,11 +321,14 @@ class Baselayout extends React.Component {
                   </li>
                 </ul>}
               </li>
-              {/*?php } ?*/}
+              {/* Add Link inside the I Tag because the style will ruin. You can try move it around */}
               <li className="active open hover">
-                <a href="#" onClick={this.props.onClick}>
+                <a href="#">
                   <i className="menu-icon glyphicon glyphicon-search" />
-                  <span className="menu-text"> Advanced Search </span>
+                  {/* You have to click the text to navigate to new page */}
+                  <Link to='advance_search' >
+                    <span className="menu-text"> Advanced Search </span>
+                  </Link>
                   <b className="arrow fa fa-angle-down" />
                 </a>
               </li>
@@ -569,10 +574,8 @@ class Baselayout extends React.Component {
             </ul>{/* /.nav-list */}
           </div>
           <div className="main-content">
-            
             <div className="main-content-inner">
               <div className="page-content">
-                
                 <div className="ace-settings-container" id="ace-settings-container">
                   <div className="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
                     <i className="ace-icon fa fa-cog bigger-130" />
@@ -601,12 +604,15 @@ class Baselayout extends React.Component {
                     </div>{/* /.pull-left */}
                   </div>{/* /.ace-settings-box */}
                 </div>{/* /.ace-settings-container */}
+                <div className="page-header">
+                  <h1>{/*?php echo $pageHeader; ?*/}</h1>
+                </div>{/* /.page-header */}
                 <div className="row">
+                  <div className="col-xs-12">
                     {/* PAGE CONTENT BEGINS */}
                     {this.state.AdvancedSearch === true ? <AdvancedSearch onClick={this.showDashboard}/> :
                 <Dashboard showAdvancedSearch={this.showAdvancedSearch}/>
                   }
-                    
                     <div className="alert alert-info visible-sm visible-xs">
                       <button type="button" className="close" data-dismiss="alert">
                         <i className="ace-icon fa fa-times" />
@@ -666,7 +672,8 @@ class Baselayout extends React.Component {
           </div>
           <a href="#" id="btn-scroll-up" className="btn-scroll-up btn btn-sm btn-inverse">
             <i className="ace-icon fa fa-angle-double-up icon-only bigger-110" />
-          </a>{/* /.main-container */}
+          </a>
+        </div>{/* /.main-container */}
         {/* basic scripts */}
         {/*[if !IE]> */}
         {/* <![endif]*/}
@@ -679,7 +686,8 @@ class Baselayout extends React.Component {
         {/* inline scripts related to this page */}
         {/* page specific plugin scripts for jQuery Data Table */}
         {/* inline scripts related for jQuery Data Table */}
-</div>
+      </div>
+
 
     );
   }
