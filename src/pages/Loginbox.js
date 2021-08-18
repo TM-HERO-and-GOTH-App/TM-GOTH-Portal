@@ -1,7 +1,4 @@
-import React, { Component } from 'react';
-import Forgot from './Forgotpassword';
-import Activate from './ActivateAcc';
-import SignUp from './Register';
+import React from 'react';
 
 class Loginbox extends React.Component {
 
@@ -46,17 +43,17 @@ class Loginbox extends React.Component {
                       </div>{/* /.widget-main */}
                       <div className="toolbar clearfix">
                         <div>
-                          <a href="#" onClick={this.props.showForgetPassword} data-target="#forgot-box" className="forgot-password-link">
+                          <a href="/login/forgotpassword" data-target="#forgot-box" className="forgot-password-link">
                             <i className="ace-icon fa fa-arrow-left" />
                             I forgot my Password
                           </a>
                         </div>
                         <div>
-                          <a href="#" onClick={this.props.showActivateAcc} data-target="#activate-box" className="user-signup-link">
+                          <a href="/login/activate" data-target="#activate-box" className="user-signup-link">
                             <i className="ace-icon fa fa-arrow-right" />
                             Activate Account
                           </a>
-                          <a href="#" onClick={this.props.showRegister} data-target="#signup-box" className="user-signup-link">
+                          <a href="/login/signupme" data-target="#signup-box" className="user-signup-link">
                             Sign Up
                             <i className="ace-icon fa fa-arrow-right" />
                           </a>

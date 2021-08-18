@@ -1,6 +1,4 @@
 import React from 'react';
-import logo from '../images/guardian-login.png';
-import Login from './Login';
 
  class Forgotpassword extends React.Component{
 
@@ -44,7 +42,7 @@ import Login from './Login';
                   </form>
                 </div>{/* /.widget-main */}
                 <div className="toolbar center">
-                  <a href="#" onClick={this.props.onClick} data-target="#login-box" className="back-to-login-link">
+                  <a href="/login/auth/" data-target="#login-box" className="back-to-login-link">
                     Back to Sign In
                     <i className="ace-icon fa fa-arrow-right" />
                   </a>

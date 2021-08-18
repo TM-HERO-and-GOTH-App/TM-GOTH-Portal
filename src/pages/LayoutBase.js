@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {Link}  from 'react-router-dom';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
@@ -155,9 +155,11 @@ class Baselayout extends React.Component {
             </div>{/* /.sidebar-shortcuts */}
             <ul className="nav nav-list">
               <li className="active open hover">
-                <a href="#" onClick={this.props.showDashboard}>
+                <a href="#">
                   <i className="menu-icon fa fa-tachometer" />
+                  <Link to='Dashboard/overall' >
                   <span className="nav_menu-item"> Dashboard </span>
+                  </Link>
                 </a>
               </li>
               <li className="active open hover" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
@@ -609,28 +611,7 @@ class Baselayout extends React.Component {
                 </div>{/* /.page-header */}
                 <div className="row">
                   <div className="col-xs-12">
-                    {/* PAGE CONTENT BEGINS */}
-                    {this.state.AdvancedSearch === true ? <AdvancedSearch onClick={this.showDashboard}/> :
-                <Dashboard showAdvancedSearch={this.showAdvancedSearch}/>
-                  }
-                    <div className="alert alert-info visible-sm visible-xs">
-                      <button type="button" className="close" data-dismiss="alert">
-                        <i className="ace-icon fa fa-times" />
-                      </button>
-                      Please note that
-                      <span className="blue bolder">top menu style</span>
-                      is visible only in devices larger than
-                      <span className="blue bolder">991px</span>
-                      which you can change using CSS builder tool.
-                    </div>
-                    <div className="well well-sm visible-sm visible-xs">
-                      Top menu can become any of the 3 mobile view menu styles:
-                      <em>default</em>
-                      ,
-                      <em>collapsible</em>
-                      or
-                      <em>minimized</em>.
-                    </div>
+                  
                     {/*<div class="hidden-sm hidden-xs">
 									<button type="button" class="sidebar-collapse btn btn-white btn-primary" data-target="#sidebar">
 										<i class="ace-icon fa fa-angle-double-up" data-icon1="ace-icon fa fa-angle-double-up" data-icon2="ace-icon fa fa-angle-double-down"></i>
@@ -646,33 +627,6 @@ class Baselayout extends React.Component {
               </div>{/* /.page-content */}
             </div>
           </div>{/* /.main-content */}
-          <br /><br /><br />
-          <div className="footer">
-            <div className="footer-inner">
-              <div className="footer-content">
-                <div style={{ padding: 0 }}>
-                  Copyright © 2018 Telekom Malaysia Berhad (128740-P) ALL RIGHTS RESERVED</div>
-                <div style={{ padding: 0 }}>For the best viewing experience, please use either Mozilla Firefox or IE browser with resolution at 1280 x 800 pixels and above</div>
-                {/*&nbsp; &nbsp;
-						<span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span> */}
-              </div>
-            </div>
-          </div>
-          <a href="#" id="btn-scroll-up" className="btn-scroll-up btn btn-sm btn-inverse">
-            <i className="ace-icon fa fa-angle-double-up icon-only bigger-110" />
-          </a>
         </div>{/* /.main-container */}
         {/* basic scripts */}
         {/*[if !IE]> */}
@@ -694,7 +648,6 @@ class Baselayout extends React.Component {
 
 
 }
-
 
 
 export default Baselayout;
