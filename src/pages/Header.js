@@ -3,11 +3,9 @@ import {Link}  from 'react-router-dom';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
-import Dashboard from './Dashboard';
-import AdvancedSearch from './AdvancedSearch';
 
 
-class Baselayout extends React.Component {
+class Header extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,7 +16,6 @@ class Baselayout extends React.Component {
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
     this.showDashboard = this.showDashboard.bind(this);
-    this.showAdvancedSearch = this.showAdvancedSearch.bind(this);
     this.state = {
       dropdownOpen: false,
       collabDropdown: false,
@@ -58,12 +55,6 @@ class Baselayout extends React.Component {
   showDashboard(e) {
     this.setState({
       Dashboard: true, AdvancedSearch: false 
-    });
-  }
-
-  showAdvancedSearch(e) {
-    this.setState({
-      Dashboard: false, AdvancedSearch: true
     });
   }
 
@@ -650,4 +641,4 @@ class Baselayout extends React.Component {
 }
 
 
-export default Baselayout;
+export default Header;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Baselayout extends React.Component {
+class Footer extends React.Component {
 
     render() {
         return (
