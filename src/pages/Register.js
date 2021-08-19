@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from './Login';
+import Loginpage from './Login';
 
 class Register extends React.Component {
 
