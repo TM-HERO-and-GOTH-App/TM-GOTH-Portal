@@ -1,12 +1,12 @@
 import React from 'react';
-import Loginpage from './Login';
+import LoginTheme from './LoginTheme';
 
 class Loginbox extends React.Component {
 
   render() {
     return (
       // We make props so that the styling is apply
-      <Loginpage
+      <LoginTheme
         children={<div id="login-box" className="login-box widget-box no-border ">
         <div className="widget-body">
           <div className="widget-main">

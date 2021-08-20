@@ -1,12 +1,12 @@
 import React from 'react';
-import Loginpage from './Login';
+import LoginTheme from './LoginTheme';
 
 class Forgotpassword extends React.Component {
 
 
   render() {
     return (
-      <Loginpage
+      <LoginTheme
         children={<div id="forgot-box" className="forgot-box widget-box">
           <div className="widget-body">
             <div className="widget-main">

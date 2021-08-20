@@ -9,7 +9,7 @@ class Dashboard extends React.Component {
         <Header />
         <div className="row">
           <div className="page-header">
-            <h1>Dashboard</h1>
+                <h1> Dashboard</h1>
           </div>
           <form name="form" method="POST">
             <div className="pull-right col-sm-4">

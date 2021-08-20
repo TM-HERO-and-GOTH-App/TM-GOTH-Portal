@@ -1,12 +1,12 @@
 import React from 'react';
-import Loginpage from './Login';
+import LoginTheme from './LoginTheme';
 
 class Register extends React.Component {
 
 
   render() {
     return (
-      <Loginpage
+      <LoginTheme
         children={
           <div id="signup-box" className="signup-box widget-box">
             <div className="widget-body">

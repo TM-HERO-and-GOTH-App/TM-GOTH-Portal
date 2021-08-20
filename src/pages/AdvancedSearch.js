@@ -1,9 +1,13 @@
 import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
 
 class AdvancedSearch extends React.Component{
 
     render(){
         return(
+          <div>
+          <Header />
       <div className="row">
       <div className="page-header">
       <h1> AdvancedSearch </h1>
@@ -142,8 +146,8 @@ class AdvancedSearch extends React.Component{
       </div>{/* /.span */}
   {/* /.row */}
   </div>
-
-
+  <Footer />
+  </div>
         );
     }
   }

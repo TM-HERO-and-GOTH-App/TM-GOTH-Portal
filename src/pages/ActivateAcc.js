@@ -1,5 +1,5 @@
 import React from 'react';
-import Loginpage from './Login';
+import LoginTheme from './LoginTheme';
 
 class ActivateAcc extends React.Component {
 
@@ -7,7 +7,7 @@ class ActivateAcc extends React.Component {
 
   render() {
     return (
-      <Loginpage
+      <LoginTheme
         children={<div id="activate-box" className="signup-box widget-box">
           <div className="widget-body">
             <div className="widget-main">

@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../images/guardian-login.png';
 
-class Loginpage extends React.Component {
+class LoginTheme extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -43,4 +43,4 @@ class Loginpage extends React.Component {
   }
 }
 
-export default Loginpage;
+export default LoginTheme;

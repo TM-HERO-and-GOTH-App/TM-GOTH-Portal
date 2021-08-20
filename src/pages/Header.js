@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link}  from 'react-router-dom';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
@@ -146,36 +145,34 @@ class Header extends React.Component {
             </div>{/* /.sidebar-shortcuts */}
             <ul className="nav nav-list">
               <li className="active open hover">
-                <a href="#">
+                <a href="/">
                   <i className="menu-icon fa fa-tachometer" />
-                  <Link to='Dashboard/overall' >
                   <span className="nav_menu-item"> Dashboard </span>
-                  </Link>
                 </a>
               </li>
               <li className="active open hover" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                <a href="#">
+                <a href="/assignment/self/assigned/">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Assignments </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
                 {this.state.dropdownOpen && <ul className="submenu">
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/self/assigned/">
+                    <a href="/assignment/self/assigned/">
                       <i className="menu-icon fa fa-caret-right" />
                       Assigned Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/self/in-progress/">
+                    <a href="/assignment/self/in-progress/">
                       <i className="menu-icon fa fa-caret-right" />
                       In-Progress Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/self/closed/">
+                    <a href="/assignment/self/closed/">
                       <i className="menu-icon fa fa-caret-right" />
                       Closed Cases
                     </a>
@@ -184,21 +181,21 @@ class Header extends React.Component {
                 </ul>}
               </li>
               <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
-                <a href="#">
+                <a href="/assignment/collaboration/assigned/">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Collaboration </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
                 {this.state.collabDropdown && <ul className="submenu">
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/collaboration/assigned/">
+                    <a href="/assignment/collaboration/assigned/">
                       <i className="menu-icon fa fa-caret-right" />
                       Assigned Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/collaboration/in-progress/">
+                    <a href="/assignment/collaboration/in-progress/">
                       <i className="menu-icon fa fa-caret-right" />
                       In-Progress Cases
                     </a>
@@ -207,35 +204,35 @@ class Header extends React.Component {
                 </ul>}
               </li>
               <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
-                <a href="<?php echo APPNAME; ?>/assignment/group/assigned/">
+                <a href="/assignment/group/assigned/">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> Group Assignments </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
                 {this.state.collabDropdown && <ul className="submenu">
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/group/assigned/">
+                    <a href="/assignment/group/assigned/">
                       <i className="menu-icon fa fa-caret-right" />
                       Assigned Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/group/closed/">
+                    <a href="/assignment/group/closed/">
                       <i className="menu-icon fa fa-caret-right" />
                       Closed Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover"> {/* active */}
-                    <a href="<?php echo APPNAME; ?>/assignment/group/in-progress/">
+                    <a href="/assignment/group/in-progress/">
                       <i className="menu-icon fa fa-caret-right" />
                       In-Progress Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/group/unassigned/">
+                    <a href="/assignment/group/unassigned/">
                       <i className="menu-icon fa fa-caret-right" />
                       <span style={{ color: 'red' }}>Unassigned Cases</span>
                     </a>
@@ -245,7 +242,7 @@ class Header extends React.Component {
               </li>
               {/*?php if( $shGroup != 'SALES' ){ ?*/}
               <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
-                <a href="<?php echo APPNAME; ?>/assignment/all/unassigned/">
+                <a href="/assignment/all/unassigned/">
                   <i className="menu-icon glyphicon glyphicon-globe" />
                   <span className="menu-text"> ALL Assignments </span>
                   <b className="arrow fa fa-angle-down" />
@@ -260,28 +257,28 @@ class Header extends React.Component {
 								<b class="arrow"></b>
 							</li>*/}
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/all/assigned/">
+                    <a href="/assignment/all/assigned/">
                       <i className="menu-icon fa fa-caret-right" />
                       Assigned Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/all/closed/">
+                    <a href="/assignment/all/closed/">
                       <i className="menu-icon fa fa-caret-right" />
                       Closed Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover"> {/* active */}
-                    <a href="<?php echo APPNAME; ?>/assignment/all/in-progress/">
+                    <a href="/assignment/all/in-progress/">
                       <i className="menu-icon fa fa-caret-right" />
                       In-Progress Cases
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/assignment/all/unassigned/">
+                    <a href="/assignment/all/unassigned/">
                       <i className="menu-icon fa fa-caret-right" />
                       <span style={{ color: 'red' }}>Unassigned Cases</span>
                     </a>
@@ -292,21 +289,21 @@ class Header extends React.Component {
               {/*?php } ?*/}
               {/*?php if( strtoupper($position) == 'ADMIN' ){ ?*/}
               <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
-                <a href="<?php echo APPNAME; ?>/admin/groupmembers/">
+                <a href="/admin/groupmembers/">
                   <i className="menu-icon fa fa-users" />
                   <span className="menu-text"> Manage Users </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
                 {this.state.collabDropdown && <ul className="submenu">
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/admin/alluser/">
+                    <a href="/admin/alluser/">
                       <i className="menu-icon fa fa-caret-right" />
                       ALL Registered User
                     </a>
                     <b className="arrow" />
                   </li>
                   <li className="hover">
-                    <a href="<?php echo APPNAME; ?>/admin/groupmembers/">
+                    <a href="/admin/groupmembers/">
                       <i className="menu-icon fa fa-caret-right" />
                       My Group Members
                     </a>
@@ -316,12 +313,10 @@ class Header extends React.Component {
               </li>
               {/* Add Link inside the I Tag because the style will ruin. You can try move it around */}
               <li className="active open hover">
-                <a href="#">
+                <a href="advance_search">
                   <i className="menu-icon glyphicon glyphicon-search" />
                   {/* You have to click the text to navigate to new page */}
-                  <Link to='advance_search' >
                     <span className="menu-text"> Advanced Search </span>
-                  </Link>
                   <b className="arrow fa fa-angle-down" />
                 </a>
               </li>
@@ -597,9 +592,7 @@ class Header extends React.Component {
                     </div>{/* /.pull-left */}
                   </div>{/* /.ace-settings-box */}
                 </div>{/* /.ace-settings-container */}
-                <div className="page-header">
-                  <h1>{/*?php echo $pageHeader; ?*/}</h1>
-                </div>{/* /.page-header */}
+                {/* /.page-header */}
                 <div className="row">
                   <div className="col-xs-12">
                   
