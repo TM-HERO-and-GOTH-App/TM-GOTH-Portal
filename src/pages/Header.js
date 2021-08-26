@@ -101,17 +101,17 @@ class Header extends React.Component {
 									</a>
 								</li>*/}
                     <li>
-                      <a href="/preference/profile/">
+                      <Link to="User_profile">
                         <i className="ace-icon fa fa-user" />
                         My Profile
-                      </a>
+                      </Link>
                     </li>
                     {/*?php if( $stakeholderName == 'RRT' ){ ?*/}
                     <li>
-                      <a href="/preference/createcase/">
+                      <Link to = "Create_case">
                         <i className="ace-icon fa fa-pencil" />
                         Create New Case
-                      </a>
+                      </Link>
                     </li>
                     {/*?php } ?*/}
                     <li className="divider" />
@@ -128,7 +128,7 @@ class Header extends React.Component {
             <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
               <ul className="nav navbar-nav">
               </ul>
-              <form className="navbar-form navbar-left form-search" role="search" method="POST" action="/search/quick/">
+              <form className="navbar-form navbar-left form-search" role="search" method="POST" action="Quick_search">
                 <div className="form-group">
                   <input type="text" name="keywords" placeholder="search" style={{ width: 250 }} />
                 </div>

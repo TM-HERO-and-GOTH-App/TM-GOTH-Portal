@@ -21,6 +21,9 @@ import MU_Registereduser from './pages/MU_Registereduser';
 import MU_Groupmember from './pages/MU_Groupmember';
 import AdvancedSearch from './pages/AdvancedSearch';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Createcase from './pages/Createcase';
+import Userprofile from './pages/Userprofile';
+import Quicksearch from './pages/Quicksearch';
 
 function App() {
   return ( 
@@ -51,6 +54,9 @@ function App() {
         <Route path="/ManageUsers_RegisteredUser"           component={MU_Registereduser} />
         <Route path="/ManageUsers_Groupmembers"             component={MU_Groupmember} />
         <Route path="/advance_search"                       component={AdvancedSearch} />
+        <Route path="/Quick_search"                       component={Quicksearch} />
+        <Route path="/User_profile"                       component={Userprofile} />
+        <Route path="/Create_case"                       component={Createcase} />
       </Switch>
     </Router>
     );
