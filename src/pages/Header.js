@@ -2,13 +2,12 @@ import React from 'react';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
-
     this.toggle = this.toggle.bind(this);
     this.collabToggle = this.collabToggle.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
@@ -89,6 +88,7 @@ class Header extends React.Component {
                     <img className="nav-user-photo" src={img2} alt="User's Photo" />
                     <span className="user-info">
                       <small>Welcome,</small>
+                      {this.props.name}
                       {/*?php echo ucwords(strtolower($fullName)); ?*/}
                     </span>
                     <i className="ace-icon fa fa-caret-down" />
