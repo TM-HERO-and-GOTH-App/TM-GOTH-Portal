@@ -73,6 +73,7 @@ class Loginbox extends React.Component {
         console.log('Your account is not yet registered')
       } else {
         this.setState({fullName: response.fullName})
+        localStorage.setItem('UserData', JSON.stringify(response))
         this.getLov(authToken)
       }
     })
