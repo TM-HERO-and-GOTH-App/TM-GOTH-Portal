@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
           </div>
           <form name="form" method="POST">
             <div className="pull-right col-sm-4">
-              <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." onchange="submitForm('<?php echo APPNAME; ?>/dashboard/overall/')">
+              <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." onChange="submitForm('<?php echo APPNAME; ?>/dashboard/overall/')">
                 <option value={0}> </option>
                 <option $shid_opt></option>
               </select>

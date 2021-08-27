@@ -66,7 +66,7 @@ class Header extends React.Component {
         <div id="navbar" className="navbar navbar-default navbar-collapse ace-save-state">
           <div className="navbar-container ace-save-state" id="navbar-container">
             <div className="navbar-header pull-left">
-              <a href="index.html" className="navbar-brand">
+              <a href="/" className="navbar-brand">
                 <small>
                   HERO Portal
                 </small>
@@ -116,7 +116,7 @@ class Header extends React.Component {
                     {/*?php } ?*/}
                     <li className="divider" />
                     <li>
-                      <a href="/login/signout/">
+                      <a href="/login">
                         <i className="ace-icon fa fa-power-off" />
                         Sign Out
                       </a>
@@ -151,7 +151,7 @@ class Header extends React.Component {
                   <span className="nav_menu-item"> Dashboard </span>
                 </Link>
               </li>
-              <li className="active open hover" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 <Link to="MyAssignments_Assigned">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Assignments </span>
@@ -181,7 +181,7 @@ class Header extends React.Component {
                   </li>
                 </ul>}
               </li>
-              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                 <Link to="MyCollaboration_Assigned">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Collaboration </span>
@@ -204,7 +204,7 @@ class Header extends React.Component {
                   </li>
                 </ul>}
               </li>
-              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                 <Link to="GroupAssignments_Assigned">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> Group Assignments </span>
@@ -242,7 +242,7 @@ class Header extends React.Component {
                 </ul>}
               </li>
               {/*?php if( $shGroup != 'SALES' ){ ?*/}
-              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                 <Link to="AllAssignments_Unassigned">
                   <i className="menu-icon glyphicon glyphicon-globe" />
                   <span className="menu-text"> ALL Assignments </span>
@@ -289,7 +289,7 @@ class Header extends React.Component {
               </li>
               {/*?php } ?*/}
               {/*?php if( strtoupper($position) == 'ADMIN' ){ ?*/}
-              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab} isOpen={this.state.collabDropdown} toggle={this.collabToggle}>
+              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                 <Link to="ManageUsers_Groupmembers">
                   <i className="menu-icon fa fa-users" />
                   <span className="menu-text"> Manage Users </span>
@@ -317,7 +317,7 @@ class Header extends React.Component {
               </li>
               {/* Add Link inside the I Tag because the style will ruin. You can try move it around */}
               <li className="active open hover">
-                <Link to="advance_search">
+                <Link to="/advance_search">
                   <i className="menu-icon glyphicon glyphicon-search" />
                   {/* You have to click the text to navigate to new page */}
                     <span className="menu-text"> Advanced Search </span>
