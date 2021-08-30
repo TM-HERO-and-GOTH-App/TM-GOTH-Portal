@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
-import defaultUserLogo from '../images/avatars/default.jpg';
+import defaultUserLogo from '../../images/avatars/default.jpg';
 import { Link } from 'react-router-dom'
 
 class Userprofile extends React.Component {
