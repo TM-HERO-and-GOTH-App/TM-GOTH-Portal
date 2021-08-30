@@ -1,17 +1,19 @@
-import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
 
-class MA_Assigned extends React.Component {
+
+import React from 'react';
+import Header from '../Header';
+import Footer from '../Footer';
+
+class MC_Assigned extends React.Component {
   render() {
     return (
       <div>
         <Header />
         <div class="page-header">
-            <h1>My Assignments : ASSIGNED</h1>
+            <h1>My Collaboration : ASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
 
-        <div className="row">
+        <div class="row">
           <div className="col-xs-12">
             {/*?php if ( isset($alertStatus) && !empty($alertStatus) ): ?*/}
             <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
@@ -23,7 +25,7 @@ class MA_Assigned extends React.Component {
                   <i className="ace-icon fa fa-check" />
                   Well done!
                 </strong>
-                {/*?php echo urldecode($alertMessage); ?*/}
+                {/*?php echo str_replace("_", " ", $alertMessage); ?*/}
               </p>
             </div>
             {/*?php endif; ?*/}
@@ -65,7 +67,7 @@ class MA_Assigned extends React.Component {
                     <th>Customer</th>
                     <th>HERO</th>
                     <th>Owner</th>
-                    <th><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell" /></div></th>
+                    <th width="5%"><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell" /></div></th>
                     <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o" /></div></th>
                   </tr>
                 </thead>
@@ -73,9 +75,9 @@ class MA_Assigned extends React.Component {
                   {/*?php if( empty($caseLs) ){ ?*/}
                   <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   {/*?php } else { 
-				
-				for($i=0;$i<$caseCount;$i++){ 
-					$badgeColor = ( $caseLs[$i]['unclosedAging'] */}<tr>
+
+                  for($i=0;$i<$caseCount;$i++){ 
+                    $badgeColor = ( $caseLs[$i]['unclosedAging'] */}<tr>
                     <td>
                       <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
                         {/*?php echo $caseLs[$i]['caseNum']; ?*/}
@@ -94,7 +96,7 @@ class MA_Assigned extends React.Component {
                       </div>
                     </td>
                     <td>{/*?php echo $caseLs[$i]['productName']; ?*/}</td>
-                    <td>{/*?php echo $caseLs[$i]['customerName']; ?*/}</td>
+                    <td>{/*?php echo ucwords($caseLs[$i]['customerName']); ?*/}</td>
                     <td>{/*?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"*/}' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt;</td>
                     <td>{/*?php echo ucwords($caseLs[$i]['ownerName']); ?*/}</td>
                     <td>
@@ -104,7 +106,7 @@ class MA_Assigned extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ma/')">
+                        <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/mc/')">
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </button>
@@ -116,7 +118,8 @@ class MA_Assigned extends React.Component {
               </table>
             </div>
           </div>{/* /.span */}
-        </div>{/* /.row */}
+          {/* /.row */}
+        </div>
 
         <Footer />
       </div>
@@ -124,4 +127,4 @@ class MA_Assigned extends React.Component {
   }
 }
 
-export default MA_Assigned;
+export default MC_Assigned;

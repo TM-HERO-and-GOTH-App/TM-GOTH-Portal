@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Header';
+import Footer from '../Footer';
 
-class MA_Inprogress extends React.Component {
+class MC_Inprogress extends React.Component {
   render() {
     return (
       <div>
@@ -84,7 +84,7 @@ class MA_Inprogress extends React.Component {
             </div> {/* <!-- /.span --> */}
           </div> {/* <!-- /.row --> */}
           <div class="page-header">
-            <h1>My Assignments : IN PROGRESS</h1>
+            <h1>My Collaboration : IN PROGRESS</h1>
           </div> {/* <!-- /.page-header --> */}
           <div class="row">
             <div class="col-xs-12">
@@ -144,4 +144,4 @@ class MA_Inprogress extends React.Component {
   }
 }
 
-export default MA_Inprogress;
+export default MC_Inprogress;

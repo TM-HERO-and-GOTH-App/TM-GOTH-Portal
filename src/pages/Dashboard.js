@@ -4,10 +4,9 @@ import Footer from './Footer';
 
 class Dashboard extends React.Component {
   render() {
-    const {fullName} = (this.props.location && this.props.location.state) || 'User';
     return (
       <div>
-        <Header name={fullName}/>
+        <Header/>
         <div className="row">
           <div className="page-header">
                 <h1> Dashboard</h1>

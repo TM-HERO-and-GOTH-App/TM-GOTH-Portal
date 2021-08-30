@@ -1,28 +1,29 @@
+import './App.css';
 import Loginbox from './pages/Loginbox';
 import Forgot from './pages/Forgotpassword';
 import Activate from './pages/ActivateAcc';
 import SignUp from './pages/Register';
-import './App.css';
 import Dashboard from './pages/Dashboard';
-import MA_Assigned from './pages/MA_Assigned';
-import MA_Inprogress from './pages/MA_Inprogress';
-import MA_Closed from './pages/MA_Closed';
-import MC_Assigned from './pages/MC_Assigned';
-import MC_Inprogress from './pages/MC_Inprogress';
-import GA_Assigned from './pages/GA_Assigned';
-import GA_Closed from './pages/GA_Closed';
-import GA_Inprogress from './pages/GA_Inprogress';
-import GA_Unassigned from './pages/GA_Unassigned';
-import AA_Assigned from './pages/AA_Assigned';
-import AA_Closed from './pages/AA_Closed';
-import AA_Inprogress from './pages/AA_Inprogress';
-import AA_Unassigned from './pages/AA_Unassigned';
-import MU_Registereduser from './pages/MU_Registereduser';
-import MU_Groupmember from './pages/MU_Groupmember';
+import MA_Assigned from './pages/my_assignments/MA_Assigned';
+import MA_Inprogress from './pages/my_assignments/MA_Inprogress';
+import MA_Closed from './pages/my_assignments/MA_Closed';
+import MC_Assigned from './pages/my_collaborations/MC_Assigned';
+import MC_Inprogress from './pages/my_collaborations/MC_Inprogress';
+import GA_Assigned from './pages/group_assignments/GA_Assigned';
+import GA_Closed from './pages/group_assignments/GA_Closed';
+import GA_Inprogress from './pages/group_assignments/GA_Inprogress';
+import GA_Unassigned from './pages/group_assignments/GA_Unassigned';
+import AA_Assigned from './pages/all_assignments/AA_Assigned';
+import AA_Closed from './pages/all_assignments/AA_Closed';
+import AA_Inprogress from './pages/all_assignments/AA_Inprogress';
+import AA_Unassigned from './pages/all_assignments/AA_Unassigned';
+import MU_Registereduser from './pages/manage_user/MU_Registereduser';
+import MU_Groupmember from './pages/manage_user/MU_Groupmember';
 import AdvancedSearch from './pages/AdvancedSearch';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Createcase from './pages/Createcase';
-import Userprofile from './pages/Userprofile';
+import Userprofile from './pages/user_profile/Userprofile';
+import EditUser from './pages/user_profile/EditUserProfile';
 import Quicksearch from './pages/Quicksearch';
 
 function App() {
@@ -54,9 +55,10 @@ function App() {
         <Route path="/ManageUsers_RegisteredUser"           component={MU_Registereduser} />
         <Route path="/ManageUsers_Groupmembers"             component={MU_Groupmember} />
         <Route path="/advance_search"                       component={AdvancedSearch} />
-        <Route path="/Quick_search"                       component={Quicksearch} />
-        <Route path="/User_profile"                       component={Userprofile} />
-        <Route path="/Create_case"                       component={Createcase} />
+        <Route path="/quick_search"                       component={Quicksearch} />
+        <Route path="/user_profile"                       component={Userprofile} />
+        <Route path='/edit_user'                          component={EditUser} />
+        <Route path="/create_case"                       component={Createcase} />
       </Switch>
     </Router>
     );

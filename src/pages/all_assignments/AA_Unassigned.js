@@ -1,14 +1,14 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Header';
+import Footer from '../Footer';
 
-class AA_Assigned extends React.Component {
+class AA_Unassigned extends React.Component {
   render() {
     return (
       <div>
         <Header />
         <div class="page-header">
-            <h1>Nationwide Assignments : ASSIGNED</h1>
+            <h1>Nationwide Assignments : UNASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
 
         <div className="row">
@@ -145,11 +145,10 @@ class AA_Assigned extends React.Component {
             </div>
           </div>  {/* //<!-- /.span --> */}
         </div> {/* // <!-- /.row --> */}
-
         <Footer />
       </div>
     );
   }
 }
 
-export default AA_Assigned;
+export default AA_Unassigned;

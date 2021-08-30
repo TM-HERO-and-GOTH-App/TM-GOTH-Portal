@@ -1,14 +1,14 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Header';
+import Footer from '../Footer';
 
-class GA_Assigned extends React.Component {
+class GA_Unassigned extends React.Component {
   render() {
     return (
       <div>
         <Header />
         <div class="page-header">
-            <h1>Group Assignments : ASSIGNED</h1>
+            <h1>Group Assignments : UNASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
 
         <div className="row">
@@ -117,11 +117,10 @@ for($i=0;$i<$caseCount;$i++){
             </div>
           </div>{/* /.span */}
         </div>{/* /.row */}
-
         <Footer />
       </div>
     );
   }
 }
 
-export default GA_Assigned;
+export default GA_Unassigned;

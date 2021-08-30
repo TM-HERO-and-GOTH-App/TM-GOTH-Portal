@@ -46,6 +46,7 @@ const LoginWebservice = {
             })
         })
             .then(res => res.json())
+            .then(responseData => {return responseData})
             //.catch((res: any) => Observable.throw(alert('Oops, there\'s a problem connecting'))
             .catch((res) => console.log(res))
     },

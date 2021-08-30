@@ -14,6 +14,7 @@ class Header extends React.Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
+    this.clearLocalStorage = this.clearLocalStorage.bind(this);
     this.state = {
       dropdownOpen: false,
       collabDropdown: false,
@@ -50,7 +51,12 @@ class Header extends React.Component {
     this.setState({ collabDropdown: false });
   }
 
+  clearLocalStorage(){
+    localStorage.clear();
+  }
+
   render() {
+    const userInfo = JSON.parse(localStorage.getItem('UserData')) || 'User';
     return (
       <div>
         <div id="navbar" className="navbar navbar-default navbar-collapse ace-save-state">
@@ -79,7 +85,7 @@ class Header extends React.Component {
                     <img className="nav-user-photo" src={img2} alt="User's Photo" />
                     <span className="user-info">
                       <small>Welcome,</small>
-                      {this.props.name}
+                      {userInfo.fullName}
                       {/*?php echo ucwords(strtolower($fullName)); ?*/}
                     </span>
                     <i className="ace-icon fa fa-caret-down" />
@@ -92,14 +98,14 @@ class Header extends React.Component {
 									</a>
 								</li>*/}
                     <li>
-                      <Link to="User_profile">
+                      <Link to="/user_profile">
                         <i className="ace-icon fa fa-user" />
                         My Profile
                       </Link>
                     </li>
                     {/*?php if( $stakeholderName == 'RRT' ){ ?*/}
                     <li>
-                      <Link to = "Create_case">
+                      <Link to = "/create_case">
                         <i className="ace-icon fa fa-pencil" />
                         Create New Case
                       </Link>
@@ -107,7 +113,7 @@ class Header extends React.Component {
                     {/*?php } ?*/}
                     <li className="divider" />
                     <li>
-                      <a href="/login">
+                      <a href="/login" onClick={this.clearLocalStorage}>
                         <i className="ace-icon fa fa-power-off" />
                         Sign Out
                       </a>

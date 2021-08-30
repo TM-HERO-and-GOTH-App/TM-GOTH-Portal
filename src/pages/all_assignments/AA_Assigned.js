@@ -1,16 +1,15 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Header';
+import Footer from '../Footer';
 
-class AA_Closed extends React.Component {
+class AA_Assigned extends React.Component {
   render() {
     return (
       <div>
         <Header />
-        <div className="page-header">
-          <h1>Nationwide Assignments : CLOSED</h1>
+        <div class="page-header">
+            <h1>Nationwide Assignments : ASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
-
 
         <div className="row">
           <form name="form" method="POST">
@@ -153,4 +152,4 @@ class AA_Closed extends React.Component {
   }
 }
 
-export default AA_Closed;
+export default AA_Assigned;

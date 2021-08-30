@@ -82,6 +82,7 @@ class Loginbox extends React.Component {
   getLov(authToken) {
     LoginWebservice.getSystemLOV(authToken).then(response => {
       console.log(response);
+      localStorage.setItem('LovData', JSON.stringify(response));
       this.props.history.push('/', this.state);
     })
   }
