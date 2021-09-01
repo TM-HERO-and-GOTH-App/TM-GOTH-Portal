@@ -25,6 +25,7 @@ import Createcase from './pages/Createcase';
 import Userprofile from './pages/user_profile/Userprofile';
 import EditUser from './pages/user_profile/EditUserProfile';
 import Quicksearch from './pages/Quicksearch';
+import NonTechnicalCase from './pages/hero_cases_functionality/NonTechnicalCase';
 
 function App() {
   return ( 
@@ -59,6 +60,7 @@ function App() {
         <Route path="/user_profile"                       component={Userprofile} />
         <Route path='/edit_user'                          component={EditUser} />
         <Route path="/create_case"                       component={Createcase} />
+        <Route path='/non_technical_case'                  component={NonTechnicalCase} />
       </Switch>
     </Router>
     );

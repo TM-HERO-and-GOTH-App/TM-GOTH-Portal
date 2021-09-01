@@ -1,0 +1,258 @@
+import React from 'react';
+import CaseService from '../../web_service/login_web_service/CaseService';
+
+class NonTechnicalCase extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            name: '',
+            mobileNumber: '',
+            description: '',
+            description: '',
+            type: 'empty',
+            product: 'empty',
+            location: 'empty',
+            image: null,
+            currLatForm: '',
+            currLat: '',
+            currLon: '',
+            state: '',
+        }
+        this.handleCustomerName = this.handleCustomerName.bind(this);
+        this.handleCustomerMobileNumber = this.handleCustomerMobileNumber.bind(this);
+        this.handleSelectType = this.handleSelectType.bind(this);
+        this.handleSelectProduct = this.handleSelectProduct.bind(this);
+        this.handleSelectLocation = this.handleSelectLocation.bind(this);
+        this.onImageChange = this.onImageChange.bind(this);
+        this.createCase = this.createCase.bind(this);
+        this.uploadPic = this.uploadPic.bind(this);
+        this.location = this.location.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    handleCustomerName(e) {
+        this.setState({ name: e.target.value })
+    }
+
+    handleCustomerMobileNumber(e) {
+        this.setState({ mobileNumber: e.target.value })
+    }
+
+    handleSelectType(e) {
+        this.setState({ type: e.target.value });
+    }
+
+    handleSelectProduct(e) {
+        this.setState({ product: e.target.value });
+    }
+
+    handleSelectLocation(e) {
+        this.setState({ location: e.target.value });
+    }
+
+    onImageChange = event => {
+        if (event.target.files && event.target.files[0]) {
+            let img = event.target.files[0];
+            this.setState({
+                image: URL.createObjectURL(img)
+            });
+        }
+    };
+
+    onSubmit(e) {
+        e.preventDefault();
+        this.location(this.state);
+        this.createCase();
+    }
+
+    createCase() {
+        CaseService.createSubmit(this.customerName, this.customerMobile, this.item, this.stateID, 284, 46, this.customerDesc, this.herobuddyResponses)
+            .then(response => {
+                const svrResponse = response;
+                if (svrResponse.response == 'OK') {
+                    const cToken = svrResponse.cToken;
+                    //----------no have pic-------------------
+                    if (this.state.image == null) {
+                        //----------for null latlong-------------------
+                        if (this.state.currLatForm == null) {
+                            this.setState({currLon: null});
+                            this.setState({currLat: null});
+                            //this.showSuccessAlert(this.svrResponseMsg);    
+                            // this.navCtrl.push(TrackingPage);
+                            //----------for have latlong-------------------
+                        } else {
+                            this.state.image = "";
+                            //this.showSuccessAlert('Case', this.svrResponse.status);
+                            this.uploadPic(svrResponse.status);
+                        }
+                    }
+                    //----------for have pic-------------------
+                    else {
+                        //this.showSuccessAlert('Case', this.svrResponse.status);
+                        this.uploadPic(svrResponse.status);
+                    }
+                } else {
+                    alert('Case', 'Failed to create case');
+                }
+                console.log(this.state.name + ',' + this.state.mobileNumber + ',' + this.state.type + ',' + this.state.state + ',' + 'complaint' + ',' + 284 + ','
+                    + 46 + ',' + 58 + ',' + this.state.description);
+            });
+    }
+
+    uploadPic(svrResponseMsg) {
+        if (this.state.currLatForm == null) {
+            this.setState({currLatForm: "-"});
+            this.setState({currLonForm: "-"});
+        }
+        CaseService.attachPicture(this.cToken, this.image, this.currLonForm, this.currLatForm)
+            .then(response => {
+                const PIC_GPS = response;
+                if (this.PIC_GPS.response == "FAILED") {
+                    // loader.dismiss();
+                    alert(this.PIC_GPS.status);
+                    //this.createForm.reset();
+                }
+                else {
+                    alert(this.PIC_GPS.status);
+
+                    this.image = null;
+                    this.currLon = null;
+                    this.currLat = null;
+                    this.currLatForm = null;
+                    this.currLonForm = null;
+                    this.createForm.reset();
+                    // this.closeCreateCaseModal();
+                    // this.navCtrl.push(TrackingPage);
+                    alert(svrResponseMsg);
+                }
+            }, errorMsg => { console.log(errorMsg) });
+    };
+
+    //location mapp
+    location(state) {
+        console.log(state);
+        if (this.state.state == 'JOHOR') {
+            this.setState({stateID: 124});
+        }
+        else if (state == 'KEDAH/PERLIS') {
+            this.stateID = 127;
+        }
+        else if (state == 'KELANTAN') {
+            this.stateID = 133;
+        }
+        else if (state == 'KUALA LUMPUR') {
+            this.stateID = 139;
+        }
+        else if (state == 'MELAKA') {
+            this.stateID = 142;
+        }
+        else if (state == 'MSC') {
+            this.stateID = 145;
+        }
+        else if (state == 'NEGERI SEMBILAN') {
+            this.stateID = 148;
+        }
+        else if (state == 'PAHANG') {
+            this.stateID = 151;
+        }
+        else if (state == 'PERAK') {
+            this.stateID = 157;
+        }
+        else if (state == 'PETALING JAYA') {
+            this.stateID = 163;
+        }
+        else if (state == 'PULAU PINANG') {
+            this.stateID = 154;
+        }
+        else if (state == 'SABAH') {
+            this.stateID = 166;
+        }
+        else if (state == 'SARAWAK') {
+            this.stateID = 169;
+        }
+        else if (state == 'SELANGOR') {
+            this.stateID = 160;
+        }
+        else if (state == 'TERENGGANU') {
+            this.stateID = 136;
+        }
+    }
+
+    render() {
+        return (
+            <form onSubmit={this.onSubmit}>
+                <div>
+                    <label for='customerName'>Customer Name*</label>
+                    <div>
+                        <input type='text' id='customerName' name='customerName' placeholder='example: Mr Ahmad/Ms Chiu/Mr Rama' value={this.state.name} onChange={this.handleCustomerName} />
+                    </div>
+                </div>
+
+                <div>
+                    <label for='customerNumber'>Customer Mobile Number*</label>
+                    <div>
+                        <input type='tel' id='customerNumber' name='customerName' min={0} placeholder='example: 0123456789' value={this.state.mobileNumber} onChange={this.handleCustomerMobileNumber} />
+                    </div>
+                </div>
+
+                <div>
+                    <label for='description'>Description*</label>
+                    <div>
+                        <input type='text' id='description' name='userDescription' placeholder='example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps' value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} />
+                    </div>
+                </div>
+
+                <div>
+                    <label for='type'>Type*</label>
+
+                    <div>
+                        <select id='type' name='type' value={this.state.type} onChange={this.handleSelectType}>
+                            <option value='empty' disabled>Select one</option>
+                            <option value='biling'>Biling</option>
+                            <option value='install'>Installation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for='product'>Product*</label>
+
+                    <div>
+                        <select id='product' name='product' value={this.state.product} onChange={this.handleSelectProduct}>
+                            <option value='empty'>Select one</option>
+                            <option value='broadband'>Broadband</option>
+                            <option value='telephony'>Telephony</option>
+                            <option value='mobile'>unifi Mobile</option>
+                            <option value='tv'>unifi TV</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for='location'>Location*</label>
+
+                    <div>
+                        <select id='location' name='location' value={this.state.location} onChange={this.handleSelectLocation}>
+                            <option value='empty'>Select one</option>
+                            <option value='johor'>Johor</option>
+                            <option value='kedah/perlis'>Kedah/Perlis</option>
+                            <option value='kelantan'>Kelantan</option>
+                            <option value='kl'>Kuala Lumpur</option>
+                            <option value='melaka'>Melaka</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <h5>Attachment</h5>
+                    {this.state.image && <img src={this.state.image} />}
+                    <input type='file' name='imageAttach' onChange={this.onImageChange} />
+                </div>
+
+                <input type='submit' title='Submit'/>
+            </form>
+        )
+    }
+}
+
+export default NonTechnicalCase;
