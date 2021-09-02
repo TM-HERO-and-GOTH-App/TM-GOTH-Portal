@@ -6,7 +6,7 @@ const CaseService = {
 
 		return fetch(baseCaseUrl + '/submit', {
 			method: 'POST',
-            headers,
+            headers: headers,
             body: JSON.stringify({
                 authToken: authToken,
                 customerName: customer_name,
@@ -23,6 +23,29 @@ const CaseService = {
 		})
 			.then(res => res.json())
 			.catch((err) => console.log(err));
+	},
+
+    createCase(authToken, customer_name, IC_NO, Mobile_NO, Case_Content,areaLocation,flag,sourceID) {
+		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
+
+		return fetch(this.baseCaseUrl + '/create-from-app', {
+			method: 'POST',
+            headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                customerName: customer_name,
+                nricNum: IC_NO,
+                mobileNum: Mobile_NO,
+                caseContent: Case_Content,
+                areaLocationID: areaLocation,
+                flag: flag,
+                sourceID: sourceID
+            })
+		})
+			.timeout(120000)
+			.then(res => res.json())
+			//.catch((res: any) => Observable.throw(alert('Oops, there\'s a problem connecting'))
+			.catch(err => console.log(err));
 	},
 
     attachPicture(authToken, cToken, filename, geotag_longitude, geotag_latitude) {

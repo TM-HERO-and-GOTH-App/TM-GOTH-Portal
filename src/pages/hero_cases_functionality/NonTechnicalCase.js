@@ -17,9 +17,9 @@ class NonTechnicalCase extends React.Component {
             currLat: '',
             currLon: '',
             state: '',
+            cToken: '',
+            token: localStorage.getItem('userToken')
         }
-        this.handleCustomerName = this.handleCustomerName.bind(this);
-        this.handleCustomerMobileNumber = this.handleCustomerMobileNumber.bind(this);
         this.handleSelectType = this.handleSelectType.bind(this);
         this.handleSelectProduct = this.handleSelectProduct.bind(this);
         this.handleSelectLocation = this.handleSelectLocation.bind(this);
@@ -28,14 +28,6 @@ class NonTechnicalCase extends React.Component {
         this.uploadPic = this.uploadPic.bind(this);
         this.location = this.location.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    handleCustomerName(e) {
-        this.setState({ name: e.target.value })
-    }
-
-    handleCustomerMobileNumber(e) {
-        this.setState({ mobileNumber: e.target.value })
     }
 
     handleSelectType(e) {
@@ -50,7 +42,7 @@ class NonTechnicalCase extends React.Component {
         this.setState({ location: e.target.value });
     }
 
-    onImageChange = event => {
+    onImageChange(event) {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
             this.setState({
@@ -66,23 +58,26 @@ class NonTechnicalCase extends React.Component {
     }
 
     createCase() {
-        CaseService.createSubmit(this.customerName, this.customerMobile, this.item, this.stateID, 284, 46, this.customerDesc, this.herobuddyResponses)
+        CaseService.createSubmit(this.state.token[0].authToken, this.state.name, this.state.mobileNumber, this.item, this.state.state, 284, 46, this.state.description, this.herobuddyResponses)
             .then(response => {
                 const svrResponse = response;
-                if (svrResponse.response == 'OK') {
-                    const cToken = svrResponse.cToken;
+                console.log(response)
+                if (response.response === 'OK') {
+                    this.setState({cToken: svrResponse.cToken});
                     //----------no have pic-------------------
-                    if (this.state.image == null) {
+                    if (this.state.image === null) {
                         //----------for null latlong-------------------
                         if (this.state.currLatForm == null) {
                             this.setState({currLon: null});
                             this.setState({currLat: null});
                             //this.showSuccessAlert(this.svrResponseMsg);    
+                            alert(this.svrResponseMsg);    
                             // this.navCtrl.push(TrackingPage);
                             //----------for have latlong-------------------
                         } else {
-                            this.state.image = "";
-                            //this.showSuccessAlert('Case', this.svrResponse.status);
+                            this.setState({image: ""});
+                            // this.showSuccessAlert('Case', this.svrResponse.status);
+                            alert(svrResponse.status);
                             this.uploadPic(svrResponse.status);
                         }
                     }
@@ -92,7 +87,7 @@ class NonTechnicalCase extends React.Component {
                         this.uploadPic(svrResponse.status);
                     }
                 } else {
-                    alert('Case', 'Failed to create case');
+                    alert('Failed to create case');
                 }
                 console.log(this.state.name + ',' + this.state.mobileNumber + ',' + this.state.type + ',' + this.state.state + ',' + 'complaint' + ',' + 284 + ','
                     + 46 + ',' + 58 + ',' + this.state.description);
@@ -104,7 +99,7 @@ class NonTechnicalCase extends React.Component {
             this.setState({currLatForm: "-"});
             this.setState({currLonForm: "-"});
         }
-        CaseService.attachPicture(this.cToken, this.image, this.currLonForm, this.currLatForm)
+        CaseService.attachPicture(this.token, this.cToken, this.image, this.currLonForm, this.currLatForm)
             .then(response => {
                 const PIC_GPS = response;
                 if (this.PIC_GPS.response == "FAILED") {
@@ -115,12 +110,11 @@ class NonTechnicalCase extends React.Component {
                 else {
                     alert(this.PIC_GPS.status);
 
-                    this.image = null;
-                    this.currLon = null;
-                    this.currLat = null;
-                    this.currLatForm = null;
-                    this.currLonForm = null;
-                    this.createForm.reset();
+                    this.setState({image: null});
+                    this.setState({currLon: null});
+                    this.setState({currLat: null});
+                    this.setState({currLatForm: null});
+                    this.setState({currLonForm: null});
                     // this.closeCreateCaseModal();
                     // this.navCtrl.push(TrackingPage);
                     alert(svrResponseMsg);
@@ -184,14 +178,14 @@ class NonTechnicalCase extends React.Component {
                 <div>
                     <label for='customerName'>Customer Name*</label>
                     <div>
-                        <input type='text' id='customerName' name='customerName' placeholder='example: Mr Ahmad/Ms Chiu/Mr Rama' value={this.state.name} onChange={this.handleCustomerName} />
+                        <input type='text' id='customerName' name='customerName' placeholder='example: Mr Ahmad/Ms Chiu/Mr Rama' value={this.state.name} onChange={(e) => this.setState({name: e.target.value})} />
                     </div>
                 </div>
 
                 <div>
                     <label for='customerNumber'>Customer Mobile Number*</label>
                     <div>
-                        <input type='tel' id='customerNumber' name='customerName' min={0} placeholder='example: 0123456789' value={this.state.mobileNumber} onChange={this.handleCustomerMobileNumber} />
+                        <input type='tel' id='customerNumber' name='customerName' min={0} placeholder='example: 0123456789' value={this.state.mobileNumber} onChange={(e) => this.setState({mobileNumber: e.target.value})} />
                     </div>
                 </div>
 

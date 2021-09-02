@@ -50,6 +50,7 @@ class Loginbox extends React.Component {
         console.log('Email does not exist')
       } else {
         const authToken = response[0].authToken;
+        localStorage.setItem('userToken', JSON.stringify(response));
         this.signIn(authToken, email, password);
       }
     })
