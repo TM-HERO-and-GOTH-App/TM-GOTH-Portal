@@ -100,7 +100,7 @@ class NonTechnicalCase extends React.Component {
             this.setState({ currLatForm: "-" });
             this.setState({ currLonForm: "-" });
         }
-        CaseService.attachPicture(this.state.token, this.cToken, this.image, this.currLonForm, this.currLatForm)
+        CaseService.attachPicture(this.state.token, this.state.cToken, this.state.image, this.currLonForm, this.currLatForm)
             .then(response => {
                 const PIC_GPS = response;
                 if (this.PIC_GPS.response == "FAILED") {

@@ -28,9 +28,9 @@ const CaseService = {
     createCase(authToken, customer_name, IC_NO, Mobile_NO, Case_Content,areaLocation,flag,sourceID) {
 		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
-		return fetch(this.baseCaseUrl + '/create-from-app', {
+		return fetch(baseCaseUrl + '/create-from-app', {
 			method: 'POST',
-            headers,
+            headers: headers,
             body: JSON.stringify({
                 authToken: authToken,
                 customerName: customer_name,
@@ -42,7 +42,6 @@ const CaseService = {
                 sourceID: sourceID
             })
 		})
-			.timeout(120000)
 			.then(res => res.json())
 			//.catch((res: any) => Observable.throw(alert('Oops, there\'s a problem connecting'))
 			.catch(err => console.log(err));
@@ -51,7 +50,7 @@ const CaseService = {
     attachPicture(authToken, cToken, filename, geotag_longitude, geotag_latitude) {
 		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
-		return fetch(this.baseCaseUrl + '/attach-picture', {
+		return fetch(baseCaseUrl + '/attach-picture', {
 			method: 'POST',
             headers,
             body: JSON.stringify({

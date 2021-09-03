@@ -27,6 +27,7 @@ import EditUser from './pages/user_profile/EditUserProfile';
 import Quicksearch from './pages/Quicksearch';
 import NonTechnicalCase from './pages/hero_cases_functionality/NonTechnicalCase';
 import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
+import CautionReport from './pages/hero_cases_functionality/CautionReport';
 
 function App() {
   return ( 
@@ -63,6 +64,7 @@ function App() {
         <Route path="/create_case"                       component={Createcase} />
         <Route path='/non_technical_case'                  component={NonTechnicalCase} />
         <Route path='/technical_case'                  component={TechnicalCase} />
+        <Route path='/caution_report'                  component={CautionReport} />
       </Switch>
     </Router>
     );

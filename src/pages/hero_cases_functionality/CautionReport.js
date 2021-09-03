@@ -1,7 +1,7 @@
 import React from 'react';
 import CaseService from '../../web_service/login_web_service/CaseService';
 
-class TechnicalCase extends React.Component {
+class CautionReport extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -9,7 +9,6 @@ class TechnicalCase extends React.Component {
             mobileNumber: '',
             description: '',
             type: 'assurance',
-            product: 'empty',
             location: 'empty',
             image: null,
             currLatForm: '',
@@ -20,16 +19,11 @@ class TechnicalCase extends React.Component {
             lovData: JSON.parse(localStorage.getItem('LovData'))
         }
         this.handleSelectLocation = this.handleSelectLocation.bind(this);
-        this.handleSelectProduct = this.handleSelectProduct.bind(this);
         this.onImageChange = this.onImageChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.createCase = this.createCase.bind(this);
         this.uploadPic = this.uploadPic.bind(this);
         this.location = this.location.bind(this);
-    }
-
-    handleSelectProduct(e) {
-        this.setState({ product: e.target.value });
     }
 
     handleSelectLocation(e) {
@@ -198,20 +192,6 @@ class TechnicalCase extends React.Component {
                     </div>
 
                     <div>
-                        <label for='product'>Product*</label>
-
-                        <div>
-                            <select id='product' name='product' value={this.state.product} onChange={this.handleSelectProduct}>
-                                <option value='empty'>Select one</option>
-                                <option value='broadband'>Broadband</option>
-                                <option value='telephony'>Telephony</option>
-                                <option value='mobile'>unifi Mobile</option>
-                                <option value='tv'>unifi TV</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
                         <label for='location'>Location*</label>
 
                         <div>
@@ -236,4 +216,4 @@ class TechnicalCase extends React.Component {
         }
     }
 
-    export default TechnicalCase;
+    export default CautionReport;
