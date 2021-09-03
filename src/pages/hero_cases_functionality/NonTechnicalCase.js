@@ -18,7 +18,8 @@ class NonTechnicalCase extends React.Component {
             currLon: '',
             state: '',
             cToken: '',
-            token: localStorage.getItem('userToken')
+            token: JSON.parse(localStorage.getItem('userToken')),
+            lovData: JSON.parse(localStorage.getItem('LovData'))
         }
         this.handleSelectType = this.handleSelectType.bind(this);
         this.handleSelectProduct = this.handleSelectProduct.bind(this);
@@ -58,24 +59,24 @@ class NonTechnicalCase extends React.Component {
     }
 
     createCase() {
-        CaseService.createSubmit(this.state.token[0].authToken, this.state.name, this.state.mobileNumber, this.item, this.state.state, 284, 46, this.state.description, this.herobuddyResponses)
+        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, this.item, this.state.state, 284, 46, this.state.description, this.herobuddyResponses)
             .then(response => {
                 const svrResponse = response;
                 console.log(response)
-                if (response.response === 'OK') {
-                    this.setState({cToken: svrResponse.cToken});
+                if (response.response == 'OK') {
+                    this.setState({ cToken: svrResponse.cToken });
                     //----------no have pic-------------------
                     if (this.state.image === null) {
                         //----------for null latlong-------------------
                         if (this.state.currLatForm == null) {
-                            this.setState({currLon: null});
-                            this.setState({currLat: null});
+                            this.setState({ currLon: null });
+                            this.setState({ currLat: null });
                             //this.showSuccessAlert(this.svrResponseMsg);    
-                            alert(this.svrResponseMsg);    
+                            alert(this.svrResponseMsg);
                             // this.navCtrl.push(TrackingPage);
                             //----------for have latlong-------------------
                         } else {
-                            this.setState({image: ""});
+                            this.setState({ image: "" });
                             // this.showSuccessAlert('Case', this.svrResponse.status);
                             alert(svrResponse.status);
                             this.uploadPic(svrResponse.status);
@@ -96,8 +97,8 @@ class NonTechnicalCase extends React.Component {
 
     uploadPic(svrResponseMsg) {
         if (this.state.currLatForm == null) {
-            this.setState({currLatForm: "-"});
-            this.setState({currLonForm: "-"});
+            this.setState({ currLatForm: "-" });
+            this.setState({ currLonForm: "-" });
         }
         CaseService.attachPicture(this.token, this.cToken, this.image, this.currLonForm, this.currLatForm)
             .then(response => {
@@ -110,11 +111,11 @@ class NonTechnicalCase extends React.Component {
                 else {
                     alert(this.PIC_GPS.status);
 
-                    this.setState({image: null});
-                    this.setState({currLon: null});
-                    this.setState({currLat: null});
-                    this.setState({currLatForm: null});
-                    this.setState({currLonForm: null});
+                    this.setState({ image: null });
+                    this.setState({ currLon: null });
+                    this.setState({ currLat: null });
+                    this.setState({ currLatForm: null });
+                    this.setState({ currLonForm: null });
                     // this.closeCreateCaseModal();
                     // this.navCtrl.push(TrackingPage);
                     alert(svrResponseMsg);
@@ -126,7 +127,7 @@ class NonTechnicalCase extends React.Component {
     location(state) {
         console.log(state);
         if (this.state.state == 'JOHOR') {
-            this.setState({stateID: 124});
+            this.setState({ stateID: 124 });
         }
         else if (state == 'KEDAH/PERLIS') {
             this.stateID = 127;
@@ -174,18 +175,18 @@ class NonTechnicalCase extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.locationOption}>
                 <div>
                     <label for='customerName'>Customer Name*</label>
                     <div>
-                        <input type='text' id='customerName' name='customerName' placeholder='example: Mr Ahmad/Ms Chiu/Mr Rama' value={this.state.name} onChange={(e) => this.setState({name: e.target.value})} />
+                        <input type='text' id='customerName' name='customerName' placeholder='example: Mr Ahmad/Ms Chiu/Mr Rama' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
                     </div>
                 </div>
 
                 <div>
                     <label for='customerNumber'>Customer Mobile Number*</label>
                     <div>
-                        <input type='tel' id='customerNumber' name='customerName' min={0} placeholder='example: 0123456789' value={this.state.mobileNumber} onChange={(e) => this.setState({mobileNumber: e.target.value})} />
+                        <input type='tel' id='customerNumber' name='customerName' min={0} placeholder='example: 0123456789' value={this.state.mobileNumber} onChange={(e) => this.setState({ mobileNumber: e.target.value })} />
                     </div>
                 </div>
 
@@ -227,12 +228,10 @@ class NonTechnicalCase extends React.Component {
 
                     <div>
                         <select id='location' name='location' value={this.state.location} onChange={this.handleSelectLocation}>
-                            <option value='empty'>Select one</option>
-                            <option value='johor'>Johor</option>
-                            <option value='kedah/perlis'>Kedah/Perlis</option>
-                            <option value='kelantan'>Kelantan</option>
-                            <option value='kl'>Kuala Lumpur</option>
-                            <option value='melaka'>Melaka</option>
+                            { this.state.lovData.filter(lov => lov.lovGroup == "AREA-LOCATION").map(data => {
+                                <option key={data.lovID} value={data}>{data.lovName}</option>
+                            })
+                            }
                         </select>
                     </div>
                 </div>
@@ -243,7 +242,7 @@ class NonTechnicalCase extends React.Component {
                     <input type='file' name='imageAttach' onChange={this.onImageChange} />
                 </div>
 
-                <input type='submit' title='Submit'/>
+                <input type='submit' title='Submit' />
             </form>
         )
     }
