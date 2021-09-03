@@ -16,8 +16,8 @@ class NonTechnicalCase extends React.Component {
             currLatForm: '',
             currLat: '',
             currLon: '',
-            state: '',
             cToken: '',
+            stateID: '',
             token: JSON.parse(localStorage.getItem('userToken')),
             lovData: JSON.parse(localStorage.getItem('LovData'))
         }
@@ -54,15 +54,15 @@ class NonTechnicalCase extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        this.location(this.state);
+        this.location(this.state.location);
         this.createCase();
     }
 
     createCase() {
-        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, this.item, this.state.state, 284, 46, this.state.description, this.herobuddyResponses)
+        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, this.item, this.state.location, 284, 46, this.state.description, this.state.stateID, this.herobuddyResponses)
             .then(response => {
                 const svrResponse = response;
-                console.log(response)
+                console.log(response);
                 if (response.response == 'OK') {
                     this.setState({ cToken: svrResponse.cToken });
                     //----------no have pic-------------------
@@ -90,8 +90,8 @@ class NonTechnicalCase extends React.Component {
                 } else {
                     alert('Failed to create case');
                 }
-                console.log(this.state.name + ',' + this.state.mobileNumber + ',' + this.state.type + ',' + this.state.state + ',' + 'complaint' + ',' + 284 + ','
-                    + 46 + ',' + 58 + ',' + this.state.description);
+                console.log(this.state.name + ',' + this.state.mobileNumber + ',' + this.state.type + ',' + this.state.location + ',' + 'complaint' + ',' + 284 + ','
+                    + 46 + ',' + 58 + ',' + this.state.stateID + ',' + this.state.description);
             });
     }
 
@@ -100,7 +100,7 @@ class NonTechnicalCase extends React.Component {
             this.setState({ currLatForm: "-" });
             this.setState({ currLonForm: "-" });
         }
-        CaseService.attachPicture(this.token, this.cToken, this.image, this.currLonForm, this.currLatForm)
+        CaseService.attachPicture(this.state.token, this.cToken, this.image, this.currLonForm, this.currLatForm)
             .then(response => {
                 const PIC_GPS = response;
                 if (this.PIC_GPS.response == "FAILED") {
@@ -126,56 +126,56 @@ class NonTechnicalCase extends React.Component {
     //location mapp
     location(state) {
         console.log(state);
-        if (this.state.state == 'JOHOR') {
+        if (state == 'JOHOR') {
             this.setState({ stateID: 124 });
         }
         else if (state == 'KEDAH/PERLIS') {
-            this.stateID = 127;
+            this.setState({stateID: 127});
         }
         else if (state == 'KELANTAN') {
-            this.stateID = 133;
+            this.setState({stateID: 133});
         }
         else if (state == 'KUALA LUMPUR') {
-            this.stateID = 139;
+            this.setState({stateID: 139});
         }
         else if (state == 'MELAKA') {
-            this.stateID = 142;
+            this.setState({stateID: 142});
         }
         else if (state == 'MSC') {
-            this.stateID = 145;
+            this.setState({stateID: 145});
         }
         else if (state == 'NEGERI SEMBILAN') {
-            this.stateID = 148;
+            this.setState({stateID: 148});
         }
         else if (state == 'PAHANG') {
-            this.stateID = 151;
+            this.setState({stateID: 151});
         }
         else if (state == 'PERAK') {
-            this.stateID = 157;
+            this.setState({stateID: 157});
         }
         else if (state == 'PETALING JAYA') {
             this.stateID = 163;
         }
         else if (state == 'PULAU PINANG') {
-            this.stateID = 154;
+            this.setState({stateID: 154});
         }
         else if (state == 'SABAH') {
-            this.stateID = 166;
+            this.setState({stateID: 166});
         }
         else if (state == 'SARAWAK') {
-            this.stateID = 169;
+            this.setState({stateID: 169});
         }
         else if (state == 'SELANGOR') {
-            this.stateID = 160;
+            this.setState({stateID: 160});
         }
         else if (state == 'TERENGGANU') {
-            this.stateID = 136;
+            this.setState({stateID: 136});
         }
     }
 
     render() {
         return (
-            <form onSubmit={this.locationOption}>
+            <form onSubmit={this.onSubmit}>
                 <div>
                     <label for='customerName'>Customer Name*</label>
                     <div>
@@ -228,10 +228,10 @@ class NonTechnicalCase extends React.Component {
 
                     <div>
                         <select id='location' name='location' value={this.state.location} onChange={this.handleSelectLocation}>
-                            { this.state.lovData.filter(lov => lov.lovGroup == "AREA-LOCATION").map(data => {
-                                <option key={data.lovID} value={data}>{data.lovName}</option>
-                            })
-                            }
+                            <option value='empty' disabled>Select one</option>
+                            { this.state.lovData.filter(lov => lov.lovGroup == "AREA-LOCATION").map(data => 
+                                <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                            )}
                         </select>
                     </div>
                 </div>
