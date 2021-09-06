@@ -59,12 +59,11 @@ class NonTechnicalCase extends React.Component {
     }
 
     createCase() {
-        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, this.item, this.state.location, 284, 46, this.state.description, this.state.stateID, this.herobuddyResponses)
-            .then(response => {
-                const svrResponse = response;
+        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, this.item, this.state.stateID, 284, 46, this.state.description, this.state.stateID)
+            .then((response) => {
                 console.log(response);
                 if (response.response == 'OK') {
-                    this.setState({ cToken: svrResponse.cToken });
+                    this.setState({ cToken: response.cToken });
                     //----------no have pic-------------------
                     if (this.state.image === null) {
                         //----------for null latlong-------------------
@@ -72,20 +71,20 @@ class NonTechnicalCase extends React.Component {
                             this.setState({ currLon: null });
                             this.setState({ currLat: null });
                             //this.showSuccessAlert(this.svrResponseMsg);    
-                            alert(this.svrResponseMsg);
+                            alert(response);
                             // this.navCtrl.push(TrackingPage);
                             //----------for have latlong-------------------
                         } else {
                             this.setState({ image: "" });
                             // this.showSuccessAlert('Case', this.svrResponse.status);
-                            alert(svrResponse.status);
-                            this.uploadPic(svrResponse.status);
+                            alert(response.status);
+                            this.uploadPic(response.status);
                         }
                     }
                     //----------for have pic-------------------
                     else {
                         //this.showSuccessAlert('Case', this.svrResponse.status);
-                        this.uploadPic(svrResponse.status);
+                        this.uploadPic(response.status);
                     }
                 } else {
                     alert('Failed to create case');
@@ -125,50 +124,49 @@ class NonTechnicalCase extends React.Component {
 
     //location mapp
     location(state) {
-        console.log(state);
-        if (state == 'JOHOR') {
+        if (state == 'Johor') {
             this.setState({ stateID: 124 });
         }
-        else if (state == 'KEDAH/PERLIS') {
+        else if (state == 'Kedah/Perlis') {
             this.setState({stateID: 127});
         }
-        else if (state == 'KELANTAN') {
+        else if (state == 'Kelantan') {
             this.setState({stateID: 133});
         }
-        else if (state == 'KUALA LUMPUR') {
+        else if (state == 'Kuala Lumpur') {
             this.setState({stateID: 139});
         }
-        else if (state == 'MELAKA') {
+        else if (state == 'Melaka') {
             this.setState({stateID: 142});
         }
         else if (state == 'MSC') {
             this.setState({stateID: 145});
         }
-        else if (state == 'NEGERI SEMBILAN') {
+        else if (state == 'Negeri Sembilan') {
             this.setState({stateID: 148});
         }
-        else if (state == 'PAHANG') {
+        else if (state == 'Pahang') {
             this.setState({stateID: 151});
         }
-        else if (state == 'PERAK') {
+        else if (state == 'Perak') {
             this.setState({stateID: 157});
         }
-        else if (state == 'PETALING JAYA') {
-            this.stateID = 163;
+        else if (state == 'Petaling Jaya') {
+            this.setState({ stateID: 163 })
         }
-        else if (state == 'PULAU PINANG') {
+        else if (state == 'Pulau Pinang') {
             this.setState({stateID: 154});
         }
-        else if (state == 'SABAH') {
+        else if (state == 'Sabah') {
             this.setState({stateID: 166});
         }
-        else if (state == 'SARAWAK') {
+        else if (state == 'Sarawak') {
             this.setState({stateID: 169});
         }
-        else if (state == 'SELANGOR') {
+        else if (state == 'Selangor') {
             this.setState({stateID: 160});
         }
-        else if (state == 'TERENGGANU') {
+        else if (state == 'Terengganu') {
             this.setState({stateID: 136});
         }
     }
