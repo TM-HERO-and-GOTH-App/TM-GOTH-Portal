@@ -1,8 +1,19 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
 import LoginWebservice from '../web_service/login_web_service/LoginService';
-// import firebase from 'firebase';
-// import { collection, getDocs } from 'firebase/firestore'
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import {  getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
+
+const firebaseConfig = {
+  // Your Firebase data in the console setting
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const auth = getAuth();
+
 
 class Loginbox extends React.Component {
   constructor(props) {
@@ -29,18 +40,23 @@ class Loginbox extends React.Component {
     this.setState({ userPassword: e.target.value })
   }
 
-  handleSubmit(e, email, password) {
+  async handleSubmit(e, email, password) {
     e.preventDefault();
     email = this.state.userEmail;
     password = this.state.userPassword;
-
-    // const db = firebase.firestore();
-    // const querySnapshot = getDocs(collection(db, "users"));
-    // querySnapshot.forEach((doc) => {
-    //   console.log(`${doc.id} => ${doc.data()}`);
-    // });
-
     this.auth(email, password)
+
+    // signInWithEmailAndPassword(auth, this.state.userEmail, this.state.userPassword)
+    //   .then((userCredential) => {
+    //     const user = userCredential.user;
+    //     console.log(user);
+    //     this.props.history.push('/');
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorMessage)
+    //   });
   }
 
   auth(email, password) {
@@ -84,7 +100,7 @@ class Loginbox extends React.Component {
     LoginWebservice.getSystemLOV(authToken).then(response => {
       console.log(response);
       localStorage.setItem('LovData', JSON.stringify(response));
-      this.props.history.push('/', this.state);
+      this.props.history.push('/');
     })
   }
 
