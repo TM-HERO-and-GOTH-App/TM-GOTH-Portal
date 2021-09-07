@@ -59,7 +59,7 @@ class NonTechnicalCase extends React.Component {
     }
 
     createCase() {
-        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, this.item, this.state.stateID, 284, 46, this.state.description, this.state.stateID)
+        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, 'item', this.state.stateID, 284, 46, this.state.description,  '')
             .then((response) => {
                 console.log(response);
                 if (response.response == 'OK') {
@@ -102,7 +102,7 @@ class NonTechnicalCase extends React.Component {
         CaseService.attachPicture(this.state.token, this.state.cToken, this.state.image, this.currLonForm, this.currLatForm)
             .then(response => {
                 const PIC_GPS = response;
-                if (this.PIC_GPS.response == "FAILED") {
+                if (PIC_GPS.response == "FAILED") {
                     // loader.dismiss();
                     alert(this.PIC_GPS.status);
                     //this.createForm.reset();
