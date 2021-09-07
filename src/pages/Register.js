@@ -1,6 +1,9 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
 import SignupService from '../web_service/login_web_service/SignupService';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const auth = getAuth();
 
 class Register extends React.Component {
   constructor(props){
@@ -10,11 +13,13 @@ class Register extends React.Component {
       fullname: '',
       password: '',
       repeatPassword: '',
-      mobileNumber: ''
+      mobileNumber: '',
+      incomplete: false
     }
     this.handleChange = this.handleChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.signup = this.signup.bind(this);
+    this.firebaseSignup = this.firebaseSignup.bind(this);
   }
 
   handleChange(e){
@@ -28,15 +33,28 @@ class Register extends React.Component {
     this.signup();
   }
 
-  signup(){
+  signup(e){
     SignupService.signup(this.state.email, this.state.fullname, this.state.password, this.state.repeatPassword, this.state.mobileNumber).then(response => {
       console.log(response)
-      console.log(this.state.email, this.state.fullname, this.state.password, this.state.repeatPassword, this.state.mobileNumber)
-      // if(response.response == 'OK'){
-      //   this.props.history.push('/');
-      // } else{
-      //   alert(response.message);
-      // }
+      if(this.state.email === '' || this.state.fullname === '' || this.state.password === '' || this.state.repeatPassword === '' || this.state.mobileNumber === ''){
+        this.setState({incomplete: true})
+      } else{
+        console.log('Registered Successful')
+        this.props.history.push('/')
+      }
+    })
+  }
+
+  firebaseSignup(e){
+    e.preventDefault();
+    createUserWithEmailAndPassword(auth, this.state.email, this.state.password).then((newUser) => {
+      if(newUser){
+        alert('New user have been created');
+        console.log(newUser)
+        this.props.history.push('/')
+      } else {
+        alert('Failedd')
+      }
     })
   }
 
@@ -55,9 +73,12 @@ class Register extends React.Component {
                 <p>All inputs below are compulsory. Thank you</p>
                 <form onSubmit={this.onSubmit}>
                   <fieldset>
-                    <div className="alert alert-">
-                      <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
-                    </div>
+                    { 
+                      this.state.incomplete ? <div className="alert alert-">
+                        Please insert all required value
+                        <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
+                      </div> : null 
+                    }
                     <label className="block clearfix">
                       <span className="block input-icon input-icon-right">
                         <input type="email" className="form-control" placeholder="Email (as your Login ID)" name="email" value={this.state.email} onChange={this.handleChange}/>

@@ -1,7 +1,6 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
 import LoginWebservice from '../web_service/login_web_service/LoginService';
-import db from '../firebase_login/LoginAuth';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
 
 const auth = getAuth();
@@ -22,6 +21,7 @@ class Loginbox extends React.Component {
     this.getLoggerProfile = this.getLoggerProfile.bind(this);
     this.getLov = this.getLov.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.firebaseLogin = this.firebaseLogin.bind(this);
   }
 
   handleEmail(e) {
@@ -32,23 +32,29 @@ class Loginbox extends React.Component {
     this.setState({ userPassword: e.target.value })
   }
 
+  firebaseLogin(e){
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, this.state.userEmail, this.state.userPassword)
+      .then((userCredential) => {
+        if(userCredential){
+          console.log(userCredential);
+          this.props.history.push('/');
+        } else{
+          alert('Email or password is wrong or does not exist')
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage)
+      });
+  }
+
   handleSubmit(e, email, password) {
     e.preventDefault();
     email = this.state.userEmail;
     password = this.state.userPassword;
     this.auth(email, password)
-
-    // signInWithEmailAndPassword(auth, this.state.userEmail, this.state.userPassword)
-    //   .then((userCredential) => {
-    //     const user = userCredential.user;
-    //     console.log(user);
-    //     this.props.history.push('/');
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorMessage)
-    //   });
   }
 
   auth(email, password) {
