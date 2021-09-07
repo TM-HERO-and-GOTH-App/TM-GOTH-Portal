@@ -1,16 +1,8 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
 import LoginWebservice from '../web_service/login_web_service/LoginService';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import {  getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
-
-const firebaseConfig = {
-  // Your Firebase data in the console setting
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import db from '../firebase_login/LoginAuth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
 
 const auth = getAuth();
 
@@ -40,7 +32,7 @@ class Loginbox extends React.Component {
     this.setState({ userPassword: e.target.value })
   }
 
-  async handleSubmit(e, email, password) {
+  handleSubmit(e, email, password) {
     e.preventDefault();
     email = this.state.userEmail;
     password = this.state.userPassword;

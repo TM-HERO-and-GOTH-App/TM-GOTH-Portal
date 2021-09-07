@@ -1,8 +1,44 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
+import SignupService from '../web_service/login_web_service/SignupService';
 
 class Register extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      email: '',
+      fullname: '',
+      password: '',
+      repeatPassword: '',
+      mobileNumber: ''
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.signup = this.signup.bind(this);
+  }
 
+  handleChange(e){
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  onSubmit(e){
+    e.preventDefault();
+    this.signup();
+  }
+
+  signup(){
+    SignupService.signup(this.state.email, this.state.fullname, this.state.password, this.state.repeatPassword, this.state.mobileNumber).then(response => {
+      console.log(response)
+      console.log(this.state.email, this.state.fullname, this.state.password, this.state.repeatPassword, this.state.mobileNumber)
+      // if(response.response == 'OK'){
+      //   this.props.history.push('/');
+      // } else{
+      //   alert(response.message);
+      // }
+    })
+  }
 
   render() {
     return (
@@ -17,38 +53,38 @@ class Register extends React.Component {
                 </h4>
                 <div className="space-6" />
                 <p>All inputs below are compulsory. Thank you</p>
-                <form method="POST" action="/login/signupme/">
+                <form onSubmit={this.onSubmit}>
                   <fieldset>
                     <div className="alert alert-">
                       <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
                     </div>
                     <label className="block clearfix">
                       <span className="block input-icon input-icon-right">
-                        <input type="email" className="form-control" placeholder="Email (as your Login ID)" name="inputs[email]" />
+                        <input type="email" className="form-control" placeholder="Email (as your Login ID)" name="email" value={this.state.email} onChange={this.handleChange}/>
                         <i className="ace-icon fa fa-envelope" />
                       </span>
                     </label>
                     <label className="block clearfix">
                       <span className="block input-icon input-icon-right">
-                        <input type="text" className="form-control" placeholder="Fullname" name="inputs[fullname]" />
+                        <input type="text" className="form-control" placeholder="Fullname" name="fullname" value={this.state.fullname} onChange={this.handleChange}/>
                         <i className="ace-icon fa fa-user" />
                       </span>
                     </label>
                     <label className="block clearfix">
                       <span className="block input-icon input-icon-right">
-                        <input type="password" className="form-control" placeholder="Password" name="password" />
+                        <input type="password" className="form-control" placeholder="Password" name="password" value={this.state.password} onChange={this.handleChange}/>
                         <i className="ace-icon fa fa-lock" />
                       </span>
                     </label>
                     <label className="block clearfix">
                       <span className="block input-icon input-icon-right">
-                        <input type="password" className="form-control" placeholder="Repeat password" name="password2" />
+                        <input type="password" className="form-control" placeholder="Repeat password" name="repeat-password" value={this.state.repeatPassword} onChange={(e) => this.setState({ repeatPassword: e.target.value })}/>
                         <i className="ace-icon fa fa-retweet" />
                       </span>
                     </label>
                     <label className="block clearfix">
                       <span className="block input-icon input-icon-right">
-                        <input type="text" className="form-control" placeholder="Mobile Number" name="Mobilenumber" />
+                        <input type="text" className="form-control" placeholder="Mobile Number" name="Mobilenumber" value={this.state.mobileNumber} onChange={(e) => this.setState({ mobileNumber: e.target.value})}/>
                         <i className="ace-icon fa fa-phone" />
                       </span>
                     </label>
