@@ -1,5 +1,5 @@
 import React from 'react';
-import CaseService from '../../web_service/login_web_service/CaseService';
+import CaseService from '../../web_service/case_service/CaseService';
 
 class TechnicalCase extends React.Component {
     constructor(props) {

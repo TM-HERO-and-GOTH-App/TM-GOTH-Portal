@@ -1,8 +1,28 @@
 import React from 'react';
+import ForgotPasswordService from '../web_service/forgot_password_service/ForgotPassword';
 import LoginTheme from './LoginTheme';
 
 class Forgotpassword extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      email: '',
+      alert: false
+    }
+    this.submitForgotPassword = this.submitForgotPassword.bind(this);
+  }
 
+  submitForgotPassword(e){
+    e.preventDefault();
+    ForgotPasswordService.forgotPassword(this.state.email).then(res => {
+      console.log(res);
+      if(this.state.email === '' || this.state.email === null){
+        this.setState({ alert: true });
+      } else {
+        alert('Sucess')
+      }
+    })
+  }
 
   render() {
     return (
@@ -16,14 +36,17 @@ class Forgotpassword extends React.Component {
               </h4>
               <div className="space-6" />
               <p>Enter your email and to receive further instructions</p>
-              <form method="POST" action="/login/forgotpassword">
+              <form onSubmit={this.submitForgotPassword}>
                 <fieldset>
-                  <div className="alert alert-">
-                    <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
-                  </div>
+                  {
+                    alert === true ? <div className="alert alert-">
+                      The email address does not exist. Your request to reset password was rejected.
+                      <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
+                    </div> : null
+                  }
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
-                      <input type="email" className="form-control" name="email" placeholder="Email" />
+                      <input type="email" className="form-control" name="email" placeholder="Email" value={this.state.email} onChange={(e) => this.setState({email: e.target.value})}/>
                       <i className="ace-icon fa fa-envelope" />
                     </span>
                   </label>

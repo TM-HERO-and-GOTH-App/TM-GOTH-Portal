@@ -1,9 +1,9 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
-import SignupService from '../web_service/login_web_service/SignupService';
+import SignupService from '../web_service/register_service/SignupService';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-const auth = getAuth();
+// const auth = getAuth();
 
 class Register extends React.Component {
   constructor(props){
@@ -45,18 +45,18 @@ class Register extends React.Component {
     })
   }
 
-  firebaseSignup(e){
-    e.preventDefault();
-    createUserWithEmailAndPassword(auth, this.state.email, this.state.password).then((newUser) => {
-      if(newUser){
-        alert('New user have been created');
-        console.log(newUser)
-        this.props.history.push('/')
-      } else {
-        alert('Failedd')
-      }
-    })
-  }
+  // firebaseSignup(e){
+  //   e.preventDefault();
+  //   createUserWithEmailAndPassword(auth, this.state.email, this.state.password).then((newUser) => {
+  //     if(newUser){
+  //       alert('New user have been created');
+  //       console.log(newUser)
+  //       this.props.history.push('/')
+  //     } else {
+  //       alert('Failedd')
+  //     }
+  //   })
+  // }
 
   render() {
     return (
