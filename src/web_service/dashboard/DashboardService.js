@@ -23,7 +23,7 @@ const DashboardService = {
                 shID: shID,
                 day: 5
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     },
 
     getTotalCaseByAgent(authToken){
@@ -33,7 +33,7 @@ const DashboardService = {
             body: JSON.stringify({
                 authToken: authToken
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     },
 
     getTotalCaseByGroup(authToken, shID){
@@ -44,7 +44,31 @@ const DashboardService = {
                 authToken: authToken,
                 shID: shID,
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
+    },
+
+    getTotalRegisteredUserByState(authToken){
+        return fetch( url + '/dashboard/total-hero-by-state/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                startDate: '2018-01-01',
+                endDate: '2018-01-01'
+            })
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
+    },
+
+    getTotalCaseByState(authToken){
+        return fetch( url + '/dashboard/total-case-by-state/',{
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                startDate: '2018-01-01',
+                endDate: '2018-01-01'
+            })
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     }
 }
 

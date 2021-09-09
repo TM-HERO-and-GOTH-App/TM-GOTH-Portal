@@ -9,6 +9,7 @@ class Dashboard extends React.Component {
     this.state = {
       shID: JSON.parse(localStorage.getItem('UserData')),
       token: JSON.parse(localStorage.getItem('userToken')),
+      totalCaseResolveAgent: 0,
       totalCancelAgent: 0,
       totalNewCaseAgent: 0,
       totalClosedAgent: 0,
@@ -20,65 +21,93 @@ class Dashboard extends React.Component {
       totalGroupNewCase: 0,
       totalGroupAssignCase: 0,
       totalGroupInprogressCase: 0,
-      totalGroupCloseCase: 0
+      totalGroupCloseCase: 0,
+      totalRegisterUser: 0,
+      totalOverallCase: 0
     }
     this.getTotalResolvedByAgentData = this.getTotalResolvedByAgentData.bind(this);
     this.getTotalCaseByAgentData = this.getTotalCaseByAgentData.bind(this);
+    this.getTotalCaseResolveByGroupData = this.getTotalCaseResolveByGroupData.bind(this);
     this.getTotalCaseByGroupData = this.getTotalCaseByGroupData.bind(this);
+    this.getRegisterUserData = this.getRegisterUserData.bind(this);
+    this.getTotalCaseByStateData = this.getTotalCaseByStateData.bind(this);
   }
 
   componentDidMount(){
+    this.getTotalResolvedByAgentData()
     this.getTotalCaseByAgentData();
     this.getTotalCaseByGroupData();
+    this.getRegisterUserData();
+    this.getTotalCaseByStateData();
+    // this.getTotalCaseResolveByGroupData();
   }
 
-  getTotalResolvedByAgentData(e) {
-    e.preventDefault();
+  getTotalResolvedByAgentData() {
     DashboardService.getTotalResolvedByAgent(this.state.token).then((res) => {
       console.log(res)
       if(res !== null){
-        this.setState({totalAgentCase: res[0].total});
+        return this.setState({totalCaseResolveAgent: res.map(data => data.total)})
       } else{
-        return this.setState({ totalAgentCase: 0 })
+        return this.state.totalCaseResolveAgent;
       }
     });
   }
 
-  getTotalCaseByAgentData(e){
-    // e.preventDefault();
+  getTotalCaseByAgentData(){
     DashboardService.getTotalCaseByAgent(this.state.token).then(res => {
-      // const data = res[0]
       console.log(res)
-      // console.log(data)
       if(res !== null){
-        this.setState({ totalAssignedAgent: res[0].totalAssigned })
-        this.setState({ totalCancelAgent: res[0].totalCancelled })
-        this.setState({ totalCaseAgent: res[0].totalCase })
-        this.setState({ totalClosedAgent: res[0].totalClosed })
-        this.setState({ totalInProgressAgent: res[0].totalInProgress })
-        this.setState({ totalNewCaseAgent: res[0].totalNew })
+        this.setState({ totalAssignedAgent: res.map(data => data.totalAssigned) })
+        this.setState({ totalCancelAgent: res.map(data => data.totalCancelled) })
+        this.setState({ totalCaseAgent: res.map(data => data.totalCase) })
+        this.setState({ totalClosedAgent: res.map(data => data.totalClosed) })
+        this.setState({ totalInProgressAgent: res.map(data => data.totalInProgress) })
+        this.setState({ totalNewCaseAgent: res.map(data => data.totalNew) })
       } else {
         return 0
       }
     })
   }
 
+  getTotalCaseResolveByGroupData(){
+    const userSHID = this.state.shID.shID
+    DashboardService.getTotalResolvedByGroup(this.state.token, userSHID).then(res => {
+      console.log(res)
+    });
+  }
+
   getTotalCaseByGroupData(){
-    // e.preventDefault();
     const userSHID = this.state.shID.shID
     DashboardService.getTotalCaseByGroup(this.state.token, userSHID).then(res => {
       console.log(res)
-      // const data = res[0];
       if(res !== null){
-        this.setState({ totalGroupCase: res[0].totalCase })
-        this.setState({ totalGroupCancelCase: res[0].totalCancelled })
-        this.setState({ totalGroupNewCase: res[0].totalNew })
-        this.setState({ totalGroupAssignCase: res[0].totalAssigned })
-        this.setState({ totalGroupInprogressCase: res[0].totalInProgress })
-        this.setState({ totalGroupCloseCase: res[0].totalClosed })
+        this.setState({ totalGroupCase: res.map(data => data.totalCase) })
+        this.setState({ totalGroupCancelCase: res.map(data => data.totalCancelled) })
+        this.setState({ totalGroupNewCase: res.map(data => data.totalNew) })
+        this.setState({ totalGroupAssignCase: res.map(data => data.totalAssigned) })
+        this.setState({ totalGroupInprogressCase: res.map(data => data.totalInProgress) })
+        this.setState({ totalGroupCloseCase: res.map(data => data.totalClosed) })
+      } else {
+        return this.state;
       }
     })
 
+  }
+
+  getRegisterUserData(){
+    DashboardService.getTotalRegisteredUserByState(this.state.token).then(res => {
+      console.log(res);
+      const totalUser = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
+      this.setState({ totalRegisterUser: totalUser });
+    })
+  }
+
+  getTotalCaseByStateData(){
+    DashboardService.getTotalCaseByState(this.state.token).then(res => {
+      console.log(res)
+      const totalCaseByState = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
+      this.setState({ totalOverallCase: totalCaseByState })
+    });
   }
 
   render() {
@@ -89,7 +118,7 @@ class Dashboard extends React.Component {
           <div className="page-header">
             <h1> Dashboard</h1>
           </div>
-          <form onSubmit={this.getTotalCaseByGroupData}>
+          <form onSubmit={this.getTotalCaseByStateData}>
             <div className="pull-right col-sm-4">
               <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." onChange="submitForm('<?php echo APPNAME; ?>/dashboard/overall/')">
                 <option value={0}> </option>
@@ -120,7 +149,7 @@ class Dashboard extends React.Component {
                       <tr>
                         <td>Resolved In 5 Days</td>
                         <td align="right">
-                          <b className="green">{this.state.totalCaseAgen}</b>
+                          <b className="green">{this.state.totalCaseResolveAgent}</b>
                         </td>
                       </tr>
                       <tr>
@@ -290,7 +319,7 @@ class Dashboard extends React.Component {
                 <div className="profile-info-row">
                   <div className="profile-info-name" style={{ width: '70%' }}> <b>Total User</b> </div>
                   <div className="profile-info-value">
-                    <span className="editable" id="username"><b></b></span>
+                    <span className="editable" id="username"><b>{this.state.totalRegisterUser}</b></span>
                   </div>
                 </div>
               </div>
@@ -312,7 +341,7 @@ class Dashboard extends React.Component {
                 <div className="profile-info-row">
                   <div className="profile-info-name" style={{ width: '70%' }}> <b>Total Case</b> </div>
                   <div className="profile-info-value">
-                    <span className="editable" id="username"><b></b></span>
+                    <span className="editable" id="username"><b>{this.state.totalOverallCase}</b></span>
                   </div>
                 </div>
               </div>
