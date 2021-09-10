@@ -22,8 +22,8 @@ class Dashboard extends React.Component {
       totalGroupAssignCase: 0,
       totalGroupInprogressCase: 0,
       totalGroupCloseCase: 0,
-      totalRegisterUser: 0,
-      totalOverallCase: 0
+      totalRegisterUserInAllStatesData: [],
+      totalOverallCase: []
     }
     this.getTotalResolvedByAgentData = this.getTotalResolvedByAgentData.bind(this);
     this.getTotalCaseByAgentData = this.getTotalCaseByAgentData.bind(this);
@@ -96,17 +96,16 @@ class Dashboard extends React.Component {
 
   getRegisterUserData(){
     DashboardService.getTotalRegisteredUserByState(this.state.token).then(res => {
-      console.log(res);
-      const totalUser = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
-      this.setState({ totalRegisterUser: totalUser });
+      // console.log(res);
+      this.setState({ totalRegisterUserInAllStatesData: res })
+      console.log(this.state.totalRegisterUserInAllStatesData)
     })
   }
 
   getTotalCaseByStateData(){
     DashboardService.getTotalCaseByState(this.state.token).then(res => {
       console.log(res)
-      const totalCaseByState = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
-      this.setState({ totalOverallCase: totalCaseByState })
+      this.setState({ totalOverallCase: res })
     });
   }
 
@@ -308,42 +307,38 @@ class Dashboard extends React.Component {
                 Total Registered User
               </h4>
               <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-
+              { this.state.totalRegisterUserInAllStatesData.map((data, key) =>                  
                 <div className="profile-info-row">
-                  <div className="profile-info-name" style={{ width: '70%' }}></div>
+                  <div className="profile-info-name" style={{ width: '70%' }}>
+                    <b key={key}>{data.state}</b>
+                  </div>
                   <div className="profile-info-value">
-                    <span className="editable" id="username"></span>
+                    <span className="editable" id="username" key={key}>
+                      {data.total}
+                    </span>
                   </div>
                 </div>
-
-                <div className="profile-info-row">
-                  <div className="profile-info-name" style={{ width: '70%' }}> <b>Total User</b> </div>
-                  <div className="profile-info-value">
-                    <span className="editable" id="username"><b>{this.state.totalRegisterUser}</b></span>
-                  </div>
-                </div>
+              )}
               </div>
             </div>
             <div className="col-sm-3">
               <h4 className="blue smaller">
                 <i className="ace-icon fa fa-folder orange" />
-                Total Created Case
+                Total Created Case (COMPLAINT)
               </h4>
               <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-
-                <div className="profile-info-row">
-                  <div className="profile-info-name" style={{ width: '70%' }}></div>
-                  <div className="profile-info-value">
-                    <span className="editable" id="username"></span>
+                { this.state.totalOverallCase.map((data, key) =>
+                  <div className="profile-info-row">
+                    <div className="profile-info-name" style={{ width: '70%' }}>
+                      <b key={key}>{data.state}</b>
+                    </div>
+                    <div className="profile-info-value">
+                      <span className="editable" id="username" key={key}>
+                        {data.total}
+                      </span>
+                    </div>
                   </div>
-                </div>
-
-                <div className="profile-info-row">
-                  <div className="profile-info-name" style={{ width: '70%' }}> <b>Total Case</b> </div>
-                  <div className="profile-info-value">
-                    <span className="editable" id="username"><b>{this.state.totalOverallCase}</b></span>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
