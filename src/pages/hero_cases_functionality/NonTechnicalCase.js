@@ -14,6 +14,7 @@ class NonTechnicalCase extends React.Component {
             location: 'empty',
             image: null,
             currLatForm: '',
+            currLonForm: '',
             currLat: '',
             currLon: '',
             cToken: '',
@@ -45,6 +46,9 @@ class NonTechnicalCase extends React.Component {
 
     onImageChange(event) {
         if (event.target.files && event.target.files[0]) {
+            // Uncomment to see the log once the user have select a picture
+            // console.log(img)
+            // console.log(event.target.files)
             let img = event.target.files[0];
             this.setState({
                 image: URL.createObjectURL(img)
@@ -99,23 +103,22 @@ class NonTechnicalCase extends React.Component {
             this.setState({ currLatForm: "-" });
             this.setState({ currLonForm: "-" });
         }
-        CaseService.attachPicture(this.state.token, this.state.cToken, this.state.image, this.currLonForm, this.currLatForm)
+        CaseService.attachPicture(this.state.token, this.state.cToken, this.state.image, this.state.currLonForm, this.state.currLatForm)
             .then(response => {
                 const PIC_GPS = response;
                 if (PIC_GPS.response == "FAILED") {
                     // loader.dismiss();
-                    alert(this.PIC_GPS.status);
+                    alert(PIC_GPS.status);
                     //this.createForm.reset();
                 }
                 else {
-                    alert(this.PIC_GPS.status);
+                    alert(PIC_GPS.status);
 
-                    this.setState({ image: null });
-                    this.setState({ currLon: null });
-                    this.setState({ currLat: null });
-                    this.setState({ currLatForm: null });
-                    this.setState({ currLonForm: null });
-                    // this.closeCreateCaseModal();
+                    this.setState({image: null});
+                    this.setState({currLon: null});
+                    this.setState({currLat: null});
+                    this.setState({currLatForm: null});
+                    this.setState({currLonForm: null});
                     // this.navCtrl.push(TrackingPage);
                     alert(svrResponseMsg);
                 }

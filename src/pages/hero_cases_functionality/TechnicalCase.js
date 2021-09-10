@@ -13,11 +13,14 @@ class TechnicalCase extends React.Component {
             location: 'empty',
             image: null,
             currLatForm: '',
+            currLonForm: '',
             currLat: '',
             currLon: '',
             stateID: '',
             token: JSON.parse(localStorage.getItem('userToken')),
-            lovData: JSON.parse(localStorage.getItem('LovData'))
+            lovData: JSON.parse(localStorage.getItem('LovData')),
+            cToken: '',
+            value: 'assurance'
         }
         this.handleSelectLocation = this.handleSelectLocation.bind(this);
         this.handleSelectProduct = this.handleSelectProduct.bind(this);
@@ -47,42 +50,77 @@ class TechnicalCase extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        this.createCase('COMPLAINT');
+        this.createCase();
+        this.location(this.state.location)
     }
 
-    createCase(complaint) {
-        CaseService.createCase(this.state.token, this.state.name, '', this.state.mobileNumber, this.state.description, this.state.location, complaint, 284)
-            .then(response => {
-                if (response.response === "ERROR") {
-                    const svrResponseMsg = response.status;
-                    // this.presentToast(this.svrResponseMsg);
-                    alert(svrResponseMsg);
-                    // loader.dismiss();
-                }
-                else {
-                    // this.cToken = this.svrResponse.cToken;
-                    this.svrResponseMsg = response.status;
-                }
-                if (this.state.image === null) {
-                    //----------for null latlong-------------------
-                    if (this.state.currLatForm == null) {
-                        this.setState({currLon: null});
-                        this.setState({currLat: null});
-                        // this.showSuccessAlert(this.svrResponseMsg);
-                        alert(this.svrResponseMsg);
-                        // loader.dismiss();
-                        // this.navCtrl.push(TrackingPage);
-                        //----------for have latlong-------------------
-                    } else {
-                        this.setState({image: ""});
-                        // loader.dismiss();
-                        this.uploadPic(this.svrResponseMsg);
+    // createCase(complaint) {
+    //     CaseService.createCase(this.state.token, this.state.name, '0123456', this.state.mobileNumber, this.state.description, this.state.stateID, complaint, 284).then(response => {
+    //             console.log(response);
+    //             if (response.response === "ERROR") {
+    //                 const svrResponseMsg = response.status;;
+    //                 alert(svrResponseMsg);
+    //                 // loader.dismiss();
+    //             }
+    //             else {
+    //                 this.svrResponseMsg = response.status;
+    //                 this.setState({ cToken: this.svrResponseMsg.cToken });
+    //             }
+    //             if (this.state.image === null) {
+    //                 //----------for null latlong-------------------
+    //                 if (this.state.currLatForm == null) {
+    //                     this.setState({currLon: null});
+    //                     this.setState({currLat: null});
+    //                     alert(this.svrResponseMsg);
+    //                     // this.navCtrl.push(TrackingPage);
+    //                     //----------for have latlong-------------------
+    //                 } else {
+    //                     this.setState({image: ""});
+    //                     // loader.dismiss();
+    //                     this.uploadPic(this.svrResponseMsg);
+    //                 }
+    //             }
+    //             //----------for have pic-------------------
+    //             else {
+    //                 this.uploadPic(this.svrResponseMsg);
+    //             }
+    //             console.log(this.state.token, this.state.name + ',' + this.state.mobileNumber + ',' + this.state.description + ',' + this.state.stateID + ',' + complaint)
+    //         });
+    // }
+
+    createCase() {
+        CaseService.createSubmit(this.state.token, this.state.name, this.state.mobileNumber, 'item', this.state.stateID, 284, 46, this.state.description,  '')
+            .then((response) => {
+                console.log(response);
+                if (response.response == 'OK') {
+                    this.setState({ cToken: response.cToken });
+                    //----------no have pic-------------------
+                    if (this.state.image === null) {
+                        //----------for null latlong-------------------
+                        if (this.state.currLatForm == null) {
+                            this.setState({ currLon: null });
+                            this.setState({ currLat: null });
+                            //this.showSuccessAlert(this.svrResponseMsg);    
+                            alert(response);
+                            // this.navCtrl.push(TrackingPage);
+                            //----------for have latlong-------------------
+                        } else {
+                            this.setState({ image: "" });
+                            // this.showSuccessAlert('Case', this.svrResponse.status);
+                            this.uploadPic(response.status);
+                        }
                     }
+                    //----------for have pic-------------------
+                    else {
+                        //this.showSuccessAlert('Case', this.svrResponse.status);
+                        alert(response.status);
+                        this.uploadPic(response.status);
+                    }
+                } else {
+                    alert('Failed to create case');
                 }
-                //----------for have pic-------------------
-                else {
-                    this.uploadPic(this.svrResponseMsg);
-                }
+                console.log(this.state.name + ',' + this.state.mobileNumber + ',' + this.state.value + ',' + this.state.location + ',' + 'complaint' + ',' + 284 + ','
+                    + 46 + ',' + 58 + ',' + this.state.stateID + ',' + this.state.description);
             });
     }
 
@@ -91,76 +129,73 @@ class TechnicalCase extends React.Component {
             this.setState({currLatForm: "-"});
             this.setState({currLonForm: "-"});
         }
-        CaseService.attachPicture(this.state.token, this.cToken, this.image, this.currLonForm, this.currLatForm)
+        CaseService.attachPicture(this.state.token, this.state.cToken, this.state.image, this.state.currLonForm, this.state.currLatForm)
             .then(response => {
                 const PIC_GPS = response;
-                if (this.PIC_GPS.response == "FAILED") {
+                if (PIC_GPS.response == "FAILED") {
                     // loader.dismiss();
-                    alert(this.PIC_GPS.status);
+                    alert(PIC_GPS.status);
                     //this.createForm.reset();
                 }
                 else {
-                    alert(this.PIC_GPS.status);
+                    alert(PIC_GPS.status);
 
-                    this.image = null;
-                    this.currLon = null;
-                    this.currLat = null;
-                    this.currLatForm = null;
-                    this.currLonForm = null;
-                    this.createForm.reset();
-                    // this.closeCreateCaseModal();
+                    this.setState({image: null});
+                    this.setState({currLon: null});
+                    this.setState({currLat: null});
+                    this.setState({currLatForm: null});
+                    this.setState({currLonForm: null});
                     // this.navCtrl.push(TrackingPage);
                     alert(svrResponseMsg);
                 }
             }, errorMsg => { console.log(errorMsg) });
     };
 
-    //location mapp
+    //location map
     location(state) {
-        console.log(state);
-        if (state == 'JOHOR') {
+        if (state == 'Johor') {
             this.setState({ stateID: 124 });
         }
-        else if (state == 'KEDAH/PERLIS') {
+        else if (state == 'Kedah/Perlis') {
             this.setState({stateID: 127});
         }
-        else if (state == 'KELANTAN') {
+        else if (state == 'Kelantan') {
             this.setState({stateID: 133});
         }
-        else if (state == 'KUALA LUMPUR') {
+        else if (state == 'Kuala Lumpur') {
             this.setState({stateID: 139});
         }
-        else if (state == 'MELAKA') {
+        else if (state == 'Melaka') {
             this.setState({stateID: 142});
         }
         else if (state == 'MSC') {
             this.setState({stateID: 145});
         }
-        else if (state == 'NEGERI SEMBILAN') {
+        else if (state == 'Negeri Sembilan') {
             this.setState({stateID: 148});
         }
-        else if (state == 'PAHANG') {
+        else if (state == 'Pahang') {
             this.setState({stateID: 151});
         }
-        else if (state == 'PERAK') {
+        else if (state == 'Perak') {
             this.setState({stateID: 157});
         }
-        else if (state == 'PETALING JAYA') {
-            this.stateID = 163;
+        else if (state == 'Petaling Jaya') {
+            this.setState({ stateID: 163 })
         }
-        else if (state == 'PULAU PINANG') {
+        else if (state == 'Pulau Pinang') {
             this.setState({stateID: 154});
         }
-        else if (state == 'SABAH') {
+        else if (state == 'Sabah') {
             this.setState({stateID: 166});
         }
-        else if (state == 'SARAWAK') {
+        else if (state == 'Sarawak') {
             this.setState({stateID: 169});
         }
-        else if (state == 'SELANGOR') {
+        else if (state == 'Selangor') {
             this.setState({stateID: 160});
         }
-        else if (state == 'TERENGGANU') {
+        else if (state == 'Terengganu') {
             this.setState({stateID: 136});
         }
     }
@@ -193,7 +228,7 @@ class TechnicalCase extends React.Component {
                         <label for='type'>Type*</label>
 
                         <div id='type' name='assurance'>
-                            <p>Assurance</p>
+                            <p value='assurance'>Assurance</p>
                         </div>
                     </div>
 
