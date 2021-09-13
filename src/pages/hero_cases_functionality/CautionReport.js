@@ -16,8 +16,8 @@ class CautionReport extends React.Component {
             stateID: '',
             image: null,
             location: 'empty',
-            token: JSON.parse(localStorage.getItem('userToken')),
-            lovData: JSON.parse(localStorage.getItem('LovData')),
+            token: JSON.parse(sessionStorage.getItem('userToken')),
+            lovData: JSON.parse(sessionStorage.getItem('LovData')),
             type: 'assurance',
             value: 'caution report'
         }

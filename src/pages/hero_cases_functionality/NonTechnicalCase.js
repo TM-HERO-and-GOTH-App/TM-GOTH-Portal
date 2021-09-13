@@ -19,8 +19,8 @@ class NonTechnicalCase extends React.Component {
             currLon: '',
             cToken: '',
             stateID: '',
-            token: JSON.parse(localStorage.getItem('userToken')),
-            lovData: JSON.parse(localStorage.getItem('LovData'))
+            token: JSON.parse(sessionStorage.getItem('userToken')),
+            lovData: JSON.parse(sessionStorage.getItem('LovData'))
         }
         this.handleSelectType = this.handleSelectType.bind(this);
         this.handleSelectProduct = this.handleSelectProduct.bind(this);

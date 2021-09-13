@@ -14,7 +14,7 @@ class Header extends React.Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
-    this.clearLocalStorage = this.clearLocalStorage.bind(this);
+    this.clearsessionStorage = this.clearsessionStorage.bind(this);
     this.state = {
       dropdownOpen: false,
       collabDropdown: false,
@@ -51,12 +51,12 @@ class Header extends React.Component {
     this.setState({ collabDropdown: false });
   }
 
-  clearLocalStorage(){
-    localStorage.clear();
+  clearsessionStorage(){
+    sessionStorage.clear();
   }
 
   render() {
-    const userInfo = JSON.parse(localStorage.getItem('UserData')) || 'User';
+    const userInfo = JSON.parse(sessionStorage.getItem('UserData')) || 'User';
     return (
       <div>
         <div id="navbar" className="navbar navbar-default navbar-collapse ace-save-state">
@@ -113,7 +113,7 @@ class Header extends React.Component {
                     {/*?php } ?*/}
                     <li className="divider" />
                     <li>
-                      <a href="/login" onClick={this.clearLocalStorage}>
+                      <a href="/login" onClick={this.clearsessionStorage}>
                         <i className="ace-icon fa fa-power-off" />
                         Sign Out
                       </a>

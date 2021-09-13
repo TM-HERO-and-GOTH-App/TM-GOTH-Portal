@@ -15,7 +15,7 @@ class Userprofile extends React.Component {
   }
 
   render() {
-    const data = JSON.parse(localStorage.getItem('UserData'));
+    const data = JSON.parse(sessionStorage.getItem('UserData'));
     return (
       <div>
         <Header />

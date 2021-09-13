@@ -65,7 +65,7 @@ class Loginbox extends React.Component {
         console.log('Email does not exist')
       } else {
         const authToken = response[0].authToken;
-        localStorage.setItem('userToken', JSON.stringify(authToken));
+        sessionStorage.setItem('userToken', JSON.stringify(authToken));
         this.signIn(authToken, email, password);
       }
     })
@@ -89,7 +89,7 @@ class Loginbox extends React.Component {
         console.log('Your account is not yet registered')
       } else {
         this.setState({fullName: response.fullName})
-        localStorage.setItem('UserData', JSON.stringify(response))
+        sessionStorage.setItem('UserData', JSON.stringify(response))
         this.getLov(authToken)
       }
     })
@@ -98,7 +98,7 @@ class Loginbox extends React.Component {
   getLov(authToken) {
     LoginWebservice.getSystemLOV(authToken).then(response => {
       console.log(response);
-      localStorage.setItem('LovData', JSON.stringify(response));
+      sessionStorage.setItem('LovData', JSON.stringify(response));
       this.props.history.push('/');
     })
   }

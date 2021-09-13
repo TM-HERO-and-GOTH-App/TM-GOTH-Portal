@@ -2,7 +2,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 import React from 'react';
 
-const lov = JSON.parse(localStorage.getItem('LovData'));
+const lov = JSON.parse(sessionStorage.getItem('LovData'));
 
 class EditUser extends React.Component {
     constructor(props){
@@ -18,7 +18,7 @@ class EditUser extends React.Component {
     }
 
     render() {
-        const data = JSON.parse(localStorage.getItem('UserData')); 
+        const data = JSON.parse(sessionStorage.getItem('UserData')); 
         return (
             <div>
                 <Header />

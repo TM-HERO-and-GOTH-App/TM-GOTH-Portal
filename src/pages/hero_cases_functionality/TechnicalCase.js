@@ -17,8 +17,8 @@ class TechnicalCase extends React.Component {
             currLat: '',
             currLon: '',
             stateID: '',
-            token: JSON.parse(localStorage.getItem('userToken')),
-            lovData: JSON.parse(localStorage.getItem('LovData')),
+            token: JSON.parse(sessionStorage.getItem('userToken')),
+            lovData: JSON.parse(sessionStorage.getItem('LovData')),
             cToken: '',
             value: 'assurance'
         }

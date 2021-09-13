@@ -7,9 +7,9 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      shID: JSON.parse(localStorage.getItem('UserData')),
-      token: JSON.parse(localStorage.getItem('userToken')),
-      lovData: JSON.parse(localStorage.getItem('LovData')),
+      shID: JSON.parse(sessionStorage.getItem('UserData')),
+      token: JSON.parse(sessionStorage.getItem('userToken')),
+      lovData: JSON.parse(sessionStorage.getItem('LovData')),
       totalCaseResolveAgent: 0,
       totalCancelAgent: 0,
       totalNewCaseAgent: 0,
