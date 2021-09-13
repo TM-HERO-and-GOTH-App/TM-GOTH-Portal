@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import CreateCaseService from '../web_service/create_case_service/CreateCaseService';
 
 class Createcase extends React.Component {
   constructor(props){
@@ -10,11 +11,8 @@ class Createcase extends React.Component {
       lov: JSON.parse(sessionStorage.getItem('LovData')),
       shID: JSON.parse(sessionStorage.getItem('UserData')),
       token: JSON.parse(sessionStorage.getItem('userToken')),
-      areaLocation: 0,
-      caseTypeID: 0,
-      sourceID: 293,
-      subSourceID: 0,
-      alertMessage: 'Alert',
+      alertStatus: false,
+      alertMessage: '',
       caseDescription: '',
       customerName: '',
       ic: '',
@@ -30,19 +28,21 @@ class Createcase extends React.Component {
 
   createCase(e){
     e.preventDefault();
-    const userInput = {
-      areaLocation: this.state.areaLocation,
-      caseTypeID: this.state.caseTypeID,
-      sourceID: this.state.sourceID,
-      subSourceID: this.state.subSourceID
-    } 
-
-    // const lov = this.state.lov.filter(data => {
-    //   if(data.parentID === userInput.sourceID && data.lovGroup === 'SUB-SOURCE'){
-    //     console.log(data)
-    //   }
-    // });
-    // return JSON.stringify(sessionStorage.setItem('ci', userInput))
+    CreateCaseService.createCase(this.state.token, this.state.customerName, this.state.ic, this.state.mobileNumber, this.state.caseDescription, this.state.stateType, 'COMPLAINT', this.state.sourceType, this.state.subSourceType, this.state.caseType)
+    .then(res => {
+      console.log(res);
+      if(this.state.customerName !== '' && this.state.sourceType !== 0 && this.state.caseDescription !== 'placeholder'){
+        if(res.response === 'FAILED'){
+          this.setState({ alertStatus: true })
+          this.setState({ alertMessage: res.message })
+        } else{
+          this.props.history.push('/MyAssignments_Assigned')
+        }
+      }else {
+        this.setState({ alertStatus: true });
+        this.setState({ alertMessage: 'Please insert all the required field' });
+      }
+    })
   }
 
   render() {
@@ -50,7 +50,7 @@ class Createcase extends React.Component {
       <div>
         <Header />
         <form name="form" onSubmit={this.createCase}>
-          {this.state.alertMessage && (this.state.alertMessage !== null) &&
+          {(this.state.alertStatus === true) && (this.state.alertMessage !== null) ?
             <div className="row">
               <div className="col-xs-12">
                 <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
@@ -60,7 +60,7 @@ class Createcase extends React.Component {
                   <p>{this.state.alertMessage}</p>
                 </div>
               </div>
-            </div>
+            </div> : null
           }
 
           <div className="left">
@@ -122,7 +122,7 @@ class Createcase extends React.Component {
                   <div className="profile-info-row">
                     <div className="profile-info-name"> Case Type </div>
                     <div className="profile-info-value">
-                        <select className='chosen-select form-control' name='caseTypeID' value={this.state.caseType} onChange={(e) => e.target.value}>
+                        <select className='chosen-select form-control' name='caseTypeID' value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value})}>
                           <option value='placeholder' disabled>Choose a Case Type</option>
                           { this.state.lov.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
                               return <option key={key} value={data.lovID}>{data.lovName}</option>
@@ -149,7 +149,7 @@ class Createcase extends React.Component {
                   <div className="profile-info-row">
                     <div className="profile-info-name"> Source </div>
                     <div className="profile-info-value">
-                      <select className='chosen-select form-control' name='sourceID' value={this.state.stateType} onChange={(e) => this.setState({ sourceType: e.target.value })}>
+                      <select className='chosen-select form-control' name='sourceID' value={this.state.sourceType} onChange={(e) => this.setState({ sourceType: e.target.value })}>
                         <option disabled value='placeholder'>Choose a Source...</option>
                         {
                           this.state.lov.filter(filter => filter.lovGroup === 'SOURCE').map((data, key) => {
