@@ -1,9 +1,33 @@
-
 import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
+import MyAssignmentService from '../../web_service/my_assignment_service/MyAssignmentService';
 
 class MA_Closed extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      token: JSON.parse(sessionStorage.getItem('userToken')),
+      totalCase: []
+    }
+    this.loggerCase = this.loggerCase.bind(this);
+  }
+
+  componentDidMount(){
+    this.loggerCase()
+  }
+
+  loggerCase(){
+    MyAssignmentService.viewCaseByOwner(this.state.token, 70).then(res => {
+      console.log(res);
+      if(res[0].response === 'FAILED'){
+        this.setState({ totalCase: res })
+      } else {
+        this.setState({ totalCase: res })
+      }
+    })
+  }
+
   render() {
     return (
       <div>
@@ -32,28 +56,6 @@ class MA_Closed extends React.Component {
               <div className="pull-right tableTools-container" />
             </div>
             <div>
-              30 ) ? 'danger' : 'warning';
-              if( $caseLs[$i]['caseStatus'] == 'NEW' ) {'{'}
-              $statusLabel = 'N';
-              $statusBadge = 'danger';
-              {'}'} else if( $caseLs[$i]['caseStatus'] == 'IN-PROGRESS' ) {'{'}
-              $statusLabel = 'IP';
-              $statusBadge = 'info';
-              {'}'} else if( $caseLs[$i]['caseStatus'] == 'ASSIGNED' ) {'{'}
-              $statusLabel = 'A';
-              $statusBadge = 'info';
-              {'}'} else if( $caseLs[$i]['caseStatus'] == 'CLOSED' ) {'{'}
-              $statusLabel = 'C';
-              $statusBadge = 'success';
-              {'}'} else if( $caseLs[$i]['caseStatus'] == 'CANCELLED' ) {'{'}
-              $statusLabel = 'D';
-              $statusBadge = 'pink';
-              {'}'} else {'{'}
-              $statusLabel = 'N/A';
-              $statusBadge = 'pink';
-              {'}'}
-              $agingKey = ( $caseLs[$i]['caseStatus'] == 'CLOSED' ) ? 'closedAging' : 'unclosedAging';
-              ?&gt;
               <table id="dynamic-table" className="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
@@ -71,36 +73,42 @@ class MA_Closed extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {/*?php if( empty($caseLs) ){ ?*/}
-                  <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
-                  {/*?php } else { 
-
-for($i=0;$i<$caseCount;$i++){ 
-  $badgeColor = ( $caseLs[$i]['unclosedAging'] */}<tr>
+                  { this.state.totalCase === null ? 
+                    <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
+                  :
+                  this.state.totalCase.map( data => {
+                    return <tr>
                     <td>
                       <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
-                        {/*?php echo $caseLs[$i]['caseNum']; ?*/}
+                        {data.caseNum}
                       </a>
                     </td>
-                    <td><div align="center"><span className="badge badge-<?php echo $statusBadge; ?>">{/*?php echo $statusLabel; ?*/}</span></div></td>
+                    <td>
+                      <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
+                      </td>
                     <td>
                       <div align="center">
-                        {/*?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"*/}'.$caseLs[$i][$agingKey].''; ?&gt;
+                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : 'aging'}
                       </div>
                     </td>
-                    <td>{/*?php echo $caseLs[$i]['caseType']; ?*/}</td>
+                    <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {/*?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"*/}' : '-'; ?&gt;
+                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
+                        {data.vip ? data.vip : '-'}
                       </div>
                     </td>
-                    <td>{/*?php echo $caseLs[$i]['productName']; ?*/}</td>
-                    <td>{/*?php echo ucwords($caseLs[$i]['customerName']); ?*/}</td>
-                    <td>{/*?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"*/}' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt;</td>
-                    <td>{/*?php echo ucwords($caseLs[$i]['ownerName']); ?*/}</td>
+                    <td>{data.productName}</td>
+                    <td>{data.customerName}</td>
+                    <td>
+                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
+                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullName} </span> : data.fullName}
+                    </td>
+                    <td>{data.ownerName}</td>
                     <td>
                       <div align="center" style={{ fontSize: 10 }}>
-                        {/*?php echo ( $caseLs[$i]['totalNewAlert'] */} 0 ) ? '<span style={{ fontSize: 10 }} className="badge badge-warning">' . $caseLs[$i]['totalNewAlert'] . '</span>' : 0; ?&gt;
+                       {data.totalNewAlert === 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
                       </div>
                     </td>
                     <td>
@@ -112,7 +120,8 @@ for($i=0;$i<$caseCount;$i++){
                       </div>
                     </td>
                   </tr>
-                  {/*?php }} ?*/}
+                  })
+                  }
                 </tbody>
               </table>
             </div>

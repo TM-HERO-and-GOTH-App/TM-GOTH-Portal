@@ -24,6 +24,20 @@ class Createcase extends React.Component {
 
     }
     this.createCase = this.createCase.bind(this);
+    this.userInput = this.userInput.bind(this);
+    this.resetForm = this.resetForm.bind(this);
+  }
+
+  userInput(){
+    const userInput = {
+      location: this.state.stateType,
+      caseTypeID: this.state.caseType,
+      sourceID: this.state.sourceType,
+      subSourceID: this.state.subSourceType
+    }
+
+    const sessionData = sessionStorage.setItem('caseInput', JSON.stringify(userInput))
+    return sessionData;
   }
 
   createCase(e){
@@ -37,6 +51,7 @@ class Createcase extends React.Component {
           this.setState({ alertMessage: res.message })
         } else{
           this.props.history.push('/MyAssignments_Assigned')
+          this.userInput()
         }
       }else {
         this.setState({ alertStatus: true });
@@ -45,11 +60,23 @@ class Createcase extends React.Component {
     })
   }
 
+  resetForm(){
+    this.setState({
+      customerName: '',
+      ic: '',
+      mobileNumber: '',
+      stateType: 'placeholder',
+      caseType: 'placeholder',
+      sourceType: 'placeholder',
+      subSourceType: 'placeholder',
+    })
+  }
+
   render() {
     return (
       <div>
         <Header />
-        <form name="form" onSubmit={this.createCase}>
+        <form name="form" onSubmit={this.createCase} onReset={this.resetForm}>
           {(this.state.alertStatus === true) && (this.state.alertMessage !== null) ?
             <div className="row">
               <div className="col-xs-12">
@@ -64,7 +91,7 @@ class Createcase extends React.Component {
           }
 
           <div className="left">
-            <button className="btn btn-sm btn-inverse" type="button">
+            <button className="btn btn-sm btn-inverse" type="reset">
               <i className="ace-icon fa fa-repeat align-top bigger-125" />
               Reset
             </button>
@@ -111,7 +138,7 @@ class Createcase extends React.Component {
                     <div className="profile-info-name"> State </div>
                     <div className="profile-info-value">
                       <select className='chosen-select form-control' name='areaLocationID' value={this.state.stateType} onChange={(e) => this.setState({ stateType: e.target.value })}>
-                        <option value='placeholder' disabled>Choose a State...</option>
+                        <option value='placeholder' hidden>Choose a State...</option>
                         {this.state.lov.filter(filter => filter.lovGroup === 'AREA-LOCATION').map((data, key) => {
                           return <option key={key} value={data.lovID}>{data.lovName}</option>
                         })}
@@ -123,7 +150,7 @@ class Createcase extends React.Component {
                     <div className="profile-info-name"> Case Type </div>
                     <div className="profile-info-value">
                         <select className='chosen-select form-control' name='caseTypeID' value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value})}>
-                          <option value='placeholder' disabled>Choose a Case Type</option>
+                          <option value='placeholder' hidden>Choose a Case Type</option>
                           { this.state.lov.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
                               return <option key={key} value={data.lovID}>{data.lovName}</option>
                             }) 
@@ -150,7 +177,7 @@ class Createcase extends React.Component {
                     <div className="profile-info-name"> Source </div>
                     <div className="profile-info-value">
                       <select className='chosen-select form-control' name='sourceID' value={this.state.sourceType} onChange={(e) => this.setState({ sourceType: e.target.value })}>
-                        <option disabled value='placeholder'>Choose a Source...</option>
+                        <option hidden value='placeholder'>Choose a Source...</option>
                         {
                           this.state.lov.filter(filter => filter.lovGroup === 'SOURCE').map((data, key) => {
                             return <option key={key} value={data.lovID}>{ data.lovName }</option>
@@ -164,7 +191,7 @@ class Createcase extends React.Component {
                     <div className="profile-info-name"> Sub Source </div>
                     <div className="profile-info-value">
                       <select className='chosen-select form-control' name='subSourceID' value={this.state.subSourceType} onChange={(e) => this.setState({ subSourceType: e.target.value })}>
-                          <option disabled value='placeholder'>Choose a Sub Source...</option>
+                          <option hidden value='placeholder'>Choose a Sub Source...</option>
                           {
                             this.state.lov.filter(filter => filter.lovGroup === 'SUB-SOURCE').map((data, key) => {
                               return <option key={key} value={data.lovID}>{ data.lovName }</option>
