@@ -1,14 +1,16 @@
 import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
-import MyAssignmentService from '../../web_service/my_assignment_service/MyAssignmentService';
+import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
 
 class MA_Closed extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       token: JSON.parse(sessionStorage.getItem('userToken')),
-      totalCase: []
+      totalCase: [],
+      statusLabel: '',
+      statusBadge: '',
     }
     this.loggerCase = this.loggerCase.bind(this);
   }
@@ -18,7 +20,7 @@ class MA_Closed extends React.Component {
   }
 
   loggerCase(){
-    MyAssignmentService.viewCaseByOwner(this.state.token, 70).then(res => {
+    AssignmentService.viewCaseByOwner(this.state.token, 70).then(res => {
       console.log(res);
       if(res[0].response === 'FAILED'){
         this.setState({ totalCase: res })
@@ -73,10 +75,30 @@ class MA_Closed extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  { this.state.totalCase === null ? 
+                  { this.state.totalCase.length === 1 ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {
+                    // this.setState({ statusBadge: data.unclosedaging > 30 ? 'danger' : 'warning'})
+                    // if(data.caseStatus === 'NEW'){
+                    //   this.setState({ statusLabel: 'N'})
+                    //   this.setState({ statusBadge: 'danger'})
+                    // } else if( data.caseStatus === 'IN-PROGRESS' ) { 
+                    //   this.setState({statusLabel: 'IP'});
+                    //   this.setState({statusBadge: 'info'});						
+                    // } else if( data.caseStatus === 'ASSIGNED' ) { 
+                    //   this.setState({statusLabel: 'A'});
+                    //   this.setState({statusBadge: 'info'});												
+                    // } else if( data.caseStatus === 'CLOSED' ) { 
+                    //   this.setState({statusLabel: 'C'});
+                    //   this.setState({statusBadge: 'success'});												
+                    // } else if( data.caseStatus === 'CANCELLED' ) { 
+                    //   this.setState({statusLabel: 'D'});
+                    //   this.setState({statusBadge: 'pink'});												
+                    // } else {
+                    //   this.setState({statusLabel: 'N/A'});
+                    //   this.setState({statusBadge: 'pink'});												
+                    // }
                     return <tr>
                     <td>
                       <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
@@ -89,7 +111,7 @@ class MA_Closed extends React.Component {
                     <td>
                       <div align="center">
                         {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : 'aging'}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>

@@ -1,143 +1,134 @@
 import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
+import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
 
 class MA_Inprogress extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      token: JSON.parse(sessionStorage.getItem('userToken')),
+      totalCase: [],
+      statusLabel: '',
+      statusBadge: '',
+    }
+    this.loggerCase = this.loggerCase.bind(this);
+  }
+
+  componentDidMount(){
+    this.loggerCase();
+  }
+
+  loggerCase(){
+    AssignmentService.viewCaseByOwner(this.state.token, 67).then(res => {
+      console.log(res);
+      if(res[0].response === 'FAILED'){
+        this.setState({ totalCase: res })
+      } else {
+        this.setState({ totalCase: res })
+      }
+    })
+  }
+
   render() {
     return (
       <div>
         <Header />
-        <div>
-          <div class="row">
-            <div class="col-sm-12">
-              <button class="btn btn-danger" onclick="redirect('<?php echo APPNAME; ?>/assignment/unassigned/')">Show Unassigned Cases</button>
-            </div>
-            <br /><br /><br />
-
-            <div class="col-xs-12">
-              {/* If there is a message */}
-
-              {/* <?php if ( isset($pageMessage) && !empty($pageMessage) ): ?> */}
-              <div class="alert alert-block alert-<?php echo $pageMessageAlert; ?>">
-                <button type="button" class="close" data-dismiss="alert">
-                  <i class="ace-icon fa fa-times"></i>
-                </button>
-
-                <p>
-                  <strong>
-                    <i class="ace-icon fa fa-check"></i>
-                    Well done!
-                  </strong>
-                  {/* Display message here */}
-
-                  {/* <?php echo str_replace("_", " ", $pageMessage); ?> */}
-                </p>
-              </div>
-              {/* <?php endif; ?> */}
-
-              <table id="simple-table" class="table  table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>Case ID</th>
-                    <th><div align="center">Aging</div></th>
-                    <th>Type</th>
-                    <th><div align="center">VIP</div></th>
-                    <th>Product</th>
-                    <th>Customer</th>
-                    <th>Logger</th>
-                    <th><div align="center">Alert</div></th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {/* <?php if( empty($assignedCaseLs) ){ ?> */}
-                  <tr><td colspan="8">List is empty</td></tr>
-                  {/* <?php } else { */}
-
-                  {/* for($i=0;$i<$assignedCaseCount;$i++){  */}
-                  {/* ?> */}
-                  <tr>
-                    <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $assignedCaseLs[$i]['cToken']; ?>">
-                        {/* <?php echo $assignedCaseLs[$i]['caseNum']; ?> */}
-                      </a>
-                    </td>
-                    {/* <td><div align="center"><?php echo ( $assignedCaseLs[$i]['unclosedAging'] < 30 ) ? $assignedCaseLs[$i]['unclosedAging'] : '<span class="badge badge-sm badge-danger">'.$assignedCaseLs[$i]['unclosedAging'].'</span>'; ?></div></td> */}
-                    <td><div align="center">unclosedAging : '<span class="badge badge-sm badge-danger">'Number here'</span></div></td>
-                    {/* <td><?php echo $assignedCaseLs[$i]['caseType']; ?></td> */}
-                    <td>Case type</td>
-                    {/* <td><div align="center"><?php echo ( !empty($assignedCaseLs[$i]['vip']) ) ? '<span class="label label-sm label-warning">Yes</span>' : 'No'; ?></div></td> */}
-                    <td><div align="center">VIP '<span class="label label-sm label-warning">Yes</span>' : 'No'</div></td>
-                    {/* <td><?php echo $assignedCaseLs[$i]['productName']; ?></td> */}
-                    <td>Product Name</td>
-                    {/* <td><?php echo $assignedCaseLs[$i]['customerName']; ?></td> */}
-                    <td>customerName</td>
-                    {/* <td><?php echo $assignedCaseLs[$i]['fullname']; ?></td> */}
-                    <td>fullName</td>
-                    {/* <td><div align="center"><?php echo ( $assignedCaseLs[$i]['totalNewAlert'] > 0 ) ? '<span class="badge badge-warning">' . $assignedCaseLs[$i]['totalNewAlert'] . '</span>' : 0; ?></div></td> */}
-                    <td><div align="center">Total New Alert '<span class="badge badge-warning">' Alert Number'</span>' : 0 '</div></td>
-                  </tr>
-                  {/* <?php }} ?> */}
-                </tbody>
-
-              </table>
-            </div> {/* <!-- /.span --> */}
-          </div> {/* <!-- /.row --> */}
           <div class="page-header">
             <h1>My Assignments : IN PROGRESS</h1>
           </div> {/* <!-- /.page-header --> */}
           <div class="row">
             <div class="col-xs-12">
-              <table id="simple-table" class="table  table-bordered table-hover">
+            <table id="dynamic-table" className="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>Case ID</th>
-                    <th><div align="center">Aging</div></th>
+                    <th><div align="center">Status</div></th>
+                    <th width="6%">Aging</th>
                     <th>Type</th>
                     <th><div align="center">VIP</div></th>
-                    <th>Product</th>
+                    <th width="8%">Product</th>
                     <th>Customer</th>
-                    <th>Logger</th>
-                    <th><div align="center">Alert</div></th>
+                    <th>HERO</th>
+                    <th>Owner</th>
+                    <th><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell" /></div></th>
+                    <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o" /></div></th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {/* <?php if( empty($inProgressCaseLs) ){ ?> */}
-                  <tr><td colspan="8">List is empty</td></tr>
-                  {/* <?php } else { */}
-
-                  {/* or($i=0;$i<$inProgressCaseCount;$i++){  */}
-                  {/* ?> */}
-                  <tr>
+                  { this.state.totalCase.length === 1 ? 
+                    <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
+                  :
+                  this.state.totalCase.map( data => {
+                    // this.setState({ statusBadge: data.unclosedaging > 30 ? 'danger' : 'warning'})
+                    // if(data.caseStatus === 'NEW'){
+                    //   this.setState({ statusLabel: 'N'})
+                    //   this.setState({ statusBadge: 'danger'})
+                    // } else if( data.caseStatus === 'IN-PROGRESS' ) { 
+                    //   this.setState({statusLabel: 'IP'});
+                    //   this.setState({statusBadge: 'info'});						
+                    // } else if( data.caseStatus === 'ASSIGNED' ) { 
+                    //   this.setState({statusLabel: 'A'});
+                    //   this.setState({statusBadge: 'info'});												
+                    // } else if( data.caseStatus === 'CLOSED' ) { 
+                    //   this.setState({statusLabel: 'C'});
+                    //   this.setState({statusBadge: 'success'});												
+                    // } else if( data.caseStatus === 'CANCELLED' ) { 
+                    //   this.setState({statusLabel: 'D'});
+                    //   this.setState({statusBadge: 'pink'});												
+                    // } else {
+                    //   this.setState({statusLabel: 'N/A'});
+                    //   this.setState({statusBadge: 'pink'});												
+                    // }
+                    return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $inProgressCaseLs[$i]['cToken']; ?>">
-                        {/* <?php echo $inProgressCaseLs[$i]['caseNum']; ?> */}
-                        Case Number
+                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                        {data.caseNum}
                       </a>
                     </td>
-                    {/* <td><div align="center"><?php echo ( $inProgressCaseLs[$i]['unclosedAging'] < 30 ) ? $inProgressCaseLs[$i]['unclosedAging'] : '<span class="badge badge-sm badge-danger">'.$inProgressCaseLs[$i]['unclosedAging'].'</span>'; ?></div></td> */}
-                    <td><div align="center">unclosedAging: '<span class="badge badge-sm badge-danger">inProgress</span>'</div></td>
-                    {/* <td><?php echo $inProgressCaseLs[$i]['caseType']; ?></td> */}
-                    <td>Case Type</td>
-                    {/* <td><div align="center"><?php echo ( !empty($inProgressCaseLs[$i]['vip']) ) ? '<span class="label label-sm label-warning">Yes</span>': 'No'; ?></div></td> */}
-                    <td><div align="center">VIP: '<span class="label label-sm label-warning">Yes</span>': 'No'</div></td>
-                    {/* <td><?php echo $inProgressCaseLs[$i]['productName']; ?></td> */}
-                    <td>Product Name</td>
-                    {/* <td><?php echo $inProgressCaseLs[$i]['customerName']; ?></td> */}
-                    <td>customerName</td>
-                    {/* <td><?php echo $inProgressCaseLs[$i]['fullname']; ?></td> */}
-                    <td>customerName</td>
-                    {/* <td><div align="center"><?php echo $inProgressCaseLs[$i]['totalNewAlert']; ?></div></td> */}
-                    <td><div align="center">Total New Alert</div></td>
+                    <td>
+                      <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
+                      </td>
+                    <td>
+                      <div align="center">
+                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
+                      </div>
+                    </td>
+                    <td>{data.caseType}</td>
+                    <td>
+                      <div align="center">
+                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
+                        {data.vip ? data.vip : '-'}
+                      </div>
+                    </td>
+                    <td>{data.productName}</td>
+                    <td>{data.customerName}</td>
+                    <td>
+                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
+                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullName} </span> : data.fullName}
+                    </td>
+                    <td>{data.ownerName}</td>
+                    <td>
+                      <div align="center" style={{ fontSize: 10 }}>
+                       {data.totalNewAlert === 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center">
+                        <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ga/')">
+                          Open
+                          <i className="ace-icon fa fa-arrow-right icon-on-right" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                  {/* <?php }} ?> */}
+                  })
+                  }
                 </tbody>
-
               </table>
             </div> {/* <!-- /.span --> */}
           </div> {/* <!-- /.row --> */}
-        </div>
         <Footer />
       </div>
     );
