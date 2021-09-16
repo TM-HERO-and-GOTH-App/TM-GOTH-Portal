@@ -8,6 +8,7 @@ class GA_Assigned extends React.Component {
     super(props)
     this.state = {
       token: JSON.parse(sessionStorage.getItem('userToken')),
+      shID: JSON.parse(sessionStorage.getItem('UserData')),
       totalCase: [],
       statusLabel: '',
       statusBadge: '',
@@ -20,7 +21,8 @@ class GA_Assigned extends React.Component {
   }
 
   loggerCase(){
-    AssignmentService.viewCaseByOwner(this.state.token, 64).then(res => {
+    const shID = this.state.shID.shID
+    AssignmentService.viewCaseByGroup(this.state.token, shID, 64).then(res => {
       console.log(res);
       if(res[0].response === 'FAILED'){
         this.setState({ totalCase: res })
@@ -133,26 +135,25 @@ class GA_Assigned extends React.Component {
                     <td>
                       <div align="center">
                         {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> aging </span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
                         {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
-                        {data.vip ? data.vip : '-'}
+                        {data.vip ? <i class="menu-icon glyphicon glyphicon-ok"></i> : '-'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
-                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullName} </span> : data.fullName}
+                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
                     <td>
                       <div align="center" style={{ fontSize: 10 }}>
-                       {data.totalNewAlert === 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
+                       {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
                       </div>
                     </td>
                     <td>

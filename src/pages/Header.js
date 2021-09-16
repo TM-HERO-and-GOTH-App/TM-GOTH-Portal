@@ -2,12 +2,18 @@ import React from 'react';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      dropdownOpen: false,
+      collabDropdown: false,
+      AdvancedSearch: false,
+      selectedTab: false,
+    }
     this.toggle = this.toggle.bind(this);
     this.collabToggle = this.collabToggle.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
@@ -15,12 +21,6 @@ class Header extends React.Component {
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
     this.clearsessionStorage = this.clearsessionStorage.bind(this);
-    this.state = {
-      dropdownOpen: false,
-      collabDropdown: false,
-      AdvancedSearch: false,
-      selectedTab: false
-    };
   }
 
   toggle() {
@@ -31,15 +31,15 @@ class Header extends React.Component {
 
   collabToggle() {
     this.setState({
-      collabDropdown: !this.state.collabDropdown
+      collabDropdown: !this.state.collabDropdown,
     });
   }
 
   onMouseEnter() {
-    this.setState({ dropdownOpen: true});
+    this.setState({ dropdownOpen: true });
   }
 
-  onMouseEnterCollab(){
+  onMouseEnterCollab() {
     this.setState({ collabDropdown: true })
   }
 
@@ -51,7 +51,7 @@ class Header extends React.Component {
     this.setState({ collabDropdown: false });
   }
 
-  clearsessionStorage(){
+  clearsessionStorage() {
     sessionStorage.clear();
   }
 
@@ -86,7 +86,6 @@ class Header extends React.Component {
                     <span className="user-info">
                       <small>Welcome,</small>
                       {userInfo.fullName}
-                      {/*?php echo ucwords(strtolower($fullName)); ?*/}
                     </span>
                     <i className="ace-icon fa fa-caret-down" />
                   </a>
@@ -103,14 +102,16 @@ class Header extends React.Component {
                         My Profile
                       </Link>
                     </li>
-                    {/*?php if( $stakeholderName == 'RRT' ){ ?*/}
-                    <li>
-                      <Link to = "/create_case">
-                        <i className="ace-icon fa fa-pencil" />
-                        Create New Case
-                      </Link>
-                    </li>
-                    {/*?php } ?*/}
+
+                    {(userInfo.stakeholderName) &&
+                      <li>
+                        <Link to="/create_case">
+                          <i className="ace-icon fa fa-pencil" />
+                          Create New Case
+                        </Link>
+                      </li>
+                    }
+
                     <li className="divider" />
                     <li>
                       <a href="/login" onClick={this.clearsessionStorage}>
@@ -142,18 +143,19 @@ class Header extends React.Component {
               <img src={img3} width={125} />
             </div>{/* /.sidebar-shortcuts */}
             <ul className="nav nav-list">
-              <li className={this.state.selectedTab ? "active open hover" : 'hover'}>
+              <li className="active open hover">
                 <a href="/">
                   <i className="menu-icon fa fa-tachometer" />
                   <span className="nav_menu-item"> Dashboard </span>
                 </a>
               </li>
-              <li className={"active open hover" } onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+              <li className='active open hover' onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 <a href="/MyAssignments_Assigned">
                   <i className="menu-icon fa fa-list" />
                   <span className="menu-text"> My Assignments </span>
                   <b className="arrow fa fa-angle-down" />
                 </a>
+
                 {this.state.dropdownOpen && <ul className="submenu">
                   <li className="hover">
                     <a href="/MyAssignments_Assigned">
@@ -176,7 +178,9 @@ class Header extends React.Component {
                     </Link>
                     <b className="arrow" />
                   </li>
-                </ul>}
+                </ul>
+                }
+
               </li>
               <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                 <Link to="/MyCollaboration_Assigned">
@@ -184,22 +188,26 @@ class Header extends React.Component {
                   <span className="menu-text"> My Collaboration </span>
                   <b className="arrow fa fa-angle-down" />
                 </Link>
-                {this.state.collabDropdown && <ul className="submenu">
-                  <li className="hover">
-                    <Link to="/MyCollaboration_Assigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Assigned Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover">
-                    <Link to="MyCollaboration_Inprogress">
-                      <i className="menu-icon fa fa-caret-right" />
-                      In-Progress Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                </ul>}
+
+                {this.state.collabDropdown &&
+                  <ul className="submenu">
+                    <li className="hover">
+                      <Link to="/MyCollaboration_Assigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Assigned Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover">
+                      <Link to="MyCollaboration_Inprogress">
+                        <i className="menu-icon fa fa-caret-right" />
+                        In-Progress Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                  </ul>
+                }
+
               </li>
               <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                 <Link to="GroupAssignments_Assigned">
@@ -207,46 +215,51 @@ class Header extends React.Component {
                   <span className="menu-text"> Group Assignments </span>
                   <b className="arrow fa fa-angle-down" />
                 </Link>
-                {this.state.collabDropdown && <ul className="submenu">
-                  <li className="hover">
-                    <Link to="GroupAssignments_Assigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Assigned Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover">
-                    <Link to="GroupAssignments_Closed">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Closed Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover"> {/* active */}
-                    <Link to="GroupAssignments_Inprogress">
-                      <i className="menu-icon fa fa-caret-right" />
-                      In-Progress Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover">
-                    <Link to="GroupAssignments_Unassigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      <span style={{ color: 'red' }}>Unassigned Cases</span>
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                </ul>}
+
+                {this.state.collabDropdown &&
+                  <ul className="submenu">
+                    <li className="hover">
+                      <Link to="GroupAssignments_Assigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Assigned Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover">
+                      <Link to="GroupAssignments_Closed">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Closed Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover"> {/* active */}
+                      <Link to="GroupAssignments_Inprogress">
+                        <i className="menu-icon fa fa-caret-right" />
+                        In-Progress Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover">
+                      <Link to="GroupAssignments_Unassigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        <span style={{ color: 'red' }}>Unassigned Cases</span>
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                  </ul>
+                }
               </li>
-              {/*?php if( $shGroup != 'SALES' ){ ?*/}
-              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
-                <Link to="AllAssignments_Unassigned">
-                  <i className="menu-icon glyphicon glyphicon-globe" />
-                  <span className="menu-text"> ALL Assignments </span>
-                  <b className="arrow fa fa-angle-down" />
-                </Link>
-                {this.state.collabDropdown && <ul className="submenu">
-                  {/*<li class="hover">
+
+              {(userInfo.hGroup !== 'SALES') &&
+                <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
+                  <Link to="AllAssignments_Unassigned">
+                    <i className="menu-icon glyphicon glyphicon-globe" />
+                    <span className="menu-text"> ALL Assignments </span>
+                    <b className="arrow fa fa-angle-down" />
+                  </Link>
+
+                  {this.state.collabDropdown && <ul className="submenu">
+                    {/*<li class="hover">
 								<a href="<?php //echo APPNAME; ?>/assignment/all/">
 									<i class="menu-icon fa fa-caret-right"></i>
 									ALL Status
@@ -254,70 +267,74 @@ class Header extends React.Component {
 
 								<b class="arrow"></b>
 							</li>*/}
-                  <li className="hover">
-                    <Link to="AllAssignments_Assigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Assigned Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover">
-                    <Link to="AllAssignments_Closed">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Closed Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover"> {/* active */}
-                    <Link to="AllAssignments_Inprogress">
-                      <i className="menu-icon fa fa-caret-right" />
-                      In-Progress Cases
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                  <li className="hover">
-                    <Link to="AllAssignments_Unassigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      <span style={{ color: 'red' }}>Unassigned Cases</span>
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                </ul>}
-              </li>
-              {/*?php } ?*/}
-              {/*?php if( strtoupper($position) == 'ADMIN' ){ ?*/}
-              <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
-                <Link to="ManageUsers_Groupmembers">
-                  <i className="menu-icon fa fa-users" />
-                  <span className="menu-text"> Manage Users </span>
-                  <b className="arrow fa fa-angle-down" />
-                </Link>
-                {this.state.collabDropdown && <ul className="submenu">
-                  <li className="hover">
-                    <Link to="ManageUsers_RegisteredUser">
-                      <i className="menu-icon fa fa-caret-right" />
-                      ALL Registered User
-                    </Link>
-                    <b className="arrow" />
-                  </li>
-                      
-                  <li className="hover">  
-                    <Link to="ManageUsers_Groupmembers">                                    
-                      <i className="menu-icon fa fa-caret-right" />                     
-                      My Group Members    
-                      </Link>                   
-                    <b className="arrow" />
-                        
-                    
-                  </li>  
-                </ul>}
-              </li>
-              {/* Add Link inside the I Tag because the style will ruin. You can try move it around */}
+                    <li className="hover">
+                      <Link to="AllAssignments_Assigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Assigned Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover">
+                      <Link to="AllAssignments_Closed">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Closed Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover"> {/* active */}
+                      <Link to="AllAssignments_Inprogress">
+                        <i className="menu-icon fa fa-caret-right" />
+                        In-Progress Cases
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                    <li className="hover">
+                      <Link to="AllAssignments_Unassigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        <span style={{ color: 'red' }}>Unassigned Cases</span>
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+                  </ul>}
+                </li>
+              }
+
+              {(userInfo.positionName === 'Admin') &&
+                <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
+                  <Link to="ManageUsers_Groupmembers">
+                    <i className="menu-icon fa fa-users" />
+                    <span className="menu-text"> Manage Users </span>
+                    <b className="arrow fa fa-angle-down" />
+                  </Link>
+                  {this.state.collabDropdown && <ul className="submenu">
+                    <li className="hover">
+                      <Link to="ManageUsers_RegisteredUser">
+                        <i className="menu-icon fa fa-caret-right" />
+                        ALL Registered User
+                      </Link>
+                      <b className="arrow" />
+                    </li>
+
+                    <li className="hover">
+                      <Link to="ManageUsers_Groupmembers">
+                        <i className="menu-icon fa fa-caret-right" />
+                        My Group Members
+                      </Link>
+                      <b className="arrow" />
+
+
+                    </li>
+                  </ul>
+                  }
+                </li>
+              }
+
+              {/* Add Linkinside the I Tag because the style will ruin. You can try move it around */}
               <li className="active open hover">
                 <Link to="/advance_search">
                   <i className="menu-icon glyphicon glyphicon-search" />
                   {/* You have to click the text to navigate to new page */}
-                    <span className="menu-text"> Advanced Search </span>
+                  <span className="menu-text"> Advanced Search </span>
                   <b className="arrow fa fa-angle-down" />
                 </Link>
               </li>
@@ -577,7 +594,7 @@ class Header extends React.Component {
                             <option data-skin="no-skin" value="#438EB9">#438EB9</option>
                             <option data-skin="skin-1" value="#222A2D">#222A2D</option>
                             {/*<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-												<option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>*/}
+												    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>*/}
                           </select>
                         </div>
                         <span>&nbsp; Choose Skin</span>
@@ -596,7 +613,7 @@ class Header extends React.Component {
                 {/* /.page-header */}
                 <div className="row">
                   <div className="col-xs-12">
-                  
+
                     {/*<div class="hidden-sm hidden-xs">
 									<button type="button" class="sidebar-collapse btn btn-white btn-primary" data-target="#sidebar">
 										<i class="ace-icon fa fa-angle-double-up" data-icon1="ace-icon fa fa-angle-double-up" data-icon2="ace-icon fa fa-angle-double-down"></i>

@@ -125,12 +125,12 @@ class MA_Assigned extends React.Component {
                     <td>{data.customerName}</td>
                     <td>
                       {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
-                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullName} </span> : data.fullName}
+                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
                     <td>
                       <div align="center" style={{ fontSize: 10 }}>
-                       {data.totalNewAlert === 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
+                       {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
                       </div>
                     </td>
                     <td>

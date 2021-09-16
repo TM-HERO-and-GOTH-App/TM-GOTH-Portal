@@ -102,7 +102,7 @@ class GA_Inprogress extends React.Component {
                 { this.state.totalCase.length === 1 ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
-                  this.state.totalCase.map( data => {
+                  this.state.totalCase.map( (data) => {
                     // this.setState({ statusBadge: data.unclosedaging > 30 ? 'danger' : 'warning'})
                     // if(data.caseStatus === 'NEW'){
                     //   this.setState({ statusLabel: 'N'})

@@ -132,7 +132,7 @@ class GA_Closed extends React.Component {
                     <td>{data.ownerName}</td>
                     <td>
                       <div align="center" style={{ fontSize: 10 }}>
-                       {data.totalNewAlert === 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
+                       {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
                       </div>
                     </td>
                     <td>
