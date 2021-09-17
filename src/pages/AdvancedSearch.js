@@ -131,7 +131,6 @@ class AdvancedSearch extends React.Component {
                     return <tr>
                       <td>
                         <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
-                          {/*?php echo $caseLs[$i]['caseNum']; ?*/}
                           {data.caseNum}
                         </a>
                       </td>
@@ -145,19 +144,16 @@ class AdvancedSearch extends React.Component {
                       <td>{data.caseType}</td>
                       <td>
                         <div align="center">
-                          {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
                           {data.vip ? <span class="label label-success arrowed-right">{data.fullname}</span> : '-'}
                         </div>
                       </td>
                       <td>{data.productName}</td>
                       <td>{data.customerName}</td>
-                      {/* <td>?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt;</td> */}
                       <td>{data.vip ? <span class="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
                       <td>{/*?php echo $ownerName , ' ' , $sh; ?*/}</td>
                       <td>{data.remark}</td>
                       <td>
                         <div align="center">
-                          {/*?php echo ( $caseLs[$i]['totalNewAlert']  0 ) ? '<span style={{fontSize: 10}} className="badge badge-warning">' . $caseLs[$i]['totalNewAlert'] . '</span>' : 0; ?&gt; */}
                           {data.totalNewAlert > 0 ? <span style={{fontSize:10}} class="badge badge-warning">{data.totalNewAlert}</span> : 0}
                         </div>
                       </td>
