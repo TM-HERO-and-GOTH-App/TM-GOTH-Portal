@@ -23,7 +23,7 @@ class Dashboard extends React.Component {
       totalGroupAssignCase: 0,
       totalGroupInprogressCase: 0,
       totalGroupCloseCase: 0,
-      totalRegisterUserInAllStatesData: [],
+      totalRegisterUser: [],
       totalOverallCaseByState: [],
       groupOption: [],
       value: 'placeholder',
@@ -105,19 +105,18 @@ class Dashboard extends React.Component {
   getRegisterUserData() {
     DashboardService.getTotalRegisteredUserByState(this.state.token).then(res => {
       // console.log(res);
-      // const totalUser = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
-      // this.setState({ totalRegisterUser: totalUser });
-      this.setState({ totalRegisterUserInAllStatesData: res })
-      console.log(this.state.totalRegisterUserInAllStatesData)
+      const totalUser = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
+      this.setState({ totalRegisterUser: totalUser });
+      // this.setState({ totalRegisterUserInAllStatesData: res })
     })
   }
 
   getTotalCaseByStateData() {
     DashboardService.getTotalCaseByState(this.state.token).then(res => {
       console.log(res)
-      this.setState({ totalOverallCaseByState: res })
-      // const totalCaseByState = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
-      // this.setState({ totalOverallCase: totalCaseByState })
+      // this.setState({ totalOverallCaseByState: res })
+      const totalCaseByState = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
+      this.setState({ totalOverallCaseByState: totalCaseByState })
     });
   }
 
@@ -332,18 +331,16 @@ class Dashboard extends React.Component {
                 Total Registered User
               </h4>
               <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                {this.state.totalRegisterUserInAllStatesData.map((data, key) =>
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: '70%' }}>
-                      <b key={key}>{data.state}</b>
+                      <b>Total User</b>
                     </div>
                     <div className="profile-info-value">
-                      <span className="editable" id="username" key={key}>
-                        {data.total}
+                      <span className="editable" id="username">
+                        {this.state.totalRegisterUser}
                       </span>
                     </div>
                   </div>
-                )}
               </div>
             </div>
             <div className="col-sm-3">
@@ -352,18 +349,16 @@ class Dashboard extends React.Component {
                 Total Created Case (COMPLAINT)
               </h4>
               <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                {this.state.totalOverallCaseByState.map((data, key) =>
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: '70%' }}>
-                      <b key={key}>{data.state}</b>
+                      <b>Total Case</b>
                     </div>
                     <div className="profile-info-value">
-                      <span className="editable" id="username" key={key}>
-                        {data.total}
+                      <span className="editable" id="username">
+                        {this.state.totalOverallCaseByState}
                       </span>
                     </div>
                   </div>
-                )}
               </div>
             </div>
           </div>

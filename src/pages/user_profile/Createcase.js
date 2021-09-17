@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import CreateCaseService from '../web_service/create_case_service/CreateCaseService';
+import Header from '../Header';
+import Footer from '../Footer';
+import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 
 class Createcase extends React.Component {
   constructor(props){
