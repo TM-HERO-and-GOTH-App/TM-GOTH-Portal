@@ -1,15 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class AssignToOther extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            caseToken: this.props.match.params.id
+        }
+    }
+
     render() {
         return (
             <div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <button class="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $cToken; ?>')">
+                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div class="space-10"></div>

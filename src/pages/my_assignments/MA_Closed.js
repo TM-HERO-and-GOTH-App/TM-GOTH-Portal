@@ -1,7 +1,8 @@
 import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
-import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
+import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
+import { Link } from 'react-router-dom'
 
 class MA_Closed extends React.Component {
   constructor(props){
@@ -25,6 +26,7 @@ class MA_Closed extends React.Component {
       if(res[0].response === 'FAILED'){
         this.setState({ totalCase: res })
       } else {
+        sessionStorage.setItem('closedCase', JSON.stringify(res))
         this.setState({ totalCase: res })
       }
     })
@@ -40,7 +42,6 @@ class MA_Closed extends React.Component {
 
         <div className="row">
           <div className="col-xs-12">
-            {/*?php if ( isset($alertStatus) && !empty($alertStatus) ): ?*/}
             <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
               <button type="button" className="close" data-dismiss="alert">
                 <i className="ace-icon fa fa-times" />
@@ -50,10 +51,8 @@ class MA_Closed extends React.Component {
                   <i className="ace-icon fa fa-check" />
                   Well done!
                 </strong>
-                {/*?php echo str_replace("_", " ", $alertMessage); ?*/}
               </p>
             </div>
-            {/*?php endif; ?*/}
             <div className="clearfix">
               <div className="pull-right tableTools-container" />
             </div>
@@ -75,7 +74,7 @@ class MA_Closed extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  { this.state.totalCase.length === 1 ? 
+                  { this.state.totalCase.length === 0 ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {
@@ -101,9 +100,9 @@ class MA_Closed extends React.Component {
                     // }
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <Link to={`/case_detail/${data.cToken}`}>
                         {data.caseNum}
-                      </a>
+                      </Link>
                     </td>
                     <td>
                       <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
@@ -117,14 +116,12 @@ class MA_Closed extends React.Component {
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
-                        {data.vip ? data.vip : '-'}
+                        {data.vip ? <span class="label label-sm label-warning">Yes</span> : 'No'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
                       {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
@@ -135,7 +132,7 @@ class MA_Closed extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ga/')">
+                        <button className="btn btn-minier btn-yellow">
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </button>

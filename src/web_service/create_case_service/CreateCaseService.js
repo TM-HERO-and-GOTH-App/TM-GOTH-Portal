@@ -18,7 +18,7 @@ const CreateCaseService = {
                 subSourceID: subSourceID,
                 caseTypeID: caseTypeID
             })
-        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
+        }).then(res => res.json()).catch(err => console.log(err))
     }
 }
 

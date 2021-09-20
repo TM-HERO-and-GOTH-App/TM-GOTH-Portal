@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
+import { Link } from 'react-router-dom';
 
 class AA_Assigned extends React.Component {
   props
@@ -24,7 +25,7 @@ class AA_Assigned extends React.Component {
 
   allAssignmentData() {
     const shID = this.state.shID.shID;
-    AssignmentService.viewCaseByGroup(this.state.token, shID, 0).then(res => {
+    AssignmentService.viewCaseByGroup(this.state.token, shID, 64).then(res => {
       console.log(res);
       this.setState({ case: res })
     })
@@ -42,30 +43,29 @@ class AA_Assigned extends React.Component {
           <form name="form" method="POST">
 
             <div className="col-sm-3">
-              <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.groupType} onChange={(e) => this.setState({ groupType: e.target.value })}>
-                <option value="0"> All Group/Stakeholder ...</option>
+              <select className="chosen-select form-control" name="shID" value={this.state.groupType} onChange={(e) => this.setState({ groupType: e.target.value })}>
+                <option value="0">All Group/Stakeholder ...</option>
                 {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                  return <option key={key} value={data.lovID}> {data.lovName} </option>
+                  return <option key={key} value={data.lovName}> {data.lovName} </option>
                 })
                 }
               </select>
             </div>
             <div className="col-sm-3">
-              <select className="chosen-select form-control" name="caseTypeID" data-placeholder="Choose a Case Type..." value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
+              <select className="chosen-select form-control" name="caseTypeID" value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
                 <option value="0" >All Case Type ...</option>
                 {
                   this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                    return <option key={key} value={data.lovID}>{data.lovName}</option>
+                    return <option key={key} value={data.lovName}>{data.lovName}</option>
                   })
                 }
               </select>
             </div>
 
           </form>
-
           <div className="col-xs-12">
             <div className="clearfix">
-              <div className="pull-right tableTools-container"></div>
+              <div className="pull-right tableTools-container" />
             </div>
             <div>
               <table id="dynamic-table" className="table table-striped table-bordered table-hover"> {/* <!-- id="simple-table" className="table table-bordered table-hover" --> */}
@@ -84,51 +84,58 @@ class AA_Assigned extends React.Component {
                     <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th>
                   </tr>
                 </thead>
-
-                <tbody>
-                  {this.state.case === null ? <tr><td colSpan="11"><span style={{ color: 'red' }}>List is empty</span></td></tr>
-                    :
-                    this.state.case.map((data) => {
-                      return <tr>
-                        <td>
-                          <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
-                            {data.caseNum}
-                          </a>
-                        </td>
-                        <td><div align="center"><span className="badge badge-<?php echo $statusBadge; ?>">Status</span></div></td>
-                        <td>
-                          <div align="center">
-                            {data.caseStatus === 'CLOSED' ? 'closedAging' : 'unclosedAging'}
-                          </div>
-                        </td>
-                        <td>{data.caseType}</td>
-                        <td>
-                          <div align="center">
-                            {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                          </div>
-                        </td>
-                        <td>{data.productName}</td>
-                        <td>{data.customerName}</td>
-                        <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                        <td>{data.ownerName + '-' + data.stakeholderName}</td>
-                        <td>
-                          <div align="center" style={{ fontSize: 10 }}>
-                            {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
-                          </div>
-                        </td>
-                        <td>
-                          <div align="center">
-                            <button className="btn btn-minier btn-yellow" onClick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/aa/')">
-                              Open
-                              <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
-                            </button>
-                          </div>
+                {(this.state.caseType) &&
+                  <tbody>
+                    {this.state.case.length === 0 ?
+                      <tr>
+                        <td colSpan="11">
+                          <span style={{ color: 'red' }}>List is empty</span>
                         </td>
                       </tr>
-                    })
-                  }
-                </tbody>
-
+                      :
+                      this.state.case.map((data) => {
+                        return <tr>
+                          <td>
+                            <Link to={`/case_detail/${data.cToken}`}>
+                              {data.caseNum}
+                            </Link>
+                          </td>
+                          <td><div align="center">
+                            <span className="badge badge-info">{data.caseStatus ? 'A' : '-'}</span>
+                          </div></td>
+                          <td>
+                            <div align="center">
+                              {data.caseStatus === 'CLOSED' ? 'closedAging' : 'unclosedAging'}
+                            </div>
+                          </td>
+                          <td>{data.caseType}</td>
+                          <td>
+                            <div align="center">
+                              {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                            </div>
+                          </td>
+                          <td>{data.productName}</td>
+                          <td>{data.customerName}</td>
+                          <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                          <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                          <td>
+                            <div align="center" style={{ fontSize: 10 }}>
+                              {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
+                            </div>
+                          </td>
+                          <td>
+                            <div align="center">
+                              <button className="btn btn-minier btn-yellow">
+                                Open
+                                <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      })
+                    }
+                  </tbody>
+                }
               </table>
             </div>
           </div>  {/* //<!-- /.span --> */}
