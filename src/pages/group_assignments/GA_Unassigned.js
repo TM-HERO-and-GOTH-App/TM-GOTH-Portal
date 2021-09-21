@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
@@ -17,7 +18,11 @@ class GA_Unassigned extends React.Component {
   }
 
   componentDidMount(){
-    this.loggerCase()
+    this.loggerCase();
+  }
+
+  componentWillUnmount(){
+    this.loggerCase();
   }
 
   loggerCase(){
@@ -36,7 +41,7 @@ class GA_Unassigned extends React.Component {
     return (
       <div>
         <Header />
-        <div class="page-header">
+        <div className="page-header">
             <h1>Group Assignments : UNASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
 
@@ -125,31 +130,31 @@ class GA_Unassigned extends React.Component {
                     // }
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <Link to={`/case_detail/${data.cToken}`}>
                         {data.caseNum}
-                      </a>
+                      </Link>
                     </td>
                     <td>
                       <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
                       </td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> aging </span>}
+                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span className="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${this.state.statusBadge}`}> aging </span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
-                        {data.vip ? <i class="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i className="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
+                        {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
-                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
+                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span className="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
+                      {data.vip ? <span className="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
                     <td>
@@ -159,7 +164,7 @@ class GA_Unassigned extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ga/')">
+                        <button className="btn btn-minier btn-yellow" onClick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ga/')">
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </button>

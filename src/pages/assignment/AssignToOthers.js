@@ -1,17 +1,49 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../Header';
+import Footer from '../Footer';
+import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
+import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 class AssignToOther extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            caseToken: this.props.match.params.id
+            caseToken: this.props.match.params.id,
+            lovData: JSON.parse(sessionStorage.getItem('LovData')),
+            token: JSON.parse(sessionStorage.getItem('userToken')),
+            shID: JSON.parse(sessionStorage.getItem('UserData')),
+            caseDetailData: {},
+            groupMember: []
         }
+        this.getCaseDetail = this.getCaseDetail.bind(this);
+        this.getGroupResult = this.getGroupResult.bind(this);
+    }
+
+    componentDidMount() {
+        this.getCaseDetail();
+        this.getGroupResult();
+    }
+
+    getGroupResult() {
+        const shID = this.state.shID.shID
+        ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
+            console.log(res);
+            this.setState({ groupMember: res })
+        })
+    }
+
+    getCaseDetail() {
+        CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
+            console.log(res)
+            this.setState({ caseDetailData: res })
+        })
     }
 
     render() {
         return (
             <div>
+                <Header/>
                 <div class="row">
                     <div class="col-sm-4">
                         <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
@@ -42,14 +74,11 @@ class AssignToOther extends React.Component {
                 <div class="row">
                     <div class="col-sm-3">
                         <form name="form" method="POST">
-                            <select class="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." onchange="submitForm('<?php echo APPNAME; ?>/assignment/groupmembers/<?php echo $cToken; ?>/#group-members')">
-                                {/* <option value="0" <?php echo ( 0 == $shID_opt ) ? 'selected="yes"' : ''; ?>>All Group/Stakeholder ...</option> */}
-                                {/* // <?php $totalLov = count($lovStakeholder); ?>
-            // <?php for($i=0;$i<$totalLov;$i++){ ?>
-            // 	<?php if( $lovStakeholder[$i]['lovName'] != 'ADMIN' ) { ?> */}
-                                {/* <option value="<?php echo $lovStakeholder[$i]['lovID']; ?>" <?php echo ( $lovStakeholder[$i]['lovID'] == $shID_opt ) ? 'selected="yes"' : ''; ?>><?php echo $lovStakeholder[$i]['lovName']; ?></option> */}
-                                {/* // 	<?php } ?>
-            // <?php } ?> */}
+                            <select class="chosen-select form-control" name="shID" dataPlaceholder="Choose a Group..." onChange="submitForm('<?php echo APPNAME; ?>/assignment/groupmembers/<?php echo $cToken; ?>/#group-members')">
+                                <option value="0">All Group/Stakeholder ...</option>
+                                {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map(data => {
+                                    return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                })}
                             </select>
                         </form>
                     </div>
@@ -79,43 +108,46 @@ class AssignToOther extends React.Component {
                             </thead>
 
                             <tbody>
-                                {/* <?php if( empty($teamMembers) ){ ?> */}
-                                <tr><td colSpan="4"><span style={{color:"red"}}>Selection NOT Allowed. Please select Group/Stakeholder</span></td></tr>
-                                {/* <?php } else { 
-				
-				for($i=0;$i<$teamMembersCount;$i++){ 
-				?> */}
-                                <tr>
-                                    <td><div align="center">
-                                        {/* <?php echo $i+1; ?> */}
-                                    </div></td>
-                                    <td>
-                                        {/* <?php echo ucwords($teamMembers[$i]['fullName']); ?> */}
-                                    </td>
-                                    <td>
-                                        {/* <?php echo strtolower($teamMembers[$i]['email']); ?> */}
-                                    </td>
-                                    <td>
-                                        {/* <?php echo ( strtoupper($teamMembers[$i]['positionName']) == 'ADMIN' ) ? '<span class="label label-warning arrowed-right">' . $teamMembers[$i]['positionName'] . '</span>' : $teamMembers[$i]['positionName']; ?>						 */}
-                                    </td>
-                                    <td><div align="center">
-                                        {/* <?php echo $teamMembers[$i]['stakeholderName']; ?> */}
-                                    </div></td>
-                                    <td><div align="center">
-                                        {/* <?php if( isAdmin($position) || isGroupCoordinator($position,$shID,$ci['shID']) ) { ?>		
-						<?php if(! isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ){ ?> */}
-                                        <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/assignment/assigntoagent/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hID']; ?>/<?php echo $shID_opt; ?>')">Assign</button>
-                                        {/* <?php }} ?>
+                                {this.state.groupMember === null ?
+                                    <tr><td colSpan="4"><span style={{ color: "red" }}>Selection NOT Allowed. Please select Group/Stakeholder</span></td></tr>
+                                    :
+                                    this.state.groupMember.map((data, i)=> {
+                                        i += 1;
+                                        return <tr>
+                                            <td><div align="center">
+                                                {i}
+                                            </div></td>
+                                            <td>
+                                                {data.fullName}
+                                            </td>
+                                            <td>
+                                                {data.email}
+                                            </td>
+                                            <td>
+                                                {data.positionName === 'Admin' ? <span class="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
+                                            </td>
+                                            <td><div align="center">
+                                                {data.stakeholderName}
+                                            </div></td>
+                                            <td><div align="center">	
+						{/* <?php if(! isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ){ ?> */} 
+                                                {(data.positionName === 'Admin' || data.positionName === 'Coordinator' || !this.state.caseDetailData.ownerName) && 
+                                                    <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/assignment/assigntoagent/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hID']; ?>/<?php echo $shID_opt; ?>')">Assign</button>                          
+                                                }
+                                                {/* <?php }} ?>
 					<?php echo ( isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ) ? '<span class="badge badge-info">Owner</span>' : ''; ?>					 */}
-                                    </div>
-                                    </td>
-                                </tr>
-                                {/* <?php }} ?> */}
+                                                {(this.state.caseDetailData.ownerName === this.state.caseDetailData.oID) && <span class="badge badge-info">Owner</span>}
+                                            </div>
+                                            </td>
+                                        </tr>
+                                    })
+                                }
                             </tbody>
 
                         </table>
                     </div>{/* <!-- /.span --> */}
                 </div>
+                <Footer/>
             </div>
         )
     }

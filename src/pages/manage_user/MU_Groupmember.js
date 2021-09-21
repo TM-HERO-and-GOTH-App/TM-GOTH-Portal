@@ -137,7 +137,7 @@ class MU_Groupmember extends React.Component {
       <div>
         <Header />
         <div>
-          <a name="group-members" />
+          {/* <a name="group-members" /> */}
 
           {this.state.alertStatus ?
             <div className="row">
@@ -163,7 +163,7 @@ class MU_Groupmember extends React.Component {
                   </span>
                   <input type="text" className="form-control search-query" name="keyword" placeholder="Search Profile by Name" value={this.state.searchUserInput} onChange={(e) => this.setState({ searchUserInput: e.target.value })} />
                   <span className="input-group-btn">
-                    <button type="submit" className="btn btn-inverse btn-white" type='submit'>
+                    <button type="submit" className="btn btn-inverse btn-white">
                       <span className="ace-icon fa fa-search icon-on-right bigger-110" />
                       Search
                     </button>
@@ -256,25 +256,21 @@ class MU_Groupmember extends React.Component {
                           </td>
                           <td>
                             <div align="center">
-                              {/* <input name="set_agent" type="checkbox" onClick="redirect('?php echo APPNAME; ?/admin/setasagent/?php echo $teamMembers[$i]['hToken']; ?/')" className="lbl" /> */}
                               <input name="set_agent" type="checkbox" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? 'yes' : ''} /><span className="lbl"></span>
                             </div>
                           </td>
                           <td>
                             <div align="center">
-                              {/* <input name="set_co" type="checkbox" onClick="redirect('?php echo APPNAME; ?/admin/setascoordinator/?php echo $teamMembers[$i]['hToken']; ?/')" className="lbl" /> */}
                               <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? 'yes' : ''}/>
                             </div>
                           </td>
                           <td>
                             <div align="center">
-                              {/* <input name="set_admin" type="checkbox" onClick="redirect('?php echo APPNAME; ?/admin/setasadmin/?php echo $teamMembers[$i]['hToken']; ?/')" className="lbl" /> */}
                               <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? 'yes' : ''}/>
                             </div>
                           </td>
                           <td><div align="center">
                             {(this.state.shID.shID !== data.hId && data.positionName !== 'Admin') && 
-                              // <button className="btn btn-minier btn-danger" onClick="redirect('<?php echo APPNAME; ?>/admin/removefromgroup/<?php echo $teamMembers[$i]['hToken']; ?>/')">Remove</button>
                               <button className="btn btn-minier btn-danger" onClick={this.removeFromGroup}>Remove</button>
                             }
                           </div>

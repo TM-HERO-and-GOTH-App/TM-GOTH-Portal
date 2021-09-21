@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
@@ -17,6 +18,10 @@ class GA_Inprogress extends React.Component {
   }
 
   componentDidMount(){
+    this.loggerCase()
+  }
+
+  componentWillUnmount(){
     this.loggerCase()
   }
 
@@ -125,9 +130,9 @@ class GA_Inprogress extends React.Component {
                     // }
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <Link to={`/case_detail/${data.cToken}`}>
                         {data.caseNum}
-                      </a>
+                      </Link>
                     </td>
                     <td>
                       <div align="center"><span className="badge badge">{data.caseStatus}</span></div>

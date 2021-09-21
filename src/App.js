@@ -10,6 +10,7 @@ import CaseDetail from './pages/CaseDetail';
 import CautionReport from './pages/hero_cases_functionality/CautionReport';
 import Createcase from './pages/user_profile/Createcase';
 import Dashboard from './pages/Dashboard';
+import EditCaseDetail from './pages/case_detail/EditCaseDetail';
 import EditUser from './pages/user_profile/EditUserProfile';
 import Forgot from './pages/Forgotpassword';
 import Loginbox from './pages/Loginbox';
@@ -66,17 +67,18 @@ function App() {
         <Route path="/advance_search"                       component={AdvancedSearch} />
         <Route path="/quick_search"                       component={Quicksearch} />
         <Route path="/user_profile"                       component={Userprofile} />
-        <Route path='/edit_user'                          component={EditUser} />
+        <Route path='/edit_profile'                          component={EditUser} />
         <Route path="/create_case"                       component={Createcase} />
         <Route path='/non_technical_case'                  component={NonTechnicalCase} />
         <Route path='/technical_case'                  component={TechnicalCase} />
         <Route path='/caution_report'                  component={CautionReport} />
-        <Route path='/internal_chat'                   component={InternalChat}/>
+        <Route path='/internal_chat/:id'                   component={InternalChat}/>
         <Route path='/invite_chat'                   component={InviteChat}/>
-        <Route path='/logger_chat'                   component={Logger}/>
-        <Route path='/action_taken'                   component={ActionTaken}/>
-        <Route path='/assign_to_other'                component={AssignToOther}/>
-        <Route path='/case_detail'                component={CaseDetail}/>
+        <Route path='/hero_chat/:id'                   component={Logger}/>
+        <Route path='/action_taken/:id'                   component={ActionTaken}/>
+        <Route path='/assign_to_other/:id'                component={AssignToOther}/>
+        <Route path='/case_detail/:id'                component={CaseDetail}/>
+        <Route path='/edit_case/:id'                component={EditCaseDetail}/>
       </Switch>
     </Router>
     );

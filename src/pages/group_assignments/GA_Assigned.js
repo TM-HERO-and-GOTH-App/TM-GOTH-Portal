@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
@@ -17,6 +18,10 @@ class GA_Assigned extends React.Component {
   }
 
   componentDidMount(){
+    this.loggerCase()
+  }
+
+  componentWillUnmount(){
     this.loggerCase()
   }
 
@@ -125,9 +130,9 @@ class GA_Assigned extends React.Component {
                     // }
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <Link to={`/case_detail/${data.cToken}`}>
                         {data.caseNum}
-                      </a>
+                      </Link>
                     </td>
                     <td>
                       <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
@@ -141,7 +146,6 @@ class GA_Assigned extends React.Component {
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
                         {data.vip ? <i class="menu-icon glyphicon glyphicon-ok"></i> : '-'}
                       </div>
                     </td>

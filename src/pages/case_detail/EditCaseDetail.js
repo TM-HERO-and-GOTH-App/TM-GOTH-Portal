@@ -64,7 +64,7 @@ class EditCaseDetail extends React.Component {
                         </Link>
                     </div>
                     <br />
-                    <div className="space-20"></div>
+                    <div className="space-20"/>
                     <form name="form" action="<?php echo APPNAME; ?>/assignment/updatecaseinfo/<?php echo $cToken; ?>">
                         <div className="col-sm-6">
                             <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
@@ -84,8 +84,9 @@ class EditCaseDetail extends React.Component {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">GROUP POOL</div>
                                             <div className="profile-info-value">
-                                                {/* <span className="editable" id="username"><b><?php echo $ci['stakeholderName']; ?></b></span> */}
-                                                <span className="editable" id="username"><b>{this.state.caseDetailData.stakeholderName}</b></span>
+                                                <span className="editable" id="username">
+                                                    <b>{this.state.caseDetailData.stakeholderName}</b>
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="profile-info-row">
@@ -192,7 +193,7 @@ class EditCaseDetail extends React.Component {
                                     <div className="profile-info-name" style={{ color: 'red', width: '20%' }}> Case Type </div>
 
                                     <div className="profile-info-value">
-                                        <select className="chosen-select form-control" name="inputs[caseTypeID]" data-placeholder="Choose a Case Type..." value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
+                                        <select className="chosen-select form-control" name="caseTypeID" data-placeholder="Choose a Case Type..." value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
                                             <option value="0">Choose a Case Type...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map(data => {
                                                 return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
@@ -204,7 +205,7 @@ class EditCaseDetail extends React.Component {
                                 <div className="profile-info-row">
                                     <div className="profile-info-name" style={{ color: "red" }}> Product Name</div>
                                     <div className="profile-info-value">
-                                        <select className="chosen-select form-control" name="inputs[productNameID]" data-placeholder="Choose a Product Name..." value={this.state.productType} onChange={(e) => this.setState({ productType: e.target.value })}>
+                                        <select className="chosen-select form-control" name="productNameID" value={this.state.productType} onChange={(e) => this.setState({ productType: e.target.value })}>
                                             <option value="0" >Choose a Product Name...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'PRODUCT').map(data => {
                                                 return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
@@ -216,7 +217,7 @@ class EditCaseDetail extends React.Component {
                                 <div className="profile-info-row">
                                     <div className="profile-info-name"> Segment </div>
                                     <div className="profile-info-value">
-                                        <select className="chosen-select form-control" name="inputs[segmentID]" data-placeholder="Choose a Segment..." value={this.state.segmentType} onChange={(e) => this.setState({ segmentType: e.target.value })}>
+                                        <select className="chosen-select form-control" name="segmentID" value={this.state.segmentType} onChange={(e) => this.setState({ segmentType: e.target.value })}>
                                             <option value="0" >Choose a Segment...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'SEGMENT').map(data => {
                                                 return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
@@ -291,7 +292,7 @@ class EditCaseDetail extends React.Component {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name"> Sub Source </div>
                                             <div className="profile-info-value">
-                                                <select className="chosen-select form-control" name="subSourceID" data-placeholder="Choose a Sub Source..." value={this.state.subSourceType} onChange={(e) => this.setState({ subSourceType: e.target.value })}>
+                                                <select className="chosen-select form-control" name="subSourceID" dataPlaceholder="Choose a Sub Source..." value={this.state.subSourceType} onChange={(e) => this.setState({ subSourceType: e.target.value })}>
                                                     <option value="0">Choose a Sub Source...</option>
                                                     {this.state.lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map(data => {
                                                         return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>

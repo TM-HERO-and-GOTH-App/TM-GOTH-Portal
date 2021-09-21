@@ -27,13 +27,11 @@ class MC_Inprogress extends React.Component {
     return (
       <div>
         <Header />
-        <div>
-          <div class="row">
-            <div class="col-sm-12">
-              <button class="btn btn-danger" onclick="redirect('<?php echo APPNAME; ?>/assignment/unassigned/')">Show Unassigned Cases</button>
-            </div>
-            <br /><br /><br />
+          <div class="page-header">
+              <h1>My Collaboration : IN-PROGRESSED</h1>
+          </div> {/* <!-- /.page-header --> */}
 
+          <div class="row">
             <div class="col-xs-12">
               {/* If there is a message */}
 
@@ -144,7 +142,6 @@ class MC_Inprogress extends React.Component {
               </table>
             </div> {/* <!-- /.span --> */}
           </div> {/* <!-- /.row --> */}
-        </div>
         <Footer />
       </div>
     );

@@ -21,6 +21,10 @@ class CaseDetail extends React.Component {
         this.getCaseDetail();
     }
 
+    componentWillUnmount(){
+        this.getCaseDetail();
+    }
+
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
@@ -89,12 +93,16 @@ class CaseDetail extends React.Component {
                         }
                         <div className="col-sm-7">
                             <div className="col-sm-7">
-                                <Link className="btn btn-primary" to='/action_taken'>
+                                <Link className="btn btn-primary" to={`/action_taken/${this.state.caseToken}`}>
                                     Action Taken
                                     {/* <!--<i className="ace-icon fa fa-arrow-right icon-on-right"></i>--> */}
                                 </Link>
-                                <button className="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $cToken; ?>/dc/')">HERO Chat</button>
-                                <button className="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/chat/internal/<?php echo $cToken; ?>/dc/')">Internal Chat</button>
+                                <Link className="btn btn-primary" to={`/hero_chat/${this.state.caseToken}`}>
+                                    HERO Chat
+                                </Link>
+                                <Link className="btn btn-primary" to={`/internal_chat/${this.state.caseToken}`}>
+                                    Internal Chat
+                                </Link>
                             </div>
                             <br />
                             <div className="space-20"></div>
@@ -217,7 +225,7 @@ class CaseDetail extends React.Component {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="login">
-                                                <span className={`label label-${this.state.statusBadge}`}>
+                                                <span className={`label label-success`}>
                                                     {
                                                         this.state.caseDetailData.caseStatus === 'NEW' ? this.setState({ statusLabel: 'UN-ASSIGNED' }) :
                                                             this.state.caseDetailData.caseStatus === 'ASSIGNED' ||
@@ -363,7 +371,7 @@ class CaseDetail extends React.Component {
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">Attachment</h4>
-                                {this.state.caseDetailData.picture ? <img src={this.state.caseDetailData.picture} /> : <i style={{ color: "red" }}>Not provided</i>}
+                                {this.state.caseDetailData.picture ? <img src={this.state.caseDetailData.picture} alt='Case'/> : <i style={{ color: "red" }}>Not provided</i>}
                             </div>
                         </div>
                         {this.state.caseDetailData.longtitude ?

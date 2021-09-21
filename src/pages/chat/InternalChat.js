@@ -1,56 +1,118 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Header from '../Header';
+import Footer from '../Footer';
+import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
+import ChatService from '../../web_service/chat_service/ChatService';
+import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 class InternalChat extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            token: JSON.parse(sessionStorage.getItem('userToken')),
+            shID: JSON.parse(sessionStorage.getItem('UserData')),
+            caseToken: this.props.match.params.id,
+            caseDetailData: {},
+            messageData: [],
+            groupMember: [],
+            isCaseOwner: '',
+            isCoordinator: '',
+            isAdmin: '',
+        }
+        this.getCaseDetail = this.getCaseDetail.bind(this);
+        this.getGroupResult = this.getGroupResult.bind(this);
+        this.getMessage = this.getMessage.bind(this);
+    }
+
+    componentDidMount() {
+        this.getCaseDetail();
+        this.getGroupResult();
+        this.getMessage();
+    }
+
+    componentWillUnmount(){
+        this.getCaseDetail();
+        this.getGroupResult();
+        this.getMessage();
+    }
+
+    getGroupResult() {
+        const shID = this.state.shID.shID
+        ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
+            console.log(res);
+            this.setState({ groupMember: res })
+            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
+            this.setState({ isAdmin: this.state.groupMember.filter(filter => filter.positionName === 'Admin') })
+        })
+    }
+
+    getCaseDetail() {
+        CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
+            console.log(res)
+            this.setState({ caseDetailData: res })
+            this.setState({ isCaseOwner: res.ownerName })
+        })
+    }
+
+    getMessage(){
+        ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'FE').then(res => {
+            console.log(res)
+            this.setState({ messageData: res });
+        })
+    }
+
     render() {
         return (
-
             <div>
+                <Header/>
                 <div class="row">
                     <div class="col-sm-12">
-                        <button class="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/assignment/<?php echo $prevPage; ?>/<?php echo $cToken; ?>')">
+                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Previous Page
-                        </button>
-                        <button class="btn btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $cToken; ?>')">
+                        </Link>
+                        <Link class="btn btn-yellow" to={`/hero_chat/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-exchange"></i>
                             Switch to HERO Chat
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div class="space-6" />
-                { /* <?php if( $ci['caseStatus'] == 'NEW' || $ci['caseStatus'] == 'ASSIGNED' || $ci['caseStatus'] == 'IN-PROGRESS' ){ ?> */}
-                <form name="form" method="POST">
+                {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ? 
+                    <form name="form">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="well">
+                                    <h4 class="black smaller">Chat Message (Internal)</h4>
+                                    {/* <!--<input type="text" name="message_be" placeholder="Text Field" class="form-control" />--> */}
+                                    <div class="form-group">
+                                        <textarea class="form-control limited" id="message_be" name="message_be" maxLength="2000"></textarea>
+                                    </div>
+                                    <div class="space-2"></div>
+                                    <button class="btn btn-sm btn-success">
+                                        <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                                        Post New Message</button>
+                                    {(this.state.isCaseOwner || this.state.isCoordinator || this.state.isAdmin) &&
+                                        <button class="btn btn-sm btn-danger" onClick="submitForm('<?php echo APPNAME; ?>/chat/invite/<?php echo $cToken; ?>/')">Invite User to G-Chat (Collaboration)</button>
+                                    }                     
+                                </div>
+                            </div>{/* <!-- /.col --> */}
+                        </div>
+                    </form>
+                    :
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="well">
-                                <h4 class="black smaller">Chat Message (Internal)</h4>
-                                {/* <!--<input type="text" name="message_be" placeholder="Text Field" class="form-control" />--> */}
-                                <div class="form-group">
-                                    <textarea class="form-control limited" id="message_be" name="message_be" maxlength="2000"></textarea>
-                                </div>
-                                <div class="space-2"></div>
-                                <button class="btn btn-sm btn-success" onclick="submitForm('<?php echo APPNAME; ?>/chat/pushmessage/<?php echo $cToken; ?>/be/');this.style.visibility= 'hidden';">
-                                    <i class="ace-icon fa fa-save align-top bigger-125"></i>
-                                    Post New Message</button>
-                                {/* // <?php if( isCaseOwner($ci['oID'],$hID) || isGroupCoordinator($position,$shID,$ci['shID']) || isAdmin($position) ){ ?> */}
-                                <button class="btn btn-sm btn-danger" onclick="submitForm('<?php echo APPNAME; ?>/chat/invite/<?php echo $cToken; ?>/')">Invite User to G-Chat (Collaboration)</button>
-                                { /* // <?php } ?> */}
+                            <div class="alert alert-block alert-danger">
+                                <p>Case has been CLOSED & LOCKED</p>
                             </div>
-                        </div>{/* <!-- /.col --> */}
-                    </div>
-                </form>
-                {/* <?php } else { ?> */}
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="alert alert-block alert-danger">
-                            <p>Case has been CLOSED & LOCKED</p>
                         </div>
+                        <br />
+                        <div class="space-10"></div>
                     </div>
-                    <br />
-                    <div class="space-10"></div>
-                </div>
-                {/* <?php } ?> */}
-                <a name="chat-ls"></a>
+                    }
+
+                <a name="chat-ls"/>
                 {/* <?php if ( isset($alertStatus) && !empty($alertMessage) ): ?> */}
                 <div class="row">
                     <div class="col-sm-12">
@@ -64,13 +126,11 @@ class InternalChat extends React.Component {
                         </div>
                     </div>
                     <br />
-                    <div class="space-10"></div>
+                    <div class="space-10"/>
                 </div>
-                {/* <?php endif; ?> */}
 
                 <div class="row">
                     <div class="col-sm-12">
-                        {/* <?php if( $chatLsCount == 0 ) { echo '<i style="color:red">Internal Chat is empty</i>'; } else { ?> */}
                         <div class="profile-user-info profile-user-info-striped" style={{margin:0}}>
                             <div class="profile-info-row">
                                 <div class="profile-info-name" style={{width:'10%'}}><b>Posted Date</b></div>
@@ -78,33 +138,33 @@ class InternalChat extends React.Component {
                                 <div class="profile-info-value" style={{width:'20%'}}><b>Posted By</b></div>
                                 <div class="profile-info-value" align="center" style={{width:'10%'}}><b>Attachment</b></div>
                             </div>
-                            {/* <?php for($i=0;$i<$chatLsCount;$i++){ ?> */}
-                            <div class="profile-info-row">
-                                <div class="profile-info-name">
-                                    {/* <?php echo $chatLs[$i]['postedDate']; ?> */}
-                                </div>
+                            {this.state.messageData.map( data => {
+                                return <div class="profile-info-row">
+                                    <div class="profile-info-name">
+                                        {data.postedDate}
+                                    </div>
 
-                                <div class="profile-info-value">
-                                    <span class="editable" id="username">
-                                        {/* <?php echo nl2br($chatLs[$i]['message']); ?> */}
-                                    </span>
+                                    <div class="profile-info-value">
+                                        <span class="editable" id="username">
+                                            {data.message}
+                                        </span>
+                                    </div>
+                                    <div class="profile-info-value">
+                                        <span class="editable" id="username">
+                                            {data.fullName}
+                                        </span>
+                                    </div>
+                                    <div class="profile-info-value" align="center">
+                                        {data.bID ? <a target="_blank" href={`${data.filename}`}><i class="ace-icon fa fa-download"></i></a> : '-'}
+                                    </div>
                                 </div>
-                                <div class="profile-info-value">
-                                    <span class="editable" id="username">
-                                        {/* <?php echo ucwords($chatLs[$i]['fullName']); ?> */}
-                                    </span>
-                                </div>
-                                <div class="profile-info-value" align="center">
-                                    {/* <?php echo ( 0 != $chatLs[$i]['bID'] ) ? '<a target="_blank" href="'.$chatLs[$i]['filename'].'"><i class="ace-icon fa fa-download"></i></a>' : '-'; ?> */}
-                                </div>
-                            </div>
-                            {/* 		<?php } ?>	 */}
+                            })}
                         </div>
-                        {/* <?php }?> */}
                         {/* </div> */}
                     </div>
                 </div>
-                <div class="space-8"></div>
+                <div class="space-8"/>
+                <Footer/>
                 {/* <span class="label label-xs label-inverse arrowed-right" style="font-size:11px;padding-top:4px"><i>Source From : <?php //echo ( $source == 'API' ) ? $source : 'Cache - 30 sec'; ?></i></span> */}
             </div>
         )

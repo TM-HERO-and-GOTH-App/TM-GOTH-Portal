@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
@@ -101,9 +102,9 @@ class MA_Assigned extends React.Component {
                     // }
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <Link to={`/case_detail/${data.cToken}`}>
                         {data.caseNum}
-                      </a>
+                      </Link>
                     </td>
                     <td>
                       <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
@@ -117,14 +118,12 @@ class MA_Assigned extends React.Component {
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<i class="menu-icon glyphicon glyphicon-ok"' : '-'; ?&gt; */}
-                        {data.vip ? data.vip : '-'}
+                        {data.vip ? <i class="menu-icon glyphicon glyphicon-ok"></i> : '-'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {/* ?php echo ( !empty($caseLs[$i]['vip']) ) ? '<span class="label label-success arrowed-right"' . ucwords($caseLs[$i]['fullname']) . '' : ucwords($caseLs[$i]['fullname']); ?&gt; */}
                       {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>

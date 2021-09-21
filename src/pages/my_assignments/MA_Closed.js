@@ -36,7 +36,7 @@ class MA_Closed extends React.Component {
     return (
       <div>
         <Header />
-        <div class="page-header">
+        <div className="page-header">
             <h1>My Assignments : Closed</h1>
         </div> {/* <!-- /.page-header --> */}
 
@@ -109,20 +109,20 @@ class MA_Closed extends React.Component {
                       </td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
+                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span className="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {data.vip ? <span class="label label-sm label-warning">Yes</span> : 'No'}
+                        {data.vip ? <span className="label label-sm label-warning">Yes</span> : 'No'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
+                      {data.vip ? <span className="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
                     <td>
