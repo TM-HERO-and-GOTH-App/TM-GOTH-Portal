@@ -1,8 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-import { Link } from 'react-router-dom'
 
 class MA_Closed extends React.Component {
   constructor(props){
@@ -74,30 +74,10 @@ class MA_Closed extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  { this.state.totalCase.length === 0 ? 
+                  { this.state.totalCase.length === 1 ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {
-                    // this.setState({ statusBadge: data.unclosedaging > 30 ? 'danger' : 'warning'})
-                    // if(data.caseStatus === 'NEW'){
-                    //   this.setState({ statusLabel: 'N'})
-                    //   this.setState({ statusBadge: 'danger'})
-                    // } else if( data.caseStatus === 'IN-PROGRESS' ) { 
-                    //   this.setState({statusLabel: 'IP'});
-                    //   this.setState({statusBadge: 'info'});						
-                    // } else if( data.caseStatus === 'ASSIGNED' ) { 
-                    //   this.setState({statusLabel: 'A'});
-                    //   this.setState({statusBadge: 'info'});												
-                    // } else if( data.caseStatus === 'CLOSED' ) { 
-                    //   this.setState({statusLabel: 'C'});
-                    //   this.setState({statusBadge: 'success'});												
-                    // } else if( data.caseStatus === 'CANCELLED' ) { 
-                    //   this.setState({statusLabel: 'D'});
-                    //   this.setState({statusBadge: 'pink'});												
-                    // } else {
-                    //   this.setState({statusLabel: 'N/A'});
-                    //   this.setState({statusBadge: 'pink'});												
-                    // }
                     return <tr>
                     <td>
                       <Link to={`/case_detail/${data.cToken}`}>
@@ -105,12 +85,13 @@ class MA_Closed extends React.Component {
                       </Link>
                     </td>
                     <td>
-                      <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
+                      <div align="center">
+                        <span className={`badge badge-${data.caseStatus ? 'success' : '-'}`}>{data.caseStatus ? 'C' : '-'}</span>
+                      </div>
                       </td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span className="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
@@ -132,10 +113,10 @@ class MA_Closed extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <button className="btn btn-minier btn-yellow">
+                        <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
-                        </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>

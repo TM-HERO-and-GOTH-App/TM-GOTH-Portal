@@ -35,7 +35,7 @@ class AA_Unassigned extends React.Component {
       <div>
         <Header />
         <div className="page-header">
-          <h1>Nationwide Assignments : IN-PROGRESS</h1>
+          <h1>Nationwide Assignments : UN-ASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
 
 
@@ -87,7 +87,7 @@ class AA_Unassigned extends React.Component {
                 </thead>
 
                 <tbody>
-                  {this.state.case.length === 0 ? 
+                  {this.state.case.length === 1 ? 
                   <tr>
                     <td colSpan="11">
                       <span style={{ color: 'red' }}>List is empty</span>
@@ -102,11 +102,11 @@ class AA_Unassigned extends React.Component {
                           </Link>
                         </td>
                         <td><div align="center">
-                          <span className="badge badge-danger">{data.caseStatus ? 'N' : '-'}</span>
+                          <span className="badge badge-pink">{data.caseStatus ? 'N' : '-'}</span>
                         </div></td>
                         <td>
                           <div align="center">
-                            {data.caseStatus === 'CLOSED' ? 'closedAging' : 'unclosedAging'}
+                            {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
                           </div>
                         </td>
                         <td>{data.caseType}</td>
@@ -126,10 +126,10 @@ class AA_Unassigned extends React.Component {
                         </td>
                         <td>
                           <div align="center">
-                            <button className="btn btn-minier btn-yellow">
+                            <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
                               Open
                               <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
-                            </button>
+                            </Link>
                           </div>
                         </td>
                       </tr>

@@ -80,26 +80,6 @@ class MA_Assigned extends React.Component {
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {
-                    // this.setState({ statusBadge: data.unclosedaging > 30 ? 'danger' : 'warning'})
-                    // if(data.caseStatus === 'NEW'){
-                    //   this.setState({ statusLabel: 'N'})
-                    //   this.setState({ statusBadge: 'danger'})
-                    // } else if( data.caseStatus === 'IN-PROGRESS' ) { 
-                    //   this.setState({statusLabel: 'IP'});
-                    //   this.setState({statusBadge: 'info'});						
-                    // } else if( data.caseStatus === 'ASSIGNED' ) { 
-                    //   this.setState({statusLabel: 'A'});
-                    //   this.setState({statusBadge: 'info'});												
-                    // } else if( data.caseStatus === 'CLOSED' ) { 
-                    //   this.setState({statusLabel: 'C'});
-                    //   this.setState({statusBadge: 'success'});												
-                    // } else if( data.caseStatus === 'CANCELLED' ) { 
-                    //   this.setState({statusLabel: 'D'});
-                    //   this.setState({statusBadge: 'pink'});												
-                    // } else {
-                    //   this.setState({statusLabel: 'N/A'});
-                    //   this.setState({statusBadge: 'pink'});												
-                    // }
                     return <tr>
                     <td>
                       <Link to={`/case_detail/${data.cToken}`}>
@@ -107,12 +87,15 @@ class MA_Assigned extends React.Component {
                       </Link>
                     </td>
                     <td>
-                      <div align="center"><span className="badge badge">{data.caseStatus}</span></div>
+                      <div align="center">
+                        <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>
+                          {data.caseStatus ? 'A' : '-'}
+                          </span>
+                        </div>
                       </td>
                     <td>
                       <div align="center">
-                        {/* ?php echo ( $caseLs[$i][$agingKey] < 16 ) ? $caseLs[$i][$agingKey] : '<span class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i][$agingKey].''; ?&gt; */}
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${this.state.statusBadge}`}> 'aging' </span>}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
@@ -134,10 +117,10 @@ class MA_Assigned extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ga/')">
+                        <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
-                        </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>

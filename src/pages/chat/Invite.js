@@ -1,54 +1,99 @@
 import React from 'react';
+import Header from '../Header';
+import Footer from '../Footer';
+import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
+import ChatService from '../../web_service/chat_service/ChatService';
+import { Link } from 'react-router-dom';
 
 class InviteChat extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            caseToken: this.props.match.params.id,
+            lovData: JSON.parse(sessionStorage.getItem('LovData')),
+            token: JSON.parse(sessionStorage.getItem('userToken')),
+            caseDetailData: {},
+            groupMembers: [],
+            stakeholderType: 0,
+        }
+        this.getGroupMembers = this.getGroupMembers.bind(this);
+        this.getCaseDetail = this.getCaseDetail.bind(this);
+    }
+
+    componentDidMount() {
+        this.getGroupMembers();
+        this.getCaseDetail();
+    }
+
+    componentWillUnmount() {
+        this.getGroupMembers();
+        this.getCaseDetail();
+    }
+
+    getGroupMembers() {
+        ChatService.getProfilesByGroupChat(this.state.token, this.state.caseToken).then(res => {
+            console.log(res)
+            this.setState({ groupMembers: res })
+        });
+    }
+
+    getCaseDetail() {
+        CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
+            // console.log(res)
+            this.setState({ caseDetailData: res })
+        })
+    }
+
     render() {
         return (
             <div>
+                <Header/>
                 <div class="row">
                     <div class="col-sm-4">
-                        <button class="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $cToken; ?>')">
+                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div class="space-10"></div>
                 <div class="row">
                     <div class="col-sm-7">
-                        <div class="profile-user-info profile-user-info-striped" style={{margin:0}}>
-                            {/* <?php if( !empty($ci['ownerName']) ){ ?> */}
-                            <div class="profile-info-row">
-                                <div class="profile-info-name">CASE OWNER</div>
-                                <div class="profile-info-value">
-                                    <span class="editable" id="username"><b>
-                                        {/* <?php echo strtoupper($ci['ownerName']) , ' - ' , $ci['stakeholderName']; ?> */}
-                                    </b></span>
+                        <div class="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                            {(this.state.caseDetailData.ownerName !== null) ?
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name">CASE OWNER</div>
+                                    <div class="profile-info-value">
+                                        <span class="editable" id="username"><b>
+                                            {this.state.caseDetailData.ownerName + ' - ' + this.state.caseDetailData.stakeholderName}
+                                        </b></span>
+                                    </div>
+                                </div> :
+
+                                this.state.caseDetailData.stakeholderName !== null &&
+                                <div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">GROUP POOL</div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="username"><b>
+                                                {this.state.caseDetailData.stakeholderName}
+                                            </b></span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">CASE OWNER</div>
+                                        <div class="profile-info-value">
+                                            <span class="editable" id="username"><i style={{ color: 'red' }}>Un-Assigned</i></span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            {/* // <?php } else { ?> */}
-                            {/* // <?php if( !empty($ci['stakeholderName']) ){ ?> */}
-                            <div class="profile-info-row">
-                                <div class="profile-info-name">GROUP POOL</div>
-                                <div class="profile-info-value">
-                                    <span class="editable" id="username"><b>
-                                        {/* <?php echo $ci['stakeholderName']; ?> */}
-                                    </b></span>
-                                </div>
-                            </div>
-                            <div class="profile-info-row">
-                                <div class="profile-info-name">CASE OWNER</div>
-                                <div class="profile-info-value">
-                                    <span class="editable" id="username"><i style={{color:'red'}}>Un-Assigned</i></span>
-                                </div>
-                            </div>
-                            {/* // <?php } ?>
-			// <?php } ?> */}
+                            }
                             <div class="profile-info-row">
                                 <div class="profile-info-name"> HERO Name </div>
 
                                 <div class="profile-info-value">
                                     <span class="editable" id="username">
-                                        {/* <?php echo ucwords($ci['fullname']); ?> */}
+                                        {this.state.caseDetailData.fullname}
                                     </span>
                                 </div>
                             </div>
@@ -57,7 +102,7 @@ class InviteChat extends React.Component {
                                 <div class="profile-info-name"> Customer </div>
 
                                 <div class="profile-info-value">
-                                    {/* <?php echo $ci['customerName']; ?> */}
+                                    {this.state.caseDetailData.customerName}
                                 </div>
                             </div>
 
@@ -66,8 +111,8 @@ class InviteChat extends React.Component {
                                 <div class="profile-info-name"> Descriptions </div>
 
                                 <div class="profile-info-value">
-                                    <span class="editable" id="login"><i style={{color:"blue"}}>
-                                        {/* <?php echo $ci['caseContent']; ?> */}
+                                    <span class="editable" id="login"><i style={{ color: "blue" }}>
+                                        {this.state.caseDetailData.caseContent}
                                     </i></span>
                                 </div>
                             </div>
@@ -77,7 +122,7 @@ class InviteChat extends React.Component {
 
                                 <div class="profile-info-value">
                                     <span class="editable" id="login">
-                                        {/* ?php echo $ci['caseStatus']; ?> */}
+                                        {this.state.caseDetailData.caseStatus}
                                     </span>
                                 </div>
                             </div>
@@ -87,7 +132,7 @@ class InviteChat extends React.Component {
 
                                 <div class="profile-info-value">
                                     <span class="editable" id="about">
-                                        {/* <?php echo $ci['createdDate']; ?> */}
+                                        {this.state.caseDetailData.createdDate}
                                     </span>
                                 </div>
                             </div>
@@ -96,11 +141,10 @@ class InviteChat extends React.Component {
 
                 </div>{/* // <!-- /.row --> */}
                 <div class="space-20"></div>
-                <a name="group-chat-members"></a>
+                <a name="group-chat-members" href='#' />
                 <div class="page-header">
                     <h1>G-Chat (Collaboration) Members</h1>
                 </div>
-                {/* // <?php $invited=array(); ?> */}
                 <div class="row">
                     <div class="col-sm-12">
                         {/* <?php if ( isset($alertStatus) && !empty($alertStatus) ): ?> */}
@@ -129,32 +173,34 @@ class InviteChat extends React.Component {
 
                             <tbody>
                                 {/* <?php if( empty($invitedMembers) ){ ?> */}
-                                <tr><td colspan="4"><span style={{color:"red"}}>Group Chat User for this case is Empty</span></td></tr>
-                                {/* // <?php } else {  */}
-                                {/* // for($i=0;$i<$invitedMembersCount;$i++){  */}
-                                {/* // $invited[] = $invitedMembers[$i]['hToken']; */}
-                                {/* // ?> */}
-                                <tr>
-                                    <td><div align="center">
-                                        {/* <?php echo $i+1; ?> */}
-                                    </div></td>
-                                    <td>
-                                        {/* <?php echo ucwords($invitedMembers[$i]['fullName']); ?> */}
-                                    </td>
-                                    <td>
-                                        {/* <?php echo ucwords($invitedMembers[$i]['nickName']); ?> */}
-                                    </td>
-                                    <td><div align="center">
-                                        {/* <?php echo $invitedMembers[$i]['stakeholderName']; ?> */}
-                                    </div></td>
-                                    <td><div align="center">
-                                        <button class="btn btn-minier btn-danger" onclick="redirect('<?php echo APPNAME; ?>/chat/removefromgroup/<?php echo $cToken; ?>/<?php echo $invitedMembers[$i]['hToken']; ?>/')">Remove</button>
-                                    </div>
-                                    </td>
-                                </tr>
-                                {/* // <?php }} ?> */}
+                                {this.state.groupMembers.length === 1 ?
+                                    <tr><td colspan="4"><span style={{ color: "red" }}>Group Chat User for this case is Empty</span></td></tr>
+                                    :
+                                    this.state.groupMembers.map((data, i) => {
+                                        i += 1;
+                                        return <tr>
+                                            <td><div align="center">
+                                                {i}
+                                            </div></td>
+                                            <td>
+                                                {data.fullName}
+                                            </td>
+                                            <td>
+                                                {data.nickName}
+                                            </td>
+                                            <td><div align="center">
+                                                {data.stakeholderName}
+                                            </div></td>
+                                            <td><div align="center">
+                                                <button class="btn btn-minier btn-danger" onclick="redirect('<?php echo APPNAME; ?>/chat/removefromgroup/<?php echo $cToken; ?>/<?php echo $invitedMembers[$i]['hToken']; ?>/')">
+                                                    Remove
+                                                </button>
+                                            </div>
+                                            </td>
+                                        </tr>
+                                    })
+                                }
                             </tbody>
-
                         </table>
                     </div>{/* // <!-- /.span --> */}
                 </div>
@@ -166,21 +212,18 @@ class InviteChat extends React.Component {
                 <div class="row">
                     <div class="col-sm-3">
                         <form name="form" method="POST">
-                            <select class="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." onchange="submitForm('<?php echo APPNAME; ?>/chat/invite/<?php echo $cToken; ?>/#group-members')">
-                                {/* <option value="0" <?php echo ( 0 == $shID_opt ) ? 'selected="yes"' : ''; ?>>All Group/Stakeholder ...</option> */}
-                                { /* <?php $totalLov = count($lovStakeholder); ?>
-            <?php for($i=0;$i<$totalLov;$i++){ ?>
-            <?php if( $lovStakeholder[$i]['lovName'] != 'ADMIN' ) { ?> */}
-                                { /* <option value="<?php echo $lovStakeholder[$i]['lovID']; ?>" <?php echo ( $lovStakeholder[$i]['lovID'] == $shID_opt ) ? 'selected="yes"' : ''; ?>><?php echo $lovStakeholder[$i]['lovName']; ?></option> */}
-                                {/* <?php } ?>
-        <?php } ?> */}
+                            <select class="chosen-select form-control" name="shID" dataplaceholder="Choose a Group..." value={this.state.stakeholderType} onChange={(e) => this.setState({ stakeholderType: e.target.value })}>
+                                <option value="0">All Group/Stakeholder ...</option>
+                                {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map(data => {
+                                    return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                })}
                             </select>
                         </form>
                     </div>
                     <div class="col-sm-9" align="right">
                     </div>
 
-                    <div class="space-20"></div>
+                    <div class="space-20"/>
 
                     <div class="col-xs-12">
 
@@ -195,44 +238,47 @@ class InviteChat extends React.Component {
                                     <th width="10%"><div align="center"><i class="ace-icon fa fa-bookmark"></i></div></th>
                                 </tr>
                             </thead>
-
+                        {this.state.stakeholderType !== 0 && 
                             <tbody>
                                 {/* <?php if( empty($teamMembers) ){ ?> */}
-                                <tr><td colspan="6"><span style={{color:"red"}}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
-                                {/* // <?php } else {  */}
-
-                                { /* for($i=0;$i<$teamMembersCount;$i++){ 
-                ?> */}
-                                <tr>
-                                    <td><div align="center">
-                                        {/* <?php echo $i+1; ?> */}
-                                    </div></td>
-                                    <td>
-                                        {/* <?php echo ucwords($teamMembers[$i]['fullName']); ?> */}
-                                    </td>
-                                    <td>
-                                        {/* <?php echo strtolower($teamMembers[$i]['email']); ?> */}
-                                    </td>
-                                    <td>
-                                        {/* <?php echo ( strtoupper($teamMembers[$i]['positionName']) == 'ADMIN' ) ? '<span class="label label-warning arrowed-right">' . $teamMembers[$i]['positionName'] . '</span>' : $teamMembers[$i]['positionName']; ?> */}
-                                        {/* <?php echo ( $ci['oID'] == $teamMembers[$i]['hID'] ) ? ' (Owner)' : ''; ?> */}
-                                    </td>
-                                    <td><div align="center">
-                                        {/* <?php echo $teamMembers[$i]['stakeholderName']; ?> */}
-                                    </div></td>
-                                    <td><div align="center">
-                                        {/* <?php if(! in_array($teamMembers[$i]['hToken'], $invited) && $ci['oID'] != $teamMembers[$i]['hID']){ ?> */}
-                                        <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/invitetogroup/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hToken']; ?>/')">Invite</button>
-                                        {/* // <?php } ?> */}
-                                    </div>
-                                    </td>
-                                </tr>
-                                { /* // <?php }} ?> */}
+                                {this.state.groupMembers.length === 1 ?
+                                    <tr><td colspan="6"><span style={{ color: "red" }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
+                                    :
+                                    this.state.groupMembers.map((data, i) => {
+                                        i += 1;
+                                        return <tr>
+                                            <td><div align="center">
+                                                {i}
+                                            </div></td>
+                                            <td>
+                                                {data.fullName}
+                                            </td>
+                                            <td>
+                                                {data.email}
+                                            </td>
+                                            <td>
+                                                {data.positionName === 'Admin' ? <span class="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
+                                                {data.hID ? '(Owner)' : ''}
+                                                {/* <?php echo ( $ci['oID'] == $teamMembers[$i]['hID'] ) ? ' (Owner)' : ''; ?> */}
+                                            </td>
+                                            <td><div align="center">
+                                                {data.stakeholderName}
+                                            </div></td>
+                                            <td><div align="center">
+                                                {/* <?php if(! in_array($teamMembers[$i]['hToken'], $invited) && $ci['oID'] != $teamMembers[$i]['hID']){ ?> */}
+                                                <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/invitetogroup/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hToken']; ?>/')">Invite</button>
+                                                {/* // <?php } ?> */}
+                                            </div>
+                                            </td>
+                                        </tr>
+                                    })
+                                }
                             </tbody>
+                        }
                         </table>
                     </div>
-                    { /* // <!-- /.span --> */}
                 </div>
+                <Footer/>
             </div>
         )
     }

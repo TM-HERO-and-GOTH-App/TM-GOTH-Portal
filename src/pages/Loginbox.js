@@ -2,7 +2,7 @@ import React from 'react';
 import LoginTheme from './LoginTheme';
 import LoginWebservice from '../web_service/login_web_service/LoginService';
 // import db from '../firebase_login/LoginAuth';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 // const auth = getAuth();
 
@@ -15,6 +15,8 @@ class Loginbox extends React.Component {
       userPassword: '',
       fullName: {},
       formSubmit: false,
+      alertStatus: false,
+      alertMessage: {},
     }
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
@@ -59,12 +61,12 @@ class Loginbox extends React.Component {
   }
 
   auth(email, password) {
-    LoginWebservice.requestToken(email).then(response => {
-      console.log(response);
-      if (response[0].status === 'FAILED') {
+    LoginWebservice.requestToken(email).then(res => {
+      console.log(res);
+      if (res[0].status === 'FAILED') {
         console.log('Email does not exist')
       } else {
-        const authToken = response[0].authToken;
+        const authToken = res[0].authToken;
         sessionStorage.setItem('userToken', JSON.stringify(authToken));
         this.signIn(authToken, email, password);
       }
@@ -72,10 +74,13 @@ class Loginbox extends React.Component {
   }
 
   signIn(authToken, email, password) {
-    LoginWebservice.signIn(authToken, email, password).then(response => {
-      console.log(response);
-      if (response.response === 'FAILED') {
-        console.log('Email does not detect');
+    LoginWebservice.signIn(authToken, email, password).then(res => {
+      console.log(res);
+      if (res.response === 'FAILED') {
+        this.setState({
+          alertStatus: true,
+          alertMessage: res,
+        })
       } else {
         this.getLoggerProfile(authToken);
       }
@@ -83,22 +88,22 @@ class Loginbox extends React.Component {
   }
 
   getLoggerProfile(authToken) {
-    LoginWebservice.getUserProfile(authToken).then(response => {
-      console.log(response);
-      if (response.category !== 'STAKEHOLDER') {
+    LoginWebservice.getUserProfile(authToken).then(res => {
+      console.log(res);
+      if (res.category !== 'STAKEHOLDER') {
         console.log('Your account is not yet registered')
       } else {
-        this.setState({fullName: response.fullName})
-        sessionStorage.setItem('UserData', JSON.stringify(response))
+        this.setState({ fullName: res.fullName })
+        sessionStorage.setItem('UserData', JSON.stringify(res))
         this.getLov(authToken)
       }
     })
   }
 
   getLov(authToken) {
-    LoginWebservice.getSystemLOV(authToken).then(response => {
-      console.log(response);
-      sessionStorage.setItem('LovData', JSON.stringify(response));
+    LoginWebservice.getSystemLOV(authToken).then(res => {
+      console.log(res);
+      sessionStorage.setItem('LovData', JSON.stringify(res));
       this.props.history.push('/');
     })
   }
@@ -117,9 +122,12 @@ class Loginbox extends React.Component {
               <div className="space-6" />
               <form onSubmit={this.handleSubmit}>
                 <fieldset>
-                  <div className="alert alert-">
-                    <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
-                  </div>
+                  { (this.state.alertStatus && this.state.alertMessage) &&
+                    <div className="alert alert-danger">
+                      <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times"></i></button>
+                      {this.state.alertMessage.remark}
+                    </div>
+                  }
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
                       <input type="email" className="form-control" name="email" placeholder="Username" value={this.state.userEmail} onChange={this.handleEmail} />

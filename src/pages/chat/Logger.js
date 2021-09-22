@@ -19,11 +19,13 @@ class Logger extends React.Component {
             isCaseOwner: '',
             isCoordinator: '',
             isAdmin: '',
+            userMessage: '',
             remarkTextType: '0'
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
         this.getMessage = this.getMessage.bind(this);
+        this.pushMessage = this.pushMessage.bind(this);
     }
 
     componentDidMount() {
@@ -63,19 +65,16 @@ class Logger extends React.Component {
         })
     }
 
+    pushMessage(){
+        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, '').then(res => {
+            console.log(res);
+        })
+    }
+
     render() {
         return (
             <div>
                 <Header />
-                {/* function isStatusClosed()
-{
-    var caseStatusID = document.getElementById("caseStatusID").value;
-    if( 70 == caseStatusID || 73 == caseStatusID ){
-        document.getElementById("closureType").style.display = "";
-    } else {
-    	document.getElementById("closureType").style.display = "none";
-    }	
-} */}
                 <div class="row">
                     <div class="col-sm-12">
                         <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
@@ -90,7 +89,7 @@ class Logger extends React.Component {
                 </div>
                 <div class="space-6"></div>
                 {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ?
-                    <form name="form">
+                    <form name="form" onSubmit={this.pushMessage}>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="well">
@@ -114,7 +113,7 @@ class Logger extends React.Component {
                                     </div>
 
                                     <div class="space-2"></div>
-                                    <button class="btn btn-sm btn-success" onclick="submitForm('<?php echo APPNAME; ?>/chat/pushmessage/<?php echo $cToken; ?>/fe/');this.style.visibility= 'hidden';">
+                                    <button class="btn btn-sm btn-success">
                                         <i class="ace-icon fa fa-save align-top bigger-125"></i>
                                         Post New Message</button>
                                 </div>
@@ -132,7 +131,7 @@ class Logger extends React.Component {
                         <div class="space-10"></div>
                     </div>
                 }
-                <a name="chat-ls"></a>
+                <a name="chat-ls"/>
                 {/* <?php if ( isset($alertStatus) && !empty($alertMessage) ): ?> */}
                 <div class="row">
                     <div class="col-sm-12">
@@ -148,10 +147,8 @@ class Logger extends React.Component {
                     <br />
                     <div class="space-10"></div>
                 </div>
-                {/* <?php endif; ?> */}
                 <div class="row">
                     <div class="col-sm-12">
-                        {/* <?php if( $chatLsCount == 0 ) { echo '<i style="color:red">HERO Chat is empty</i>'; } else { ?> */}
                         {this.state.messageData.length === 1 ?
                             <i style={{color:"red"}}>HERO Chat is empty</i>
                             :

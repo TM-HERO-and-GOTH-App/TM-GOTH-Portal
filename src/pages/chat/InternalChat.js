@@ -19,10 +19,12 @@ class InternalChat extends React.Component {
             isCaseOwner: '',
             isCoordinator: '',
             isAdmin: '',
+            userMessage: '',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
         this.getMessage = this.getMessage.bind(this);
+        this.pushMessage = this.pushMessage.bind(this);
     }
 
     componentDidMount() {
@@ -62,6 +64,12 @@ class InternalChat extends React.Component {
         })
     }
 
+    pushMessage(){
+        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, '').then(res => {
+            console.log(res);
+        })
+    }
+
     render() {
         return (
             <div>
@@ -80,7 +88,7 @@ class InternalChat extends React.Component {
                 </div>
                 <div class="space-6" />
                 {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ? 
-                    <form name="form">
+                    <form name="form" onSubmit={this.pushMessage}>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="well">
@@ -94,7 +102,7 @@ class InternalChat extends React.Component {
                                         <i class="ace-icon fa fa-save align-top bigger-125"></i>
                                         Post New Message</button>
                                     {(this.state.isCaseOwner || this.state.isCoordinator || this.state.isAdmin) &&
-                                        <button class="btn btn-sm btn-danger" onClick="submitForm('<?php echo APPNAME; ?>/chat/invite/<?php echo $cToken; ?>/')">Invite User to G-Chat (Collaboration)</button>
+                                        <Link class="btn btn-sm btn-danger" to={`/invite_to_group_chat/${this.state.caseToken}`}>Invite User to G-Chat (Collaboration)</Link>
                                     }                     
                                 </div>
                             </div>{/* <!-- /.col --> */}

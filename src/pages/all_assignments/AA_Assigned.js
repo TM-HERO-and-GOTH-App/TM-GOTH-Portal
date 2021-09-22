@@ -86,7 +86,7 @@ class AA_Assigned extends React.Component {
                 </thead>
                 {(this.state.caseType) &&
                   <tbody>
-                    {this.state.case.length === 0 ?
+                    {this.state.case.length === 1 ?
                       <tr>
                         <td colSpan="11">
                           <span style={{ color: 'red' }}>List is empty</span>
@@ -101,11 +101,11 @@ class AA_Assigned extends React.Component {
                             </Link>
                           </td>
                           <td><div align="center">
-                            <span className="badge badge-info">{data.caseStatus ? 'A' : '-'}</span>
+                            <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
                           </div></td>
                           <td>
                             <div align="center">
-                              {data.caseStatus === 'CLOSED' ? 'closedAging' : 'unclosedAging'}
+                              {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
                             </div>
                           </td>
                           <td>{data.caseType}</td>
@@ -125,10 +125,10 @@ class AA_Assigned extends React.Component {
                           </td>
                           <td>
                             <div align="center">
-                              <button className="btn btn-minier btn-yellow">
+                              <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
                                 Open
                                 <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
-                              </button>
+                              </Link>
                             </div>
                           </td>
                         </tr>

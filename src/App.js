@@ -73,7 +73,7 @@ function App() {
         <Route path='/technical_case'                  component={TechnicalCase} />
         <Route path='/caution_report'                  component={CautionReport} />
         <Route path='/internal_chat/:id'                   component={InternalChat}/>
-        <Route path='/invite_chat'                   component={InviteChat}/>
+        <Route path='/invite_to_group_chat/:id'                   component={InviteChat}/>
         <Route path='/hero_chat/:id'                   component={Logger}/>
         <Route path='/action_taken/:id'                   component={ActionTaken}/>
         <Route path='/assign_to_other/:id'                component={AssignToOther}/>
