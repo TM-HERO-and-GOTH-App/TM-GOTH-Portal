@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import AdvancedSearchService from '../web_service/advance_search_service/AdvanceSearch';
+import { Link } from 'react-router-dom';
 
 class AdvancedSearch extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class AdvancedSearch extends React.Component {
       token: JSON.parse(sessionStorage.getItem('userToken'))
     }
     this.advancedSearch = this.advancedSearch.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   advancedSearch(e) {
@@ -28,6 +30,19 @@ class AdvancedSearch extends React.Component {
         console.log(res)
         this.setState({ searchResult: res })
       })
+  }
+
+  reset(){
+    this.setState({
+      keyFullName: '',
+      keyEmail: '',
+      keyNricNum: '',
+      keyCaseNum: '',
+      keyVIPName: '',
+      keyCustomerName: '',
+      keySRNum: '',
+      keyTtNum: '',
+    })
   }
 
   render() {
@@ -40,7 +55,7 @@ class AdvancedSearch extends React.Component {
           </div>
           <div className="col-sm-12">Please enter your keywords...</div>
           <div className="space-2" />
-          <form name="form" onSubmit={this.advancedSearch}>
+          <form name="form" onSubmit={this.advancedSearch} onReset={this.reset}>
             <div className="col-sm-2">
               <input type="text" name="keyFullname" placeholder="HERO Name" value={this.state.keyFullName} onChange={(e) => this.setState({ keyFullName: e.target.value })} />
             </div>
@@ -68,7 +83,7 @@ class AdvancedSearch extends React.Component {
               <input type="text" name="keyTtNum" placeholder="TT Number" value={this.state.keyTtNum} onChange={(e) => this.setState({ keyTtNum: e.target.value })} />
             </div>
             <div className="col-sm-3" style={{ paddingLeft: 10 }}>
-              <button type="button" className="btn btn-sm btn-inverse" onclick="redirect('<?php echo APPNAME; ?>/search/enquiry/')">
+              <button type="reset" className="btn btn-sm btn-inverse">
                 <i className="ace-icon fa fa-repeat align-top bigger-125" />
                 <span>Reset</span>
               </button>
@@ -130,31 +145,31 @@ class AdvancedSearch extends React.Component {
                   this.state.searchResult.map((data, i) => {
                     return <tr>
                       <td>
-                        <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                        <Link to={`/case_detail/${data.cToken}`}>
                           {data.caseNum}
-                        </a>
+                        </Link>
                       </td>
                       <td><div align="center"><span className="badge badge-<?php echo $statusBadge; ?>">{data.caseStatus}</span></div></td>
                       <td>
                         <div align="center" style={{ fontSize: 10 }}>
-                          {/* ?php echo ( $caseLs[$i]['unclosedAging'] < 16 ) ? $caseLs[$i]['unclosedAging'] : '<span style="font-size:10px" class="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i]['closedAging'].''; ?&gt; */}
+                          {/* ?php echo ( $caseLs[$i]['unclosedAging'] < 16 ) ? $caseLs[$i]['unclosedAging'] : '<span style="font-size:10px" className="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i]['closedAging'].''; ?&gt; */}
                           {data.unclosedAging > 30 ? 'Closed' : 'aging' }
                         </div>
                       </td>
                       <td>{data.caseType}</td>
                       <td>
                         <div align="center">
-                          {data.vip ? <span class="label label-success arrowed-right">{data.fullname}</span> : '-'}
+                          {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
                         </div>
                       </td>
                       <td>{data.productName}</td>
                       <td>{data.customerName}</td>
-                      <td>{data.vip ? <span class="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                      <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
                       <td>{/*?php echo $ownerName , ' ' , $sh; ?*/}</td>
                       <td>{data.remark}</td>
                       <td>
                         <div align="center">
-                          {data.totalNewAlert > 0 ? <span style={{fontSize:10}} class="badge badge-warning">{data.totalNewAlert}</span> : 0}
+                          {data.totalNewAlert > 0 ? <span style={{fontSize:10}} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
                         </div>
                       </td>
                       <td>

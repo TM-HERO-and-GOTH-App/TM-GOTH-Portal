@@ -258,16 +258,18 @@ class InviteChat extends React.Component {
                                             </td>
                                             <td>
                                                 {data.positionName === 'Admin' ? <span class="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
-                                                {data.hID ? '(Owner)' : ''}
+                                                {this.state.caseDetailData.oID === data.hID ? '(Owner)' : ''}
                                                 {/* <?php echo ( $ci['oID'] == $teamMembers[$i]['hID'] ) ? ' (Owner)' : ''; ?> */}
                                             </td>
                                             <td><div align="center">
                                                 {data.stakeholderName}
                                             </div></td>
                                             <td><div align="center">
-                                                {/* <?php if(! in_array($teamMembers[$i]['hToken'], $invited) && $ci['oID'] != $teamMembers[$i]['hID']){ ?> */}
-                                                <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/invitetogroup/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hToken']; ?>/')">Invite</button>
-                                                {/* // <?php } ?> */}
+                                                {data.hToken && this.state.caseDetailData.oID !== data.hID && 
+                                                    <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/invitetogroup/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hToken']; ?>/')">
+                                                        Invite
+                                                    </button>
+                                                }
                                             </div>
                                             </td>
                                         </tr>

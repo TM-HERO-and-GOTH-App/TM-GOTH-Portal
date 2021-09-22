@@ -1,18 +1,20 @@
 import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
-import { Link, NavLink } from 'react-router-dom';
-
+import QuickSearchService from '../web_service/quick_search_service/QuickSearchService';
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      token: JSON.parse(sessionStorage.getItem('UserData')),
       dropdownOpen: false,
       collabDropdown: false,
       AdvancedSearch: false,
       selectedTab: false,
+      searchInput: ''
     }
     this.toggle = this.toggle.bind(this);
     this.collabToggle = this.collabToggle.bind(this);
@@ -21,6 +23,7 @@ class Header extends React.Component {
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
     this.clearsessionStorage = this.clearsessionStorage.bind(this);
+    this.quickSearchResult = this.quickSearchResult.bind(this);
   }
 
   toggle() {
@@ -55,8 +58,14 @@ class Header extends React.Component {
     sessionStorage.clear();
   }
 
+  quickSearchResult(e){
+    e.preventDefault();
+    QuickSearchService.quickSearch(this.state.token, this.state.searchInput).then(res => {
+      console.log(res);
+    })
+  }
+
   render() {
-    const userInfo = JSON.parse(sessionStorage.getItem('UserData')) || 'User';
     return (
       <div>
         <div id="navbar" className="navbar navbar-default navbar-collapse ace-save-state">
@@ -85,7 +94,7 @@ class Header extends React.Component {
                     <img className="nav-user-photo" src={img2} alt="User's Photo" />
                     <span className="user-info">
                       <small>Welcome,</small>
-                      {userInfo.fullName}
+                      {this.state.token.fullName}
                     </span>
                     <i className="ace-icon fa fa-caret-down" />
                   </a>
@@ -103,7 +112,7 @@ class Header extends React.Component {
                       </Link>
                     </li>
 
-                    {(userInfo.stakeholderName) &&
+                    {(this.state.token.stakeholderName) &&
                       <li>
                         <Link to="/create_case">
                           <i className="ace-icon fa fa-pencil" />
@@ -126,9 +135,9 @@ class Header extends React.Component {
             <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
               <ul className="nav navbar-nav">
               </ul>
-              <form className="navbar-form navbar-left form-search" role="search" method="POST" action="Quick_search">
+              <form className="navbar-form navbar-left form-search" role="search"onSubmit={this.quickSearchResult}>
                 <div className="form-group">
-                  <input type="text" name="keywords" placeholder="search" style={{ width: 250 }} />
+                  <input type="text" name="keywords" placeholder="search" style={{ width: 250 }} value={this.state.searchInput} onChange={(e) => this.setState({ searchInput: e.target.value })}/>
                 </div>
                 <button type="submit" className="btn btn-mini btn-info2">
                   <i className="ace-icon fa fa-search icon-only bigger-110" />
@@ -250,7 +259,7 @@ class Header extends React.Component {
                 }
               </li>
 
-              {(userInfo.hGroup !== 'SALES') &&
+              {(this.state.token.hGroup !== 'SALES') &&
                 <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                   <Link to="AllAssignments_Unassigned">
                     <i className="menu-icon glyphicon glyphicon-globe" />
@@ -299,7 +308,7 @@ class Header extends React.Component {
                 </li>
               }
 
-              {(userInfo.positionName === 'Admin') &&
+              {(this.state.token.positionName === 'Admin') &&
                 <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                   <Link to="ManageUsers_Groupmembers">
                     <i className="menu-icon fa fa-users" />

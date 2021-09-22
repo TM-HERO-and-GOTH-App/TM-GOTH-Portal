@@ -30,7 +30,6 @@ import AA_Closed from './pages/all_assignments/AA_Closed';
 import MU_Registereduser from './pages/manage_user/MU_Registereduser';
 import MU_Groupmember from './pages/manage_user/MU_Groupmember';
 import NonTechnicalCase from './pages/hero_cases_functionality/NonTechnicalCase';
-import Quicksearch from './pages/Quicksearch';
 import SignUp from './pages/Register';
 import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
 import Userprofile from './pages/user_profile/Userprofile';
@@ -65,7 +64,6 @@ function App() {
         <Route path="/ManageUsers_RegisteredUser"           component={MU_Registereduser} />
         <Route path="/ManageUsers_Groupmembers"             component={MU_Groupmember} />
         <Route path="/advance_search"                       component={AdvancedSearch} />
-        <Route path="/quick_search"                       component={Quicksearch} />
         <Route path="/user_profile"                       component={Userprofile} />
         <Route path='/edit_profile'                          component={EditUser} />
         <Route path="/create_case"                       component={Createcase} />
