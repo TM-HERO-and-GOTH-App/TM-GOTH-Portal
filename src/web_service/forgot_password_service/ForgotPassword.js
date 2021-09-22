@@ -1,10 +1,9 @@
-const baseUrl = 'https://hero.tm.com.my';
+const url = 'https://hero.tm.com.my';
+const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const ForgotPasswordService = {
     forgotPassword(email){
-        let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-        return fetch(baseUrl + '/login/reset-password-code-request/', {
+        return fetch(url + '/login/reset-password-code-request/', {
             method: 'POST',
             headers,
             body: JSON.stringify({

@@ -3,7 +3,6 @@ const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const DashboardService = {
     getTotalResolvedByAgent(authToken){
-
         return fetch( url + '/case/total-resolved-within-days-by-agent/', {
             method: 'POST',
             headers: headers,

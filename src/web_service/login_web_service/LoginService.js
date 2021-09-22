@@ -1,12 +1,12 @@
-const baseUrl = 'https://hero.tm.com.my';
+const url = 'https://hero.tm.com.my';
 const apiKEY = '32c70cb3-7381-e2ef-ad1f-b5a61964d408-cxt';
+const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const LoginWebservice = {
      requestToken(email) {
-        let headers = { 'Content-Type': 'application/json; charset=utf-8' };
         console.log(email + ' token');
 
-        return fetch(baseUrl + '/api-authentication/request-token', {
+        return fetch(url + '/api-authentication/request-token', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -19,9 +19,7 @@ const LoginWebservice = {
     },
 
      signIn(authToken, email, password) {
-        let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-        return fetch(baseUrl + '/login/sign-in/', {
+        return fetch(url + '/login/sign-in/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -36,9 +34,7 @@ const LoginWebservice = {
     },
 
      getUserProfile(authToken) {
-        let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-        return fetch(baseUrl + '/user/view-profile', {
+        return fetch(url + '/user/view-profile', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -52,9 +48,7 @@ const LoginWebservice = {
     },
 
     getSystemLOV(authToken) {
-		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-		return fetch(baseUrl + '/system/get-lov/', {
+		return fetch(url + '/system/get-lov/', {
 			method: 'POST',
             headers,
             body: JSON.stringify({

@@ -1,10 +1,9 @@
-const baseCaseUrl = 'https://hero.tm.com.my/case';
+const url = 'https://hero.tm.com.my/case';
+const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const CaseService = {
     createSubmit(authToken, customer_name, Mobile_NO, Case_Content, areaLocation, caseTypeID, productID, additionalRemark, herobuddyResponse) {
-		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-		return fetch(baseCaseUrl + '/submit', {
+		return fetch(url + '/submit', {
 			method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -27,9 +26,7 @@ const CaseService = {
 	},
 
     createCase(authToken, customer_name, IC_NO, Mobile_NO, Case_Content,areaLocation,flag,sourceID) {
-		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-		return fetch(baseCaseUrl + '/create-from-app', {
+		return fetch(url + '/create-from-app', {
 			method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -50,9 +47,7 @@ const CaseService = {
 	},
 
     attachPicture(authToken, cToken, filename, geotag_longitude, geotag_latitude) {
-		let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
-		return fetch(baseCaseUrl + '/attach-picture', {
+		return fetch(url + '/attach-picture', {
 			method: 'POST',
             headers,
             body: JSON.stringify({

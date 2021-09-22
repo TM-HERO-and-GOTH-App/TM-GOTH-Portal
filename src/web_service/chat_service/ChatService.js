@@ -1,10 +1,10 @@
-const baseCaseUrl = 'https://hero.tm.com.my';
+const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const ChatService = {
 
     getProfilesByGroupChat(authToken, cToken){
-        return fetch( baseCaseUrl + '/chat/view-users-by-group/', {
+        return fetch( url + '/chat/view-users-by-group/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -15,7 +15,7 @@ const ChatService = {
     },
 
     pullChatMessage(authToken, cToken, flag){
-        return fetch( baseCaseUrl + '/chat/pull-message/', {
+        return fetch( url + '/chat/pull-message/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -27,7 +27,7 @@ const ChatService = {
     },
 
     pushChatMessage(authToken, cToken, message, flag, fileName){
-        return fetch( baseCaseUrl + '/chat/push-message/', {
+        return fetch( url + '/chat/push-message/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
