@@ -11,12 +11,12 @@ class Loginbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      alertMessage: '',
       userEmail: '',
       userPassword: '',
       fullName: {},
       formSubmit: false,
       alertStatus: false,
-      alertMessage: {},
     }
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
@@ -65,6 +65,9 @@ class Loginbox extends React.Component {
       console.log(res);
       if (res[0].status === 'FAILED') {
         console.log('Email does not exist')
+        this.setState({
+          alertMessage: 'Email does not exist'
+        })
       } else {
         const authToken = res[0].authToken;
         sessionStorage.setItem('userToken', JSON.stringify(authToken));
@@ -79,7 +82,7 @@ class Loginbox extends React.Component {
       if (res.response === 'FAILED') {
         this.setState({
           alertStatus: true,
-          alertMessage: res,
+          alertMessage: 'Email does not exist.',
         })
       } else {
         this.getLoggerProfile(authToken);
@@ -92,6 +95,9 @@ class Loginbox extends React.Component {
       console.log(res);
       if (res.category !== 'STAKEHOLDER') {
         console.log('Your account is not yet registered')
+        this.setState({
+          alertMessage: 'Your account is not yet registered'
+        })
       } else {
         this.setState({ fullName: res.fullName })
         sessionStorage.setItem('UserData', JSON.stringify(res))
@@ -122,10 +128,10 @@ class Loginbox extends React.Component {
               <div className="space-6" />
               <form onSubmit={this.handleSubmit}>
                 <fieldset>
-                  { (this.state.alertStatus && this.state.alertMessage) &&
+                  { (this.state.alertMessage !== '') &&
                     <div className="alert alert-danger">
                       <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times"></i></button>
-                      {this.state.alertMessage.remark}
+                      {this.state.alertMessage}
                     </div>
                   }
                   <label className="block clearfix">

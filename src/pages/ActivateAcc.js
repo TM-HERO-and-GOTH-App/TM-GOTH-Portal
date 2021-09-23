@@ -1,9 +1,31 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
+import ActivateAccountService from '../web_service/activate_account/ActivateAccountService';
 
 class ActivateAcc extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      alertMessage: '',
+      email: '',
+      activationCode: '',
+    }
+    this.sendUserActivation = this.sendUserActivation.bind(this);
+  }
 
-
+  sendUserActivation(e){
+    e.preventDefault();
+    ActivateAccountService.activateAccount(this.state.email, this.state.activationCode).then(res => {
+      console.log(res);
+      if(res[0].response === 'FAILED'){
+        this.setState({
+          alertMessage: res[0].message
+        })
+      } else {
+        this.props.history.push('/login')
+      }
+    })
+  }
 
   render() {
     return (
@@ -16,20 +38,21 @@ class ActivateAcc extends React.Component {
                 New Account Activation
               </h4>
               <div className="space-6" />
-              <form method="POST" action="</login/activate/">
+              <form method="POST" onSubmit={this.sendUserActivation}>
                 <fieldset>
-                  <div className="alert alert-">
+                  {this.state.alertMessage !== '' && <div className="alert alert-danger">
                     <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
-                  </div>
+                    {this.state.alertMessage}
+                  </div>}
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
-                      <input type="email" className="form-control" name="email" placeholder="Email" />
+                      <input type="email" className="form-control" name="email" placeholder="Email" value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} />
                       <i className="ace-icon fa fa-envelope" />
                     </span>
                   </label>
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
-                      <input type="text" className="form-control" name="iactivationKey" placeholder="Activation Code" />
+                      <input type="text" className="form-control" name="iactivationKey" placeholder="Activation Code" value={this.state.activationCode} onChange={(e) => this.setState({ activationCode: e.target.value })}/>
                       <i className="ace-icon fa fa-lock" />
                     </span>
                   </label>

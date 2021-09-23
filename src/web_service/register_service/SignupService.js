@@ -14,7 +14,7 @@ const SignupService = {
                 fullName: fullName,
                 password: password,
                 password2: password2,
-                mobileNumber: mobileNum
+                mobileNum: mobileNum
             })
         }).then((res) => res.json()).catch((err) => console.log(err));
     }

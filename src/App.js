@@ -30,7 +30,7 @@ import AA_Closed from './pages/all_assignments/AA_Closed';
 import MU_Registereduser from './pages/manage_user/MU_Registereduser';
 import MU_Groupmember from './pages/manage_user/MU_Groupmember';
 import NonTechnicalCase from './pages/hero_cases_functionality/NonTechnicalCase';
-import SignUp from './pages/Register';
+import SignUp from './pages/Registerbox';
 import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
 import Userprofile from './pages/user_profile/Userprofile';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
