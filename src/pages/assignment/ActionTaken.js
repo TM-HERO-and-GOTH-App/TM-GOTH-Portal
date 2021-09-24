@@ -27,6 +27,7 @@ class ActionTaken extends React.Component {
         this.getActionRemark = this.getActionRemark.bind(this);
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
+        this.setRemark = this.setRemark.bind(this);
     }
 
     componentDidMount() {
@@ -57,6 +58,14 @@ class ActionTaken extends React.Component {
             console.log(res)
             this.setState({ caseDetailData: res })
             this.setState({ isCaseOwner: res.ownerName })
+        })
+    }
+
+    setRemark(e){
+        e.preventDefault();
+        ActionTakenService.setRemark(this.state.token, this.state.caseToken, this.state.remarkType, this.state.caseStatusType, this.state.closureType)
+        .then(res => {
+            this.props.history.push(`/case_detail/${this.state.caseToken}`)
         })
     }
 
@@ -113,8 +122,8 @@ function isStatusClosed()
                         }
                     </div>
                     <div class="pull-right col-sm-6" align="right">
-                        <button class="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $cToken; ?>/dc/')">HERO Chat</button>
-                        <button class="btn btn-primary" onclick="redirect('<?php echo APPNAME; ?>/chat/internal/<?php echo $cToken; ?>/dc/')">Internal Chat</button>
+                        <Link class="btn btn-primary" to={`/hero_chat/${this.state.caseToken}`}>HERO Chat</Link>
+                        <Link class="btn btn-primary" to={`/internal_chat/${this.state.caseToken}`}>Internal Chat</Link>
                     </div>
                 </div>
                 <div class="space-6" />
@@ -163,7 +172,7 @@ function isStatusClosed()
                 {(this.state.caseDetailData.caseStatus === 'NEW' ||
                     this.state.caseDetailData.caseStatus === 'ASSIGNED' ||
                     this.state.caseDetailData.caseStatus === 'IN-PROGRESS' || this.state.isAdmin) &&
-                    <form name="form" method="POST">
+                    <form name="form" onSubmit={this.setRemark}>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="well" style={{ height: 300 }}>
@@ -240,7 +249,7 @@ function isStatusClosed()
 
                                     <div class="col-sm-11" style={{ padding: 0 }}>
                                         <div class="form-group">
-                                            <button class="btn btn-sm btn-success" onclick="submitForm('<?php echo APPNAME; ?>/assignment/setremark/<?php echo $cToken; ?>');this.style.visibility= 'hidden';">
+                                            <button class="btn btn-sm btn-success">
                                                 <i class="ace-icon fa fa-save align-top bigger-125"></i>
                                                 Update Status & Remark</button>
                                         </div>

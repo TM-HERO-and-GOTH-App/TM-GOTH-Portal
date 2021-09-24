@@ -44,8 +44,8 @@ class InternalChat extends React.Component {
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             console.log(res);
             this.setState({ groupMember: res })
-            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
-            this.setState({ isAdmin: this.state.groupMember.filter(filter => filter.positionName === 'Admin') })
+            this.setState({ isCoordinator: res.filter(filter => filter.positionName === 'Coordinator') })
+            this.setState({ isAdmin: res.filter(filter => filter.positionName === 'Admin') })
         })
     }
 

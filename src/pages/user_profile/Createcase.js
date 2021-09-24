@@ -40,8 +40,7 @@ class Createcase extends React.Component {
     return sessionData;
   }
 
-  createCase(e){
-    e.preventDefault();
+  createCase(){
     CreateCaseService.createCase(this.state.token, this.state.customerName, this.state.ic, this.state.mobileNumber, this.state.caseDescription, this.state.stateType, 'COMPLAINT', this.state.sourceType, this.state.subSourceType, this.state.caseType)
     .then(res => {
       console.log(res);

@@ -11,6 +11,20 @@ const ActionTakenService = {
                 cToken: cToken
             })
         }).then(res => res.json()).catch(err => console.log(err));
+    },
+
+    setRemark(authToken, cToken, remark, caseStatusID, ctID){
+        return fetch( url + '/case/update-case-status/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                cToken: cToken,
+                ctID: ctID,
+                caseStatusID: caseStatusID,
+                remark: remark
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
     }
 }
 

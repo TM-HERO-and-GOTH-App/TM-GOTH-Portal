@@ -46,6 +46,7 @@ class AdvancedSearch extends React.Component {
   }
 
   render() {
+    // console.log(this.props.location.state.quickSearch)
     return (
       <div>
         <Header />
@@ -149,7 +150,11 @@ class AdvancedSearch extends React.Component {
                           {data.caseNum}
                         </Link>
                       </td>
-                      <td><div align="center"><span className="badge badge-<?php echo $statusBadge; ?>">{data.caseStatus}</span></div></td>
+                      <td>
+                        <div align="center">
+                          <span className="badge badge-<?php echo $statusBadge; ?>">{data.caseStatus}</span>
+                        </div>
+                      </td>
                       <td>
                         <div align="center" style={{ fontSize: 10 }}>
                           {/* ?php echo ( $caseLs[$i]['unclosedAging'] < 16 ) ? $caseLs[$i]['unclosedAging'] : '<span style="font-size:10px" className="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i]['closedAging'].''; ?&gt; */}
