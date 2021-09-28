@@ -80,7 +80,7 @@ class MA_Closed extends React.Component {
                   this.state.totalCase.map( data => {
                     return <tr>
                     <td>
-                      <Link to={`/case_detail/${data.cToken}`}>
+                      <Link to={`/case-detail/${data.cToken}`}>
                         {data.caseNum}
                       </Link>
                     </td>
@@ -113,7 +113,7 @@ class MA_Closed extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
+                        <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </Link>

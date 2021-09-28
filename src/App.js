@@ -48,35 +48,35 @@ function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/activate" component={Activate} />
         {/* Go to this route path to see the sign up box and no background image */}
-        <Route path="/MyAssignments_Assigned"               component={MA_Assigned} />
-        <Route path="/MyAssignments_Inprogress"             component={MA_Inprogress} />
-        <Route path="/MyAssignments_Closed"                 component={MA_Closed} />
-        <Route path="/MyCollaboration_Assigned"             component={MC_Assigned} />
-        <Route path="/MyCollaboration_Inprogress"           component={MC_Inprogress} />
-        <Route path="/GroupAssignments_Assigned"            component={GA_Assigned} />
-        <Route path="/GroupAssignments_Closed"              component={GA_Closed} />
-        <Route path="/GroupAssignments_Inprogress"          component={GA_Inprogress} />
-        <Route path="/GroupAssignments_Unassigned"          component={GA_Unassigned} />
-        <Route path="/AllAssignments_Assigned"              component={AA_Assigned} />
-        <Route path="/AllAssignments_Closed"                component={AA_Closed} />
-        <Route path="/AllAssignments_Inprogress"            component={AA_Inprogress} />
-        <Route path="/AllAssignments_Unassigned"            component={AA_Unassigned} />
-        <Route path="/ManageUsers_RegisteredUser"           component={MU_Registereduser} />
-        <Route path="/ManageUsers_Groupmembers"             component={MU_Groupmember} />
+        <Route path="/MyAssignments-Assigned"               component={MA_Assigned} />
+        <Route path="/MyAssignments-Inprogress"             component={MA_Inprogress} />
+        <Route path="/MyAssignments-Closed"                 component={MA_Closed} />
+        <Route path="/MyCollaboration-Assigned"             component={MC_Assigned} />
+        <Route path="/MyCollaboration-Inprogress"           component={MC_Inprogress} />
+        <Route path="/GroupAssignments-Assigned"            component={GA_Assigned} />
+        <Route path="/GroupAssignments-Closed"              component={GA_Closed} />
+        <Route path="/GroupAssignments-Inprogress"          component={GA_Inprogress} />
+        <Route path="/GroupAssignments-Unassigned"          component={GA_Unassigned} />
+        <Route path="/AllAssignments-Assigned"              component={AA_Assigned} />
+        <Route path="/AllAssignments-Closed"                component={AA_Closed} />
+        <Route path="/AllAssignments-Inprogress"            component={AA_Inprogress} />
+        <Route path="/AllAssignments-Unassigned"            component={AA_Unassigned} />
+        <Route path="/ManageUsers-RegisteredUser"           component={MU_Registereduser} />
+        <Route path="/ManageUsers-Groupmembers"             component={MU_Groupmember} />
         <Route path="/advance_search"                       component={AdvancedSearch} />
-        <Route path="/user_profile"                       component={Userprofile} />
-        <Route path='/edit_profile'                          component={EditUser} />
-        <Route path="/create_case"                       component={Createcase} />
-        <Route path='/non_technical_case'                  component={NonTechnicalCase} />
-        <Route path='/technical_case'                  component={TechnicalCase} />
-        <Route path='/caution_report'                  component={CautionReport} />
-        <Route path='/internal_chat/:id'                   component={InternalChat}/>
-        <Route path='/invite_to_group_chat/:id'                   component={InviteChat}/>
-        <Route path='/hero_chat/:id'                   component={Logger}/>
-        <Route path='/action_taken/:id'                   component={ActionTaken}/>
-        <Route path='/assign_to_other/:id'                component={AssignToOther}/>
-        <Route path='/case_detail/:id'                component={CaseDetail}/>
-        <Route path='/edit_case/:id'                component={EditCaseDetail}/>
+        <Route path="/user-profile"                       component={Userprofile} />
+        <Route path='/edit-profile'                          component={EditUser} />
+        <Route path="/create-case"                       component={Createcase} />
+        <Route path='/non-technical-case'                  component={NonTechnicalCase} />
+        <Route path='/technical-case'                  component={TechnicalCase} />
+        <Route path='/caution-report'                  component={CautionReport} />
+        <Route path='/internal-chat/:id'                   component={InternalChat}/>
+        <Route path='/invite-to_group-chat/:id'                   component={InviteChat}/>
+        <Route path='/hero-chat/:id'                   component={Logger}/>
+        <Route path='/action-taken/:id'                   component={ActionTaken}/>
+        <Route path='/assign-to-other/:id'                component={AssignToOther}/>
+        <Route path='/case-detail/:id'                component={CaseDetail}/>
+        <Route path='/edit-case/:id'                component={EditCaseDetail}/>
       </Switch>
     </Router>
     );

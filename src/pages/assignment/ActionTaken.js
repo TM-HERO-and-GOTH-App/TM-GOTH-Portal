@@ -10,6 +10,7 @@ class ActionTaken extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            // Find and Match the current case token
             caseToken: this.props.match.params.id,
             lovData: JSON.parse(sessionStorage.getItem('LovData')),
             token: JSON.parse(sessionStorage.getItem('userToken')),
@@ -110,20 +111,20 @@ function isStatusClosed()
                 {/* <?php endif; ?> */}
                 <div class="row">
                     <div class="col-sm-6">
-                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
+                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
                         </Link>
                         {(this.state.caseDetailData.caseStatus !== 'CLOSED' && this.state.caseDetailData.caseStatus !== 'CANCELLED') && (this.state.caseDetailData.ownerName || this.state.isCoordinator) &&
-                            <Link class="btn btn-warning" to={`/edit_case/${this.state.caseToken}`}>
+                            <Link class="btn btn-warning" to={`/edit-case/${this.state.caseToken}`}>
                                 <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
                                 Edit Case Detail
                             </Link>
                         }
                     </div>
                     <div class="pull-right col-sm-6" align="right">
-                        <Link class="btn btn-primary" to={`/hero_chat/${this.state.caseToken}`}>HERO Chat</Link>
-                        <Link class="btn btn-primary" to={`/internal_chat/${this.state.caseToken}`}>Internal Chat</Link>
+                        <Link class="btn btn-primary" to={`/hero-chat/${this.state.caseToken}`}>HERO Chat</Link>
+                        <Link class="btn btn-primary" to={`/internal-chat/${this.state.caseToken}`}>Internal Chat</Link>
                     </div>
                 </div>
                 <div class="space-6" />

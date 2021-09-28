@@ -76,11 +76,11 @@ class InternalChat extends React.Component {
                 <Header/>
                 <div class="row">
                     <div class="col-sm-12">
-                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
+                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Previous Page
                         </Link>
-                        <Link class="btn btn-yellow" to={`/hero_chat/${this.state.caseToken}`}>
+                        <Link class="btn btn-yellow" to={`/hero-chat/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-exchange"></i>
                             Switch to HERO Chat
                         </Link>
@@ -102,7 +102,7 @@ class InternalChat extends React.Component {
                                         <i class="ace-icon fa fa-save align-top bigger-125"></i>
                                         Post New Message</button>
                                     {(this.state.isCaseOwner || this.state.isCoordinator || this.state.isAdmin) &&
-                                        <Link class="btn btn-sm btn-danger" to={`/invite_to_group_chat/${this.state.caseToken}`}>Invite User to G-Chat (Collaboration)</Link>
+                                        <Link class="btn btn-sm btn-danger" to={`/invite-to-group-chat/${this.state.caseToken}`}>Invite User to G-Chat (Collaboration)</Link>
                                     }                     
                                 </div>
                             </div>{/* <!-- /.col --> */}
@@ -116,11 +116,11 @@ class InternalChat extends React.Component {
                             </div>
                         </div>
                         <br />
-                        <div class="space-10"></div>
+                        <div class="space-10"/>
                     </div>
                     }
 
-                <a name="chat-ls"/>
+                <a href="#" name="chat-ls"/>
                 {/* <?php if ( isset($alertStatus) && !empty($alertMessage) ): ?> */}
                 <div class="row">
                     <div class="col-sm-12">
@@ -163,7 +163,7 @@ class InternalChat extends React.Component {
                                         </span>
                                     </div>
                                     <div class="profile-info-value" align="center">
-                                        {data.bID ? <a target="_blank" href={`${data.filename}`}><i class="ace-icon fa fa-download"></i></a> : '-'}
+                                        {data.bID ? <a target="_blank" rel='noreferrer' href={`${data.filename}`}><i class="ace-icon fa fa-download"></i></a> : '-'}
                                     </div>
                                 </div>
                             })}

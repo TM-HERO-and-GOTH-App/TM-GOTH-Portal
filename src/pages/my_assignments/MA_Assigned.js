@@ -12,7 +12,6 @@ class MA_Assigned extends React.Component {
       hToken: JSON.parse(sessionStorage.getItem('UserData')),
       token: JSON.parse(sessionStorage.getItem('userToken')),
       shID: JSON.parse(sessionStorage.getItem('UserData')),
-      caseCount: 0,
       totalCase: [],
     }
     this.loggerCase = this.loggerCase.bind(this);
@@ -24,10 +23,8 @@ class MA_Assigned extends React.Component {
 
   loggerCase(){
     AssignmentService.viewCaseByOwner(this.state.token, 64).then(res => {
-      console.log(res);
-      // if(res[0].response === 'FAILED'){
+      // console.log(res);
         this.setState({ totalCase: res })
-      // }
     })
   }
 
@@ -76,13 +73,15 @@ class MA_Assigned extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                { this.state.totalCase.length === 1 ? 
+                {
+                //Check if Case is empty. The length of an empty Case is 1.
+                this.state.totalCase.length === 1 ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {
                     return <tr>
                     <td>
-                      <Link to={`/case_detail/${data.cToken}`}>
+                      <Link to={`/case-detail/${data.cToken}`}>
                         {data.caseNum}
                       </Link>
                     </td>
@@ -117,7 +116,7 @@ class MA_Assigned extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
+                        <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </Link>
@@ -131,7 +130,6 @@ class MA_Assigned extends React.Component {
             </div>
           </div>{/* /.span */}
         </div>{/* /.row */}
-
         <Footer />
       </div>
     );

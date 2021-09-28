@@ -77,11 +77,11 @@ class Logger extends React.Component {
                 <Header />
                 <div class="row">
                     <div class="col-sm-12">
-                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
+                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Previous Page
                         </Link>
-                        <Link class="btn btn-yellow" to={`/internal_chat/${this.state.caseToken}`}>
+                        <Link class="btn btn-yellow" to={`/internal-chat/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-exchange"></i>
                             Switch to Internal Chat
                         </Link>

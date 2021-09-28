@@ -26,7 +26,7 @@ class Dashboard extends React.Component {
       totalRegisterUser: [],
       totalOverallCaseByState: [],
       groupOption: [],
-      value: 'placeholder',
+      groupValue: '0',
       // totalRegisterUser: 0,
       // totalOverallCase: 0
     }
@@ -37,7 +37,6 @@ class Dashboard extends React.Component {
     this.getRegisterUserData = this.getRegisterUserData.bind(this);
     this.getTotalCaseByStateData = this.getTotalCaseByStateData.bind(this);
     this.getLOVData = this.getLOVData.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +49,7 @@ class Dashboard extends React.Component {
     // this.getTotalCaseResolveByGroupData();
   }
 
+  //Below is all the function correspond to it's purpose:
   getTotalResolvedByAgentData() {
     DashboardService.getTotalResolvedByAgent(this.state.token).then((res) => {
       console.log(res)
@@ -126,10 +126,6 @@ class Dashboard extends React.Component {
     this.setState({ groupOption: optionData });
   }
 
-  handleSelectChange(e){
-    this.setState({ value: e.target.value })
-  }
-
   render() {
     return (
       <div>
@@ -140,12 +136,12 @@ class Dashboard extends React.Component {
           </div>
             <form onSubmit={this.getLOVData}>
               <div className="pull-right col-sm-4">
-                <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.value} onChange={this.handleSelectChange}>
-                  <option value='placeholder'>All group...</option>
+                <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.groupValue} onChange={(e) => this.setState({ groupValue: e.target.value})}>
+                  <option value='0'>All group...</option>
                 { 
-                  this.state.groupOption.map((data)=> {
+                  this.state.groupOption ? this.state.groupOption.map((data)=> {
                     return <option value={data.lovName} key={data.lovID}>{ data.lovName }</option>
-                  })
+                  }) : <option value='0'>No data</option>
                 }
                 </select>
               </div>
@@ -171,31 +167,31 @@ class Dashboard extends React.Component {
                       <tr>
                         <td>Resolved In 5 Days</td>
                         <td align="right">
-                          <b className="green">{this.state.totalCaseResolveAgent}%</b>
+                          <b className="green">{this.state.totalCaseResolveAgent ? this.state.totalCaseResolveAgent : 0}%</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Closed</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalClosedAgent}</b>
+                          <b className="blue">{this.state.totalClosedAgent ? this.state.totalClosedAgent : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>In-Progress</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalInProgressAgent}</b>
+                          <b className="blue">{this.state.totalInProgressAgent ? this.state.totalInProgressAgent : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Assigned</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalAssignedAgent}</b>
+                          <b className="blue">{this.state.totalAssignedAgent ? this.state.totalAssignedAgent : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td><b>Total Case</b></td>
                         <td align="right">
-                          <b className="green">{this.state.totalCaseAgent}</b>
+                          <b className="green">{this.state.totalCaseAgent ? this.state.totalCaseAgent : 0}</b>
                         </td>
                       </tr>
                     </tbody>
@@ -225,37 +221,37 @@ class Dashboard extends React.Component {
                       <tr>
                         <td>Resolved In 5 Days</td>
                         <td align="right">
-                          <b className="green">{this.state.totalGroupCase}</b>
+                          <b className="green">{this.state.totalGroupCase ? this.state.totalGroupCase : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Closed</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupCloseCase}</b>
+                          <b className="blue">{this.state.totalGroupCloseCase ? this.state.totalGroupCloseCase : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>In-Progress</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupInprogressCase}</b>
+                          <b className="blue">{this.state.totalGroupInprogressCase ? this.state.totalGroupInprogressCase : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Assigned</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupAssignCase}</b>
+                          <b className="blue">{this.state.totalGroupAssignCase ? this.state.totalGroupAssignCase : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Un-Assigned</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupCancelCase}</b>
+                          <b className="blue">{this.state.totalGroupCancelCase ? this.state.totalGroupCancelCase : 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td><b>Total Case</b></td>
                         <td align="right">
-                          <b className="green">{this.state.totalGroupCase}</b>
+                          <b className="green">{this.state.totalGroupCase ? this.state.totalGroupCase : 0}</b>
                         </td>
                       </tr>
                     </tbody>
@@ -337,7 +333,7 @@ class Dashboard extends React.Component {
                     </div>
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        {this.state.totalRegisterUser}
+                        {this.state.totalRegisterUser ? this.state.totalGroupCase : 0}
                       </span>
                     </div>
                   </div>
@@ -355,7 +351,7 @@ class Dashboard extends React.Component {
                     </div>
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        {this.state.totalOverallCaseByState}
+                        {this.state.totalOverallCaseByState ? this.state.totalOverallCaseByState : 0}
                       </span>
                     </div>
                   </div>

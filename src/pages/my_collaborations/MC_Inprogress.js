@@ -48,8 +48,6 @@ class MC_Inprogress extends React.Component {
                     Well done!
                   </strong>
                   {/* Display message here */}
-
-                  {/* <?php echo str_replace("_", " ", $pageMessage); ?> */}
                 </p>
               </div>
               {/* <?php endif; ?> */}
@@ -75,7 +73,7 @@ class MC_Inprogress extends React.Component {
                   this.state.totalCase.map( data => {
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <a href={`/case-detail/${data.cToken}`}>
                         {data.caseNum}
                       </a>
                     </td>
@@ -108,7 +106,7 @@ class MC_Inprogress extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
+                        <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </Link>

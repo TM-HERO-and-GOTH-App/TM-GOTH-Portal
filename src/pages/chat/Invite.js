@@ -50,7 +50,7 @@ class InviteChat extends React.Component {
                 <Header/>
                 <div class="row">
                     <div class="col-sm-4">
-                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
+                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
                         </Link>
@@ -205,7 +205,7 @@ class InviteChat extends React.Component {
                     </div>{/* // <!-- /.span --> */}
                 </div>
                 <div class="space-20"></div>
-                <a name="group-members"></a>
+                <a href='#' name="group-members"/>
                 <div class="page-header">
                     <h1>Group Members</h1>
                 </div>

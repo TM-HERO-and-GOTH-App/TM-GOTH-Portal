@@ -1,6 +1,6 @@
 import React from 'react';
 import LoginTheme from './LoginTheme';
-import LoginWebservice from '../web_service/login_web_service/LoginService';
+import LoginService from '../web_service/login_service/LoginService';
 // import db from '../firebase_login/LoginAuth';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -11,11 +11,9 @@ class Loginbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      alertMessage: '',
       userEmail: '',
       userPassword: '',
-      fullName: {},
-      formSubmit: false,
+      // formSubmit: false,
       alertStatus: false,
     }
     this.handleEmail = this.handleEmail.bind(this);
@@ -53,6 +51,9 @@ class Loginbox extends React.Component {
   //     });
   // }
 
+
+  // Make a base logic and then pass the data down through parameters
+  // The logic is identical to HERO login logic
   handleSubmit(e, email, password) {
     e.preventDefault();
     email = this.state.userEmail;
@@ -61,12 +62,12 @@ class Loginbox extends React.Component {
   }
 
   auth(email, password) {
-    LoginWebservice.requestToken(email).then(res => {
+    LoginService.requestToken(email).then(res => {
       console.log(res);
       if (res[0].status === 'FAILED') {
         console.log('Email does not exist')
         this.setState({
-          alertMessage: 'Email does not exist'
+          alertStatus: true
         })
       } else {
         const authToken = res[0].authToken;
@@ -77,12 +78,11 @@ class Loginbox extends React.Component {
   }
 
   signIn(authToken, email, password) {
-    LoginWebservice.signIn(authToken, email, password).then(res => {
+    LoginService.signIn(authToken, email, password).then(res => {
       console.log(res);
       if (res.response === 'FAILED') {
         this.setState({
           alertStatus: true,
-          alertMessage: 'Email does not exist.',
         })
       } else {
         this.getLoggerProfile(authToken);
@@ -91,15 +91,14 @@ class Loginbox extends React.Component {
   }
 
   getLoggerProfile(authToken) {
-    LoginWebservice.getUserProfile(authToken).then(res => {
+    LoginService.getUserProfile(authToken).then(res => {
       console.log(res);
       if (res.category !== 'STAKEHOLDER') {
         console.log('Your account is not yet registered')
         this.setState({
-          alertMessage: 'Your account is not yet registered'
+          alertStatus: true
         })
       } else {
-        this.setState({ fullName: res.fullName })
         sessionStorage.setItem('UserData', JSON.stringify(res))
         this.getLov(authToken)
       }
@@ -107,7 +106,7 @@ class Loginbox extends React.Component {
   }
 
   getLov(authToken) {
-    LoginWebservice.getSystemLOV(authToken).then(res => {
+    LoginService.getSystemLOV(authToken).then(res => {
       console.log(res);
       sessionStorage.setItem('LovData', JSON.stringify(res));
       this.props.history.push('/');
@@ -128,10 +127,10 @@ class Loginbox extends React.Component {
               <div className="space-6" />
               <form onSubmit={this.handleSubmit}>
                 <fieldset>
-                  { (this.state.alertMessage !== '') &&
+                  { this.state.alertStatus &&
                     <div className="alert alert-danger">
                       <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times"></i></button>
-                      {this.state.alertMessage}
+                      Invalid Username/Password OR Profile not exist. Please try the Forgot Password for assistant
                     </div>
                   }
                   <label className="block clearfix">

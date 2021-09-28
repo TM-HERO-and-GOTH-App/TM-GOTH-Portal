@@ -58,7 +58,7 @@ class EditCaseDetail extends React.Component {
                     <div className="space-10"/>
                     {/* <?php endif; ?> */}
                     <div className="col-sm-4">
-                        <Link className="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
+                        <Link className="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
                         </Link>

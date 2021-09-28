@@ -21,11 +21,11 @@ class EditUser extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e){
-        e.preventDefault();
+    handleSubmit(){
         UpdateProfileService.updateAgentProfile(this.state.token, this.state.name, this.state.mobileNum, this.state.nickName, this.state.stateOption,this.state.divisionOption)
         .then(res => {
-            console.log(res)
+            console.log(res);
+            this.props.history.push('/user-profile')
         })
     }
 

@@ -44,7 +44,7 @@ class Createcase extends React.Component {
     CreateCaseService.createCase(this.state.token, this.state.customerName, this.state.ic, this.state.mobileNumber, this.state.caseDescription, this.state.stateType, 'COMPLAINT', this.state.sourceType, this.state.subSourceType, this.state.caseType)
     .then(res => {
       console.log(res);
-      if(this.state.customerName !== '' && this.state.sourceType !== 0 && this.state.caseDescription !== 'placeholder'){
+      if(this.state.customerName !== '' && this.state.sourceType !== 0 && this.state.caseDescription !== ''){
         if(res.response === 'FAILED'){
           this.setState({ alertStatus: true })
           this.setState({ alertMessage: res.message })
@@ -77,7 +77,7 @@ class Createcase extends React.Component {
       <div>
         <Header />
         <form name="form" onSubmit={this.createCase} onReset={this.resetForm}>
-          {(this.state.alertStatus === true) && (this.state.alertMessage !== null) ?
+          {(this.state.alertStatus === true) && (this.state.alertMessage !== null) &&
             <div className="row">
               <div className="col-xs-12">
                 <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
@@ -87,7 +87,7 @@ class Createcase extends React.Component {
                   <p>{this.state.alertMessage}</p>
                 </div>
               </div>
-            </div> : null
+            </div>
           }
 
           <div className="left">
@@ -95,7 +95,7 @@ class Createcase extends React.Component {
               <i className="ace-icon fa fa-repeat align-top bigger-125" />
               Reset
             </button>
-            <button className="btn btn-sm btn-success" type="submit" name="btn_post">
+            <button className="btn btn-sm btn-success" type="submit">
               <i className="ace-icon fa fa-save align-top bigger-125" />
               Save New Case
             </button>

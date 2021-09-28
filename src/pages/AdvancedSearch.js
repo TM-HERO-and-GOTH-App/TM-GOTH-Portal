@@ -8,6 +8,7 @@ class AdvancedSearch extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      caseToken: this.props.match.params.id,
       keyFullName: '',
       keyEmail: '',
       keyNricNum: '',
@@ -46,7 +47,6 @@ class AdvancedSearch extends React.Component {
   }
 
   render() {
-    // console.log(this.props.location.state.quickSearch)
     return (
       <div>
         <Header />
@@ -146,7 +146,7 @@ class AdvancedSearch extends React.Component {
                   this.state.searchResult.map((data, i) => {
                     return <tr>
                       <td>
-                        <Link to={`/case_detail/${data.cToken}`}>
+                        <Link to={`/case-detail/${data.cToken}`}>
                           {data.caseNum}
                         </Link>
                       </td>
@@ -179,14 +179,13 @@ class AdvancedSearch extends React.Component {
                       </td>
                       <td>
                         <div align="center">
-                          <button className="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/logger/<?php echo $caseLs[$i]['cToken']; ?>/ma/')">
+                          <button className="btn btn-minier btn-yellow" onClick={`/hero-chat/${this.state.caseToken}`}>
                             Open
                             <i className="ace-icon fa fa-arrow-right icon-on-right" />
                           </button>
                         </div>
                       </td>
                     </tr>
-
                   })
                 }
               </tbody>

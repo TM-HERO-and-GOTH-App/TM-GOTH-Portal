@@ -75,7 +75,7 @@ class MC_Assigned extends React.Component {
                   this.state.totalCase.map( data => {
                     return <tr>
                     <td>
-                      <a href="<?php echo APPNAME; ?>/assignment/detailcase/<?php echo $caseLs[$i]['cToken']; ?>">
+                      <a href={`/case-detail/${data.cToken}`}>
                         {data.caseNum}
                       </a>
                     </td>
@@ -108,7 +108,7 @@ class MC_Assigned extends React.Component {
                     </td>
                     <td>
                       <div align="center">
-                        <Link className="btn btn-minier btn-yellow" to={`/hero_chat/${data.cToken}`}>
+                        <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
                           Open
                           <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </Link>
