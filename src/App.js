@@ -6,7 +6,7 @@ import ActionTaken from './pages/assignment/ActionTaken';
 import Activate from './pages/ActivateAcc';
 import AdvancedSearch from './pages/AdvancedSearch';
 import AssignToOther from './pages/assignment/AssignToOthers';
-import CaseDetail from './pages/CaseDetail';
+import CaseDetail from './pages/case_detail/CaseDetail';
 import CautionReport from './pages/hero_cases_functionality/CautionReport';
 import Createcase from './pages/user_profile/Createcase';
 import Dashboard from './pages/Dashboard';
@@ -63,7 +63,7 @@ function App() {
         <Route path="/AllAssignments-Unassigned"            component={AA_Unassigned} />
         <Route path="/ManageUsers-RegisteredUser"           component={MU_Registereduser} />
         <Route path="/ManageUsers-Groupmembers"             component={MU_Groupmember} />
-        <Route path="/advance_search"                       component={AdvancedSearch} />
+        <Route path="/advance-search"                       component={AdvancedSearch} />
         <Route path="/user-profile"                       component={Userprofile} />
         <Route path='/edit-profile'                          component={EditUser} />
         <Route path="/create-case"                       component={Createcase} />

@@ -1,39 +1,66 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import CaseDetailService from '../web_service/case_detail_service/CaseDetailService';
 import { Link } from 'react-router-dom';
+import Header from '../Header';
+import Footer from '../Footer';
+import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
+import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 class CaseDetail extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             token: JSON.parse(sessionStorage.getItem('userToken')),
+            userData: JSON.parse(sessionStorage.getItem('UserData')),
             caseToken: this.props.match.params.id,
             caseDetailData: {},
+            isCoordinator: '',
             statusLabel: '',
-            statusBadge: ''
+            statusBadge: '',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
+        this.assignCaseToMe = this.assignCaseToMe.bind(this);
+        this.assignCaseToAgent = this.assignCaseToAgent.bind(this);
+        this.getGroupResult = this.getGroupResult.bind(this);
     }
 
     componentDidMount() {
         this.getCaseDetail();
     }
 
-    componentWillUnmount(){
-        this.getCaseDetail();
-    }
-
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
-            this.setState({ caseDetailData: res })
+            this.setState({ caseDetailData: res }) //Here is the error is pointing
+        })
+    }
+
+    assignCaseToMe() {
+        CaseDetailService.assignToMe(this.state.token, this.state.caseToken).then(res => {
+            console.log(res);
+            this.props.history.push('/MyAssignments-Assigned')
+        })
+    }
+
+    assignCaseToAgent(){
+        const hID = this.state.userData.hID;
+        const shID = this.state.userData.shID;
+
+        CaseDetailService.assignToAgent(this.state.token, this.state.caseToken, hID, shID).then(res => {
+            console.log(res)
+        }) 
+    }
+
+    getGroupResult() {
+        const shID = this.state.shID.shID
+        ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
+            console.log(res);
+            this.setState({ groupMember: res })
+            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
         })
     }
 
     // initMap(lat,lon) {
-				
+
     //     // Using the lat and lng
     //     var latitude = lat; 
     //     var longitude = lon;
@@ -66,6 +93,7 @@ class CaseDetail extends React.Component {
                                 </button>
                                 <p>
                                     {/* <?php echo urldecode($alertMessage); ?> */}
+                                    Alert Message here
                                 </p>
                             </div>
                         </div>
@@ -78,29 +106,36 @@ class CaseDetail extends React.Component {
                     <div className="row">
                         {(this.state.caseDetailData.caseStatus !== 'CLOSED' || this.state.caseDetailData.caseStatus !== 'CANCELLED') &&
                             <div className="col-sm-5">
-                                {this.state.caseDetailData.ownerName ? <Link className="btn btn-primary" to={`/assign_to_other/${this.state.caseToken}`}>Assign To Me</Link> : null}
-                                {/* <?php } ?>
-            <?php if( isCoordinator($position) ){ ?> */}
-                                <Link className="btn btn-danger" to={`/assign_to_other/${this.state.caseToken}`}>Assign To Others</Link>
-                                {
-                                    this.state.caseDetailData.oID ? 
-                                        <Link className="btn btn-warning" to={`/edit_case/${this.state.caseToken}`}>
-                                            <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
-                                            Edit Case Detail
-                                        </Link> : null
+                                {this.state.caseDetailData.ownerName &&
+                                    <button className="btn btn-primary" onClick={this.assignCaseToMe}>
+                                        Assign To Me
+                                    </button>
+                                }
+
+                                {this.state.isCoordinator && 
+                                    <button className="btn btn-danger" onClick={this.assignCaseToAgent}>
+                                        Assign To Others
+                                    </button>
+                                }
+
+                                {this.state.caseDetailData.oID &&
+                                    <Link className="btn btn-warning" to={`/edit-case/${this.state.caseToken}`}>
+                                        <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
+                                        Edit Case Detail
+                                    </Link>
                                 }
                             </div>
                         }
                         <div className="col-sm-7">
                             <div className="col-sm-7">
-                                <Link className="btn btn-primary" to={`/action_taken/${this.state.caseToken}`}>
+                                <Link className="btn btn-primary" to={`/action-taken/${this.state.caseToken}`}>
                                     Action Taken
                                     {/* <!--<i className="ace-icon fa fa-arrow-right icon-on-right"></i>--> */}
                                 </Link>
-                                <Link className="btn btn-primary" to={`/hero_chat/${this.state.caseToken}`}>
+                                <Link className="btn btn-primary" to={`/hero-chat/${this.state.caseToken}`}>
                                     HERO Chat
                                 </Link>
-                                <Link className="btn btn-primary" to={`/internal_chat/${this.state.caseToken}`}>
+                                <Link className="btn btn-primary" to={`/internal-chat/${this.state.caseToken}`}>
                                     Internal Chat
                                 </Link>
                             </div>
@@ -122,6 +157,7 @@ class CaseDetail extends React.Component {
                                                 </span>
                                             </div>
                                         </div> :
+                                        
                                         <div>
                                             <div className="profile-info-row">
                                                 <div className="profile-info-name">GROUP POOL</div>
@@ -228,9 +264,7 @@ class CaseDetail extends React.Component {
                                                 <span className={`label label-success`}>
                                                     {
                                                         this.state.caseDetailData.caseStatus === 'NEW' ? this.setState({ statusLabel: 'UN-ASSIGNED' }) :
-                                                            this.state.caseDetailData.caseStatus === 'ASSIGNED' ||
-                                                                this.state.caseDetailData.caseStatus === 'IN-PROGRESS' ||
-                                                                this.state.caseDetailData.caseStatus === 'CLOSED' ? this.state.caseDetailData.caseStatus : this.state.caseDetailData.caseStatus
+                                                            this.state.caseDetailData.caseStatus
                                                     }
                                                 </span>
                                             </span>
@@ -256,7 +290,17 @@ class CaseDetail extends React.Component {
                                                     {this.state.caseDetailData.closedDate}
                                                 </span>
                                             </div>
-                                        </div> : null
+                                        </div> : 
+                                        
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name"> Closed Date </div>
+
+                                            <div className="profile-info-value">
+                                                <span className="editable" id="about">
+                                                    -
+                                                </span>
+                                            </div>
+                                        </div>
                                     }
 
                                 </div>
@@ -371,7 +415,7 @@ class CaseDetail extends React.Component {
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">Attachment</h4>
-                                {this.state.caseDetailData.picture ? <img src={this.state.caseDetailData.picture} alt='Case'/> : <i style={{ color: "red" }}>Not provided</i>}
+                                {this.state.caseDetailData.picture ? <img src={this.state.caseDetailData.picture} alt='Case' /> : <i style={{ color: "red" }}>Not provided</i>}
                             </div>
                         </div>
                         {this.state.caseDetailData.longtitude ?

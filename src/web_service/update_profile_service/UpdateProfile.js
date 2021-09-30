@@ -19,7 +19,7 @@ const UpdateProfileService = {
                 zoneID: 0,
                 teamID: 0
             })
-        })
+        }).then(res => res.json()).catch(err => console.log(err))
     }
 }
 

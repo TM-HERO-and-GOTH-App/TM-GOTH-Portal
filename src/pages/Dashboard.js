@@ -333,7 +333,7 @@ class Dashboard extends React.Component {
                     </div>
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        {this.state.totalRegisterUser ? this.state.totalGroupCase : 0}
+                        {this.state.totalRegisterUser ? this.state.totalRegisterUser : 0}
                       </span>
                     </div>
                   </div>

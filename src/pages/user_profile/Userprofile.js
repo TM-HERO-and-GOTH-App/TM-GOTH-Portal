@@ -71,7 +71,7 @@ class Userprofile extends React.Component {
           </div>
           <div className="col-xs-12 col-sm-5">
             <div className="left">
-              <Link className="btn btn-sm btn-warning" to='/edit_user'>
+              <Link className="btn btn-sm btn-warning" to='/edit-profile'>
                 <i className="ace-icon fa fa-pencil align-top bigger-125" />
                 Edit Profile
               </Link>

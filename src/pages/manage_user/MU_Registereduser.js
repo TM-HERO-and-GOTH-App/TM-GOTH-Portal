@@ -11,6 +11,7 @@ class MU_Registereduser extends React.Component {
       userKeyword: '',
       user: [],
       alertStatus: false,
+      // isLoading: false,
       alertMessage: '',
       totalStakeHolderUser: 0,
       totalTMUser: 0,
@@ -19,6 +20,10 @@ class MU_Registereduser extends React.Component {
   }
 
   componentDidMount() {
+    this.getUserData();
+  }
+
+  componentWillUnmount(){
     this.getUserData();
   }
 

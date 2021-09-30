@@ -22,7 +22,7 @@ class GA_Closed extends React.Component {
   }
 
   componentWillUnmount(){
-    this.loggerCase()
+    this.loggerCase();
   }
 
   loggerCase(){

@@ -14,7 +14,9 @@ class AssignToOther extends React.Component {
             token: JSON.parse(sessionStorage.getItem('userToken')),
             shID: JSON.parse(sessionStorage.getItem('UserData')),
             caseDetailData: {},
-            groupMember: []
+            groupMember: [],
+            caseOwner: '',
+            stakeholderGroup: '0',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
@@ -37,6 +39,7 @@ class AssignToOther extends React.Component {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
             this.setState({ caseDetailData: res })
+            this.setState({ caseOwner: res.ownerName })
         })
     }
 
@@ -46,7 +49,7 @@ class AssignToOther extends React.Component {
                 <Header/>
                 <div class="row">
                     <div class="col-sm-4">
-                        <Link class="btn btn-primary" to={`/case_detail/${this.state.caseToken}`}>
+                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
                         </Link>
@@ -67,17 +70,17 @@ class AssignToOther extends React.Component {
                         {/* <?php endif; ?> */}
                     </div>
                 </div>{/* <!-- /.row --> */}
-                <a name="group-members"></a>
+                <a href='#' name="group-members"/>
                 <div class="page-header">
                     <h1>Group Members</h1>
                 </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <form name="form" method="POST">
-                            <select class="chosen-select form-control" name="shID" dataPlaceholder="Choose a Group..." onChange="submitForm('<?php echo APPNAME; ?>/assignment/groupmembers/<?php echo $cToken; ?>/#group-members')">
+                            <select class="chosen-select form-control" name="shID" dataPlaceholder="Choose a Group..." value={this.state.stakeholderGroup} onChange={(e) => this.setState({ stakeholderGroup: e.target.value})}>
                                 <option value="0">All Group/Stakeholder ...</option>
                                 {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map(data => {
-                                    return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                    return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                 })}
                             </select>
                         </form>
@@ -111,7 +114,7 @@ class AssignToOther extends React.Component {
                                 {this.state.groupMember === null ?
                                     <tr><td colSpan="4"><span style={{ color: "red" }}>Selection NOT Allowed. Please select Group/Stakeholder</span></td></tr>
                                     :
-                                    this.state.groupMember.map((data, i)=> {
+                                    this.state.stakeholderGroup && this.state.groupMember.map((data, i)=> {
                                         i += 1;
                                         return <tr>
                                             <td><div align="center">

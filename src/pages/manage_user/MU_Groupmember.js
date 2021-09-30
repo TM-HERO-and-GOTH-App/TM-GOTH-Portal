@@ -13,7 +13,10 @@ class MU_Groupmember extends React.Component {
       userResults: [],
       groupResults: [],
       alertStatus: false,
-      alertMessage: ''
+      setAgent: false,
+      setCoordinator: false,
+      setAdmin: false,
+      alertMessage: '',
     }
     this.getSearchUser = this.getSearchUser.bind(this);
     this.resetUserSearch = this.resetUserSearch.bind(this);
@@ -252,21 +255,21 @@ class MU_Groupmember extends React.Component {
                           <td>{data.fullName}</td>
                           <td>{data.email}</td>
                           <td>
-                            {data.positionName === 'Admin' ? <span class="label label-warning arrowed-right">{ data.positionName }</span> : data.positionName }
+                            {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{ data.positionName }</span> : data.positionName }
                           </td>
                           <td>
                             <div align="center">
-                              <input name="set_agent" type="checkbox" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? 'yes' : ''} /><span className="lbl"></span>
+                              <input name="set_agent" type="checkbox" className="lbl" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? !this.state.setAgent : false} onChange={(e) => this.setState({ setAgent: !this.state.setAgent })} />
                             </div>
                           </td>
                           <td>
                             <div align="center">
-                              <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? 'yes' : ''}/>
+                              <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? !this.state.setCoordinator: false} onChange={(e) => this.setState({ setCoordinator: !this.state.setCoordinator})}/>
                             </div>
                           </td>
                           <td>
                             <div align="center">
-                              <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? 'yes' : ''}/>
+                              <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? !this.state.setAdmin : false} onChange={(e) => this.setState({ setAdmin: e.target.value})}/>
                             </div>
                           </td>
                           <td><div align="center">

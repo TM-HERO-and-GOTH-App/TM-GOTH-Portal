@@ -32,7 +32,7 @@ class MA_Assigned extends React.Component {
     return (
       <div>
         <Header />
-        <div class="page-header">
+        <div className="page-header">
             <h1>My Assignments : ASSIGNED</h1>
         </div> {/* <!-- /.page-header --> */}
 
@@ -94,19 +94,19 @@ class MA_Assigned extends React.Component {
                       </td>
                     <td>
                       <div align="center">
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {data.vip ? <i class="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                        {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
+                      {data.vip ? <span className="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
                     <td>

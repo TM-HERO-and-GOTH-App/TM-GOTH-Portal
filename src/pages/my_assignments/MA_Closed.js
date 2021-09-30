@@ -91,7 +91,7 @@ class MA_Closed extends React.Component {
                       </td>
                     <td>
                       <div align="center">
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
