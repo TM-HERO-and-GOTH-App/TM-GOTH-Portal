@@ -23,12 +23,15 @@ class Dashboard extends React.Component {
       totalGroupAssignCase: 0,
       totalGroupInprogressCase: 0,
       totalGroupCloseCase: 0,
+      nationWideTotalAssign: 0,
+      nationWideTotalCancel: 0,
+      nationWideTotalCase: 0,
+      nationWideTotalClose: 0,
+      nationWideTotalInProgress: 0,
+      nationWideTotalResolvedCase: 0,
       totalRegisterUser: [],
       totalOverallCaseByState: [],
-      groupOption: [],
       groupValue: '0',
-      // totalRegisterUser: 0,
-      // totalOverallCase: 0
     }
     this.getTotalResolvedByAgentData = this.getTotalResolvedByAgentData.bind(this);
     this.getTotalCaseByAgentData = this.getTotalCaseByAgentData.bind(this);
@@ -36,7 +39,7 @@ class Dashboard extends React.Component {
     this.getTotalCaseByGroupData = this.getTotalCaseByGroupData.bind(this);
     this.getRegisterUserData = this.getRegisterUserData.bind(this);
     this.getTotalCaseByStateData = this.getTotalCaseByStateData.bind(this);
-    this.getLOVData = this.getLOVData.bind(this);
+    this.getOtherGroupData = this.getOtherGroupData.bind(this);
   }
 
   componentDidMount() {
@@ -45,8 +48,8 @@ class Dashboard extends React.Component {
     this.getTotalCaseByGroupData();
     this.getRegisterUserData();
     this.getTotalCaseByStateData();
-    this.getLOVData();
     // this.getTotalCaseResolveByGroupData();
+    // this.getOtherGroupData();
   }
 
   //Below is all the function correspond to it's purpose:
@@ -99,7 +102,23 @@ class Dashboard extends React.Component {
         return this.state;
       }
     })
+  }
 
+  getOtherGroupData(e){
+    e.preventDefault();
+    DashboardService.getTotalCaseByGroup(this.state.token, this.state.groupValue).then(res => {
+      console.log(res);
+      this.setState({ nationWideTotalAssign: res[0].totalAssigned})
+      this.setState({ nationWideTotalCancel: res[0].totalCancelled})
+      this.setState({ nationWideTotalCase: res[0].totalCase})
+      this.setState({ nationWideTotalClose: res[0].totalClosed})
+      this.setState({ nationWideTotalInProgress: res[0].totalInProgress})
+    })
+
+    DashboardService.getTotalResolvedByGroup(this.state.token, this.state.groupValue).then(res => {
+      console.log(res);
+      this.setState({ nationWideTotalResolvedCase: res[0].total})
+    })
   }
 
   getRegisterUserData() {
@@ -120,12 +139,6 @@ class Dashboard extends React.Component {
     });
   }
 
-  getLOVData() {
-    const optionData = this.state.lovData.filter(lov => lov.lovGroup === 'STAKEHOLDER').filter(lov => lov.lovName !== 'ADMIN');
-    console.log(optionData);
-    this.setState({ groupOption: optionData });
-  }
-
   render() {
     return (
       <div>
@@ -134,17 +147,18 @@ class Dashboard extends React.Component {
           <div className="page-header">
             <h1> Dashboard</h1>
           </div>
-            <form onSubmit={this.getLOVData}>
+            <form onSubmit={this.getOtherGroupData}>
               <div className="pull-right col-sm-4">
                 <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.groupValue} onChange={(e) => this.setState({ groupValue: e.target.value})}>
                   <option value='0'>All group...</option>
                 { 
-                  this.state.groupOption ? this.state.groupOption.map((data)=> {
-                    return <option value={data.lovName} key={data.lovID}>{ data.lovName }</option>
+                  this.state.lovData ? this.state.lovData.filter(lov => lov.lovGroup === 'STAKEHOLDER' && lov.lovName !== 'ADMIN').map((data)=> {
+                    return <option value={data.lovID} key={data.lovID}>{ data.lovName }</option>
                   }) : <option value='0'>No data</option>
                 }
                 </select>
               </div>
+              <button type='submit'>Submit</button>
             </form>
           <br /><br /><br />
           <div className="col-sm-4">
@@ -280,37 +294,37 @@ class Dashboard extends React.Component {
                       <tr>
                         <td>Resolved In 5 Days</td>
                         <td align="right">
-                          <b className="green"></b>
+                          <b className="green">{this.state.nationWideTotalResolvedCase}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Closed</td>
                         <td align="right">
-                          <b className="blue"></b>
+                          <b className="blue">{this.state.nationWideTotalClose}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>In-Progress</td>
                         <td align="right">
-                          <b className="blue"></b>
+                          <b className="blue">{this.state.nationWideTotalInProgress}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Assigned</td>
                         <td align="right">
-                          <b className="blue"></b>
+                          <b className="blue">{this.state.nationWideTotalAssign}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Un-Assigned</td>
                         <td align="right">
-                          <b className="blue"></b>
+                          <b className="blue">{this.state.nationWideTotalCancel}</b>
                         </td>
                       </tr>
                       <tr>
                         <td><b>Total Case</b></td>
                         <td align="right">
-                          <b className="green"></b>
+                          <b className="green">{this.state.nationWideTotalCase}</b>
                         </td>
                       </tr>
                     </tbody>

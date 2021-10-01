@@ -43,7 +43,7 @@ class MU_Registereduser extends React.Component {
         <div>
           <a name="group-members" />
           {
-          this.state.alertStatus ?
+          this.state.alertStatus &&
             <div className="row">
               <div className="col-sm-12">
                 <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
@@ -55,7 +55,7 @@ class MU_Registereduser extends React.Component {
               </div>
               <br /><br />
               <div className="space-10" />
-            </div> : null
+            </div>
           }
 
           <div className="row">

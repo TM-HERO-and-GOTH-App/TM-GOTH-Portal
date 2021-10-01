@@ -63,10 +63,10 @@ class ActionTaken extends React.Component {
     }
 
     setRemark(e){
-        e.preventDefault();
+        // e.preventDefault();
         ActionTakenService.setRemark(this.state.token, this.state.caseToken, this.state.remarkType, this.state.caseStatusType, this.state.closureType)
         .then(res => {
-            this.props.history.push(`/case_detail/${this.state.caseToken}`)
+            this.props.history.push(`/case-detail/${this.state.caseToken}`)
         })
     }
 
@@ -217,7 +217,7 @@ function isStatusClosed()
                                                             this.state.caseRemarks.filter(filter => filter.remarkType === 'CLOSED') && 
                                                             (this.state.isCaseOwner || this.state.isAdmin) ?
                                                                         this.state.lovData.filter(filter => filter.lovGroup === 'CASE-STATUS').map(data => {
-                                                                            return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                                                            return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
                                                                         }) :
 
                                                                         (this.state.caseRemarks.filter(filter => filter.remarkType === 'TO-BE-DELETED') && this.state.isAdmin) ?
