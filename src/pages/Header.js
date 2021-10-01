@@ -9,12 +9,13 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: JSON.parse(sessionStorage.getItem('UserData')),
+      userData: JSON.parse(sessionStorage.getItem('UserData')),
+      token: JSON.parse(sessionStorage.getItem('userToken')),
       dropdownOpen: false,
       collabDropdown: false,
       AdvancedSearch: false,
       selectedTab: false,
-      searchInput: ''
+      searchInput: '',
     }
     this.toggle = this.toggle.bind(this);
     this.collabToggle = this.collabToggle.bind(this);
@@ -23,7 +24,7 @@ class Header extends React.Component {
     this.onMouseEnterCollab = this.onMouseEnterCollab.bind(this);
     this.onMouseLeaveCollab = this.onMouseLeaveCollab.bind(this);
     this.clearsessionStorage = this.clearsessionStorage.bind(this);
-    // this.quickSearchResult = this.quickSearchResult.bind(this);
+    this.quickSearchResult = this.quickSearchResult.bind(this);
   }
 
   // For hover and sub-menu open
@@ -59,16 +60,16 @@ class Header extends React.Component {
     sessionStorage.clear();
   }
 
-  // quickSearchResult(e){
-  //   e.preventDefault();
-  //   QuickSearchService.quickSearch(this.state.token, this.state.searchInput).then(res => {
-  //     console.log(res);
-  //     this.props.history.push({
-  //       pathname: '/advance_search',
-  //       state: { quickSearch: this.state.searchInput }
-  //     })
-  //   })
-  // }
+  quickSearchResult(e){
+    // e.preventDefault();
+    QuickSearchService.quickSearch(this.state.token, this.state.searchInput).then(res => {
+      console.log(res);
+      this.props.history.push({
+        pathname: '/advance_search',
+        state: { quickSearch: this.state.searchInput }
+      })
+    })
+  }
 
   render() {
     return (
@@ -99,7 +100,7 @@ class Header extends React.Component {
                     <img className="nav-user-photo" src={img2} alt="User's Photo" />
                     <span className="user-info">
                       <small>Welcome,</small>
-                      {this.state.token.fullName ? this.state.token.fullName : 'User Name'}
+                      {this.state.userData.fullName ? this.state.userData.fullName : 'User Name'}
                     </span>
                     <i className="ace-icon fa fa-caret-down" />
                   </a>
@@ -117,7 +118,7 @@ class Header extends React.Component {
                       </Link>
                     </li>
 
-                    {(this.state.token.stakeholderName) &&
+                    {(this.state.userData.stakeholderName) &&
                       <li>
                         <Link to="/create-case">
                           <i className="ace-icon fa fa-pencil" />
@@ -264,7 +265,7 @@ class Header extends React.Component {
                 }
               </li>
 
-              {(this.state.token.hGroup !== 'SALES') &&
+              {(this.state.userData.hGroup !== 'SALES') &&
                 <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                   <Link to="AllAssignments-Unassigned">
                     <i className="menu-icon glyphicon glyphicon-globe" />
@@ -313,7 +314,7 @@ class Header extends React.Component {
                 </li>
               }
 
-              {(this.state.token.positionName === 'Admin') &&
+              {(this.state.userData.positionName === 'Admin') &&
                 <li className="active open hover" onMouseOver={this.onMouseEnterCollab} onMouseLeave={this.onMouseLeaveCollab}>
                   <Link to="ManageUsers-Groupmembers">
                     <i className="menu-icon fa fa-users" />

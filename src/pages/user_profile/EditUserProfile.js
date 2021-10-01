@@ -22,7 +22,8 @@ class EditUser extends React.Component {
     }
 
     handleSubmit(){
-        UpdateProfileService.updateAgentProfile(this.state.token, this.state.name, this.state.mobileNum, this.state.nickName, this.state.stateOption,this.state.divisionOption)
+        // e.preventDefault();
+        UpdateProfileService.updateAgentProfile(this.state.token, this.state.data.email, this.state.name, '', this.state.mobileNum, this.state.nickName, '', this.state.stateOption,this.state.divisionOption, '', '')
         .then(res => {
             console.log(res);
             this.props.history.push('/user-profile')
@@ -36,12 +37,12 @@ class EditUser extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="col-xs-12 col-sm-6">
                         <div className="left">
-                            <Link className="btn btn-sm btn-primary" to='/user_profile'>
+                            <Link className="btn btn-sm btn-primary" to='/user-profile'>
                                 <i className="ace-icon fa fa-user align-top bigger-125"></i>
                                 View Profile
                             </Link>
 
-                            <button className="btn btn-sm btn-success" type="submit" name="btn_post" onclick="this.style.visibility= 'hidden';">
+                            <button className="btn btn-sm btn-success" type="submit" name="btn_post">
                                 <i className="ace-icon fa fa-save align-top bigger-125"></i>
                                 Update Profile
                             </button>

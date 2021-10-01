@@ -9,7 +9,6 @@ class MU_Groupmember extends React.Component {
     this.state = {
       shID: JSON.parse(sessionStorage.getItem('UserData')),
       token: JSON.parse(sessionStorage.getItem('userToken')),
-      searchUserInput: '',
       userResults: [],
       groupResults: [],
       alertStatus: false,
@@ -17,12 +16,13 @@ class MU_Groupmember extends React.Component {
       setCoordinator: false,
       setAdmin: false,
       alertMessage: '',
+      searchUserInput: '',
     }
     this.getSearchUser = this.getSearchUser.bind(this);
-    this.resetUserSearch = this.resetUserSearch.bind(this);
     this.getGroupResult = this.getGroupResult.bind(this);
     this.inviteToGroup = this.inviteToGroup.bind(this);
     this.removeFromGroup = this.removeFromGroup.bind(this);
+    this.resetUserSearch = this.resetUserSearch.bind(this);
     this.setAsAgent = this.setAsAgent.bind(this);
     this.setAsAdmin = this.setAsAdmin.bind(this);
     this.setAsCoordinator = this.setAsCoordinator.bind(this);
@@ -42,7 +42,7 @@ class MU_Groupmember extends React.Component {
 
   resetUserSearch() {
     this.setState({
-      searchUserInput: ''
+      searchUserInput: '',
     })
   }
 
@@ -159,7 +159,7 @@ class MU_Groupmember extends React.Component {
 
           <div className="row">
             <div className="col-xs-6">
-              <form name="form" onSubmit={this.getSearchUser} onReset={this.resetUserSearch}>
+              <form name="form" onSubmit={this.getSearchUser}>
                 <div className="input-group">
                   <span className="input-group-addon">
                     <i className="ace-icon fa fa-check" />
@@ -182,7 +182,7 @@ class MU_Groupmember extends React.Component {
             <div>
               <div>
                 <span className="input-group-btn">
-                  <button className="pull-left btn btn-sm btn-inverse" type='reset'>
+                  <button className="pull-left btn btn-sm btn-inverse" onClick={this.resetUserSearch}>
                     <i className="ace-icon fa fa-refresh" />
                     <span className="bigger-110">Reset Search Keyword</span>
                   </button>
@@ -227,7 +227,9 @@ class MU_Groupmember extends React.Component {
                   </table>
                 </div>
               </div>
-            </div> :
+            </div> 
+            
+            :
 
             <div className="row">
               <div className="col-xs-12">

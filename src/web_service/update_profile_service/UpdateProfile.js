@@ -20,6 +20,17 @@ const UpdateProfileService = {
                 teamID: 0
             })
         }).then(res => res.json()).catch(err => console.log(err))
+    },
+
+    uploadAvatar(authToken, blob){
+        return fetch( url + '/user/update-avatar-picture/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                avatarPicture: blob
+            })
+        }).then(res => res.json()).catch(err => console.log(err))
     }
 }
 
