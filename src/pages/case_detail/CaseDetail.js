@@ -30,24 +30,24 @@ class CaseDetail extends React.Component {
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
-            this.setState({ caseDetailData: res }) //Here is the error is pointing
+            this.setState({ caseDetailData: res })
         })
     }
 
     assignCaseToMe() {
         CaseDetailService.assignToMe(this.state.token, this.state.caseToken).then(res => {
             console.log(res);
-            this.props.history.push('/MyAssignments-Assigned')
+            this.props.history.push('/MyAssignments-Assigned');
         })
     }
 
-    assignCaseToAgent(){
+    assignCaseToAgent() {
         const hID = this.state.userData.hID;
         const shID = this.state.userData.shID;
 
         CaseDetailService.assignToAgent(this.state.token, this.state.caseToken, hID, shID).then(res => {
             console.log(res)
-        }) 
+        })
     }
 
     getGroupResult() {
@@ -84,7 +84,6 @@ class CaseDetail extends React.Component {
             <div>
                 <Header />
                 <div>
-                    {/* <?php if ( isset($alertStatus) && !empty($alertStatus) ): ?> */}
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
@@ -100,8 +99,6 @@ class CaseDetail extends React.Component {
                         <br />
                         <div className="space-10" />
                     </div>
-                    {/* <?php endif; ?> */}
-
 
                     <div className="row">
                         {(this.state.caseDetailData.caseStatus !== 'CLOSED' || this.state.caseDetailData.caseStatus !== 'CANCELLED') &&
@@ -112,20 +109,21 @@ class CaseDetail extends React.Component {
                                     </button>
                                 }
 
-                                {this.state.isCoordinator && 
+                                {this.state.isCoordinator &&
                                     <button className="btn btn-danger" onClick={this.assignCaseToAgent}>
                                         Assign To Others
                                     </button>
                                 }
 
-                                {this.state.caseDetailData.oID &&
+                                {this.state.caseDetailData.oID ?
                                     <Link className="btn btn-warning" to={`/edit-case/${this.state.caseToken}`}>
                                         <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
                                         Edit Case Detail
-                                    </Link>
+                                    </Link> : null
                                 }
                             </div>
                         }
+
                         <div className="col-sm-7">
                             <div className="col-sm-7">
                                 <Link className="btn btn-primary" to={`/action-taken/${this.state.caseToken}`}>
@@ -157,7 +155,7 @@ class CaseDetail extends React.Component {
                                                 </span>
                                             </div>
                                         </div> :
-                                        
+
                                         <div>
                                             <div className="profile-info-row">
                                                 <div className="profile-info-name">GROUP POOL</div>
@@ -261,12 +259,16 @@ class CaseDetail extends React.Component {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="login">
-                                                <span className={`label label-success`}>
-                                                    {
-                                                        this.state.caseDetailData.caseStatus === 'NEW' ? this.setState({ statusLabel: 'UN-ASSIGNED' }) :
-                                                            this.state.caseDetailData.caseStatus
-                                                    }
-                                                </span>
+                                                {
+                                                    this.state.caseDetailData.caseStatus === 'NEW' ? < span className='label label-danger'>{this.state.caseDetailData.caseStatus}</span> :
+                                                        this.state.caseDetailData.caseStatus === 'IN-PROGRESS' ? < span className='label label-info'>{this.state.caseDetailData.caseStatus}</span> :
+                                                            this.state.caseDetailData.caseStatus === 'ASSIGNED' ? < span className='label label-info'>{this.state.caseDetailData.caseStatus}</span> :
+                                                                this.state.caseDetailData.caseStatus === 'CLOSED' ? < span className='label label-success'>{this.state.caseDetailData.caseStatus}</span> :
+                                                                    < span className='label label-pink'>
+                                                                        {this.state.caseDetailData.caseStatus}
+                                                                    </span>
+
+                                                }
                                             </span>
                                         </div>
                                     </div>
@@ -290,8 +292,8 @@ class CaseDetail extends React.Component {
                                                     {this.state.caseDetailData.closedDate}
                                                 </span>
                                             </div>
-                                        </div> : 
-                                        
+                                        </div> :
+
                                         <div className="profile-info-row">
                                             <div className="profile-info-name"> Closed Date </div>
 
@@ -438,7 +440,7 @@ class CaseDetail extends React.Component {
                     </div>
                     <Footer />
                 </div>
-            </div>
+            </div >
         )
     }
 }

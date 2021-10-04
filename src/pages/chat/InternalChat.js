@@ -24,7 +24,7 @@ class InternalChat extends React.Component {
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
         this.getMessage = this.getMessage.bind(this);
-        this.pushMessage = this.pushMessage.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
     }
 
     componentDidMount() {
@@ -64,8 +64,9 @@ class InternalChat extends React.Component {
         })
     }
 
-    pushMessage(){
-        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, '').then(res => {
+    sendMessage(){
+        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, '')
+        .then(res => {
             console.log(res);
         })
     }
@@ -88,7 +89,7 @@ class InternalChat extends React.Component {
                 </div>
                 <div class="space-6" />
                 {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ? 
-                    <form name="form" onSubmit={this.pushMessage}>
+                    <form name="form" onSubmit={this.sendMessage}>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="well">
