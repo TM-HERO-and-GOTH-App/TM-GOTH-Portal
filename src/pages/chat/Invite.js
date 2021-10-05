@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ChatService from '../../web_service/chat_service/ChatService';
-import { Link } from 'react-router-dom';
+import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 class InviteChat extends React.Component {
     constructor(props) {
@@ -15,9 +16,12 @@ class InviteChat extends React.Component {
             caseDetailData: {},
             groupMembers: [],
             stakeholderType: 0,
+            alertStatus: false,
+            alertMessage: '',
         }
         this.getGroupMembers = this.getGroupMembers.bind(this);
         this.getCaseDetail = this.getCaseDetail.bind(this);
+        this.inviteToGroup = this.inviteToGroup.bind(this);
     }
 
     componentDidMount() {
@@ -44,27 +48,44 @@ class InviteChat extends React.Component {
         })
     }
 
+    inviteToGroup() {
+        const shID = this.state.shID.shID
+        ManageUserService.inviteToGroup(this.state.token, '', shID).then(res => {
+            if (res === null) {
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'Only case owner or group coordinator can do the invitation.'
+                })
+            } else {
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'The user has been successfully invited.'
+                })
+            }
+        })
+    }
+
     render() {
         return (
             <div>
-                <Header/>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
-                            <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
+                <Header />
+                <div className="row">
+                    <div className="col-sm-4">
+                        <Link className="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
+                            <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Case Detail
                         </Link>
                     </div>
                 </div>
-                <div class="space-10"></div>
-                <div class="row">
-                    <div class="col-sm-7">
-                        <div class="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                <div className="space-10"></div>
+                <div className="row">
+                    <div className="col-sm-7">
+                        <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                             {(this.state.caseDetailData.ownerName !== null) ?
-                                <div class="profile-info-row">
-                                    <div class="profile-info-name">CASE OWNER</div>
-                                    <div class="profile-info-value">
-                                        <span class="editable" id="username"><b>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">CASE OWNER</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="username"><b>
                                             {this.state.caseDetailData.ownerName + ' - ' + this.state.caseDetailData.stakeholderName}
                                         </b></span>
                                     </div>
@@ -72,66 +93,66 @@ class InviteChat extends React.Component {
 
                                 this.state.caseDetailData.stakeholderName !== null &&
                                 <div>
-                                    <div class="profile-info-row">
-                                        <div class="profile-info-name">GROUP POOL</div>
-                                        <div class="profile-info-value">
-                                            <span class="editable" id="username"><b>
+                                    <div className="profile-info-row">
+                                        <div className="profile-info-name">GROUP POOL</div>
+                                        <div className="profile-info-value">
+                                            <span className="editable" id="username"><b>
                                                 {this.state.caseDetailData.stakeholderName}
                                             </b></span>
                                         </div>
                                     </div>
-                                    <div class="profile-info-row">
-                                        <div class="profile-info-name">CASE OWNER</div>
-                                        <div class="profile-info-value">
-                                            <span class="editable" id="username"><i style={{ color: 'red' }}>Un-Assigned</i></span>
+                                    <div className="profile-info-row">
+                                        <div className="profile-info-name">CASE OWNER</div>
+                                        <div className="profile-info-value">
+                                            <span className="editable" id="username"><i style={{ color: 'red' }}>Un-Assigned</i></span>
                                         </div>
                                     </div>
                                 </div>
                             }
-                            <div class="profile-info-row">
-                                <div class="profile-info-name"> HERO Name </div>
+                            <div className="profile-info-row">
+                                <div className="profile-info-name"> HERO Name </div>
 
-                                <div class="profile-info-value">
-                                    <span class="editable" id="username">
+                                <div className="profile-info-value">
+                                    <span className="editable" id="username">
                                         {this.state.caseDetailData.fullname}
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="profile-info-row">
-                                <div class="profile-info-name"> Customer </div>
+                            <div className="profile-info-row">
+                                <div className="profile-info-name"> Customer </div>
 
-                                <div class="profile-info-value">
+                                <div className="profile-info-value">
                                     {this.state.caseDetailData.customerName}
                                 </div>
                             </div>
 
 
-                            <div class="profile-info-row">
-                                <div class="profile-info-name"> Descriptions </div>
+                            <div className="profile-info-row">
+                                <div className="profile-info-name"> Descriptions </div>
 
-                                <div class="profile-info-value">
-                                    <span class="editable" id="login"><i style={{ color: "blue" }}>
+                                <div className="profile-info-value">
+                                    <span className="editable" id="login"><i style={{ color: "blue" }}>
                                         {this.state.caseDetailData.caseContent}
                                     </i></span>
                                 </div>
                             </div>
 
-                            <div class="profile-info-row">
-                                <div class="profile-info-name"> Case Status </div>
+                            <div className="profile-info-row">
+                                <div className="profile-info-name"> Case Status </div>
 
-                                <div class="profile-info-value">
-                                    <span class="editable" id="login">
+                                <div className="profile-info-value">
+                                    <span className="editable" id="login">
                                         {this.state.caseDetailData.caseStatus}
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="profile-info-row">
-                                <div class="profile-info-name"> Created Date </div>
+                            <div className="profile-info-row">
+                                <div className="profile-info-name"> Created Date </div>
 
-                                <div class="profile-info-value">
-                                    <span class="editable" id="about">
+                                <div className="profile-info-value">
+                                    <span className="editable" id="about">
                                         {this.state.caseDetailData.createdDate}
                                     </span>
                                 </div>
@@ -140,41 +161,40 @@ class InviteChat extends React.Component {
                     </div>
 
                 </div>{/* // <!-- /.row --> */}
-                <div class="space-20"></div>
+                <div className="space-20"></div>
                 <a name="group-chat-members" href='#' />
-                <div class="page-header">
+                <div className="page-header">
                     <h1>G-Chat (Collaboration) Members</h1>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        {/* <?php if ( isset($alertStatus) && !empty($alertStatus) ): ?> */}
-                        <div class="alert alert-block alert-<?php echo $alertStatus; ?>">
-                            <button type="button" class="close" data-dismiss="alert">
-                                <i class="ace-icon fa fa-times"></i>
-                            </button>
-                            <p>
-                                {/* <?php echo urldecode($alertMessage); ?> */}
-                            </p>
-                        </div>
-                        {/* <?php endif; ?> */}
+                <div className="row">
+                    <div className="col-sm-12">
+                        {this.state.alertStatus &&
+                            <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
+                                <button type="button" className="close" data-dismiss="alert">
+                                    <i className="ace-icon fa fa-times"></i>
+                                </button>
+                                <p>
+                                    {this.state.alertMessage}
+                                </p>
+                            </div>
+                        }
                     </div>
-                    <div class="col-xs-12">
+                    <div className="col-xs-12">
                         <p>Users in the list below are able to view the Case in "My Collaboration" Tab</p>
-                        <table id="simple-table" class="table  table-bordered table-hover">
+                        <table id="simple-table" className="table  table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th width="5%"><div align="center">#</div></th>
                                     <th width="35%">Fullname</th>
                                     <th width="30%">Nickname</th>
                                     <th width="20%"><div align="center">Group</div></th>
-                                    <th width="10%"><div align="center"><i class="ace-icon fa fa-bookmark"></i></div></th>
+                                    <th width="10%"><div align="center"><i className="ace-icon fa fa-bookmark"></i></div></th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                {/* <?php if( empty($invitedMembers) ){ ?> */}
                                 {this.state.groupMembers.length === 1 ?
-                                    <tr><td colspan="4"><span style={{ color: "red" }}>Group Chat User for this case is Empty</span></td></tr>
+                                    <tr><td colSpan="4"><span style={{ color: "red" }}>Group Chat User for this case is Empty</span></td></tr>
                                     :
                                     this.state.groupMembers.map((data, i) => {
                                         i += 1;
@@ -192,7 +212,7 @@ class InviteChat extends React.Component {
                                                 {data.stakeholderName}
                                             </div></td>
                                             <td><div align="center">
-                                                <button class="btn btn-minier btn-danger" onclick="redirect('<?php echo APPNAME; ?>/chat/removefromgroup/<?php echo $cToken; ?>/<?php echo $invitedMembers[$i]['hToken']; ?>/')">
+                                                <button className="btn btn-minier btn-danger" onclick="redirect('<?php echo APPNAME; ?>/chat/removefromgroup/<?php echo $cToken; ?>/<?php echo $invitedMembers[$i]['hToken']; ?>/')">
                                                     Remove
                                                 </button>
                                             </div>
@@ -204,15 +224,15 @@ class InviteChat extends React.Component {
                         </table>
                     </div>{/* // <!-- /.span --> */}
                 </div>
-                <div class="space-20"></div>
-                <a href='#' name="group-members"/>
-                <div class="page-header">
+                <div className="space-20"></div>
+                <a href='#' name="group-members" />
+                <div className="page-header">
                     <h1>Group Members</h1>
                 </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <form name="form" method="POST">
-                            <select class="chosen-select form-control" name="shID" dataplaceholder="Choose a Group..." value={this.state.stakeholderType} onChange={(e) => this.setState({ stakeholderType: e.target.value })}>
+                <div className="row">
+                    <div className="col-sm-3">
+                        <form name="form" onClick={this.getGroupMembers}>
+                            <select className="chosen-select form-control" name="shID" dataplaceholder="Choose a Group..." value={this.state.stakeholderType} onChange={(e) => this.setState({ stakeholderType: e.target.value })}>
                                 <option value="0">All Group/Stakeholder ...</option>
                                 {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map(data => {
                                     return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
@@ -220,14 +240,13 @@ class InviteChat extends React.Component {
                             </select>
                         </form>
                     </div>
-                    <div class="col-sm-9" align="right">
-                    </div>
+                    <div className="col-sm-9" align="right"/>
 
-                    <div class="space-20"/>
+                    <div className="space-20" />
 
-                    <div class="col-xs-12">
+                    <div className="col-xs-12">
 
-                        <table id="simple-table" class="table  table-bordered table-hover">
+                        <table id="simple-table" className="table  table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th width="5%"><div align="center">#</div></th>
@@ -235,52 +254,52 @@ class InviteChat extends React.Component {
                                     <th width="20%">Email</th>
                                     <th width="15%">Position</th>
                                     <th width="15%"><div align="center">Group</div></th>
-                                    <th width="10%"><div align="center"><i class="ace-icon fa fa-bookmark"></i></div></th>
+                                    <th width="10%"><div align="center"><i className="ace-icon fa fa-bookmark"></i></div></th>
                                 </tr>
                             </thead>
-                        {this.state.stakeholderType !== 0 && 
-                            <tbody>
-                                {/* <?php if( empty($teamMembers) ){ ?> */}
-                                {this.state.groupMembers.length === 1 ?
-                                    <tr><td colspan="6"><span style={{ color: "red" }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
-                                    :
-                                    this.state.groupMembers.map((data, i) => {
-                                        i += 1;
-                                        return <tr>
-                                            <td><div align="center">
-                                                {i}
-                                            </div></td>
-                                            <td>
-                                                {data.fullName}
-                                            </td>
-                                            <td>
-                                                {data.email}
-                                            </td>
-                                            <td>
-                                                {data.positionName === 'Admin' ? <span class="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
-                                                {this.state.caseDetailData.oID === data.hID ? '(Owner)' : ''}
-                                                {/* <?php echo ( $ci['oID'] == $teamMembers[$i]['hID'] ) ? ' (Owner)' : ''; ?> */}
-                                            </td>
-                                            <td><div align="center">
-                                                {data.stakeholderName}
-                                            </div></td>
-                                            <td><div align="center">
-                                                {data.hToken && this.state.caseDetailData.oID !== data.hID && 
-                                                    <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/chat/invitetogroup/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hToken']; ?>/')">
-                                                        Invite
-                                                    </button>
-                                                }
-                                            </div>
-                                            </td>
-                                        </tr>
-                                    })
-                                }
-                            </tbody>
-                        }
+                            {this.state.stakeholderType &&
+                                <tbody>
+                                    {(this.state.groupMembers[0].response === 'FAILED' || this.state.stakeholderType === '0') ?
+                                        <tr><td colSpan="6"><span style={{ color: "red" }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
+                                        :
+                                        this.state.groupMembers.map((data, i) => {
+                                            i += 1;
+                                            return <tr>
+                                                <td><div align="center">
+                                                    {i}
+                                                </div></td>
+                                                <td>
+                                                    {data.fullName}
+                                                </td>
+                                                <td>
+                                                    {data.email}
+                                                </td>
+                                                <td>
+                                                    {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
+                                                    {this.state.caseDetailData.oID === data.hID ? '(Owner)' : ''}
+                                                    {/* <?php echo ( $ci['oID'] == $teamMembers[$i]['hID'] ) ? ' (Owner)' : ''; ?> */}
+                                                </td>
+                                                <td><div align="center">
+                                                    {data.stakeholderName}
+                                                </div></td>
+                                                <td>
+                                                    <div align="center">
+                                                        {data.hToken && this.state.caseDetailData.oID !== data.hID &&
+                                                            <button className="btn btn-minier btn-yellow" onClick={this.inviteToGroup}>
+                                                                Invite
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        })
+                                    }
+                                </tbody>
+                            }
                         </table>
                     </div>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         )
     }

@@ -19,6 +19,9 @@ class ActionTaken extends React.Component {
             ctID: {},
             caseRemarks: [],
             groupMember: [],
+            alertStatus: false,
+            alertMessage: '',
+            statusBadge: '',
             isCaseOwner: '',
             isCoordinator: '',
             isAdmin: '',
@@ -74,7 +77,19 @@ class ActionTaken extends React.Component {
             console.log(this.state.caseStatusType)
             console.log(this.state.remark)
             console.log(res);
-            this.props.history.push(`/case-detail/${this.state.caseToken}`)
+            if(res.response === 'FAILED'){
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'Action cannot be implemented',
+                    statusBadge: 'danger'
+                })
+            } else {
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'Action has been implemented',
+                    statusBadge: 'success'
+                })
+            }
         })
     }
 
@@ -105,22 +120,22 @@ function isStatusClosed()
     }	
 }
 </script> */}
-                {/* <?php if ( isset($alertStatus) && !empty($alertStatus) ): ?> */}
+                { this.state.alertStatus &&
                 <div className="row">
                     <div className="col-sm-12">
-                        <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
+                        <div className={`alert alert-block alert-${this.state.statusBadge}`}>
                             <button type="button" className="close" data-dismiss="alert">
                                 <i className="ace-icon fa fa-times"></i>
                             </button>
                             <p>
-                                {/* <?php echo urldecode($alertMessage); ?> */}
+                                {this.state.alertMessage}
                             </p>
                         </div>
                     </div>
                     <br />
                     <div className="space-10"></div>
                 </div>
-                {/* <?php endif; ?> */}
+                }
                 <div className="row">
                     <div className="col-sm-6">
                         <Link className="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>

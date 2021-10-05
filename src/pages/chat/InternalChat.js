@@ -16,6 +16,9 @@ class InternalChat extends React.Component {
             caseDetailData: {},
             messageData: [],
             groupMember: [],
+            alertStatus: false,
+            alertMessage: '',
+            statusBadge: '',
             isCaseOwner: '',
             isCoordinator: '',
             isAdmin: '',
@@ -33,7 +36,7 @@ class InternalChat extends React.Component {
         this.getMessage();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.getCaseDetail();
         this.getGroupResult();
         this.getMessage();
@@ -57,114 +60,129 @@ class InternalChat extends React.Component {
         })
     }
 
-    getMessage(){
+    getMessage() {
         ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'FE').then(res => {
             console.log(res)
             this.setState({ messageData: res });
         })
     }
 
-    sendMessage(){
-        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, '')
-        .then(res => {
-            console.log(res);
-        })
+    sendMessage(e) {
+        e.preventDefault();
+        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'FE', '')
+            .then(res => {
+                console.log(res);
+                if (res[0].response === 'FAILED') {
+                    this.setState({
+                        alertStatus: true,
+                        alertMessage: 'Opss, chat message failed to send',
+                        statusBadge: 'danger'
+                    })
+                } else {
+                    this.setState({
+                        alertStatus: true,
+                        alertMessage: 'Chat message has been posted',
+                        statusBadge: 'success'
+                    })
+                }
+            })
     }
 
     render() {
         return (
             <div>
-                <Header/>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
-                            <i class="ace-icon fa fa-arrow-left icon-on-left"></i>
+                <Header />
+                <div className="row">
+                    <div className="col-sm-12">
+                        <Link className="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
+                            <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
                             Back to Previous Page
                         </Link>
-                        <Link class="btn btn-yellow" to={`/hero-chat/${this.state.caseToken}`}>
-                            <i class="ace-icon fa fa-exchange"></i>
+                        <Link className="btn btn-yellow" to={`/hero-chat/${this.state.caseToken}`}>
+                            <i className="ace-icon fa fa-exchange"></i>
                             Switch to HERO Chat
                         </Link>
                     </div>
                 </div>
-                <div class="space-6" />
-                {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ? 
+                <div className="space-6" />
+                {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ?
                     <form name="form" onSubmit={this.sendMessage}>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="well">
-                                    <h4 class="black smaller">Chat Message (Internal)</h4>
-                                    {/* <!--<input type="text" name="message_be" placeholder="Text Field" class="form-control" />--> */}
-                                    <div class="form-group">
-                                        <textarea class="form-control limited" id="message_be" name="message_be" maxLength="2000"></textarea>
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <div className="well">
+                                    <h4 className="black smaller">Chat Message (Internal)</h4>
+                                    {/* <!--<input type="text" name="message_be" placeholder="Text Field" className="form-control" />--> */}
+                                    <div className="form-group">
+                                        <textarea className="form-control limited" id="message_be" name="message_be" maxLength="2000" value={this.state.userMessage} onChange={(e) => this.setState({ userMessage: e.target.value })}></textarea>
                                     </div>
-                                    <div class="space-2"></div>
-                                    <button class="btn btn-sm btn-success">
-                                        <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                                    <div className="space-2"></div>
+                                    <button className="btn btn-sm btn-success">
+                                        <i className="ace-icon fa fa-save align-top bigger-125"></i>
                                         Post New Message</button>
                                     {(this.state.isCaseOwner || this.state.isCoordinator || this.state.isAdmin) &&
-                                        <Link class="btn btn-sm btn-danger" to={`/invite-to-group-chat/${this.state.caseToken}`}>Invite User to G-Chat (Collaboration)</Link>
-                                    }                     
+                                        <Link className="btn btn-sm btn-danger" to={`/invite-to-group-chat/${this.state.caseToken}`}>Invite User to G-Chat (Collaboration)</Link>
+                                    }
                                 </div>
                             </div>{/* <!-- /.col --> */}
                         </div>
                     </form>
                     :
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="alert alert-block alert-danger">
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <div className="alert alert-block alert-danger">
                                 <p>Case has been CLOSED & LOCKED</p>
                             </div>
                         </div>
                         <br />
-                        <div class="space-10"/>
+                        <div className="space-10" />
                     </div>
-                    }
+                }
 
-                <a href="#" name="chat-ls"/>
-                {/* <?php if ( isset($alertStatus) && !empty($alertMessage) ): ?> */}
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="alert alert-block alert-<?php echo $alertStatus; ?>">
-                            <button type="button" class="close" data-dismiss="alert">
-                                <i class="ace-icon fa fa-times"></i>
-                            </button>
-                            <p>
-                                {/* <?php echo urldecode($alertMessage); ?> */}
-                            </p>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="space-10"/>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="profile-user-info profile-user-info-striped" style={{margin:0}}>
-                            <div class="profile-info-row">
-                                <div class="profile-info-name" style={{width:'10%'}}><b>Posted Date</b></div>
-                                <div class="profile-info-value" style={{width:'40%'}}><b>Message</b></div>
-                                <div class="profile-info-value" style={{width:'20%'}}><b>Posted By</b></div>
-                                <div class="profile-info-value" align="center" style={{width:'10%'}}><b>Attachment</b></div>
+                <a href="#" name="chat-ls" />
+                {this.state.alertStatus &&
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <div className={`alert alert-block alert-${this.state.statusBadge}`}>
+                                <button type="button" className="close" data-dismiss="alert">
+                                    <i className="ace-icon fa fa-times"></i>
+                                </button>
+                                <p>
+                                    {this.state.alertMessage}
+                                </p>
                             </div>
-                            {this.state.messageData.map( data => {
-                                return <div class="profile-info-row">
-                                    <div class="profile-info-name">
+                        </div>
+                        <br />
+                        <div className="space-10" />
+                    </div>
+                }
+
+                <div className="row">
+                    <div className="col-sm-12">
+                        <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                            <div className="profile-info-row">
+                                <div className="profile-info-name" style={{ width: '10%' }}><b>Posted Date</b></div>
+                                <div className="profile-info-value" style={{ width: '40%' }}><b>Message</b></div>
+                                <div className="profile-info-value" style={{ width: '20%' }}><b>Posted By</b></div>
+                                <div className="profile-info-value" align="center" style={{ width: '10%' }}><b>Attachment</b></div>
+                            </div>
+                            {this.state.messageData.map(data => {
+                                return <div className="profile-info-row">
+                                    <div className="profile-info-name">
                                         {data.postedDate}
                                     </div>
 
-                                    <div class="profile-info-value">
-                                        <span class="editable" id="username">
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="username">
                                             {data.message}
                                         </span>
                                     </div>
-                                    <div class="profile-info-value">
-                                        <span class="editable" id="username">
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="username">
                                             {data.fullName}
                                         </span>
                                     </div>
-                                    <div class="profile-info-value" align="center">
-                                        {data.bID ? <a target="_blank" rel='noreferrer' href={`${data.filename}`}><i class="ace-icon fa fa-download"></i></a> : '-'}
+                                    <div className="profile-info-value" align="center">
+                                        {data.bID ? <a target="_blank" rel='noreferrer' href={`${data.filename}`}><i className="ace-icon fa fa-download"></i></a> : '-'}
                                     </div>
                                 </div>
                             })}
@@ -172,9 +190,9 @@ class InternalChat extends React.Component {
                         {/* </div> */}
                     </div>
                 </div>
-                <div class="space-8"/>
-                <Footer/>
-                {/* <span class="label label-xs label-inverse arrowed-right" style="font-size:11px;padding-top:4px"><i>Source From : <?php //echo ( $source == 'API' ) ? $source : 'Cache - 30 sec'; ?></i></span> */}
+                <div className="space-8" />
+                <Footer />
+                {/* <span className="label label-xs label-inverse arrowed-right" style="font-size:11px;padding-top:4px"><i>Source From : <?php //echo ( $source == 'API' ) ? $source : 'Cache - 30 sec'; ?></i></span> */}
             </div>
         )
     }

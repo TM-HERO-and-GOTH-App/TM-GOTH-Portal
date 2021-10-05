@@ -34,7 +34,7 @@ const ChatService = {
                 authToken: authToken,
                 cToken: cToken,
                 message: message,
-                flag: flag.toUpperCase(),
+                flag: flag,
                 fileName: fileName
             })
         }).then(res => res.json()).catch(err => console.log(err));

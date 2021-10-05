@@ -40,7 +40,8 @@ class Createcase extends React.Component {
     return sessionData;
   }
 
-  createCase(){
+  createCase(e){
+    e.preventDefault();
     CreateCaseService.createCase(this.state.token, this.state.customerName, this.state.ic, this.state.mobileNumber, this.state.caseDescription, this.state.stateType, 'COMPLAINT', this.state.sourceType, this.state.subSourceType, this.state.caseType)
     .then(res => {
       console.log(res);
@@ -49,8 +50,9 @@ class Createcase extends React.Component {
           this.setState({ alertStatus: true })
           this.setState({ alertMessage: res.message })
         } else{
-          this.props.history.push('/MyAssignments_Assigned')
-          this.userInput()
+          this.props.history.push('/MyAssignments-Assigned')
+          // this.userInput();
+          this.resetForm();
         }
       }else {
         this.setState({ alertStatus: true });
@@ -77,7 +79,7 @@ class Createcase extends React.Component {
       <div>
         <Header />
         <form name="form" onSubmit={this.createCase} onReset={this.resetForm}>
-          {(this.state.alertStatus === true) && (this.state.alertMessage !== null) &&
+          {this.state.alertStatus &&
             <div className="row">
               <div className="col-xs-12">
                 <div className="alert alert-block alert-<?php echo $alertStatus; ?>">

@@ -83,7 +83,7 @@ class AssignToOther extends React.Component {
                     </div>
                 </div>
 
-                <div class="space-10"/>
+                <div class="space-10" />
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -99,7 +99,7 @@ class AssignToOther extends React.Component {
                         }
                     </div>
                 </div>{/* <!-- /.row --> */}
-                
+
                 <a href='#' name="group-members" />
 
                 <div class="page-header">
@@ -126,7 +126,7 @@ class AssignToOther extends React.Component {
                         }
                     </div>
 
-                    <div class="space-20"/>
+                    <div class="space-20" />
 
                     <div class="col-xs-12">
                         <table id="simple-table" class="table  table-bordered table-hover">
@@ -148,9 +148,11 @@ class AssignToOther extends React.Component {
                                     this.state.stakeholderGroup && this.state.groupMember.map((data, i) => {
                                         i += 1;
                                         return <tr>
-                                            <td><div align="center">
-                                                {i}
-                                            </div></td>
+                                            <td>
+                                                <div align="center">
+                                                    {i}
+                                                </div>
+                                            </td>
                                             <td>
                                                 {data.fullName}
                                             </td>
@@ -160,22 +162,25 @@ class AssignToOther extends React.Component {
                                             <td>
                                                 {data.positionName === 'Admin' ? <span class="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
                                             </td>
-                                            <td><div align="center">
-                                                {data.stakeholderName}
-                                            </div></td>
-                                            <td><div align="center">
-                                                {( !this.state.caseOwner || data.positionName === 'Admin' || data.positionName === 'Coordinator' || !this.state.caseDetailData.ownerName ) &&
-                                                    <button class="btn btn-minier btn-yellow" onClick={this.assignCaseToAgent}>Assign</button>
-                                                }
-					{/* <?php echo ( isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ) ? '<span class="badge badge-info">Owner</span>' : ''; ?>					 */} 
-                                                {this.state.caseOwner && <span class="badge badge-info">Owner</span>}
-                                            </div>
+                                            <td>
+                                                <div align="center">
+                                                    {data.stakeholderName}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div align="center">
+                                                    {(!this.state.caseOwner || data.positionName === 'Admin' || data.positionName === 'Coordinator' || !this.state.caseDetailData.ownerName) &&
+                                                        <button class="btn btn-minier btn-yellow" onClick={this.assignCaseToAgent}>Assign</button>
+                                                    }
+                                                    {
+                                                        this.state.caseOwner ? <span class="badge badge-info">Owner</span> : ''
+                                                    }
+                                                </div>
                                             </td>
                                         </tr>
                                     })
                                 }
                             </tbody>
-
                         </table>
                     </div>{/* <!-- /.span --> */}
                 </div>
