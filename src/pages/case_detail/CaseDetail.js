@@ -16,10 +16,10 @@ class CaseDetail extends React.Component {
             isCoordinator: '',
             statusLabel: '',
             statusBadge: '',
+            alertMessage: '',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.assignCaseToMe = this.assignCaseToMe.bind(this);
-        this.assignCaseToAgent = this.assignCaseToAgent.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
     }
 
@@ -38,15 +38,6 @@ class CaseDetail extends React.Component {
         CaseDetailService.assignToMe(this.state.token, this.state.caseToken).then(res => {
             console.log(res);
             this.props.history.push('/MyAssignments-Assigned');
-        })
-    }
-
-    assignCaseToAgent() {
-        const hID = this.state.userData.hID;
-        const shID = this.state.userData.shID;
-
-        CaseDetailService.assignToAgent(this.state.token, this.state.caseToken, hID, shID).then(res => {
-            console.log(res)
         })
     }
 
@@ -110,16 +101,16 @@ class CaseDetail extends React.Component {
                                 }
 
                                 {this.state.isCoordinator &&
-                                    <button className="btn btn-danger" onClick={this.assignCaseToAgent}>
+                                    <Link className="btn btn-danger" to={this.props.history.push(`/assign-to-other/${this.state.caseToken}/`)}>
                                         Assign To Others
-                                    </button>
+                                    </Link>
                                 }
 
-                                {this.state.caseDetailData.oID ?
+                                {this.state.caseDetailData.oID &&
                                     <Link className="btn btn-warning" to={`/edit-case/${this.state.caseToken}`}>
                                         <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
                                         Edit Case Detail
-                                    </Link> : null
+                                    </Link>
                                 }
                             </div>
                         }

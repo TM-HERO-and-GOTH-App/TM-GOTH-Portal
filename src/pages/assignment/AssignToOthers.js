@@ -12,14 +12,19 @@ class AssignToOther extends React.Component {
             caseToken: this.props.match.params.id,
             lovData: JSON.parse(sessionStorage.getItem('LovData')),
             token: JSON.parse(sessionStorage.getItem('userToken')),
-            shID: JSON.parse(sessionStorage.getItem('UserData')),
+            userData: JSON.parse(sessionStorage.getItem('UserData')),
             caseDetailData: {},
             groupMember: [],
             caseOwner: '',
+            isCoordinator: '',
+            isAdmin: '',
+            alertMessage: '',
+            alertStatus: false,
             stakeholderGroup: '0',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
+        this.assignCaseToAgent = this.assignCaseToAgent.bind(this);
     }
 
     componentDidMount() {
@@ -28,10 +33,12 @@ class AssignToOther extends React.Component {
     }
 
     getGroupResult() {
-        const shID = this.state.shID.shID
+        const shID = this.state.userData.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             console.log(res);
             this.setState({ groupMember: res })
+            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
+            this.setState({ isAdmin: this.state.groupMember.filter(filter => filter.positionName === 'Admin') })
         })
     }
 
@@ -43,10 +50,30 @@ class AssignToOther extends React.Component {
         })
     }
 
+    assignCaseToAgent() {
+        const hID = this.state.userData.hID;
+        const shID = this.state.userData.shID;
+
+        CaseDetailService.assignToAgent(this.state.token, this.state.caseToken, hID, shID).then(res => {
+            console.log(res)
+            if (res.response === 'FAILED') {
+                return this.setState({
+                    alertStatus: true,
+                    alertMessage: 'Only case owner or group coordinator can do the case assignment'
+                })
+            } else {
+                return this.setState({
+                    alertStatus: true,
+                    alertMessage: 'The case has been successfully assigned to the person'
+                })
+            }
+        })
+    }
+
     render() {
         return (
             <div>
-                <Header/>
+                <Header />
                 <div class="row">
                     <div class="col-sm-4">
                         <Link class="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
@@ -55,29 +82,33 @@ class AssignToOther extends React.Component {
                         </Link>
                     </div>
                 </div>
-                <div class="space-10"></div>
+
+                <div class="space-10"/>
+
                 <div class="row">
                     <div class="col-sm-12">
-                        {/* <?php if ( isset($alertStatus) && !empty($alertStatus) ): ?> */}
-                        <div class="alert alert-block alert-<?php echo $alertStatus; ?>">
-                            <button type="button" class="close" data-dismiss="alert">
-                                <i class="ace-icon fa fa-times"></i>
-                            </button>
-                            <p>
-                                {/* <?php echo str_replace("-", " ", $alertMessage); ?> */}
-                            </p>
-                        </div>
-                        {/* <?php endif; ?> */}
+                        {this.state.alertStatus === true &&
+                            <div class="alert alert-block alert-<?php echo $alertStatus; ?>">
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <i class="ace-icon fa fa-times"></i>
+                                </button>
+                                <p>
+                                    {this.state.alertMessage}
+                                </p>
+                            </div>
+                        }
                     </div>
                 </div>{/* <!-- /.row --> */}
-                <a href='#' name="group-members"/>
+                
+                <a href='#' name="group-members" />
+
                 <div class="page-header">
                     <h1>Group Members</h1>
                 </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <form name="form" method="POST">
-                            <select class="chosen-select form-control" name="shID" dataPlaceholder="Choose a Group..." value={this.state.stakeholderGroup} onChange={(e) => this.setState({ stakeholderGroup: e.target.value})}>
+                            <select class="chosen-select form-control" name="shID" dataPlaceholder="Choose a Group..." value={this.state.stakeholderGroup} onChange={(e) => this.setState({ stakeholderGroup: e.target.value })}>
                                 <option value="0">All Group/Stakeholder ...</option>
                                 {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map(data => {
                                     return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
@@ -87,17 +118,17 @@ class AssignToOther extends React.Component {
                     </div>
                     <div class="col-sm-9" align="right">
                         {/* <?php if( 0 != $shID_opt && (isCaseOwner($ci['oID'],$hID) || isAdmin($position) || isGroupCoordinator($position,$shID,$ci['shID'])) ) { ?>		 */}
-                        <button class="btn btn-sm btn-danger" onclick="redirect('<?php echo APPNAME; ?>/assignment/assigntopool/<?php echo $cToken; ?>/<?php echo $shID_opt; ?>')">
-                            <i class="ace-icon fa fa-exchange"></i>
-                            Assign To Group Pool
-                        </button>
-                        {/* <?php } ?> */}
+                        {(this.state.caseOwner || this.state.isAdmin || this.state.isCoordinator) &&
+                            <button class="btn btn-sm btn-danger" onclick="redirect('<?php echo APPNAME; ?>/assignment/assigntopool/<?php echo $cToken; ?>/<?php echo $shID_opt; ?>')">
+                                <i class="ace-icon fa fa-exchange"></i>
+                                Assign To Group Pool
+                            </button>
+                        }
                     </div>
 
-                    <div class="space-20"></div>
+                    <div class="space-20"/>
 
                     <div class="col-xs-12">
-
                         <table id="simple-table" class="table  table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -111,10 +142,10 @@ class AssignToOther extends React.Component {
                             </thead>
 
                             <tbody>
-                                {this.state.groupMember === null ?
+                                {this.state.groupMember.length === 1 ?
                                     <tr><td colSpan="4"><span style={{ color: "red" }}>Selection NOT Allowed. Please select Group/Stakeholder</span></td></tr>
                                     :
-                                    this.state.stakeholderGroup && this.state.groupMember.map((data, i)=> {
+                                    this.state.stakeholderGroup && this.state.groupMember.map((data, i) => {
                                         i += 1;
                                         return <tr>
                                             <td><div align="center">
@@ -132,14 +163,12 @@ class AssignToOther extends React.Component {
                                             <td><div align="center">
                                                 {data.stakeholderName}
                                             </div></td>
-                                            <td><div align="center">	
-						{/* <?php if(! isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ){ ?> */} 
-                                                {(data.positionName === 'Admin' || data.positionName === 'Coordinator' || !this.state.caseDetailData.ownerName) && 
-                                                    <button class="btn btn-minier btn-yellow" onclick="redirect('<?php echo APPNAME; ?>/assignment/assigntoagent/<?php echo $cToken; ?>/<?php echo $teamMembers[$i]['hID']; ?>/<?php echo $shID_opt; ?>')">Assign</button>                          
+                                            <td><div align="center">
+                                                {( !this.state.caseOwner || data.positionName === 'Admin' || data.positionName === 'Coordinator' || !this.state.caseDetailData.ownerName ) &&
+                                                    <button class="btn btn-minier btn-yellow" onClick={this.assignCaseToAgent}>Assign</button>
                                                 }
-                                                {/* <?php }} ?>
-					<?php echo ( isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ) ? '<span class="badge badge-info">Owner</span>' : ''; ?>					 */}
-                                                {(this.state.caseDetailData.ownerName === this.state.caseDetailData.oID) && <span class="badge badge-info">Owner</span>}
+					{/* <?php echo ( isCaseOwner($ci['oID'],$teamMembers[$i]['hID']) ) ? '<span class="badge badge-info">Owner</span>' : ''; ?>					 */} 
+                                                {this.state.caseOwner && <span class="badge badge-info">Owner</span>}
                                             </div>
                                             </td>
                                         </tr>
@@ -150,7 +179,7 @@ class AssignToOther extends React.Component {
                         </table>
                     </div>{/* <!-- /.span --> */}
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         )
     }

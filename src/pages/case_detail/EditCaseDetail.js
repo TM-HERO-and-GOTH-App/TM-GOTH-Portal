@@ -12,6 +12,9 @@ class EditCaseDetail extends React.Component {
             lovData: JSON.parse(sessionStorage.getItem('LovData')),
             caseToken: this.props.match.params.id,
             caseDetailData: [],
+            alertStatus: false,
+            alertMessage: '',
+            statusBadge: '',
             customerName: '',
             packageName: '',
             serviceAddress: '',
@@ -25,11 +28,35 @@ class EditCaseDetail extends React.Component {
             sourceType: '0',
             subSourceType: '0',
         }
+        this.editCaseDetail = this.editCaseDetail.bind(this);
         this.getCaseDetail = this.getCaseDetail.bind(this);
+        this.reset = this.reset.bind(this);
     }
 
     componentDidMount() {
         this.getCaseDetail();
+    }
+
+    editCaseDetail(e){
+        e.preventDefault();
+        CaseDetailService.updateCaseInfo(this.state.token, this.state.caseToken, this.state.caseType, this.state.productType, 
+            this.state.packageName, this.state.serviceID, this.state.serviceAddress, this.state.srNumber, this.state.ttNumber, this.state.locationType,
+            this.state.customerName, this.state.segmentType).then(res => {
+                console.log(res)
+                if(res.response === 'FAILED'){
+                    this.setState({
+                        alertStatus: true,
+                        statusBadge: 'danger',
+                        alertMessage: 'The case failed to updated.'
+                    })
+                }else {
+                    this.setState({
+                        alertStatus: true,
+                        statusBadge: 'success',
+                        alertMessage: 'The case has been successfully updated.'
+                    })
+                }
+            });
     }
 
     getCaseDetail() {
@@ -39,24 +66,40 @@ class EditCaseDetail extends React.Component {
         })
     }
 
+    reset(){
+        this.setState({
+            customerName: '',
+            packageName: '',
+            serviceAddress: '',
+            serviceID: '',
+            srNumber: '',
+            ttNumber: '',
+            caseType: '0',
+            locationType: '0',
+            productType: '0',
+            segmentType: '0',
+            sourceType: '0',
+            subSourceType: '0'
+        })
+    }
+
     render() {
         return (
             <div>
                 <Header />
                 <div className="row">
-                    {/* <?php if ( isset($alertStatus) && !empty($alertStatus) ): ?> */}
+                    {this.state.alertStatus &&
                     <div className="col-sm-12">
-                        <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
+                        <div className={`alert alert-block alert-${this.state.statusBadge}`}>
                             <button type="button" className="close" data-dismiss="alert">
                                 <i className="ace-icon fa fa-times"></i>
                             </button>
-                            {/* <p><?php echo urldecode($alertMessage); ?></p> */}
-                            <p>Alert Message</p>
+                            {this.state.alertMessage}
                         </div>
                     </div>
+                    }
                     <br />
                     <div className="space-10"/>
-                    {/* <?php endif; ?> */}
                     <div className="col-sm-4">
                         <Link className="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
@@ -65,7 +108,7 @@ class EditCaseDetail extends React.Component {
                     </div>
                     <br />
                     <div className="space-20"/>
-                    <form name="form" action="<?php echo APPNAME; ?>/assignment/updatecaseinfo/<?php echo $cToken; ?>">
+                    <form name="form" onSubmit={this.editCaseDetail} onReset={this.reset}>
                         <div className="col-sm-6">
                             <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
@@ -127,10 +170,10 @@ class EditCaseDetail extends React.Component {
                                     <div className="profile-info-name" style={{ color: "red" }}> State </div>
 
                                     <div className="profile-info-value">
-                                        <select className="chosen-select form-control" name="areaLocationID" data-placeholder="Choose a State...">
+                                        <select className="chosen-select form-control" name="areaLocationID" value={this.state.locationType} onChange={(e) => this.setState({ locationType: e.target.value })}>
                                             <option value="0">Choose a State...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'AREA-LOCATION').map(data => {
-                                                return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                                return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                             })
                                             }
                                         </select>
@@ -196,7 +239,7 @@ class EditCaseDetail extends React.Component {
                                         <select className="chosen-select form-control" name="caseTypeID" data-placeholder="Choose a Case Type..." value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
                                             <option value="0">Choose a Case Type...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map(data => {
-                                                return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                                return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                             })}
                                         </select>
                                     </div>
@@ -208,7 +251,7 @@ class EditCaseDetail extends React.Component {
                                         <select className="chosen-select form-control" name="productNameID" value={this.state.productType} onChange={(e) => this.setState({ productType: e.target.value })}>
                                             <option value="0" >Choose a Product Name...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'PRODUCT').map(data => {
-                                                return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                                return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                             })}
                                         </select>
                                     </div>
@@ -220,7 +263,7 @@ class EditCaseDetail extends React.Component {
                                         <select className="chosen-select form-control" name="segmentID" value={this.state.segmentType} onChange={(e) => this.setState({ segmentType: e.target.value })}>
                                             <option value="0" >Choose a Segment...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'SEGMENT').map(data => {
-                                                return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                                return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                             }
                                             )}
                                         </select>
@@ -283,7 +326,7 @@ class EditCaseDetail extends React.Component {
                                                 <select className="chosen-select form-control" name="sourceID" data-placeholder="Choose a Source..." value={this.state.sourceType} onChange={(e) => this.setState({ sourceType: e.target.value })}>
                                                     <option value="0">Choose a Source...</option>		
                                                     {this.state.lovData.filter(filter => filter.lovGroup === 'SOURCE' && filter.lovName !== 'Mobile Apps').map(data => {
-                                                        return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                                 })}
                                                 </select>
                                             </div>
@@ -295,7 +338,7 @@ class EditCaseDetail extends React.Component {
                                                 <select className="chosen-select form-control" name="subSourceID" dataPlaceholder="Choose a Sub Source..." value={this.state.subSourceType} onChange={(e) => this.setState({ subSourceType: e.target.value })}>
                                                     <option value="0">Choose a Sub Source...</option>
                                                     {this.state.lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map(data => {
-                                                        return <option key={data.lovID} value={data.lovName}>{data.lovName}</option>
+                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                                     })}	
                                                 </select>
                                             </div>
@@ -307,7 +350,7 @@ class EditCaseDetail extends React.Component {
                         <div style={{ clear: "both" }}></div>
                         <div className="col-sm-6" style={{ paddingTop: "30px" }}>
                             <p style={{ color: "red" }}><i>*** Inputs with red color are compulsory</i></p>
-                            <button type="button" className="btn btn-sm btn-inverse" onclick="redirect('<?php echo APPNAME; ?>/assignment/editdetailcase/<?php echo $cToken; ?>')">
+                            <button type="reset" className="btn btn-sm btn-inverse">
                                 <i className="ace-icon fa fa-repeat align-top bigger-125"></i>
                                 <span>Reset</span>
                             </button>

@@ -35,6 +35,27 @@ const CaseDetailService = {
                 cToken: cToken
             })
         }).then(res => res.json()).catch(err => console.log(err))
+    },
+
+    updateCaseInfo(authToken, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID){
+        return fetch( url + '/case/update-case-detail/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                cToken: cToken,
+                caseTypeID: caseTypeID,
+                productNameID: productNameID,
+                packageName: packageName,
+                serviceID: serviceID,
+                serviceAddress: serviceAddress,
+                srNum: srNum,
+                ttNum: ttNum,
+                areaLocationID: areaLocationID,
+                actualCustomerName: actualCustomerName,
+                segmentID: segmentID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
     }
 }
 
