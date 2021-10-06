@@ -82,10 +82,10 @@ class GA_Assigned extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  { this.state.totalCase.length === 1 ? 
+                  { this.state.totalCase === null ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
-                  this.state.totalCase.map( data => {
+                  this.state.totalCase.map( data=> {
                     return <tr>
                     <td>
                       <Link to={`/case-detail/${data.cToken}`}>

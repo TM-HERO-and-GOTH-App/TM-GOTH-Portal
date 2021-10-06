@@ -78,7 +78,7 @@ class GA_Inprogress extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                { this.state.totalCase.length === 1 ? 
+                { this.state.totalCase === null ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( (data) => {

@@ -40,13 +40,12 @@ class AA_Assigned extends React.Component {
         </div> {/* <!-- /.page-header --> */}
 
         <div className="row">
-          <form name="form" method="POST">
-
+          <form name="form">
             <div className="col-sm-3">
               <select className="chosen-select form-control" name="shID" value={this.state.groupType} onChange={(e) => this.setState({ groupType: e.target.value })}>
                 <option value="0">All Group/Stakeholder ...</option>
                 {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                  return <option key={key} value={data.lovName}> {data.lovName} </option>
+                  return <option key={key} value={data.lovID}> {data.lovName} </option>
                 })
                 }
               </select>
@@ -56,7 +55,7 @@ class AA_Assigned extends React.Component {
                 <option value="0" >All Case Type ...</option>
                 {
                   this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                    return <option key={key} value={data.lovName}>{data.lovName}</option>
+                    return <option key={key} value={data.lovID}>{data.lovName}</option>
                   })
                 }
               </select>
@@ -84,9 +83,9 @@ class AA_Assigned extends React.Component {
                     <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th>
                   </tr>
                 </thead>
-                {(this.state.caseType) &&
+                {(this.state.caseType || this.state.groupType) &&
                   <tbody>
-                    {this.state.case.length === 1 ?
+                    {this.state.case === null ?
                       <tr>
                         <td colSpan="11">
                           <span style={{ color: 'red' }}>List is empty</span>
@@ -140,7 +139,6 @@ class AA_Assigned extends React.Component {
             </div>
           </div>  {/* //<!-- /.span --> */}
         </div> {/* // <!-- /.row --> */}
-
         <Footer />
       </div>
     );

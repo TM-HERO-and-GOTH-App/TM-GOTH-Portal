@@ -20,6 +20,7 @@ class MC_Assigned extends React.Component {
 
   collaboratorCase(){
     AssignmentService.viewCaseByCollaborator(this.state.token, 64).then(res =>{
+      // console.log(res)
       this.setState({ totalCase: res })
     })
   }
@@ -69,7 +70,7 @@ class MC_Assigned extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                { this.state.totalCase.length === 1 ? 
+                { this.state.totalCase === null ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {

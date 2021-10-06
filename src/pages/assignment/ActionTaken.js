@@ -34,7 +34,6 @@ class ActionTaken extends React.Component {
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
         this.setRemark = this.setRemark.bind(this);
-        this.updateCase = this.updateCase.bind(this);
     }
 
     componentDidMount() {
@@ -93,24 +92,12 @@ class ActionTaken extends React.Component {
         })
     }
 
-    updateCase(){
-        this.props.history.push(`/case_detail/${this.state.caseToken}`)
-    }
-
     render() {
         return (
             <div>
                 <Header />
-                {/* <script type="text/javascript">
-function getRemarkText()
-{
-    var remarkText = document.getElementById("remarkText").value;
-    if( 0 != remarkText ){
-        document.getElementById("remark").value=remarkText;
-    }
-}
 
-function isStatusClosed()
+{/* function isStatusClosed()
 {
     var caseStatusID = document.getElementById("caseStatusID").value;
     if( 70 == caseStatusID || 73 == caseStatusID ){
@@ -209,11 +196,8 @@ function isStatusClosed()
                                         <div className="form-group">
                                             <select className="chosen-select form-control" id="remarkText" value={this.state.remarkType} onChange={(e) => this.setState({ remarkType: e.target.value })}>
                                                 <option value="0">Please select Remark Text Helper (if any)...</option>
-                                                {(this.state.caseRemarks.filter(filter => filter.lovID > 421 && filter.lovID < 236)) ?
+                                                {(this.state.caseRemarks.filter(filter => filter.lovID > 421 && filter.lovID < 236)) &&
                                                     this.state.lovData.filter(filter => filter.lovGroup === 'REMARK-HELPER').map((data, i) => {
-                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
-                                                    }) :
-                                                    this.state.caseRemarks.map(data => {
                                                         return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                                     })
                                                 }
@@ -262,13 +246,10 @@ function isStatusClosed()
                                                 <div className="form-group">
                                                     <select className="chosen-select form-control" name="ctID" value={this.state.closureType} onChange={(e) => this.setState({ closureType: e.target.value })}>
                                                         <option value="0">Choose a Closure Type...</option>	
-                                                        {this.state.lovData.filter( filter => filter.lovID > 427 && filter.lovID < 489) ?
+                                                        {this.state.lovData.filter( filter => filter.lovID > 427 && filter.lovID < 489) &&
                                                          this.state.lovData.filter( filter => filter.lovGroup === 'CLOSURE-TYPE').map( data => {
                                                             return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
-                                                        }) : 
-                                                        this.state.lovData.filter( filter => filter.lovGroup === 'CLOSURE-TYPE').map( data => {
-                                                            return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
-                                                        })
+                                                        }) 
                                                     }
                                                     </select>
                                                 </div>

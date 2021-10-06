@@ -29,11 +29,7 @@ class GA_Closed extends React.Component {
     const shID = this.state.shID.shID;
     AssignmentService.viewCaseByGroup(this.state.token, shID, 70).then(res => {
       console.log(res);
-      if(res[0].response === 'FAILED'){
-        this.setState({ totalCase: res })
-      } else {
-        this.setState({ totalCase: res })
-      }
+      this.setState({ totalCase: res })
     })
   }
 
@@ -41,7 +37,7 @@ class GA_Closed extends React.Component {
     return (
       <div>
         <Header />
-        <div class="page-header">
+        <div className="page-header">
             <h1>Group Assignments : CLOSED</h1>
         </div> {/* <!-- /.page-header --> */}
 
@@ -82,7 +78,7 @@ class GA_Closed extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  { this.state.totalCase.length === 1 ? 
+                  { this.state.totalCase === null ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {
@@ -99,19 +95,19 @@ class GA_Closed extends React.Component {
                       </td>
                     <td>
                       <div align="center">
-                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging ? 'danger' : 'warning'}`}> 'aging' </span>}
+                        {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging ? 'danger' : 'warning'}`}> 'aging' </span>}
                       </div>
                     </td>
                     <td>{data.caseType}</td>
                     <td>
                       <div align="center">
-                        {data.vip ? <i class="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                        {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
                       </div>
                     </td>
                     <td>{data.productName}</td>
                     <td>{data.customerName}</td>
                     <td>
-                      {data.vip ? <span class="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
+                      {data.vip ? <span className="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
                     </td>
                     <td>{data.ownerName}</td>
                     <td>
