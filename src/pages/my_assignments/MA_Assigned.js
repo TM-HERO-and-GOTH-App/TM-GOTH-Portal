@@ -75,7 +75,7 @@ class MA_Assigned extends React.Component {
                 <tbody>
                 {
                 //Check if Case is empty.
-                this.state.totalCase === null ? 
+                this.state.totalCase === 'FAILED' ? 
                     <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
                   :
                   this.state.totalCase.map( data => {

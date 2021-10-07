@@ -87,12 +87,12 @@ class AA_Unassigned extends React.Component {
                 </thead>
 
                 <tbody>
-                  {this.state.case === null ? 
-                  <tr>
-                    <td colSpan="11">
-                      <span style={{ color: 'red' }}>List is empty</span>
-                    </td>
-                  </tr>
+                  {this.state.case === 'FAILED' ?
+                    <tr>
+                      <td colSpan="11">
+                        <span style={{ color: 'red' }}>List is empty</span>
+                      </td>
+                    </tr>
                     :
                     this.state.case.map((data) => {
                       return <tr>
@@ -136,12 +136,10 @@ class AA_Unassigned extends React.Component {
                     })
                   }
                 </tbody>
-
               </table>
             </div>
           </div>  {/* //<!-- /.span --> */}
         </div> {/* // <!-- /.row --> */}
-
         <Footer />
       </div>
     );

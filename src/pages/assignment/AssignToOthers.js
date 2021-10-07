@@ -15,16 +15,18 @@ class AssignToOther extends React.Component {
             userData: JSON.parse(sessionStorage.getItem('UserData')),
             caseDetailData: {},
             groupMember: [],
+            alertStatus: false,
+            alertMessage: '',
+            badge: '',
             caseOwner: '',
             isCoordinator: '',
             isAdmin: '',
-            alertMessage: '',
-            alertStatus: false,
             stakeholderGroup: '0',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
         this.assignCaseToAgent = this.assignCaseToAgent.bind(this);
+        this.assignToPool = this.assignToPool.bind(this);
     }
 
     componentDidMount() {
@@ -65,6 +67,26 @@ class AssignToOther extends React.Component {
                 return this.setState({
                     alertStatus: true,
                     alertMessage: 'The case has been successfully assigned to the person'
+                })
+            }
+        })
+    }
+
+    assignToPool(e){
+        e.preventDefault();
+        CaseDetailService.transferOwnership(this.state.token, this.state.caseToken, this.state.userData.shID).then(res => {
+            console.log(res);
+            if(res.response === 'FAILED'){
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'Only case owner or group coordinator can do the case assignment',
+                    badge: 'danger'
+                })
+            } else{
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'The case has been successfully assigned to this group pool',
+                    badge: 'success'
                 })
             }
         })
@@ -119,7 +141,7 @@ class AssignToOther extends React.Component {
                     <div class="col-sm-9" align="right">
                         {/* <?php if( 0 != $shID_opt && (isCaseOwner($ci['oID'],$hID) || isAdmin($position) || isGroupCoordinator($position,$shID,$ci['shID'])) ) { ?>		 */}
                         {(this.state.caseOwner || this.state.isAdmin || this.state.isCoordinator) &&
-                            <button class="btn btn-sm btn-danger" onclick="redirect('<?php echo APPNAME; ?>/assignment/assigntopool/<?php echo $cToken; ?>/<?php echo $shID_opt; ?>')">
+                            <button class="btn btn-sm btn-danger" onClick={this.assignToPool}>
                                 <i class="ace-icon fa fa-exchange"></i>
                                 Assign To Group Pool
                             </button>

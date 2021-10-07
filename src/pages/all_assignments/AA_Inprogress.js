@@ -87,7 +87,7 @@ class AA_Inprogress extends React.Component {
                 </thead>
 
                 <tbody>
-                  {this.state.case === null ? 
+                  {this.state.case === 'FAILED'  ? 
                   <tr>
                     <td colSpan="11">
                       <span style={{ color: 'red' }}>List is empty</span>

@@ -85,7 +85,7 @@ class AA_Assigned extends React.Component {
                 </thead>
                 {(this.state.caseType || this.state.groupType) &&
                   <tbody>
-                    {this.state.case === null ?
+                    {this.state.case === 'FAILED'  ?
                       <tr>
                         <td colSpan="11">
                           <span style={{ color: 'red' }}>List is empty</span>

@@ -3,9 +3,10 @@ import LoginTheme from './LoginTheme';
 import ActivateAccountService from '../web_service/activate_account/ActivateAccountService';
 
 class ActivateAcc extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
+      alertStatus: false,
       alertMessage: '',
       email: '',
       activationCode: '',
@@ -13,15 +14,19 @@ class ActivateAcc extends React.Component {
     this.sendUserActivation = this.sendUserActivation.bind(this);
   }
 
-  sendUserActivation(e){
+  sendUserActivation(e) {
     e.preventDefault();
     ActivateAccountService.activateAccount(this.state.email, this.state.activationCode).then(res => {
       console.log(res);
-      if(res[0].response === 'FAILED'){
+      if (res[0].response === 'FAILED') {
         this.setState({
           alertMessage: res[0].message
         })
       } else {
+        this.setState({
+          alertStatus: true,
+          alertMessage: 'Your account have been succesfully activated. You will be redirected to Login page.'
+        })
         this.props.history.push('/login')
       }
     })
@@ -40,10 +45,12 @@ class ActivateAcc extends React.Component {
               <div className="space-6" />
               <form method="POST" onSubmit={this.sendUserActivation}>
                 <fieldset>
-                  {this.state.alertMessage !== '' && <div className="alert alert-danger">
-                    <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
-                    {this.state.alertMessage}
-                  </div>}
+                  {this.state.alertStatus &&
+                    <div className="alert alert-danger">
+                      <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times" /></button>
+                      {this.state.alertMessage}
+                    </div>
+                  }
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
                       <input type="email" className="form-control" name="email" placeholder="Email" value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} />
@@ -52,7 +59,7 @@ class ActivateAcc extends React.Component {
                   </label>
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
-                      <input type="text" className="form-control" name="iactivationKey" placeholder="Activation Code" value={this.state.activationCode} onChange={(e) => this.setState({ activationCode: e.target.value })}/>
+                      <input type="text" className="form-control" name="iactivationKey" placeholder="Activation Code" value={this.state.activationCode} onChange={(e) => this.setState({ activationCode: e.target.value })} />
                       <i className="ace-icon fa fa-lock" />
                     </span>
                   </label>

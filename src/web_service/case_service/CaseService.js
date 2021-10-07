@@ -21,7 +21,6 @@ const CaseService = {
             })
 		})
 			.then(res => res.json())
-            .then(data => { return data })
 			.catch((err) => console.log(err));
 	},
 
@@ -41,7 +40,6 @@ const CaseService = {
             })
 		})
 			.then(res => res.json())
-            .then(data => { return data })
 			//.catch((res: any) => Observable.throw(alert('Oops, there\'s a problem connecting'))
 			.catch(err => console.log(err));
 	},

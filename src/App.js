@@ -48,21 +48,21 @@ function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/activate" component={Activate} />
         {/* Go to this route path to see the sign up box and no background image */}
-        <Route path="/MyAssignments-Assigned"               component={MA_Assigned} />
-        <Route path="/MyAssignments-Inprogress"             component={MA_Inprogress} />
-        <Route path="/MyAssignments-Closed"                 component={MA_Closed} />
-        <Route path="/MyCollaboration-Assigned"             component={MC_Assigned} />
-        <Route path="/MyCollaboration-Inprogress"           component={MC_Inprogress} />
-        <Route path="/GroupAssignments-Assigned"            component={GA_Assigned} />
-        <Route path="/GroupAssignments-Closed"              component={GA_Closed} />
-        <Route path="/GroupAssignments-Inprogress"          component={GA_Inprogress} />
-        <Route path="/GroupAssignments-Unassigned"          component={GA_Unassigned} />
-        <Route path="/AllAssignments-Assigned"              component={AA_Assigned} />
-        <Route path="/AllAssignments-Closed"                component={AA_Closed} />
-        <Route path="/AllAssignments-Inprogress"            component={AA_Inprogress} />
-        <Route path="/AllAssignments-Unassigned"            component={AA_Unassigned} />
-        <Route path="/ManageUsers-RegisteredUser"           component={MU_Registereduser} />
-        <Route path="/ManageUsers-Groupmembers"             component={MU_Groupmember} />
+        <Route exact path="/MyAssignments-Assigned"               component={MA_Assigned} />
+        <Route exact path="/MyAssignments-Inprogress"             component={MA_Inprogress} />
+        <Route exact path="/MyAssignments-Closed"                 component={MA_Closed} />
+        <Route exact path="/MyCollaboration-Assigned"             component={MC_Assigned} />
+        <Route exact path="/MyCollaboration-Inprogress"           component={MC_Inprogress} />
+        <Route exact path="/GroupAssignments-Assigned"            component={GA_Assigned} />
+        <Route exact path="/GroupAssignments-Closed"              component={GA_Closed} />
+        <Route exact path="/GroupAssignments-Inprogress"          component={GA_Inprogress} />
+        <Route exact path="/GroupAssignments-Unassigned"          component={GA_Unassigned} />
+        <Route exact path="/AllAssignments-Assigned"              component={AA_Assigned} />
+        <Route exact path="/AllAssignments-Closed"                component={AA_Closed} />
+        <Route exact path="/AllAssignments-Inprogress"            component={AA_Inprogress} />
+        <Route exact path="/AllAssignments-Unassigned"            component={AA_Unassigned} />
+        <Route exact path="/ManageUsers-RegisteredUser"           component={MU_Registereduser} />
+        <Route exact path="/ManageUsers-Groupmembers"             component={MU_Groupmember} />
         <Route path="/advance-search"                       component={AdvancedSearch} />
         <Route path="/user-profile"                       component={Userprofile} />
         <Route path='/edit-profile'                          component={EditUser} />

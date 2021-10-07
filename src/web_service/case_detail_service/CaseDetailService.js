@@ -26,6 +26,18 @@ const CaseDetailService = {
         }).then(res => res.json()).catch(err => console.log(err))
     },
 
+    transferOwnership(authToken, cToken, shID){
+        return fetch( url + '/case/transfer-ownership/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                cToken: cToken,
+                shID: shID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
+    },
+
     getCaseDetail(authToken, cToken){
         return fetch( url + '/case/view-case-detail/', {
             method: 'POST',
