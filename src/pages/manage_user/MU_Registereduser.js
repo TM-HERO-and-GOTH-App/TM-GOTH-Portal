@@ -9,7 +9,7 @@ class MU_Registereduser extends React.Component {
     this.state = {
       token: JSON.parse(sessionStorage.getItem('userToken')),
       userKeyword: '',
-      user: [],
+      registerUser: [],
       alertStatus: false,
       // isLoading: false,
       alertMessage: '',
@@ -23,16 +23,12 @@ class MU_Registereduser extends React.Component {
     this.getUserData();
   }
 
-  componentWillUnmount(){
-    this.getUserData();
-  }
-
   getUserData() {
     ManageUserService.getAllUser(this.state.token, this.state.userKeyword).then(res => {
-      console.log(res)
-      this.setState({ user: res })
-      this.setState({ totalTMUser: this.state.user.filter(filter => filter.category === 'TM').length})
-      this.setState({ totalStakeHolderUser: this.state.user.filter(filter => filter.category === 'STAKEHOLDER').length})
+      // console.log(res)
+      this.setState({ registerUser: res })
+      this.setState({ totalTMUser: res.filter(filter => filter.category === 'TM').length })
+      this.setState({ totalStakeHolderUser: res.filter(filter => filter.category === 'STAKEHOLDER').length })
     });
   }
 
@@ -43,7 +39,7 @@ class MU_Registereduser extends React.Component {
         <div>
           <a name="group-members" />
           {
-          this.state.alertStatus &&
+            this.state.alertStatus &&
             <div className="row">
               <div className="col-sm-12">
                 <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
@@ -59,11 +55,9 @@ class MU_Registereduser extends React.Component {
           }
 
           <div className="row">
-            <div className="col-xs-6">
-            </div>
+            <div className="col-xs-6" />
           </div>
           <div className="space-2" />
-          {/*?php $totalSH = $totalTM = 0; ?*/}
           <div className="row">
             <div className="col-xs-12">
               <div className="clearfix">
@@ -82,20 +76,19 @@ class MU_Registereduser extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.user === null ?
-                      <tr><td colSpan={6}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
-                      :
-                      this.state.user.map((data, i) => {
+                    {
+                      this.state.registerUser.map((data, i) => {
                         i += 1;
-                        return <tr>
-                          <td><div align="center">{i}</div></td>
-                          <td>{data.fullName}</td>
-                          <td>{data.email}</td>
-                          <td>{data.category}</td>
-                          <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
-                          <td><div align="right">{data.registeredDate}</div></td>
-                        </tr>
-
+                        return data.response ? <tr><td colSpan={6}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
+                          :
+                          <tr>
+                            <td><div align="center">{i}</div></td>
+                            <td>{data.fullName}</td>
+                            <td>{data.email}</td>
+                            <td>{data.category}</td>
+                            <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
+                            <td><div align="right">{data.registeredDate}</div></td>
+                          </tr>
                       })
                     }
                   </tbody>
@@ -135,7 +128,6 @@ class MU_Registereduser extends React.Component {
             </div>
           </div>
         </div>
-
         <Footer />
       </div>
     );

@@ -27,8 +27,8 @@ class MU_Groupmember extends React.Component {
     this.setAsAdmin = this.setAsAdmin.bind(this);
     this.setAsCoordinator = this.setAsCoordinator.bind(this);
   }
-  
-  componentDidMount(){
+
+  componentDidMount() {
     this.getGroupResult();
   }
 
@@ -49,20 +49,21 @@ class MU_Groupmember extends React.Component {
   getGroupResult() {
     const shID = this.state.shID.shID
     ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
-      console.log(res);
+      // console.log(res);
       this.setState({ groupResults: res })
     })
   }
 
-  inviteToGroup(){
+  inviteToGroup() {
     const shID = this.state.shID.shID
     ManageUserService.inviteToGroup(this.state.token, '', shID).then(res => {
-      if(res === null){
+      // console.log(res);
+      if (res === null) {
         this.setState({
           alertStatus: true,
           alertMessage: 'Only group admin can do the invitation'
         })
-      } else{
+      } else {
         this.setState({
           alertStatus: true,
           alertMessage: 'The user has been successfully added.'
@@ -71,14 +72,15 @@ class MU_Groupmember extends React.Component {
     })
   }
 
-  removeFromGroup(){
+  removeFromGroup() {
     ManageUserService.removeFromGroup(this.state.token, '', this.state.shID.shID).then(res => {
-      if(res === null){
+      // console.log(res);
+      if (res === null) {
         this.setState({
           alertStatus: true,
           alertMessage: 'Only admin can remove the members'
-        }) 
-      } else{
+        })
+      } else {
         this.setState({
           alertStatus: true,
           alertMessage: 'The user has been remove from the group.'
@@ -87,14 +89,15 @@ class MU_Groupmember extends React.Component {
     })
   }
 
-  setAsAgent(){
+  setAsAgent() {
     ManageUserService.setAsAgent(this.state.token, '', this.state.shID.shID).then(res => {
-      if(res === null){
+      // console.log(res);
+      if (res === null) {
         this.setState({
           alertStatus: true,
           alertMessage: 'Only group admin can set the role.'
-        }) 
-      } else{
+        })
+      } else {
         this.setState({
           alertStatus: true,
           alertMessage: 'The user has been successfully updated as Agent.'
@@ -103,14 +106,15 @@ class MU_Groupmember extends React.Component {
     })
   }
 
-  setAsAdmin(){
+  setAsAdmin() {
     ManageUserService.setAsAdmin(this.state.token, '', this.state.shID.shID).then(res => {
-      if(res === null){
+      // console.log(res);
+      if (res === null) {
         this.setState({
           alertStatus: true,
           alertMessage: 'Only group admin can set the role.'
-        }) 
-      } else{
+        })
+      } else {
         this.setState({
           alertStatus: true,
           alertMessage: 'The user has been successfully updated as Admin.'
@@ -119,14 +123,15 @@ class MU_Groupmember extends React.Component {
     })
   }
 
-  setAsCoordinator(){
+  setAsCoordinator() {
     ManageUserService.setAsCoordinator(this.state.token, '', this.state.shID.shID).then(res => {
-      if(res === null){
+      // console.log(res);
+      if (res === null) {
         this.setState({
           alertStatus: true,
           alertMessage: 'Only group admin can set the role.'
-        }) 
-      } else{
+        })
+      } else {
         this.setState({
           alertStatus: true,
           alertMessage: 'The user has been successfully updated as Coordinator.'
@@ -140,7 +145,7 @@ class MU_Groupmember extends React.Component {
       <div>
         <Header />
         <div>
-          {/* <a name="group-members" /> */}
+          <a name="group-members" />
 
           {this.state.alertStatus ?
             <div className="row">
@@ -227,8 +232,8 @@ class MU_Groupmember extends React.Component {
                   </table>
                 </div>
               </div>
-            </div> 
-            
+            </div>
+
             :
 
             <div className="row">
@@ -247,40 +252,40 @@ class MU_Groupmember extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.groupResults === null ?
-                      <tr><td colSpan={4}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
-                      :
-                      this.state.groupResults.map(( data, i ) => {
+                    {
+                      this.state.groupResults.map((data, i) => {
                         i += 1;
-                        return <tr>
-                          <td><div align="center">{i}</div></td>
-                          <td>{data.fullName}</td>
-                          <td>{data.email}</td>
-                          <td>
-                            {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{ data.positionName }</span> : data.positionName }
-                          </td>
-                          <td>
-                            <div align="center">
-                              <input name="set_agent" type="checkbox" className="lbl" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? !this.state.setAgent : false} onChange={(e) => this.setState({ setAgent: !this.state.setAgent })} />
+                        return data.response === 'FAILED' ? <tr><td colSpan={4}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
+                          :
+                          <tr>
+                            <td><div align="center">{i}</div></td>
+                            <td>{data.fullName}</td>
+                            <td>{data.email}</td>
+                            <td>
+                              {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
+                            </td>
+                            <td>
+                              <div align="center">
+                                <input name="set_agent" type="checkbox" className="lbl" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? !this.state.setAgent : false} onChange={(e) => this.setState({ setAgent: !this.state.setAgent })} />
+                              </div>
+                            </td>
+                            <td>
+                              <div align="center">
+                                <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? !this.state.setCoordinator : false} onChange={(e) => this.setState({ setCoordinator: !this.state.setCoordinator })} />
+                              </div>
+                            </td>
+                            <td>
+                              <div align="center">
+                                <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? !this.state.setAdmin : false} onChange={(e) => this.setState({ setAdmin: e.target.value })} />
+                              </div>
+                            </td>
+                            <td><div align="center">
+                              {(this.state.shID.shID !== data.hId && data.positionName !== 'Admin') &&
+                                <button className="btn btn-minier btn-danger" onClick={this.removeFromGroup}>Remove</button>
+                              }
                             </div>
-                          </td>
-                          <td>
-                            <div align="center">
-                              <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? !this.state.setCoordinator: false} onChange={(e) => this.setState({ setCoordinator: !this.state.setCoordinator})}/>
-                            </div>
-                          </td>
-                          <td>
-                            <div align="center">
-                              <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? !this.state.setAdmin : false} onChange={(e) => this.setState({ setAdmin: e.target.value})}/>
-                            </div>
-                          </td>
-                          <td><div align="center">
-                            {(this.state.shID.shID !== data.hId && data.positionName !== 'Admin') && 
-                              <button className="btn btn-minier btn-danger" onClick={this.removeFromGroup}>Remove</button>
-                            }
-                          </div>
-                          </td>
-                        </tr>
+                            </td>
+                          </tr>
                       })
                     }
                   </tbody>
@@ -290,7 +295,6 @@ class MU_Groupmember extends React.Component {
           }
           <br />
         </div>
-
         <Footer />
       </div>
     );

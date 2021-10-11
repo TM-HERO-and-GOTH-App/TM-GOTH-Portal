@@ -12,7 +12,7 @@ class AA_Assigned extends React.Component {
       lovData: JSON.parse(sessionStorage.getItem('LovData')),
       token: JSON.parse(sessionStorage.getItem('userToken')),
       shID: JSON.parse(sessionStorage.getItem('UserData')),
-      case: [],
+      allAsssignCase: [],
       caseType: '0',
       groupType: '0',
     }
@@ -26,8 +26,8 @@ class AA_Assigned extends React.Component {
   allAssignmentData() {
     const shID = this.state.shID.shID;
     AssignmentService.viewCaseByGroup(this.state.token, shID, 64).then(res => {
-      console.log(res);
-      this.setState({ case: res })
+      // console.log(res);
+      this.setState({ allAsssignCase: res })
     })
   }
 
@@ -44,9 +44,9 @@ class AA_Assigned extends React.Component {
             <div className="col-sm-3">
               <select className="chosen-select form-control" name="shID" value={this.state.groupType} onChange={(e) => this.setState({ groupType: e.target.value })}>
                 <option value="0">All Group/Stakeholder ...</option>
-                {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                  return <option key={key} value={data.lovID}> {data.lovName} </option>
-                })
+                {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) =>
+                  <option key={key} value={data.lovID}> {data.lovName} </option>
+                )
                 }
               </select>
             </div>
@@ -54,9 +54,9 @@ class AA_Assigned extends React.Component {
               <select className="chosen-select form-control" name="caseTypeID" value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
                 <option value="0" >All Case Type ...</option>
                 {
-                  this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                    return <option key={key} value={data.lovID}>{data.lovName}</option>
-                  })
+                  this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) =>
+                    <option key={key} value={data.lovID}>{data.lovName}</option>
+                  )
                 }
               </select>
             </div>
@@ -83,17 +83,17 @@ class AA_Assigned extends React.Component {
                     <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th>
                   </tr>
                 </thead>
-                {(this.state.caseType || this.state.groupType) &&
-                  <tbody>
-                    {this.state.case === 'FAILED'  ?
-                      <tr>
-                        <td colSpan="11">
-                          <span style={{ color: 'red' }}>List is empty</span>
-                        </td>
-                      </tr>
-                      :
-                      this.state.case.map((data) => {
-                        return <tr>
+                <tbody>
+                  {
+                    this.state.allAsssignCase.map((data) => {
+                      return data.response === 'FAILED' ?
+                        <tr>
+                          <td colSpan="11">
+                            <span style={{ color: 'red' }}>List is empty</span>
+                          </td>
+                        </tr>
+                        :
+                        <tr>
                           <td>
                             <Link to={`/case-detail/${data.cToken}`}>
                               {data.caseNum}
@@ -131,10 +131,9 @@ class AA_Assigned extends React.Component {
                             </div>
                           </td>
                         </tr>
-                      })
-                    }
-                  </tbody>
-                }
+                    })
+                  }
+                </tbody>
               </table>
             </div>
           </div>  {/* //<!-- /.span --> */}

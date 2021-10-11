@@ -11,7 +11,7 @@ class AA_Unassigned extends React.Component {
       lovData: JSON.parse(sessionStorage.getItem('LovData')),
       token: JSON.parse(sessionStorage.getItem('userToken')),
       shID: JSON.parse(sessionStorage.getItem('UserData')),
-      case: [],
+      allAssignCase: [],
       caseType: '0',
       groupType: '0',
     }
@@ -25,8 +25,8 @@ class AA_Unassigned extends React.Component {
   allAssignmentData() {
     const shID = this.state.shID.shID;
     AssignmentService.viewCaseByGroup(this.state.token, shID, 61).then(res => {
-      console.log(res);
-      this.setState({ case: res })
+      // console.log(res);
+      this.setState({ allAssignCase: res })
     })
   }
 
@@ -87,52 +87,53 @@ class AA_Unassigned extends React.Component {
                 </thead>
 
                 <tbody>
-                  {this.state.case === 'FAILED' ?
-                    <tr>
-                      <td colSpan="11">
-                        <span style={{ color: 'red' }}>List is empty</span>
-                      </td>
-                    </tr>
-                    :
-                    this.state.case.map((data) => {
-                      return <tr>
-                        <td>
-                          <Link to={`/case-detail/${data.cToken}`}>
-                            {data.caseNum}
-                          </Link>
-                        </td>
-                        <td><div align="center">
-                          <span className="badge badge-pink">{data.caseStatus ? 'N' : '-'}</span>
-                        </div></td>
-                        <td>
-                          <div align="center">
-                            {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
-                          </div>
-                        </td>
-                        <td>{data.caseType}</td>
-                        <td>
-                          <div align="center">
-                            {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                          </div>
-                        </td>
-                        <td>{data.productName}</td>
-                        <td>{data.customerName}</td>
-                        <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                        <td>{data.ownerName + '-' + data.stakeholderName}</td>
-                        <td>
-                          <div align="center" style={{ fontSize: 10 }}>
-                            {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
-                          </div>
-                        </td>
-                        <td>
-                          <div align="center">
-                            <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
-                              Open
-                              <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                  {
+                    this.state.allAssignCase.map((data) => {
+                      return data.response === 'FAILED' ?
+                        <tr>
+                          <td colSpan="11">
+                            <span style={{ color: 'red' }}>List is empty</span>
+                          </td>
+                        </tr>
+                        :
+                        <tr>
+                          <td>
+                            <Link to={`/case-detail/${data.cToken}`}>
+                              {data.caseNum}
                             </Link>
-                          </div>
-                        </td>
-                      </tr>
+                          </td>
+                          <td><div align="center">
+                            <span className="badge badge-pink">{data.caseStatus ? 'N' : '-'}</span>
+                          </div></td>
+                          <td>
+                            <div align="center">
+                              {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
+                            </div>
+                          </td>
+                          <td>{data.caseType}</td>
+                          <td>
+                            <div align="center">
+                              {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                            </div>
+                          </td>
+                          <td>{data.productName}</td>
+                          <td>{data.customerName}</td>
+                          <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                          <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                          <td>
+                            <div align="center" style={{ fontSize: 10 }}>
+                              {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
+                            </div>
+                          </td>
+                          <td>
+                            <div align="center">
+                              <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
+                                Open
+                                <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
                     })
                   }
                 </tbody>
