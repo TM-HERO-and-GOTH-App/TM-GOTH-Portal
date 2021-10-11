@@ -1,8 +1,9 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import LoginTheme from './LoginTheme';
 import LoginService from '../web_service/login_service/LoginService';
 // import db from '../firebase_login/LoginAuth';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 // const auth = getAuth();
 
@@ -11,10 +12,11 @@ class Loginbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      alertStatus: false,
+      alertMessage: '',
       userEmail: '',
       userPassword: '',
       // formSubmit: false,
-      alertStatus: false,
     }
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
@@ -65,9 +67,8 @@ class Loginbox extends React.Component {
     LoginService.requestToken(email).then(res => {
       console.log(res);
       if (res[0].status === 'FAILED') {
-        console.log('Email does not exist')
         this.setState({
-          alertStatus: true
+          alertStatus: true,
         })
       } else {
         const authToken = res[0].authToken;
@@ -83,6 +84,7 @@ class Loginbox extends React.Component {
       if (res.response === 'FAILED') {
         this.setState({
           alertStatus: true,
+          alertMessage: 'Email or Password does not match.'
         })
       } else {
         this.getLoggerProfile(authToken);
@@ -94,9 +96,9 @@ class Loginbox extends React.Component {
     LoginService.getUserProfile(authToken).then(res => {
       console.log(res);
       if (res.category !== 'STAKEHOLDER') {
-        console.log('Your account is not yet registered')
         this.setState({
-          alertStatus: true
+          alertStatus: true,
+          alertMessage: 'Your account is not yet registered as Stakeholder'
         })
       } else {
         sessionStorage.setItem('UserData', JSON.stringify(res))
@@ -110,6 +112,7 @@ class Loginbox extends React.Component {
       console.log(res);
       sessionStorage.setItem('LovData', JSON.stringify(res));
       this.props.history.push('/');
+      // return <Redirect to='/'/>
     })
   }
 
@@ -127,10 +130,10 @@ class Loginbox extends React.Component {
               <div className="space-6" />
               <form onSubmit={this.handleSubmit}>
                 <fieldset>
-                  { this.state.alertStatus &&
+                  {this.state.alertStatus &&
                     <div className="alert alert-danger">
                       <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times"></i></button>
-                      Invalid Username/Password OR Profile not exist. Please try the Forgot Password for assistant
+                      {this.state.alertMessage ?? 'Invalid Username/Password OR Profile not exist. Please try the Forgot Password for assistant'}
                     </div>
                   }
                   <label className="block clearfix">
@@ -147,9 +150,7 @@ class Loginbox extends React.Component {
                   </label>
                   <div className="space" />
                   <div className="clearfix">
-                    <button className="width-35 pull-right btn btn-sm btn-primary"
-                    // onClick={() => alert('Sign In button is being click and working')}
-                    >
+                    <button className="width-35 pull-right btn btn-sm btn-primary">
                       <i className="ace-icon fa fa-key" />
                       <span className="bigger-110">Sign In</span>
                     </button>
@@ -177,7 +178,8 @@ class Loginbox extends React.Component {
               </div>
             </div>
           </div>
-        </div>}
+        </div>
+        }
       />
     );
   }

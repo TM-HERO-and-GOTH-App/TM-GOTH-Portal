@@ -50,9 +50,7 @@ class Createcase extends React.Component {
           this.setState({ alertStatus: true })
           this.setState({ alertMessage: res.message })
         } else{
-          this.props.history.push('/MyAssignments-Assigned')
-          // this.userInput();
-          this.resetForm();
+          this.props.history.push('/');
         }
       }else {
         this.setState({ alertStatus: true });

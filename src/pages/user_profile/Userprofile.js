@@ -18,10 +18,12 @@ class Userprofile extends React.Component {
 
   handleImage(e){
     e.preventDefault();
-    console.log(this.state.imageFile);
+    
+    // Uncomment below to see the picture data when an image is upload.
+    // console.log(this.state.imageFile);
+
     UpdateProfileService.uploadAvatar(this.state.token, this.state.imageFile.name).then(res => {
       console.log(res);
-      // this.setState({ userData.avatarPicture: })
       this.props.history.push('/user-profile');
     })
   }

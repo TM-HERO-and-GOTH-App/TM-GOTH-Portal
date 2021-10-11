@@ -33,6 +33,7 @@ import NonTechnicalCase from './pages/hero_cases_functionality/NonTechnicalCase'
 import SignUp from './pages/Registerbox';
 import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
 import Userprofile from './pages/user_profile/Userprofile';
+import PrivateRoute from './private-route/PrivateAuthRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
@@ -41,13 +42,12 @@ function App() {
     // Just change the route name to see all the dedicated page
     <Router> 
         <Switch>
-        <Route path="/" exact component={Dashboard} />
         {/* For Login page, you need to create a background page Component */}
         <Route path="/login" component={Loginbox} />
+        <PrivateRoute path="/" component={Dashboard} />
         <Route path="/forgotpassword" component={Forgot} />
         <Route path="/signup" component={SignUp} />
         <Route path="/activate" component={Activate} />
-        {/* Go to this route path to see the sign up box and no background image */}
         <Route exact path="/MyAssignments-Assigned"               component={MA_Assigned} />
         <Route exact path="/MyAssignments-Inprogress"             component={MA_Inprogress} />
         <Route exact path="/MyAssignments-Closed"                 component={MA_Closed} />
@@ -63,20 +63,20 @@ function App() {
         <Route exact path="/AllAssignments-Unassigned"            component={AA_Unassigned} />
         <Route exact path="/ManageUsers-RegisteredUser"           component={MU_Registereduser} />
         <Route exact path="/ManageUsers-Groupmembers"             component={MU_Groupmember} />
-        <Route path="/advance-search"                       component={AdvancedSearch} />
-        <Route path="/user-profile"                       component={Userprofile} />
-        <Route path='/edit-profile'                          component={EditUser} />
-        <Route path="/create-case"                       component={Createcase} />
-        <Route path='/non-technical-case'                  component={NonTechnicalCase} />
-        <Route path='/technical-case'                  component={TechnicalCase} />
-        <Route path='/caution-report'                  component={CautionReport} />
-        <Route path='/internal-chat/:id'                   component={InternalChat}/>
+        <Route path="/advance-search"                             component={AdvancedSearch} />
+        <Route path="/user-profile"                               component={Userprofile} />
+        <Route path='/edit-profile'                               component={EditUser} />
+        <Route path="/create-case"                                component={Createcase} />
+        <Route path='/non-technical-case'                         component={NonTechnicalCase} />
+        <Route path='/technical-case'                             component={TechnicalCase} />
+        <Route path='/caution-report'                             component={CautionReport} />
+        <Route path='/internal-chat/:id'                          component={InternalChat}/>
         <Route path='/invite-to-group-chat/:id'                   component={InviteChat}/>
-        <Route path='/hero-chat/:id'                   component={Logger}/>
-        <Route path='/action-taken/:id'                   component={ActionTaken}/>
-        <Route path='/assign-to-other/:id'                component={AssignToOther}/>
-        <Route path='/case-detail/:id'                component={CaseDetail}/>
-        <Route path='/edit-case/:id'                component={EditCaseDetail}/>
+        <Route path='/hero-chat/:id'                              component={Logger}/>
+        <Route path='/action-taken/:id'                           component={ActionTaken}/>
+        <Route path='/assign-to-other/:id'                        component={AssignToOther}/>
+        <Route path='/case-detail/:id'                            component={CaseDetail}/>
+        <Route path='/edit-case/:id'                              component={EditCaseDetail}/>
       </Switch>
     </Router>
     );
