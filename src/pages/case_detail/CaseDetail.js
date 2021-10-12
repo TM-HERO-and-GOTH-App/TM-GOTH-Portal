@@ -1,5 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+// Thanks to the creator who continue to maintain Google API for react.
+// --> https://www.npmjs.com/package/@react-google-maps/api
+// For documentation: https://react-google-maps-api-docs.netlify.app/#marker
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Header from '../Header';
 import Footer from '../Footer';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
@@ -232,8 +236,8 @@ class CaseDetail extends React.Component {
                                             </span>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="lon" value={this.state.caseDetailData.longtitude ? this.state.caseDetailData.longtitude : 0} />
-                                    <input type="hidden" id="lat" value={this.state.caseDetailData.latitude ? this.state.caseDetailData.latitude : 0} />
+                                    <input type="hidden" id="lon" value={this.state.caseDetailData.longtitude ?? 0} />
+                                    <input type="hidden" id="lat" value={this.state.caseDetailData.latitude ?? 0} />
 
                                     <div className="profile-info-row">
                                         <div className="profile-info-name"> Descriptions </div>
@@ -411,7 +415,7 @@ class CaseDetail extends React.Component {
                                 {this.state.caseDetailData.picture ? <img src={this.state.caseDetailData.picture} alt='Case' /> : <i style={{ color: "red" }}>Not provided</i>}
                             </div>
                         </div>
-                        {this.state.caseDetailData.longtitude ?
+                        {this.state.caseDetailData.longtitude &&
                             <div>
                                 <div className="space-20" />
                                 <div className="row">
@@ -423,10 +427,34 @@ class CaseDetail extends React.Component {
                                                 </button>
                                             </div>
                                         </h4>
-                                        <div id="map_canvas" style={{ width: "100%", height: 400 }}></div>
+                                        <LoadScript
+                                            googleMapsApiKey="AIzaSyC3j_ZmhRgR8eT9zYp1swE7VxsXhYP6ZoI"
+                                        >
+                                            <GoogleMap
+                                                mapContainerStyle={{ width: "100%", height: 400 }}
+                                                // center={{lat: 37.772, lng: -122.214}}
+                                                center={{lat: this.state.caseDetailData.latitude, lng: this.state.caseDetailData.longtitude}}
+                                                zoom={15}
+                                            >
+                                                { /* Child components, such as markers, info windows, etc. */}
+                                                {/* <Marker 
+                                                    position={{
+                                                        lat: 37.772,
+                                                        lng: -122.214
+                                                      }}
+                                                /> */}
+                                                <Marker 
+                                                    position={{
+                                                        lat: this.state.caseDetailData.latitude,
+                                                        lng: this.state.caseDetailData.longtitude
+                                                      }}
+                                                />
+                                                
+                                            </GoogleMap>
+                                        </LoadScript>
                                     </div>
                                 </div>
-                            </div> : null
+                            </div> 
                         }
                     </div>
                     <Footer />
