@@ -428,14 +428,15 @@ class CaseDetail extends React.Component {
                                             </div>
                                         </h4>
                                         <LoadScript
-                                            googleMapsApiKey="AIzaSyC3j_ZmhRgR8eT9zYp1swE7VxsXhYP6ZoI"
+                                            googleMapsApiKey="Your API key"
                                         >
                                             <GoogleMap
                                                 mapContainerStyle={{ width: "100%", height: 400 }}
+                                                // Uncomment below to testing
                                                 // center={{lat: 37.772, lng: -122.214}}
                                                 center={{lat: this.state.caseDetailData.latitude, lng: this.state.caseDetailData.longtitude}}
                                                 zoom={15}
-                                            >
+                                                >
                                                 { /* Child components, such as markers, info windows, etc. */}
                                                 {/* <Marker 
                                                     position={{
