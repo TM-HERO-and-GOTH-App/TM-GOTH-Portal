@@ -17,10 +17,10 @@ class CaseDetail extends React.Component {
             userData: JSON.parse(sessionStorage.getItem('UserData')),
             caseToken: this.props.match.params.id,
             caseDetailData: {},
-            isCoordinator: '',
-            statusLabel: '',
-            statusBadge: '',
+            alertStatus: false,
             alertMessage: '',
+            statusBadge: '',
+            isCoordinator: '',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.assignCaseToMe = this.assignCaseToMe.bind(this);
@@ -41,7 +41,19 @@ class CaseDetail extends React.Component {
     assignCaseToMe() {
         CaseDetailService.assignToMe(this.state.token, this.state.caseToken).then(res => {
             console.log(res);
-            this.props.history.push('/MyAssignments-Assigned');
+            if (res.response === 'FAILED') {
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'The case cannot assign to your pool.',
+                    statusBadge: 'danger'
+                })
+            } else {
+                this.setState({
+                    alertStatus: true,
+                    alertMessage: 'The case has been successfully assigned your pool.',
+                    statusBadge: 'success'
+                })
+            }
         })
     }
 
@@ -49,63 +61,47 @@ class CaseDetail extends React.Component {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             console.log(res);
-            this.setState({ groupMember: res })
-            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
+            this.setState({ 
+                groupMember: res,
+                isCoordinator: this.state.groupMember.filter(filter => filter.positionName === "Coordinator")
+            })
         })
     }
-
-    // initMap(lat,lon) {
-
-    //     // Using the lat and lng
-    //     var latitude = lat; 
-    //     var longitude = lon;
-    //     var latlng = new google.maps.LatLng(latitude,longitude);
-    //     var feature = {
-    //         zoom: 15,
-    //         center: latlng,
-    //         mapTypeId: google.maps.MapTypeId.ROADMAP
-    //     };
-    //     map = new google.maps.Map(document.getElementById("map_canvas"), feature);
-    //     geocoder = new google.maps.Geocoder();
-    //     var marker = new google.maps.Marker({
-    //         position: latlng,
-    //         map: map,
-    //         title: "Geotag: " + latitude + "/" + longitude 
-    //     });
-    // }
 
     render() {
         return (
             <div>
                 <Header />
                 <div>
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
-                                <button type="button" className="close" data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times"></i>
-                                </button>
-                                <p>
-                                    {/* <?php echo urldecode($alertMessage); ?> */}
-                                    Alert Message here
-                                </p>
+                    {
+                        this.state.alertStatus &&
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <div className={`alert alert-block alert-${this.state.statusBadge}`}>
+                                    <button type="button" className="close" data-dismiss="alert">
+                                        <i className="ace-icon fa fa-times"></i>
+                                    </button>
+                                    <p>
+                                        {this.state.alertMessage}
+                                    </p>
+                                </div>
                             </div>
+                            <br />
+                            <div className="space-10" />
                         </div>
-                        <br />
-                        <div className="space-10" />
-                    </div>
+                    }
 
                     <div className="row">
                         {(this.state.caseDetailData.caseStatus !== 'CLOSED' || this.state.caseDetailData.caseStatus !== 'CANCELLED') &&
                             <div className="col-sm-5">
-                                {this.state.caseDetailData.ownerName &&
+                                {!this.state.caseDetailData.ownerName &&
                                     <button className="btn btn-primary" onClick={this.assignCaseToMe}>
                                         Assign To Me
                                     </button>
                                 }
 
                                 {this.state.isCoordinator &&
-                                    <Link className="btn btn-danger" to={this.props.history.push(`/assign-to-other/${this.state.caseToken}/`)}>
+                                    <Link className="btn btn-danger" to={`/assign-to-other/${this.state.caseToken}`}>
                                         Assign To Others
                                     </Link>
                                 }
@@ -434,9 +430,9 @@ class CaseDetail extends React.Component {
                                                 mapContainerStyle={{ width: "100%", height: 400 }}
                                                 // Uncomment below to testing
                                                 // center={{lat: 37.772, lng: -122.214}}
-                                                center={{lat: this.state.caseDetailData.latitude, lng: this.state.caseDetailData.longtitude}}
+                                                center={{ lat: this.state.caseDetailData.latitude, lng: this.state.caseDetailData.longtitude }}
                                                 zoom={15}
-                                                >
+                                            >
                                                 { /* Child components, such as markers, info windows, etc. */}
                                                 {/* <Marker 
                                                     position={{
@@ -444,18 +440,18 @@ class CaseDetail extends React.Component {
                                                         lng: -122.214
                                                       }}
                                                 /> */}
-                                                <Marker 
+                                                <Marker
                                                     position={{
                                                         lat: this.state.caseDetailData.latitude,
                                                         lng: this.state.caseDetailData.longtitude
-                                                      }}
+                                                    }}
                                                 />
-                                                
+
                                             </GoogleMap>
                                         </LoadScript>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         }
                     </div>
                     <Footer />

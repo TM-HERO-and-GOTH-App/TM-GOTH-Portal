@@ -76,7 +76,7 @@ function App() {
           <Route path='/hero-chat/:id'                              component={Logger}/>
           <Route path='/action-taken/:id'                           component={ActionTaken}/>
           <Route path='/assign-to-other/:id'                        component={AssignToOther}/>
-          <Route path='/case-detail/:id'                            component={CaseDetail}/>
+          <Route exact path='/case-detail/:id'                      component={CaseDetail}/>
           <Route path='/edit-case/:id'                              component={EditCaseDetail}/>
         </PrivateRoute>
       </Switch>

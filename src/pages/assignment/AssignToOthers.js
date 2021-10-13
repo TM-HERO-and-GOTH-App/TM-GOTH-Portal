@@ -18,9 +18,9 @@ class AssignToOther extends React.Component {
             alertStatus: false,
             alertMessage: '',
             badge: '',
-            caseOwner: '',
-            isCoordinator: '',
-            isAdmin: '',
+            caseOwner: {},
+            isCoordinator: [],
+            isAdmin: [],
             stakeholderGroup: '0',
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
@@ -37,36 +37,40 @@ class AssignToOther extends React.Component {
     getGroupResult() {
         const shID = this.state.userData.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
-            console.log(res);
-            this.setState({ groupMember: res })
-            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
-            this.setState({ isAdmin: this.state.groupMember.filter(filter => filter.positionName === 'Admin') })
+            // console.log(res);
+            this.setState({ 
+                groupMember: res, 
+                isCoordinator: res.filter(filter => filter.positionName === "Coordinator"),
+                isAdmin: res.filter(filter => filter.positionName === "Admin")
+            })
         })
     }
 
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
-            console.log(res)
-            this.setState({ caseDetailData: res })
-            this.setState({ caseOwner: res.ownerName })
+            // console.log(res)
+            this.setState({ caseDetailData: res, caseOwner: res.ownerName })
         })
     }
 
-    assignCaseToAgent() {
-        const hID = this.state.userData.hID;
-        const shID = this.state.userData.shID;
+    assignCaseToAgent(e) {
+        e.preventDefault();
+        const hID = this.state.groupMember.map(data => data.hID);
+        const shID = this.state.groupMember.map(data => data.shID);
 
         CaseDetailService.assignToAgent(this.state.token, this.state.caseToken, hID, shID).then(res => {
             console.log(res)
             if (res.response === 'FAILED') {
                 return this.setState({
                     alertStatus: true,
-                    alertMessage: 'Only case owner or group coordinator can do the case assignment'
+                    alertMessage: 'Only case owner or group coordinator can do the case assignment',
+                    badge: 'danger'
                 })
             } else {
                 return this.setState({
                     alertStatus: true,
-                    alertMessage: 'The case has been successfully assigned to the person'
+                    alertMessage: 'The case has been successfully assigned to the person',
+                    badge: 'success'
                 })
             }
         })
@@ -110,7 +114,7 @@ class AssignToOther extends React.Component {
                 <div class="row">
                     <div class="col-sm-12">
                         {this.state.alertStatus === true &&
-                            <div class="alert alert-block alert-<?php echo $alertStatus; ?>">
+                            <div class={`alert alert-block alert-${this.state.badge}`}>
                                 <button type="button" class="close" data-dismiss="alert">
                                     <i class="ace-icon fa fa-times"></i>
                                 </button>
@@ -139,10 +143,9 @@ class AssignToOther extends React.Component {
                         </form>
                     </div>
                     <div class="col-sm-9" align="right">
-                        {/* <?php if( 0 != $shID_opt && (isCaseOwner($ci['oID'],$hID) || isAdmin($position) || isGroupCoordinator($position,$shID,$ci['shID'])) ) { ?>		 */}
                         {(this.state.caseOwner || this.state.isAdmin || this.state.isCoordinator) &&
                             <button class="btn btn-sm btn-danger" onClick={this.assignToPool}>
-                                <i class="ace-icon fa fa-exchange"></i>
+                                <i class="ace-icon fa fa-exchange"/>
                                 Assign To Group Pool
                             </button>
                         }
@@ -191,12 +194,10 @@ class AssignToOther extends React.Component {
                                             </td>
                                             <td>
                                                 <div align="center">
-                                                    {(!this.state.caseOwner || data.positionName === 'Admin' || data.positionName === 'Coordinator' || !this.state.caseDetailData.ownerName) &&
-                                                        <button class="btn btn-minier btn-yellow" onClick={this.assignCaseToAgent}>Assign</button>
+                                                    {(data.positionName === "Admin" || data.positionName === "Coordinator") &&
+                                                        this.state.caseOwner !== data.fullName && <button class="btn btn-minier btn-yellow" onClick={this.assignCaseToAgent}>Assign</button>
                                                     }
-                                                    {
-                                                        this.state.caseOwner ? <span class="badge badge-info">Owner</span> : ''
-                                                    }
+                                                    {this.state.caseOwner === data.fullName && <span class="badge badge-info">Owner</span>}
                                                 </div>
                                             </td>
                                         </tr>

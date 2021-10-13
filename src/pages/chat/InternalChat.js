@@ -46,17 +46,18 @@ class InternalChat extends React.Component {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             console.log(res);
-            this.setState({ groupMember: res })
-            this.setState({ isCoordinator: res.filter(filter => filter.positionName === 'Coordinator') })
-            this.setState({ isAdmin: res.filter(filter => filter.positionName === 'Admin') })
+            this.setState({ 
+                groupMember: res,
+                isCoordinator: res.filter(filter => filter.positionName === "Coordinator"),
+                isAdmin: res.filter(filter => filter.positionName === "Admin")
+            })
         })
     }
 
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
-            this.setState({ caseDetailData: res })
-            this.setState({ isCaseOwner: res.ownerName })
+            this.setState({ caseDetailData: res, isCaseOwner: res.ownerName })
         })
     }
 
@@ -69,9 +70,9 @@ class InternalChat extends React.Component {
 
     sendMessage(e) {
         e.preventDefault();
-        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'FE', '')
+        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'BE', '')
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 if (res[0].response === 'FAILED') {
                     this.setState({
                         alertStatus: true,

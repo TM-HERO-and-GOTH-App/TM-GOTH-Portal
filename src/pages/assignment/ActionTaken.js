@@ -53,18 +53,18 @@ class ActionTaken extends React.Component {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             // console.log(res);
-            this.setState({ groupMember: res })
-            this.setState({ isCoordinator: this.state.groupMember.filter(filter => filter.positionName === 'Coordinator') })
-            this.setState({ isAdmin: this.state.groupMember.filter(filter => filter.positionName === 'Admin') })
+            this.setState({ 
+                groupMember: res, 
+                isCoordinator: this.state.groupMember.filter(filter => filter.positionName === "Coordinator"),
+                isAdmin: this.state.groupMember.filter(filter => filter.positionName === "Admin")
+            })
         })
     }
 
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             // console.log(res)
-            this.setState({ caseDetailData: res })
-            this.setState({ ctID: res.ctID })
-            this.setState({ isCaseOwner: res.ownerName })
+            this.setState({ caseDetailData: res, ctID: res.ctID, isCaseOwner: res.ownerName })
         })
     }
 
@@ -72,10 +72,7 @@ class ActionTaken extends React.Component {
         e.preventDefault();
         ActionTakenService.setRemark(this.state.token, this.state.caseToken, this.state.remark, this.state.caseStatusType, this.state.ctID)
         .then(res => {
-            console.log(this.state.ctID)
-            console.log(this.state.caseStatusType)
-            console.log(this.state.remark)
-            console.log(res);
+            // console.log(res);
             if(res.response === 'FAILED'){
                 this.setState({
                     alertStatus: true,

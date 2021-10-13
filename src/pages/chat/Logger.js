@@ -46,44 +46,45 @@ class Logger extends React.Component {
     getGroupResult() {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
-            console.log(res);
-            this.setState({ groupMember: res })
-            this.setState({ isCoordinator: res.filter(filter => filter.positionName === 'Coordinator') })
-            this.setState({ isAdmin: res.filter(filter => filter.positionName === 'Admin') })
+            // console.log(res);
+            this.setState({ 
+                groupMember: res,
+                isCoordinator: res.filter(filter => filter.positionName === "Coordinator"),
+                isAdmin: res.filter(filter => filter.positionName === "Admin") 
+            })
         })
     }
 
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
-            this.setState({ caseDetailData: res })
-            this.setState({ isCaseOwner: res.ownerName })
+            this.setState({ caseDetailData: res, isCaseOwner: res.ownerName })
         })
     }
 
     getMessage() {
         ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'FE').then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ messageData: res });
         })
     }
 
-    pushMessage(e){
+    pushMessage(e) {
         e.preventDefault();
-        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage).then(res => {
-            console.log(res);
-            if(res[0].response === 'FAILED'){
+        ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'FE').then(res => {
+            // console.log(res);
+            if (res[0].response === 'FAILED') {
                 this.setState({
                     alertStatus: true,
                     alertMessage: 'Opss, chat message failed to send',
                     statusBadge: 'danger'
                 })
-            } else{
+            } else {
                 this.setState({
                     alertStatus: true,
                     alertMessage: 'Chat message has been posted',
                     statusBadge: 'success'
-                }) 
+                })
             }
         })
     }
@@ -113,7 +114,7 @@ class Logger extends React.Component {
                                     <h4 className="black smaller">Chat Message (with Logger)</h4>
                                     {/* <!--<input type="text" name="message_fe" placeholder="Text Field" className="form-control" />--> */}
                                     <div className="form-group">
-                                        <select className="chosen-select form-control" id="remarkText" value={this.state.remarkTextType} onchange={(e) => this.setState({ remarkTextType: e.target.value })}>
+                                        <select className="chosen-select form-control" id="remarkText" value={this.state.remarkTextType} onChange={(e) => this.setState({ remarkTextType: e.target.value })}>
                                             <option value="0">Please select Remark Text Helper (if any)...</option>
                                             {this.state.lovData.filter(filter => filter.lovID > 421 && filter.lovID < 426) &&
                                                 this.state.lovData.filter(filter => filter.lovGroup === 'REMARK-HELPER').map(data => {
@@ -121,7 +122,7 @@ class Logger extends React.Component {
                                                 })
                                             }
                                         </select>
-                                        <div className="space-2"/>
+                                        <div className="space-2" />
                                         <textarea value={this.state.userMessage} onChange={(e) => this.setState({ userMessage: e.target.value })} className="form-control limited" id="message_fe" name="message_fe" maxlength="2000"></textarea>
                                     </div>
 
@@ -145,27 +146,27 @@ class Logger extends React.Component {
                         <div className="space-10"></div>
                     </div>
                 }
-                <a name="chat-ls"/>
+                <a name="chat-ls" />
                 {this.state.alertStatus &&
-                <div className="row">
-                    <div className="col-sm-12">
-                        <div className={`alert alert-block alert-${this.state.statusBadge}`}>
-                            <button type="button" className="close" data-dismiss="alert">
-                                <i className="ace-icon fa fa-times"></i>
-                            </button>
-                            <p>
-                                {this.state.alertMessage}
-                            </p>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <div className={`alert alert-block alert-${this.state.statusBadge}`}>
+                                <button type="button" className="close" data-dismiss="alert">
+                                    <i className="ace-icon fa fa-times"></i>
+                                </button>
+                                <p>
+                                    {this.state.alertMessage}
+                                </p>
+                            </div>
                         </div>
+                        <br />
+                        <div className="space-10" />
                     </div>
-                    <br />
-                    <div className="space-10"/>
-                </div>
                 }
                 <div className="row">
                     <div className="col-sm-12">
                         {this.state.messageData === null ?
-                            <i style={{color:"red"}}>HERO Chat is empty</i>
+                            <i style={{ color: "red" }}>HERO Chat is empty</i>
                             :
                             this.state.messageData.map(data => {
                                 return <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
