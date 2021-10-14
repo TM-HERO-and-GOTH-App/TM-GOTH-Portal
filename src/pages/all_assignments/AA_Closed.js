@@ -40,13 +40,12 @@ class AA_Closed extends React.Component {
 
 
         <div className="row">
-          <form name="form" method="POST">
-
+          <form name="form">
             <div className="col-sm-3">
               <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.groupType} onChange={(e) => this.setState({ groupType: e.target.value })}>
                 <option value="0"> All Group/Stakeholder ...</option>
-                {this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                  return <option key={key} value={data.lovID}> {data.lovName} </option>
+                {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
+                  return <option key={key} value={data.lovName}> {data.lovName} </option>
                 })
                 }
               </select>
@@ -55,13 +54,12 @@ class AA_Closed extends React.Component {
               <select className="chosen-select form-control" name="caseTypeID" data-placeholder="Choose a Case Type..." value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
                 <option value="0" >All Case Type ...</option>
                 {
-                  this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                    return <option key={key} value={data.lovID}>{data.lovName}</option>
+                  this.state.lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                    return <option key={key} value={data.lovName}>{data.lovName}</option>
                   })
                 }
               </select>
             </div>
-
           </form>
 
           <div className="col-xs-12">
@@ -96,44 +94,85 @@ class AA_Closed extends React.Component {
                           </td>
                         </tr>
                         :
-                        <tr>
-                          <td>
-                            <Link to={`/case-detail/${data.cToken}`}>
-                              {data.caseNum}
-                            </Link>
-                          </td>
-                          <td><div align="center">
-                            <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'C' : '-'}</span>
-                          </div></td>
-                          <td>
-                            <div align="center">
-                              {data.caseStatus === 'CLOSED' ? 'closedAging' : <span class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
-                            </div>
-                          </td>
-                          <td>{data.caseType}</td>
-                          <td>
-                            <div align="center">
-                              {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                            </div>
-                          </td>
-                          <td>{data.productName}</td>
-                          <td>{data.customerName}</td>
-                          <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                          <td>{data.ownerName + '-' + data.stakeholderName}</td>
-                          <td>
-                            <div align="center" style={{ fontSize: 10 }}>
-                              {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
-                            </div>
-                          </td>
-                          <td>
-                            <div align="center">
-                              <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
-                                Open
-                                <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                        this.state.caseType === '0' ?
+                          <tr>
+                            <td>
+                              <Link to={`/case-detail/${data.cToken}`}>
+                                {data.caseNum}
                               </Link>
-                            </div>
-                          </td>
-                        </tr>
+                            </td>
+                            <td><div align="center">
+                              <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
+                            </div></td>
+                            <td>
+                              <div align="center">
+                                {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
+                              </div>
+                            </td>
+                            <td>{data.caseType}</td>
+                            <td>
+                              <div align="center">
+                                {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                              </div>
+                            </td>
+                            <td>{data.productName}</td>
+                            <td>{data.customerName}</td>
+                            <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                            <td>
+                              <div align="center" style={{ fontSize: 10 }}>
+                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
+                              </div>
+                            </td>
+                            <td>
+                              <div align="center">
+                                <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
+                                  Open
+                                  <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                </Link>
+                              </div>
+                            </td>
+                          </tr>
+                          :
+                          this.state.caseType === data.caseType &&
+                          <tr>
+                            <td>
+                              <Link to={`/case-detail/${data.cToken}`}>
+                                {data.caseNum}
+                              </Link>
+                            </td>
+                            <td><div align="center">
+                              <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
+                            </div></td>
+                            <td>
+                              <div align="center">
+                                {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
+                              </div>
+                            </td>
+                            <td>{data.caseType}</td>
+                            <td>
+                              <div align="center">
+                                {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                              </div>
+                            </td>
+                            <td>{data.productName}</td>
+                            <td>{data.customerName}</td>
+                            <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                            <td>
+                              <div align="center" style={{ fontSize: 10 }}>
+                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
+                              </div>
+                            </td>
+                            <td>
+                              <div align="center">
+                                <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
+                                  Open
+                                  <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                </Link>
+                              </div>
+                            </td>
+                          </tr>
                     })
                   }
                 </tbody>
