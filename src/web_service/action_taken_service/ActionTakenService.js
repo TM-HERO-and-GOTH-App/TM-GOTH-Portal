@@ -1,3 +1,6 @@
+// ATTENTION: If you want to use Axios, you can look at Dashboard Service and look for 
+// 'getTotalCaseByGroup'. That will be an example if you want to use Axios to call the API.
+
 const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 

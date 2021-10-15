@@ -102,7 +102,7 @@ class AA_Closed extends React.Component {
                               </Link>
                             </td>
                             <td><div align="center">
-                              <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
+                              <span className='badge badge-info'>{data.caseStatus ? 'C' : '-'}</span>
                             </div></td>
                             <td>
                               <div align="center">

@@ -44,7 +44,7 @@ class AA_Unassigned extends React.Component {
             <div className="col-sm-3">
               <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.groupType} onChange={(e) => this.setState({ groupType: e.target.value })}>
                 <option value="0"> All Group/Stakeholder ...</option>
-                {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN')(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                {this.state.lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
                   return <option key={key} value={data.lovName}> {data.lovName} </option>
                 })
                 }
@@ -103,7 +103,7 @@ class AA_Unassigned extends React.Component {
                               </Link>
                             </td>
                             <td><div align="center">
-                              <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
+                              <span className='badge badge-pink'>{data.caseStatus ? 'D' : '-'}</span>
                             </div></td>
                             <td>
                               <div align="center">

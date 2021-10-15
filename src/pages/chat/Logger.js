@@ -31,18 +31,7 @@ class Logger extends React.Component {
         this.pushMessage = this.pushMessage.bind(this);
     }
 
-    componentDidMount() {
-        this.getCaseDetail();
-        this.getGroupResult();
-        this.getMessage();
-    }
-
-    componentWillUnmount() {
-        this.getCaseDetail();
-        this.getGroupResult();
-        this.getMessage();
-    }
-
+    
     getGroupResult() {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
@@ -54,21 +43,21 @@ class Logger extends React.Component {
             })
         })
     }
-
+    
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
             console.log(res)
             this.setState({ caseDetailData: res, isCaseOwner: res.ownerName })
         })
     }
-
+    
     getMessage() {
         ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'FE').then(res => {
             // console.log(res)
-            this.setState({ messageData: res });
+            this.setState({ messageData: res }, () => {console.log(this.state.messageData)});
         })
     }
-
+    
     pushMessage(e) {
         e.preventDefault();
         ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'FE').then(res => {
@@ -88,7 +77,13 @@ class Logger extends React.Component {
             }
         })
     }
-
+    
+    componentDidMount() {
+        this.getCaseDetail();
+        this.getGroupResult();
+        this.getMessage();
+    }
+    
     render() {
         return (
             <div>
@@ -168,7 +163,7 @@ class Logger extends React.Component {
                         {this.state.messageData === null ?
                             <i style={{ color: "red" }}>HERO Chat is empty</i>
                             :
-                            this.state.messageData.map(data => {
+                            this.state.messageData && this.state.messageData.map(data => {
                                 return <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                     <div className="profile-info-row">
                                         <div className="profile-info-name" style={{ width: "10" }}><b>Posted Date</b></div>

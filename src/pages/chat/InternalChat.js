@@ -30,18 +30,6 @@ class InternalChat extends React.Component {
         this.sendMessage = this.sendMessage.bind(this);
     }
 
-    componentDidMount() {
-        this.getCaseDetail();
-        this.getGroupResult();
-        this.getMessage();
-    }
-
-    componentWillUnmount() {
-        this.getCaseDetail();
-        this.getGroupResult();
-        this.getMessage();
-    }
-
     getGroupResult() {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
@@ -62,7 +50,7 @@ class InternalChat extends React.Component {
     }
 
     getMessage() {
-        ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'FE').then(res => {
+        ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'BE').then(res => {
             console.log(res)
             this.setState({ messageData: res });
         })
@@ -87,6 +75,12 @@ class InternalChat extends React.Component {
                     })
                 }
             })
+    }
+
+    componentDidMount() {
+        this.getCaseDetail();
+        this.getGroupResult();
+        this.getMessage();
     }
 
     render() {
@@ -167,7 +161,10 @@ class InternalChat extends React.Component {
                                 <div className="profile-info-value" align="center" style={{ width: '10%' }}><b>Attachment</b></div>
                             </div>
                             {this.state.messageData.map(data => {
-                                return <div className="profile-info-row">
+                                return data.response === 'FAILED' ?
+                                    <i style={{color:"red"}}>Internal Chat is empty</i>
+                                :
+                                <div className="profile-info-row">
                                     <div className="profile-info-name">
                                         {data.postedDate}
                                     </div>

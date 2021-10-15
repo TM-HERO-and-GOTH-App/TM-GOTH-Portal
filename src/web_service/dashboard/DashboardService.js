@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -36,6 +38,17 @@ const DashboardService = {
     },
 
     getTotalCaseByGroup(authToken, shID){
+        // return axios({
+        //     method: 'POST',
+        //     url: url + '/case/get-total-case-by-stakeholder/',
+        //     headers: headers,
+        //     data: {
+        //         authToken: authToken,
+        //         shID: shID
+        //     },
+        //     responseType: 'json'
+        // }).then(res => {return res.data}).catch(err => console.log(err));
+
         return fetch( url + '/case/get-total-case-by-stakeholder/', {
             method: 'POST',
             headers: headers,

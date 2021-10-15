@@ -102,7 +102,7 @@ class AA_Inprogress extends React.Component {
                               </Link>
                             </td>
                             <td><div align="center">
-                              <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
+                              <span className='badge badge-info'>{data.caseStatus ? 'IP' : '-'}</span>
                             </div></td>
                             <td>
                               <div align="center">
