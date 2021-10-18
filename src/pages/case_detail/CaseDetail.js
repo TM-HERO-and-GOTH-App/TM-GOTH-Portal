@@ -424,7 +424,7 @@ class CaseDetail extends React.Component {
                                             </div>
                                         </h4>
                                         <LoadScript
-                                            googleMapsApiKey="AIzaSyC3j_ZmhRgR8eT9zYp1swE7VxsXhYP6ZoI"
+                                            googleMapsApiKey="Your API key"
                                         >
                                             <GoogleMap
                                                 mapContainerStyle={{ width: "100%", height: 400 }}
