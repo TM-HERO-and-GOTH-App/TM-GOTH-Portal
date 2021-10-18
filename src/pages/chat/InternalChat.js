@@ -33,7 +33,7 @@ class InternalChat extends React.Component {
     getGroupResult() {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
-            console.log(res);
+            // console.log(res);
             this.setState({ 
                 groupMember: res,
                 isCoordinator: res.filter(filter => filter.positionName === "Coordinator"),
@@ -44,20 +44,19 @@ class InternalChat extends React.Component {
 
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ caseDetailData: res, isCaseOwner: res.ownerName })
         })
     }
 
     getMessage() {
         ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'BE').then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ messageData: res });
         })
     }
 
     sendMessage(e) {
-        e.preventDefault();
         ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'BE', '')
             .then(res => {
                 // console.log(res);
@@ -75,6 +74,7 @@ class InternalChat extends React.Component {
                     })
                 }
             })
+        e.preventDefault();
     }
 
     componentDidMount() {
@@ -160,11 +160,11 @@ class InternalChat extends React.Component {
                                 <div className="profile-info-value" style={{ width: '20%' }}><b>Posted By</b></div>
                                 <div className="profile-info-value" align="center" style={{ width: '10%' }}><b>Attachment</b></div>
                             </div>
-                            {this.state.messageData.map(data => {
+                            {this.state.messageData.map((data, key) => {
                                 return data.response === 'FAILED' ?
                                     <i style={{color:"red"}}>Internal Chat is empty</i>
                                 :
-                                <div className="profile-info-row">
+                                <div className="profile-info-row" key={key}>
                                     <div className="profile-info-name">
                                         {data.postedDate}
                                     </div>
