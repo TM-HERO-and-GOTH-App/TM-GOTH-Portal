@@ -98,30 +98,6 @@ class AdvancedSearch extends React.Component {
             <div className="clearfix">
               <div className="pull-right tableTools-container-search" style={{ paddingTop: 10 }} />
             </div>
-            {/* <div>
-        30 ) ? 'danger' : 'warning';
-        $ownerName = ( !empty($caseLs[$i]['ownerName']) ) ? ucwords($caseLs[$i]['ownerName']) : '<i style={{color: 'red'}}>Un-Assigned</i>';
-        if( $caseLs[$i]['caseStatus'] == 'NEW' ) {'{'}
-        $statusLabel = 'N';
-        $statusBadge = 'danger';
-        {'}'} else if( $caseLs[$i]['caseStatus'] == 'IN-PROGRESS' ) {'{'} 
-        $statusLabel = 'IP';
-        $statusBadge = 'info';						
-        {'}'} else if( $caseLs[$i]['caseStatus'] == 'ASSIGNED' ) {'{'} 
-        $statusLabel = 'A';
-        $statusBadge = 'info';												
-        {'}'} else if( $caseLs[$i]['caseStatus'] == 'CLOSED' ) {'{'} 
-        $statusLabel = 'CL';
-        $statusBadge = 'success';												
-        {'}'} else if( $caseLs[$i]['caseStatus'] == 'CANCELLED' ) {'{'} 
-        $statusLabel = 'CA';
-        $statusBadge = 'pink';												
-        {'}'} else {'{'}
-        $statusLabel = 'TBD';
-        $statusBadge = 'pink';												
-        {'}'} 
-        $sh = '<span className="badge badge-info">' . $caseLs[$i]['stakeholderName'] . '</span>';
-        ?&gt;*/}
             <table id="dynamic-table-search" className="table table-striped table-bordered table-hover">
               <thead>
                 <tr>
@@ -140,7 +116,7 @@ class AdvancedSearch extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.searchResult === null ?
+                {this.state.searchResult.map(map => map.response  === "FAILED") ?
                   <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
                   :
                   this.state.searchResult.map((data, i) => {
@@ -179,10 +155,10 @@ class AdvancedSearch extends React.Component {
                       </td>
                       <td>
                         <div align="center">
-                          <button className="btn btn-minier btn-yellow" onClick={`/hero-chat/${this.state.caseToken}`}>
+                          <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${this.state.caseToken}`}>
                             Open
                             <i className="ace-icon fa fa-arrow-right icon-on-right" />
-                          </button>
+                          </Link>
                         </div>
                       </td>
                     </tr>

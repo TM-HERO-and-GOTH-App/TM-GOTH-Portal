@@ -36,8 +36,8 @@ class InternalChat extends React.Component {
             console.log(res);
             this.setState({ 
                 groupMember: res,
-                isCoordinator: res.filter(filter => filter.positionName === "Coordinator"),
-                isAdmin: res.filter(filter => filter.positionName === "Admin")
+                isCoordinator: res.map(map => map.positionName === "Coordinator"),
+                isAdmin: res.map(map => map.positionName === "Admin")
             })
         })
     }

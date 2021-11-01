@@ -35,24 +35,23 @@ class GA_Closed extends React.Component {
         <Header />
         <div className="page-header">
           <h1>Group Assignments : CLOSED</h1>
-        </div> {/* <!-- /.page-header --> */}
+        </div> 
 
         <div className="row">
           <div className="col-xs-12">
-            {/*?php if ( isset($alertStatus) && !empty($alertStatus) ): ?*/}
-            <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
-              <button type="button" className="close" data-dismiss="alert">
-                <i className="ace-icon fa fa-times" />
-              </button>
-              <p>
-                <strong>
-                  <i className="ace-icon fa fa-check" />
-                  Well done!
-                </strong>
-                {/*?php echo str_replace("_", " ", $alertMessage); ?*/}
-              </p>
-            </div>
-            {/*?php endif; ?*/}
+            {
+              <div className="alert alert-block alert-success">
+                <button type="button" className="close" data-dismiss="alert">
+                  <i className="ace-icon fa fa-times" />
+                </button>
+                <p>
+                  <strong>
+                    <i className="ace-icon fa fa-check" />
+                    Well done!
+                  </strong>
+                </p>
+              </div>
+            }
             <div className="clearfix">
               <div className="pull-right tableTools-container" />
             </div>

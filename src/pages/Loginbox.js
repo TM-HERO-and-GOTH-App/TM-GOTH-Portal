@@ -111,7 +111,7 @@ class Loginbox extends React.Component {
     LoginService.getSystemLOV(authToken).then(res => {
       console.log(res);
       sessionStorage.setItem('LovData', JSON.stringify(res));
-      this.props.history.push('/');
+      this.props.history.replace('/');
       // return <Redirect to='/'/>
     })
   }

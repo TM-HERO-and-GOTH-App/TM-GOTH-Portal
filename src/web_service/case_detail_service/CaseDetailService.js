@@ -38,15 +38,20 @@ const CaseDetailService = {
         }).then(res => res.json()).catch(err => console.log(err));
     },
 
-    getCaseDetail(authToken, cToken){
-        return fetch( url + '/case/view-case-detail/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                cToken: cToken
-            })
-        }).then(res => res.json()).catch(err => console.log(err))
+    async getCaseDetail(authToken, cToken){
+        try {
+            const res = await fetch(url + '/case/view-case-detail/', {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    authToken: authToken,
+                    cToken: cToken
+                })
+            });
+            return await res.json();
+        } catch (err) {
+            return console.log(err);
+        }
     },
 
     updateCaseInfo(authToken, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID){

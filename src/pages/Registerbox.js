@@ -54,7 +54,7 @@ class Register extends React.Component {
       else {
         console.log(res);
         console.log('Registered Successful')
-        this.props.history.push('/activate')
+        this.props.history.replace('/activate')
       }
     })
   }

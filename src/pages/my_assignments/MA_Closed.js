@@ -37,7 +37,7 @@ class MA_Closed extends React.Component {
 
         <div className="row">
           <div className="col-xs-12">
-            <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
+            <div className="alert alert-block alert-success">
               <button type="button" className="close" data-dismiss="alert">
                 <i className="ace-icon fa fa-times" />
               </button>

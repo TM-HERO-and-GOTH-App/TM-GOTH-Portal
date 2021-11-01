@@ -26,7 +26,7 @@ class EditUser extends React.Component {
         UpdateProfileService.updateAgentProfile(this.state.token, this.state.data.email, this.state.name, '', this.state.mobileNum, this.state.nickName, '', this.state.stateOption,this.state.divisionOption, '', '')
         .then(res => {
             console.log(res);
-            this.props.history.push('/user-profile')
+            this.props.history.replace('/user-profile')
         })
     }
 

@@ -28,37 +28,42 @@ class Logger extends React.Component {
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.getGroupResult = this.getGroupResult.bind(this);
         this.getMessage = this.getMessage.bind(this);
-        this.pushMessage = this.pushMessage.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+    }
+    
+    componentDidMount() {
+        this.getCaseDetail();
+        this.getGroupResult();
+        this.getMessage();
     }
 
-    
     getGroupResult() {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             // console.log(res);
-            this.setState({ 
+            this.setState({
                 groupMember: res,
-                isCoordinator: res.filter(filter => filter.positionName === "Coordinator"),
-                isAdmin: res.filter(filter => filter.positionName === "Admin") 
+                isCoordinator: res.map(map => map.positionName === "Coordinator"),
+                isAdmin: res.map(map => map.positionName === "Admin")
             })
         })
     }
-    
+
     getCaseDetail() {
         CaseDetailService.getCaseDetail(this.state.token, this.state.caseToken).then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ caseDetailData: res, isCaseOwner: res.ownerName })
         })
     }
-    
+
     getMessage() {
         ChatService.pullChatMessage(this.state.token, this.state.caseToken, 'FE').then(res => {
             // console.log(res)
-            this.setState({ messageData: res }, () => {console.log(this.state.messageData)});
+            this.setState({ messageData: res }, () => { console.log(this.state.messageData) });
         })
     }
-    
-    pushMessage(e) {
+
+    sendMessage(e) {
         e.preventDefault();
         ChatService.pushChatMessage(this.state.token, this.state.caseToken, this.state.userMessage, 'FE').then(res => {
             // console.log(res);
@@ -77,13 +82,7 @@ class Logger extends React.Component {
             }
         })
     }
-    
-    componentDidMount() {
-        this.getCaseDetail();
-        this.getGroupResult();
-        this.getMessage();
-    }
-    
+
     render() {
         return (
             <div>
@@ -102,7 +101,7 @@ class Logger extends React.Component {
                 </div>
                 <div className="space-6"></div>
                 {(this.state.caseDetailData.caseStatus === 'NEW' || this.state.caseDetailData.caseStatus === 'ASSIGNED' || this.state.caseDetailData.caseStatus === 'IN-PROGRESS') ?
-                    <form name="form" onSubmit={this.pushMessage}>
+                    <form name="form" onSubmit={this.sendMessage}>
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="well">
@@ -160,11 +159,11 @@ class Logger extends React.Component {
                 }
                 <div className="row">
                     <div className="col-sm-12">
-                        {this.state.messageData === null ?
-                            <i style={{ color: "red" }}>HERO Chat is empty</i>
-                            :
-                            this.state.messageData && this.state.messageData.map(data => {
-                                return <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                        {this.state.messageData.map(data => {
+                            return data.response === "FAILED" ?
+                                <i style={{ color: "red" }}>HERO Chat is empty</i>
+                                :
+                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                     <div className="profile-info-row">
                                         <div className="profile-info-name" style={{ width: "10" }}><b>Posted Date</b></div>
                                         <div className="profile-info-value" style={{ width: "40%" }}><b>Message</b></div>
@@ -194,7 +193,7 @@ class Logger extends React.Component {
 
                                     </div>
                                 </div>
-                            })
+                        })
                         }
                     </div>
                 </div>

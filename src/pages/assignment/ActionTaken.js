@@ -93,17 +93,6 @@ class ActionTaken extends React.Component {
         return (
             <div>
                 <Header />
-
-{/* function isStatusClosed()
-{
-    var caseStatusID = document.getElementById("caseStatusID").value;
-    if( 70 == caseStatusID || 73 == caseStatusID ){
-        document.getElementById("closureType").style.display = "";
-    } else {
-    	document.getElementById("closureType").style.display = "none";
-    }	
-}
-</script> */}
                 { this.state.alertStatus &&
                 <div className="row">
                     <div className="col-sm-12">

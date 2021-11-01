@@ -27,7 +27,7 @@ class ActivateAcc extends React.Component {
           alertStatus: true,
           alertMessage: 'Your account have been succesfully activated. You will be redirected to Login page.'
         })
-        this.props.history.push('/login')
+        this.props.history.replace('/login')
       }
     })
   }

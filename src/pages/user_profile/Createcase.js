@@ -50,7 +50,7 @@ class Createcase extends React.Component {
           this.setState({ alertStatus: true })
           this.setState({ alertMessage: res.message })
         } else{
-          this.props.history.push('/');
+          this.props.history.replace('/');
         }
       }else {
         this.setState({ alertStatus: true });

@@ -24,7 +24,7 @@ class Userprofile extends React.Component {
 
     UpdateProfileService.uploadAvatar(this.state.token, this.state.imageFile.name).then(res => {
       console.log(res);
-      this.props.history.push('/user-profile');
+      this.props.history.replace('/user-profile');
     })
   }
 

@@ -39,7 +39,7 @@ class MA_Assigned extends React.Component {
         <div className="row">
           <div className="col-xs-12">
             {this.state.alertStatus ?
-              <div className="alert alert-block">
+              <div className="alert alert-block alert-success">
                 <button type="button" className="close" data-dismiss="alert">
                   <i className="ace-icon fa fa-times" />
                 </button>
@@ -48,7 +48,6 @@ class MA_Assigned extends React.Component {
                     <i className="ace-icon fa fa-check" />
                     Well done!
                   </strong>
-                  {/* ?php echo urldecode($alertMessage); ? */}
                 </p>
               </div> : null
             }

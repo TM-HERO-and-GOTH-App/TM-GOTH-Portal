@@ -39,8 +39,8 @@ const ManageUserService = {
         }).then(res => res.json()).catch(err => console.log(err));
     },
 
-    getProfileByGroup(authToken, shID){
-        return fetch( url + '/user/view-all-profile/', {
+    async getProfileByGroup(authToken, shID){
+        return await fetch( url + '/user/view-all-profile/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({

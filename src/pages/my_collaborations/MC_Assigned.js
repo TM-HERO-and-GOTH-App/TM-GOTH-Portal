@@ -36,7 +36,7 @@ class MC_Assigned extends React.Component {
         <div className="row">
           <div className="col-xs-12">
             {/*?php if ( isset($alertStatus) && !empty($alertStatus) ): ?*/}
-            <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
+            <div className="alert alert-block alert-success">
               <button type="button" className="close" data-dismiss="alert">
                 <i className="ace-icon fa fa-times" />
               </button>

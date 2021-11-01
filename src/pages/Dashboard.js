@@ -1,4 +1,5 @@
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import DashboardService from '../web_service/dashboard/DashboardService';
@@ -10,6 +11,7 @@ class Dashboard extends React.Component {
       shID: JSON.parse(sessionStorage.getItem('UserData')),
       token: JSON.parse(sessionStorage.getItem('userToken')),
       lovData: JSON.parse(sessionStorage.getItem('LovData')),
+      closeDashboard: false,
       totalCaseResolveAgent: 0,
       totalCancelAgent: 0,
       totalNewCaseAgent: 0,
@@ -31,93 +33,72 @@ class Dashboard extends React.Component {
       nationWideTotalResolvedCase: 0,
       totalRegisterUser: [],
       totalOverallCaseByState: [],
-      groupValue: '0',
+      nationValue: 'initialValue',
     }
     this.getTotalResolvedByAgentData = this.getTotalResolvedByAgentData.bind(this);
     this.getTotalCaseByAgentData = this.getTotalCaseByAgentData.bind(this);
-    this.getTotalCaseResolveByGroupData = this.getTotalCaseResolveByGroupData.bind(this);
     this.getTotalCaseByGroupData = this.getTotalCaseByGroupData.bind(this);
     this.getRegisterUserData = this.getRegisterUserData.bind(this);
     this.getTotalCaseByStateData = this.getTotalCaseByStateData.bind(this);
-    this.getOtherGroupData = this.getOtherGroupData.bind(this);
-  }
-
-  componentDidMount() {
-    this.getTotalResolvedByAgentData()
-    this.getTotalCaseByAgentData();
-    this.getTotalCaseByGroupData();
-    this.getRegisterUserData();
-    this.getTotalCaseByStateData();
-    // this.getTotalCaseResolveByGroupData();
-    // this.getOtherGroupData();
+    this.getNationWideGroupData = this.getNationWideGroupData.bind(this);
   }
 
   //Below is all the function correspond to it's purpose:
   getTotalResolvedByAgentData() {
     DashboardService.getTotalResolvedByAgent(this.state.token).then((res) => {
-      console.log(res)
-      if (res !== null) {
-        return this.setState({ totalCaseResolveAgent: res.map(data => data.total) })
-      } else {
-        return this.state.totalCaseResolveAgent;
-      }
+      // console.log(res)
+      this.setState({ totalCaseResolveAgent: res.map(data => data.total) })
     });
   }
 
   getTotalCaseByAgentData() {
     DashboardService.getTotalCaseByAgent(this.state.token).then(res => {
-      console.log(res)
+      // console.log(res)
       if (res !== null) {
-        this.setState({ totalAssignedAgent: res.map(data => data.totalAssigned) })
-        this.setState({ totalCancelAgent: res.map(data => data.totalCancelled) })
-        this.setState({ totalCaseAgent: res.map(data => data.totalCase) })
-        this.setState({ totalClosedAgent: res.map(data => data.totalClosed) })
-        this.setState({ totalInProgressAgent: res.map(data => data.totalInProgress) })
-        this.setState({ totalNewCaseAgent: res.map(data => data.totalNew) })
+        this.setState({ 
+          totalAssignedAgent: res.map(data => data.totalAssigned),
+          totalCancelAgent: res.map(data => data.totalCancelled),
+          totalCaseAgent: res.map(data => data.totalCase),
+          totalClosedAgent: res.map(data => data.totalClosed),
+          totalInProgressAgent: res.map(data => data.totalInProgress),
+          totalNewCaseAgent: res.map(data => data.totalNew)
+        })
       } else {
         return 0
       }
     })
   }
 
-  getTotalCaseResolveByGroupData() {
-    const userSHID = this.state.shID.shID
-    DashboardService.getTotalResolvedByGroup(this.state.token, userSHID).then(res => {
-      console.log(res)
-    });
-  }
-
   getTotalCaseByGroupData() {
     const userSHID = this.state.shID.shID
     DashboardService.getTotalCaseByGroup(this.state.token, userSHID).then(res => {
-      console.log(res)
-      if (res !== null) {
-        this.setState({ totalGroupCase: res.map(data => data.totalCase) })
-        this.setState({ totalGroupCancelCase: res.map(data => data.totalCancelled) })
-        this.setState({ totalGroupNewCase: res.map(data => data.totalNew) })
-        this.setState({ totalGroupAssignCase: res.map(data => data.totalAssigned) })
-        this.setState({ totalGroupInprogressCase: res.map(data => data.totalInProgress) })
-        this.setState({ totalGroupCloseCase: res.map(data => data.totalClosed) })
-      } else {
-        return this.state;
-      }
+      // console.log(res)
+      this.setState({ 
+        totalGroupCase: res.map(data => data.totalCase),
+        totalGroupCancelCase: res.map(data => data.totalCancelled),
+        totalGroupNewCase: res.map(data => data.totalNew),
+        totalGroupAssignCase: res.map(data => data.totalAssigned),
+        totalGroupInprogressCase: res.map(data => data.totalInProgress),
+        totalGroupCloseCase: res.map(data => data.totalClosed)
+      })
     })
   }
 
-  getOtherGroupData(e){
-    e.preventDefault();
-    DashboardService.getTotalCaseByGroup(this.state.token, this.state.groupValue).then(res => {
+  getNationWideGroupData() {
+    DashboardService.getTotalCaseByGroup(this.state.token, this.state.nationValue).then(res => {
       console.log(res);
-      this.setState({ nationWideTotalAssign: res[0].totalAssigned})
-      this.setState({ nationWideTotalCancel: res[0].totalCancelled})
-      this.setState({ nationWideTotalCase: res[0].totalCase})
-      this.setState({ nationWideTotalClose: res[0].totalClosed})
-      this.setState({ nationWideTotalInProgress: res[0].totalInProgress})
+      this.setState({ 
+        nationWideTotalAssign: res[0].totalAssigned,
+        nationWideTotalCancel: res[0].totalCancelled,
+        nationWideTotalCase: res[0].totalCase,
+        nationWideTotalClose: res[0].totalClosed,
+        nationWideTotalInProgress: res[0].totalInProgress
+      })
     })
 
-    DashboardService.getTotalResolvedByGroup(this.state.token, this.state.groupValue).then(res => {
+    DashboardService.getTotalResolvedByGroup(this.state.token, this.state.nationValue).then(res => {
       console.log(res);
-      this.setState({ nationWideTotalResolvedCase: res[0].total})
+      this.setState({ nationWideTotalResolvedCase: res[0].total })
     })
   }
 
@@ -132,11 +113,20 @@ class Dashboard extends React.Component {
 
   getTotalCaseByStateData() {
     DashboardService.getTotalCaseByState(this.state.token).then(res => {
-      console.log(res)
+      // console.log(res)
       // this.setState({ totalOverallCaseByState: res })
       const totalCaseByState = res.reduce((prevData, currentData) => prevData + currentData.total, 0)
       this.setState({ totalOverallCaseByState: totalCaseByState })
     });
+  }
+
+  componentDidMount() {
+    this.getTotalResolvedByAgentData()
+    this.getTotalCaseByAgentData();
+    this.getTotalCaseByGroupData();
+    this.getRegisterUserData();
+    this.getTotalCaseByStateData();
+    // this.getNationWideGroupData();
   }
 
   render() {
@@ -145,21 +135,21 @@ class Dashboard extends React.Component {
         <Header />
         <div className="row">
           <div className="page-header">
-            <h1> Dashboard</h1>
+            <h1>Dashboard</h1>
           </div>
-            <form onSubmit={this.getOtherGroupData}>
-              <div className="pull-right col-sm-4">
-                <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={this.state.groupValue} onChange={(e) => this.setState({ groupValue: e.target.value})}>
-                  <option value='0'>All group...</option>
-                { 
-                  this.state.lovData ? this.state.lovData.filter(lov => lov.lovGroup === 'STAKEHOLDER' && lov.lovName !== 'ADMIN').map((data)=> {
-                    return <option value={data.lovID} key={data.lovID}>{ data.lovName }</option>
-                  }) : <option value='0'>No data</option>
+          <form>
+            <div className="pull-right col-sm-4">
+              {/* TODO: display the API data based on Option tag. Currently have side effects */}
+              <select className="chosen-select form-control" onClick={this.getNationWideGroupData} name="shID" value={this.state.nationValue} onChange={(e) => { this.setState({ nationValue: e.target.value }); console.log(this.state.nationValue);}}>
+                <option value='initialValue'>Choose a group...</option>
+                {
+                  this.state.lovData.filter(lov => lov.lovGroup === 'STAKEHOLDER' && lov.lovName !== 'ADMIN').map((data) =>
+                    <option value={data.lovID} key={data.lovID}>{data.lovName}</option>
+                  )
                 }
-                </select>
-              </div>
-              <button type='submit'>Submit</button>
-            </form>
+              </select>
+            </div>
+          </form>
           <br /><br /><br />
           <div className="col-sm-4">
             <div className="widget-box transparent">
@@ -181,31 +171,31 @@ class Dashboard extends React.Component {
                       <tr>
                         <td>Resolved In 5 Days</td>
                         <td align="right">
-                          <b className="green">{this.state.totalCaseResolveAgent ? this.state.totalCaseResolveAgent : 0}%</b>
+                          <b className="green">{(this.state.totalCaseResolveAgent / 100 * 100)?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Closed</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalClosedAgent ? this.state.totalClosedAgent : 0}</b>
+                          <b className="blue">{this.state.totalClosedAgent ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>In-Progress</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalInProgressAgent ? this.state.totalInProgressAgent : 0}</b>
+                          <b className="blue">{this.state.totalInProgressAgent ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Assigned</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalAssignedAgent ? this.state.totalAssignedAgent : 0}</b>
+                          <b className="blue">{this.state.totalAssignedAgent ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td><b>Total Case</b></td>
                         <td align="right">
-                          <b className="green">{this.state.totalCaseAgent ? this.state.totalCaseAgent : 0}</b>
+                          <b className="green">{this.state.totalCaseAgent ?? 0}</b>
                         </td>
                       </tr>
                     </tbody>
@@ -221,7 +211,7 @@ class Dashboard extends React.Component {
                   <i className="ace-icon fa fa-group orange" />
                   My Group Assignments
                 </h4>
-                
+
                 <div className="widget-toolbar">
                   <a href="#" data-action="collapse">
                     <i className="ace-icon fa fa-chevron-up" />
@@ -235,37 +225,37 @@ class Dashboard extends React.Component {
                       <tr>
                         <td>Resolved In 5 Days</td>
                         <td align="right">
-                          <b className="green">{this.state.totalGroupCase ? this.state.totalGroupCase : 0}</b>
+                          <b className="green">{this.state.totalGroupCase ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Closed</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupCloseCase ? this.state.totalGroupCloseCase : 0}</b>
+                          <b className="blue">{this.state.totalGroupCloseCase ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>In-Progress</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupInprogressCase ? this.state.totalGroupInprogressCase : 0}</b>
+                          <b className="blue">{this.state.totalGroupInprogressCase ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Assigned</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupAssignCase ? this.state.totalGroupAssignCase : 0}</b>
+                          <b className="blue">{this.state.totalGroupAssignCase ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td>Un-Assigned</td>
                         <td align="right">
-                          <b className="blue">{this.state.totalGroupCancelCase ? this.state.totalGroupCancelCase : 0}</b>
+                          <b className="blue">{this.state.totalGroupCancelCase ?? 0}</b>
                         </td>
                       </tr>
                       <tr>
                         <td><b>Total Case</b></td>
                         <td align="right">
-                          <b className="green">{this.state.totalGroupCase ? this.state.totalGroupCase : 0}</b>
+                          <b className="green">{this.state.totalGroupCase ?? 0}</b>
                         </td>
                       </tr>
                     </tbody>
@@ -290,44 +280,46 @@ class Dashboard extends React.Component {
               <div className="widget-body">
                 <div className="widget-main no-padding">
                   <table className="table table-bordered table-striped">
-                    <tbody>
-                      <tr>
-                        <td>Resolved In 5 Days</td>
-                        <td align="right">
-                          <b className="green">{this.state.nationWideTotalResolvedCase}</b>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Closed</td>
-                        <td align="right">
-                          <b className="blue">{this.state.nationWideTotalClose}</b>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>In-Progress</td>
-                        <td align="right">
-                          <b className="blue">{this.state.nationWideTotalInProgress}</b>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Assigned</td>
-                        <td align="right">
-                          <b className="blue">{this.state.nationWideTotalAssign}</b>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Un-Assigned</td>
-                        <td align="right">
-                          <b className="blue">{this.state.nationWideTotalCancel}</b>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><b>Total Case</b></td>
-                        <td align="right">
-                          <b className="green">{this.state.nationWideTotalCase}</b>
-                        </td>
-                      </tr>
-                    </tbody>
+                    {this.state.nationValue &&
+                      <tbody>
+                        <tr>
+                          <td>Resolved In 5 Days</td>
+                          <td align="right">
+                            <b className="green">{this.state.nationWideTotalResolvedCase}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Closed</td>
+                          <td align="right">
+                            <b className="blue">{this.state.nationWideTotalClose}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>In-Progress</td>
+                          <td align="right">
+                            <b className="blue">{this.state.nationWideTotalInProgress}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Assigned</td>
+                          <td align="right">
+                            <b className="blue">{this.state.nationWideTotalAssign}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Un-Assigned</td>
+                          <td align="right">
+                            <b className="blue">{this.state.nationWideTotalCancel}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Total Case</b></td>
+                          <td align="right">
+                            <b className="green">{this.state.nationWideTotalCase}</b>
+                          </td>
+                        </tr>
+                      </tbody>
+                    }
                   </table>
                 </div>{/* /.widget-main */}
               </div>{/* /.widget-body */}
@@ -341,16 +333,16 @@ class Dashboard extends React.Component {
                 Total Registered User
               </h4>
               <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                  <div className="profile-info-row">
-                    <div className="profile-info-name" style={{ width: '70%' }}>
-                      <b>Total User</b>
-                    </div>
-                    <div className="profile-info-value">
-                      <span className="editable" id="username">
-                        {this.state.totalRegisterUser ? this.state.totalRegisterUser : 0}
-                      </span>
-                    </div>
+                <div className="profile-info-row">
+                  <div className="profile-info-name" style={{ width: '70%' }}>
+                    <b>Total User</b>
                   </div>
+                  <div className="profile-info-value">
+                    <span className="editable" id="username">
+                      {this.state.totalRegisterUser ?? 0}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="col-sm-3">
@@ -359,16 +351,16 @@ class Dashboard extends React.Component {
                 Total Created Case (COMPLAINT)
               </h4>
               <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                  <div className="profile-info-row">
-                    <div className="profile-info-name" style={{ width: '70%' }}>
-                      <b>Total Case</b>
-                    </div>
-                    <div className="profile-info-value">
-                      <span className="editable" id="username">
-                        {this.state.totalOverallCaseByState ? this.state.totalOverallCaseByState : 0}
-                      </span>
-                    </div>
+                <div className="profile-info-row">
+                  <div className="profile-info-name" style={{ width: '70%' }}>
+                    <b>Total Case</b>
                   </div>
+                  <div className="profile-info-value">
+                    <span className="editable" id="username">
+                      {this.state.totalOverallCaseByState ?? 0}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
