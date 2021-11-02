@@ -92,6 +92,7 @@ class MU_Registereduser extends React.Component {
                             <td>{data.email}</td>
                             <td>{data.category}</td>
                             <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
+                            
                             {/* If you want to show date only, uncomment below */}
                             {/* <td><div align="right">{moment(data.registeredDate).format('DD-MM-YYYY')}</div></td> */}
                             <td><div align="right">{data.registeredDate}</div></td>

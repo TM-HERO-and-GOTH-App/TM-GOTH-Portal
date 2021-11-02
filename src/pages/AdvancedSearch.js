@@ -28,7 +28,7 @@ class AdvancedSearch extends React.Component {
     e.preventDefault();
     AdvancedSearchService.advancedSearch(this.state.token, this.state.keyEmail, this.state.keyFullName, this.state.keyNricNum, this.state.keySRNum, this.state.keyTtNum, this.state.keyCaseNum, this.state.keyVIPName, this.state.keyCustomerName)
       .then(res => {
-        console.log(res)
+        console.log(res);
         this.setState({ searchResult: res })
       })
   }
@@ -116,11 +116,11 @@ class AdvancedSearch extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.searchResult.map(map => map.response  === "FAILED") ?
-                  <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
-                  :
-                  this.state.searchResult.map((data, i) => {
-                    return <tr>
+                {(this.state.searchResult.length === 0) ?
+                 <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
+                 :
+                 this.state.searchResult.map(data => {
+                   return <tr>
                       <td>
                         <Link to={`/case-detail/${data.cToken}`}>
                           {data.caseNum}
@@ -128,7 +128,14 @@ class AdvancedSearch extends React.Component {
                       </td>
                       <td>
                         <div align="center">
-                          <span className="badge badge-<?php echo $statusBadge; ?>">{data.caseStatus}</span>
+                          {
+                            data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
+                            data.caseStatus === 'IN-PROGRESS' ?  <span className='badge badge-info'>IP</span> :
+                            data.caseStatus === 'ASSIGNED' ?  <span className='badge badge-info'>A</span> :
+                            data.caseStatus === 'CLOSED' ?  <span className='badge badge-success'>CL</span> :
+                            data.caseStatus === 'CANCELLED' ?  <span className='badge badge-info'>CA</span> :
+                            <span className='badge badge-pink'>TBD</span> 
+                          }
                         </div>
                       </td>
                       <td>
@@ -162,7 +169,7 @@ class AdvancedSearch extends React.Component {
                         </div>
                       </td>
                     </tr>
-                  })
+                  }) 
                 }
               </tbody>
             </table>

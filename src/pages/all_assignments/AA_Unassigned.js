@@ -119,7 +119,7 @@ class AA_Unassigned extends React.Component {
                             <td>{data.productName}</td>
                             <td>{data.customerName}</td>
                             <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                            <td>{data.ownerName ? data.ownerName + '-' + data.stakeholderName : data.stakeholderName}</td>
                             <td>
                               <div align="center" style={{ fontSize: 10 }}>
                                 {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
@@ -159,7 +159,7 @@ class AA_Unassigned extends React.Component {
                             <td>{data.productName}</td>
                             <td>{data.customerName}</td>
                             <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                            <td>{data.ownerName ? data.ownerName + '-' + data.stakeholderName : data.stakeholderName}</td>
                             <td>
                               <div align="center" style={{ fontSize: 10 }}>
                                 {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
