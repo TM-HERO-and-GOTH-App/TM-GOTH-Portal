@@ -1,4 +1,5 @@
 import React from 'react';
+import * as moment from 'moment';
 import Header from '../Header';
 import Footer from '../Footer';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService'
@@ -25,10 +26,12 @@ class MU_Registereduser extends React.Component {
 
   getUserData() {
     ManageUserService.getAllUser(this.state.token, this.state.userKeyword).then(res => {
-      // console.log(res)
-      this.setState({ registerUser: res })
-      this.setState({ totalTMUser: res.filter(filter => filter.category === 'TM').length })
-      this.setState({ totalStakeHolderUser: res.filter(filter => filter.category === 'STAKEHOLDER').length })
+      console.log(res)
+      this.setState({ 
+        registerUser: res,
+        totalTMUser: res.filter(filter => filter.category === 'TM').length,
+        totalStakeHolderUser: res.filter(filter => filter.category === 'STAKEHOLDER').length 
+      })
     });
   }
 
@@ -87,7 +90,7 @@ class MU_Registereduser extends React.Component {
                             <td>{data.email}</td>
                             <td>{data.category}</td>
                             <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
-                            <td><div align="right">{data.registeredDate}</div></td>
+                            <td><div align="right">{moment(data.registeredDate).format('DD-MM-YYYY')}</div></td>
                           </tr>
                       })
                     }

@@ -50,6 +50,8 @@ class AA_Assigned extends React.Component {
                 }
               </select>
             </div>
+
+            {/* The data all is from RRT group. Changing the Select input will not going to have any change */}
             <div className="col-sm-3">
               <select className="chosen-select form-control" name="caseTypeID" value={this.state.caseType} onChange={(e) => this.setState({ caseType: e.target.value })}>
                 <option value='0'>All Case Type ...</option>

@@ -4,15 +4,15 @@ const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const DashboardService = {
-    getTotalResolvedByAgent(authToken){
-        return fetch( url + '/case/total-resolved-within-days-by-agent/', {
+    async getTotalResolvedByAgent(authToken){
+        return await fetch( url + '/case/total-resolved-within-days-by-agent/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
                 authToken: authToken,
                 days: 5
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(resData => {return resData}).catch(err => console.log(err))
     },
 
     getTotalResolvedByGroup(authToken, shID){
@@ -24,17 +24,17 @@ const DashboardService = {
                 shID: shID,
                 days: 5
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(resData => {return resData}).catch(err => console.log(err))
     },
 
-    getTotalCaseByAgent(authToken){
-        return fetch( url + '/case/get-total-case-by-owner/', {
+    async getTotalCaseByAgent(authToken){
+        return await fetch( url + '/case/get-total-case-by-owner/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
                 authToken: authToken
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(resData => {return resData}).catch(err => console.log(err))
     },
 
     getTotalCaseByGroup(authToken, shID){
