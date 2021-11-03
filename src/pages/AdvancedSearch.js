@@ -116,60 +116,63 @@ class AdvancedSearch extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {(this.state.searchResult.length === 0) ?
-                 <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
+                {
+                  this.state.searchResult.length === 0 ?
+                    <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
+                :
+                  this.state.searchResult.map(data => {
+                    return data.response === 'FAILED' ? 
+                    <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
                  :
-                 this.state.searchResult.map(data => {
-                   return <tr>
-                      <td>
-                        <Link to={`/case-detail/${data.cToken}`}>
-                          {data.caseNum}
+                  <tr>
+                    <td>
+                      <Link to={`/case-detail/${data.cToken}`}>
+                        {data.caseNum}
+                      </Link>
+                    </td>
+                    <td>
+                      <div align="center">
+                        {
+                          data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
+                          data.caseStatus === 'IN-PROGRESS' ?  <span className='badge badge-info'>IP</span> :
+                          data.caseStatus === 'ASSIGNED' ?  <span className='badge badge-info'>A</span> :
+                          data.caseStatus === 'CLOSED' ?  <span className='badge badge-success'>CL</span> :
+                          data.caseStatus === 'CANCELLED' ?  <span className='badge badge-info'>CA</span> :
+                          <span className='badge badge-pink'>TBD</span> 
+                        }
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" style={{ fontSize: 10 }}>
+                        {data.unclosedAging < 16 ? data.unclosedAging : <span style={{fontSize:"10px"}} class={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{data.closedAging}</span> }
+                      </div>
+                    </td>
+                    <td>{data.caseType}</td>
+                    <td>
+                      <div align="center">
+                        {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
+                      </div>
+                    </td>
+                    <td>{data.productName}</td>
+                    <td>{data.customerName}</td>
+                    <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                    <td>{/*?php echo $ownerName , ' ' , $sh; ?*/}</td>
+                    <td>{data.remark}</td>
+                    <td>
+                      <div align="center">
+                        {data.totalNewAlert > 0 ? <span style={{fontSize:10}} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center">
+                        <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${this.state.caseToken}`}>
+                          Open
+                          <i className="ace-icon fa fa-arrow-right icon-on-right" />
                         </Link>
-                      </td>
-                      <td>
-                        <div align="center">
-                          {
-                            data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
-                            data.caseStatus === 'IN-PROGRESS' ?  <span className='badge badge-info'>IP</span> :
-                            data.caseStatus === 'ASSIGNED' ?  <span className='badge badge-info'>A</span> :
-                            data.caseStatus === 'CLOSED' ?  <span className='badge badge-success'>CL</span> :
-                            data.caseStatus === 'CANCELLED' ?  <span className='badge badge-info'>CA</span> :
-                            <span className='badge badge-pink'>TBD</span> 
-                          }
-                        </div>
-                      </td>
-                      <td>
-                        <div align="center" style={{ fontSize: 10 }}>
-                          {/* ?php echo ( $caseLs[$i]['unclosedAging'] < 16 ) ? $caseLs[$i]['unclosedAging'] : '<span style="font-size:10px" className="badge badge-sm badge-'.$badgeColor.'"'.$caseLs[$i]['closedAging'].''; ?&gt; */}
-                          {data.unclosedAging > 30 ? 'Closed' : 'aging' }
-                        </div>
-                      </td>
-                      <td>{data.caseType}</td>
-                      <td>
-                        <div align="center">
-                          {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
-                        </div>
-                      </td>
-                      <td>{data.productName}</td>
-                      <td>{data.customerName}</td>
-                      <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                      <td>{/*?php echo $ownerName , ' ' , $sh; ?*/}</td>
-                      <td>{data.remark}</td>
-                      <td>
-                        <div align="center">
-                          {data.totalNewAlert > 0 ? <span style={{fontSize:10}} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
-                        </div>
-                      </td>
-                      <td>
-                        <div align="center">
-                          <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${this.state.caseToken}`}>
-                            Open
-                            <i className="ace-icon fa fa-arrow-right icon-on-right" />
-                          </Link>
-                        </div>
-                      </td>
-                    </tr>
-                  }) 
+                      </div>
+                    </td>
+                  </tr>
+                  })
                 }
               </tbody>
             </table>

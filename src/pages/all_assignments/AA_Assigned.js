@@ -95,47 +95,7 @@ class AA_Assigned extends React.Component {
                           </td>
                         </tr>
                         :
-                        this.state.caseType === '0' ?
-                          <tr>
-                            <td>
-                              <Link to={`/case-detail/${data.cToken}`}>
-                                {data.caseNum}
-                              </Link>
-                            </td>
-                            <td><div align="center">
-                              <span className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>
-                            </div></td>
-                            <td>
-                              <div align="center">
-                                {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
-                              </div>
-                            </td>
-                            <td>{data.caseType}</td>
-                            <td>
-                              <div align="center">
-                                {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                              </div>
-                            </td>
-                            <td>{data.productName}</td>
-                            <td>{data.customerName}</td>
-                            <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
-                            <td>
-                              <div align="center" style={{ fontSize: 10 }}>
-                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
-                              </div>
-                            </td>
-                            <td>
-                              <div align="center">
-                                <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
-                                  Open
-                                  <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                          :
-                          this.state.caseType === data.caseType &&
+                          this.state.caseType === '0' ?
                             <tr>
                               <td>
                                 <Link to={`/case-detail/${data.cToken}`}>
@@ -162,7 +122,7 @@ class AA_Assigned extends React.Component {
                               <td>{data.ownerName + '-' + data.stakeholderName}</td>
                               <td>
                                 <div align="center" style={{ fontSize: 10 }}>
-                                  {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
+                                  {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
                                 </div>
                               </td>
                               <td>
@@ -174,6 +134,46 @@ class AA_Assigned extends React.Component {
                                 </div>
                               </td>
                             </tr>
+                          :
+                            this.state.caseType === data.caseType &&
+                              <tr>
+                                <td>
+                                  <Link to={`/case-detail/${data.cToken}`}>
+                                    {data.caseNum}
+                                  </Link>
+                                </td>
+                                <td><div align="center">
+                                  <span className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>
+                                </div></td>
+                                <td>
+                                  <div align="center">
+                                    {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
+                                  </div>
+                                </td>
+                                <td>{data.caseType}</td>
+                                <td>
+                                  <div align="center">
+                                    {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
+                                  </div>
+                                </td>
+                                <td>{data.productName}</td>
+                                <td>{data.customerName}</td>
+                                <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
+                                <td>{data.ownerName + '-' + data.stakeholderName}</td>
+                                <td>
+                                  <div align="center" style={{ fontSize: 10 }}>
+                                    {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
+                                  </div>
+                                </td>
+                                <td>
+                                  <div align="center">
+                                    <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
+                                      Open
+                                      <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                    </Link>
+                                  </div>
+                                </td>
+                              </tr>
                     })
                   }
                 </tbody>
