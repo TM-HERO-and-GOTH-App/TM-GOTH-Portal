@@ -37,19 +37,19 @@ class EditCaseDetail extends React.Component {
         this.getCaseDetail();
     }
 
-    editCaseDetail(e){
+    editCaseDetail(e) {
         e.preventDefault();
-        CaseDetailService.updateCaseInfo(this.state.token, this.state.caseToken, this.state.caseType, this.state.productType, 
+        CaseDetailService.updateCaseInfo(this.state.token, this.state.caseToken, this.state.caseType, this.state.productType,
             this.state.packageName, this.state.serviceID, this.state.serviceAddress, this.state.srNumber, this.state.ttNumber, this.state.locationType,
             this.state.customerName, this.state.segmentType).then(res => {
                 console.log(res)
-                if(res.response === 'FAILED'){
+                if (res.response === 'FAILED') {
                     this.setState({
                         alertStatus: true,
                         statusBadge: 'danger',
                         alertMessage: 'The case failed to updated.'
                     })
-                }else {
+                } else {
                     this.setState({
                         alertStatus: true,
                         statusBadge: 'success',
@@ -66,7 +66,7 @@ class EditCaseDetail extends React.Component {
         })
     }
 
-    reset(){
+    reset() {
         this.setState({
             customerName: '',
             packageName: '',
@@ -87,19 +87,22 @@ class EditCaseDetail extends React.Component {
         return (
             <div>
                 <Header />
+                <div className="page-header">
+                    <h1>CASE DETAIL : {this.state.caseDetailData.caseNum}</h1>
+                </div> {/* <!-- /.page-header --> */}
                 <div className="row">
                     {this.state.alertStatus &&
-                    <div className="col-sm-12">
-                        <div className={`alert alert-block alert-${this.state.statusBadge}`}>
-                            <button type="button" className="close" data-dismiss="alert">
-                                <i className="ace-icon fa fa-times"></i>
-                            </button>
-                            {this.state.alertMessage}
+                        <div className="col-sm-12">
+                            <div className={`alert alert-block alert-${this.state.statusBadge}`}>
+                                <button type="button" className="close" data-dismiss="alert">
+                                    <i className="ace-icon fa fa-times"></i>
+                                </button>
+                                {this.state.alertMessage}
+                            </div>
                         </div>
-                    </div>
                     }
                     <br />
-                    <div className="space-10"/>
+                    <div className="space-10" />
                     <div className="col-sm-4">
                         <Link className="btn btn-primary" to={`/case-detail/${this.state.caseToken}`}>
                             <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
@@ -107,7 +110,7 @@ class EditCaseDetail extends React.Component {
                         </Link>
                     </div>
                     <br />
-                    <div className="space-20"/>
+                    <div className="space-20" />
                     <form name="form" onSubmit={this.editCaseDetail} onReset={this.reset}>
                         <div className="col-sm-6">
                             <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
@@ -261,7 +264,7 @@ class EditCaseDetail extends React.Component {
                                     <div className="profile-info-name"> Segment </div>
                                     <div className="profile-info-value">
                                         <select className="chosen-select form-control" name="segmentID" value={this.state.segmentType} onChange={(e) => this.setState({ segmentType: e.target.value })}>
-                                            <option value="0" >Choose a Segment...</option>
+                                            <option value="0">Choose a Segment...</option>
                                             {this.state.lovData.filter(filter => filter.lovGroup === 'SEGMENT').map(data => {
                                                 return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
                                             }
@@ -317,34 +320,35 @@ class EditCaseDetail extends React.Component {
                                 </div>
 
                                 {/* <!-- if not from MOBILE APP --> */}
+                                {/* Separate the 2 of the option because if combine them both in the same statement, they will not display correctly */}
                                 {this.state.lovData.filter(filter => filter.lovID !== 284) &&
-                                    <div>
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name"> Source </div>
+                                    <div className="profile-info-row">
+                                        <div className="profile-info-name"> Source </div>
 
-                                            <div className="profile-info-value">
-                                                <select className="chosen-select form-control" name="sourceID" data-placeholder="Choose a Source..." value={this.state.sourceType} onChange={(e) => this.setState({ sourceType: e.target.value })}>
-                                                    <option value="0">Choose a Source...</option>		
-                                                    {this.state.lovData.filter(filter => filter.lovGroup === 'SOURCE' && filter.lovName !== 'Mobile Apps').map(data => {
-                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                        <div className="profile-info-value">
+                                            <select className="chosen-select form-control" name="sourceID" value={this.state.sourceType} onChange={(e) => this.setState({ sourceType: e.target.value })}>
+                                                <option value="0">Choose a Source...</option>
+                                                {this.state.lovData.filter(filter => filter.lovGroup === 'SOURCE' && filter.lovName !== 'Mobile Apps').map((data, key) => {
+                                                    return <option key={key} value={data.lovID}>{data.lovName}</option>
                                                 })}
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name"> Sub Source </div>
-                                            <div className="profile-info-value">
-                                                <select className="chosen-select form-control" name="subSourceID" dataPlaceholder="Choose a Sub Source..." value={this.state.subSourceType} onChange={(e) => this.setState({ subSourceType: e.target.value })}>
-                                                    <option value="0">Choose a Sub Source...</option>
-                                                    {this.state.lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map(data => {
-                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
-                                                    })}	
-                                                </select>
-                                            </div>
+                                            </select>
                                         </div>
                                     </div>
-                            }
+                                }
+
+                                {this.state.lovData.filter(filter => filter.lovID !== 284) &&
+                                    <div className="profile-info-row">
+                                        <div className="profile-info-name"> Sub Source </div>
+                                        <div className="profile-info-value">
+                                            <select className="chosen-select form-control" name="subSourceID" value={this.state.subSourceType} onChange={(e) => this.setState({ subSourceType: e.target.value })}>
+                                                <option value="0">Choose a Sub Source...</option>
+                                                {this.state.lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map((data, key) => {
+                                                    return <option key={key} value={data.lovID}>{data.lovName}</option>
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div style={{ clear: "both" }}></div>
