@@ -16,28 +16,32 @@ class LoginTheme extends React.Component {
 
   render() {
     return (
-      <div className="main-container" style={{ backgroundColor: '#1D2024' }}>
-        <div className="main-content" style={{ backgroundColor: '#1D2024' }}>
-          <div className="row" style={{ backgroundColor: '#1D2024' }}>
-              <div className="page-container" style={{ backgroundColor: '#1D2024' }}>
+      <div class="login-layout">
+        <div className="main-container">
+          <div className="main-content">
+            <div className="row">
+              <div className="login-container">
                 <div className="center" style={{ paddingTop: 20 }}>
                   <img src={logo} width="350px" /><br /><br />
                   <h4 className="red" id="id-company-text">HERO PORTAL For Case Resolution by Internal Team</h4>
                 </div>
-              
-              {this.props.children}
+
+                <div class="space-6"/>
+
+                {this.props.children}
                 {/* This div tag is use to make space */}
-              <div className="space-6" />
+                <div className="space-6" />
                 <div className="position-relative">
                   <div align="center" style={{ padding: '10px 0 50px 0', color: 'silver' }}>
                     Copyright © 2018 Telekom Malaysia Berhad (128740-P) ALL RIGHTS RESERVED<br />
                     For the best viewing experience, please use either Mozilla Firefox or IE browser with resolution at 1280 x 800 pixels and above
                   </div>
-                </div> {/* /.position-relative */}
-            </div>{/* /.col */}
-            
-          </div>{/* /.row */}
-        </div>{/* /.main-content */}
+                </div>
+              </div>{/* /.col */}
+
+            </div>{/* /.row */}
+          </div>{/* /.main-content */}
+        </div>
       </div>
     );
   }
