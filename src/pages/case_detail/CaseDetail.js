@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 // --> https://www.npmjs.com/package/@react-google-maps/api
 // For documentation: https://react-google-maps-api-docs.netlify.app/#marker
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import Header from '../Header';
+import Layout from '../Layout';
 import Footer from '../Footer';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
@@ -21,6 +21,7 @@ class CaseDetail extends React.Component {
             alertMessage: '',
             statusBadge: '',
             isCoordinator: '',
+            left: true
         }
         this.getCaseDetail = this.getCaseDetail.bind(this);
         this.assignCaseToMe = this.assignCaseToMe.bind(this);
@@ -61,61 +62,64 @@ class CaseDetail extends React.Component {
         const shID = this.state.shID.shID
         ManageUserService.getProfileByGroup(this.state.token, shID).then(res => {
             console.log(res);
-            this.setState({ 
-                groupMember: res,
-                isCoordinator: this.state.groupMember.filter(filter => filter.positionName === "Coordinator")
+            this.setState({
+                isCoordinator: this.state.res.filter(filter => filter.positionName === "Coordinator")
             })
         })
     }
 
     render() {
         return (
-            <div>
-                <Header />
+            <Layout pageContent={
                 <div>
-                    {
-                        this.state.alertStatus &&
-                        <div className="row">
-                            <div className="col-sm-12">
-                                <div className={`alert alert-block alert-${this.state.statusBadge}`}>
-                                    <button type="button" className="close" data-dismiss="alert">
-                                        <i className="ace-icon fa fa-times"></i>
-                                    </button>
-                                    <p>
-                                        {this.state.alertMessage}
-                                    </p>
+                    <div className="page-header">
+                        <h1>CASE DETAIL : {this.state.caseDetailData.caseNum}</h1>
+                    </div> {/* <!-- /.page-header --> */}
+
+                    <div>
+                        {
+                            this.state.alertStatus &&
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className={`alert alert-block alert-${this.state.statusBadge}`}>
+                                        <button type="button" className="close" data-dismiss="alert">
+                                            <i className="ace-icon fa fa-times"></i>
+                                        </button>
+                                        <p>
+                                            {this.state.alertMessage}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <br />
-                            <div className="space-10" />
-                        </div>
-                    }
-
-                    <div className="row">
-                        {(this.state.caseDetailData.caseStatus !== 'CLOSED' || this.state.caseDetailData.caseStatus !== 'CANCELLED') &&
-                            <div className="col-sm-5">
-                                {!this.state.caseDetailData.ownerName &&
-                                    <button className="btn btn-primary" onClick={this.assignCaseToMe}>
-                                        Assign To Me
-                                    </button>
-                                }
-
-                                {this.state.isCoordinator &&
-                                    <Link className="btn btn-danger" to={`/assign-to-other/${this.state.caseToken}`}>
-                                        Assign To Others
-                                    </Link>
-                                }
-
-                                {this.state.caseDetailData.oID &&
-                                    <Link className="btn btn-warning" to={`/edit-case/${this.state.caseToken}`}>
-                                        <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
-                                        Edit Case Detail
-                                    </Link>
-                                }
+                                <br />
+                                <div className="space-10" />
                             </div>
                         }
 
-                        <div className="col-sm-7">
+                        <div className="row">
+                            {
+                                (this.state.caseDetailData.caseStatus !== 'CLOSED' || this.state.caseDetailData.caseStatus !== 'CANCELLED') &&
+                                <div className="col-sm-5">
+                                    {!this.state.caseDetailData.ownerName &&
+                                        <button className="btn btn-primary" onClick={this.assignCaseToMe}>
+                                            Assign To Me
+                                        </button>
+                                    }
+
+                                    {this.state.isCoordinator &&
+                                        <Link className="btn btn-danger" to={`/assign-to-other/${this.state.caseToken}`}>
+                                            Assign To Others
+                                        </Link>
+                                    }
+
+                                    {(!this.state.caseDetailData.ownerName || this.state.isCoordinator) &&
+                                        <Link className="btn btn-warning" to={`/edit-case/${this.state.caseToken}`}>
+                                            <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
+                                            Edit Case Detail
+                                        </Link>
+                                    }
+                                </div>
+                            }
+
                             <div className="col-sm-7">
                                 <Link className="btn btn-primary" to={`/action-taken/${this.state.caseToken}`}>
                                     Action Taken
@@ -129,7 +133,7 @@ class CaseDetail extends React.Component {
                                 </Link>
                             </div>
                             <br />
-                            <div className="space-20"></div>
+                            <div className="space-20" />
                         </div>
 
                         <div className="row">
@@ -404,7 +408,7 @@ class CaseDetail extends React.Component {
                                 </div>
                             </div>
                         </div>{/* <!-- /.row --> */}
-                        <div className="space-20"></div>
+                        <div className="space-20" />
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">Attachment</h4>
@@ -424,7 +428,7 @@ class CaseDetail extends React.Component {
                                             </div>
                                         </h4>
                                         <LoadScript
-                                            googleMapsApiKey="Your API key"
+                                            googleMapsApiKey="AIzaSyC3j_ZmhRgR8eT9zYp1swE7VxsXhYP6ZoI"
                                         >
                                             <GoogleMap
                                                 mapContainerStyle={{ width: "100%", height: 400 }}
@@ -454,9 +458,9 @@ class CaseDetail extends React.Component {
                             </div>
                         }
                     </div>
-                    <Footer />
                 </div>
-            </div >
+            }
+            />
         )
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../Header';
+import Layout from '../Layout';
 import Footer from '../Footer';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
@@ -142,60 +142,101 @@ class MU_Groupmember extends React.Component {
 
   render() {
     return (
-      <div>
-        <Header />
+      <Layout pageContent={
         <div>
-          <a name="group-members" />
 
-          {this.state.alertStatus ?
-            <div className="row">
-              <div className="col-sm-12">
-                <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
-                  <button type="button" className="close" data-dismiss="alert">
-                    <i className="ace-icon fa fa-times" />
-                  </button>
-                  <p>{this.state.alertMessage}</p>
+          <div>
+            <a name="group-members" />
+
+            {this.state.alertStatus ?
+              <div className="row">
+                <div className="col-sm-12">
+                  <div className="alert alert-block alert-<?php echo $alertStatus; ?>">
+                    <button type="button" className="close" data-dismiss="alert">
+                      <i className="ace-icon fa fa-times" />
+                    </button>
+                    <p>{this.state.alertMessage}</p>
+                  </div>
                 </div>
-              </div>
-              <br /><br />
-              <div className="space-10" />
-            </div> : null
-          }
+                <br /><br />
+                <div className="space-10" />
+              </div> : null
+            }
 
-          <div className="row">
-            <div className="col-xs-6">
-              <form name="form" onSubmit={this.getSearchUser}>
-                <div className="input-group">
-                  <span className="input-group-addon">
-                    <i className="ace-icon fa fa-check" />
-                  </span>
-                  <input type="text" className="form-control search-query" name="keyword" placeholder="Search Profile by Name" value={this.state.searchUserInput} onChange={(e) => this.setState({ searchUserInput: e.target.value })} />
+            <div className="row">
+              <div className="col-xs-6">
+                <form name="form" onSubmit={this.getSearchUser}>
+                  <div className="input-group">
+                    <span className="input-group-addon">
+                      <i className="ace-icon fa fa-check" />
+                    </span>
+                    <input type="text" className="form-control search-query" name="keyword" placeholder="Search Profile by Name" value={this.state.searchUserInput} onChange={(e) => this.setState({ searchUserInput: e.target.value })} />
+                    <span className="input-group-btn">
+                      <button type="submit" className="btn btn-inverse btn-white">
+                        <span className="ace-icon fa fa-search icon-on-right bigger-110" />
+                        Search
+                      </button>
+                    </span>
+                  </div>
+                </form>
+              </div>
+              <div className="col-xs-6 pull-right">
+              </div>
+            </div>
+            <div className="space-2" />
+            {this.state.searchUserInput !== '' ?
+              <div>
+                <div>
                   <span className="input-group-btn">
-                    <button type="submit" className="btn btn-inverse btn-white">
-                      <span className="ace-icon fa fa-search icon-on-right bigger-110" />
-                      Search
+                    <button className="pull-left btn btn-sm btn-inverse" onClick={this.resetUserSearch}>
+                      <i className="ace-icon fa fa-refresh" />
+                      <span className="bigger-110">Reset Search Keyword</span>
                     </button>
                   </span>
                 </div>
-              </form>
-            </div>
-            <div className="col-xs-6 pull-right">
-            </div>
-          </div>
-          <div className="space-2" />
-          {this.state.searchUserInput !== '' ?
-            <div>
-              <div>
-                <span className="input-group-btn">
-                  <button className="pull-left btn btn-sm btn-inverse" onClick={this.resetUserSearch}>
-                    <i className="ace-icon fa fa-refresh" />
-                    <span className="bigger-110">Reset Search Keyword</span>
-                  </button>
-                </span>
+                <br />
+                <h4 className="header blue">Search Result</h4>
+                <p>* Showing for Activated Users ONLY</p>
+                <div className="row">
+                  <div className="col-xs-12">
+                    <table id="simple-table" className="table  table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th width="5%"><div align="center">#</div></th>
+                          <th width="30%">Fullname</th>
+                          <th width="25%">Email</th>
+                          <th width="15%">Category</th>
+                          <th width="15%"><div align="center">Stakeholder</div></th>
+                          <th width="10%"><div align="center"><i className="ace-icon fa fa-bookmark" /></div></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.userResults.map((data, i) => {
+                          i += 1;
+                          return <tr>
+                            <td><div align="center">{i}</div></td>
+                            <td>{data.fullName}</td>
+                            <td>{data.email}</td>
+                            <td>{data.category}</td>
+                            <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
+                            <td>
+                              <div align="center">
+                                {(data.category === 'PUBLIC' || data.category === 'TM') &&
+                                  <button className="btn btn-minier btn-success" onClick={this.inviteToGroup}>Add to Group</button>
+                                }
+                              </div>
+                            </td>
+                          </tr>
+                        })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-              <br />
-              <h4 className="header blue">Search Result</h4>
-              <p>* Showing for Activated Users ONLY</p>
+
+              :
+
               <div className="row">
                 <div className="col-xs-12">
                   <table id="simple-table" className="table  table-bordered table-hover">
@@ -203,100 +244,61 @@ class MU_Groupmember extends React.Component {
                       <tr>
                         <th width="5%"><div align="center">#</div></th>
                         <th width="30%">Fullname</th>
-                        <th width="25%">Email</th>
-                        <th width="15%">Category</th>
-                        <th width="15%"><div align="center">Stakeholder</div></th>
+                        <th width="15%">Email</th>
+                        <th width="10%">Position</th>
+                        <th width="10%"><div align="center">Agent</div></th>
+                        <th width="10%"><div align="center">Coordinator</div></th>
+                        <th width="10%"><div align="center">Admin</div></th>
                         <th width="10%"><div align="center"><i className="ace-icon fa fa-bookmark" /></div></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.userResults.map((data, i) => {
-                        i += 1;
-                        return <tr>
-                          <td><div align="center">{i}</div></td>
-                          <td>{data.fullName}</td>
-                          <td>{data.email}</td>
-                          <td>{data.category}</td>
-                          <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
-                          <td>
-                            <div align="center">
-                              {(data.category === 'PUBLIC' || data.category === 'TM') &&
-                                <button className="btn btn-minier btn-success" onClick={this.inviteToGroup}>Add to Group</button>
-                              }
-                            </div>
-                          </td>
-                        </tr>
-                      })
+                      {
+                        this.state.groupResults.map((data, i) => {
+                          i += 1;
+                          return data.response === 'FAILED' ? <tr><td colSpan={4}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
+                            :
+                            <tr>
+                              <td><div align="center">{i}</div></td>
+                              <td>{data.fullName}</td>
+                              <td>{data.email}</td>
+                              <td>
+                                {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
+                              </td>
+                              <td>
+                                <div align="center">
+                                  <input name="set_agent" type="checkbox" className="lbl" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? !this.state.setAgent : false} onChange={(e) => this.setState({ setAgent: !this.state.setAgent })} />
+                                </div>
+                              </td>
+                              <td>
+                                <div align="center">
+                                  <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? !this.state.setCoordinator : false} onChange={(e) => this.setState({ setCoordinator: !this.state.setCoordinator })} />
+                                </div>
+                              </td>
+                              <td>
+                                <div align="center">
+                                  <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? !this.state.setAdmin : false} onChange={(e) => this.setState({ setAdmin: e.target.value })} />
+                                </div>
+                              </td>
+                              <td><div align="center">
+                                {(this.state.shID.shID !== data.hId && data.positionName !== 'Admin') &&
+                                  <button className="btn btn-minier btn-danger" onClick={this.removeFromGroup}>Remove</button>
+                                }
+                              </div>
+                              </td>
+                            </tr>
+                        })
                       }
                     </tbody>
                   </table>
-                </div>
+                </div>{/* /.span */}
               </div>
-            </div>
-
-            :
-
-            <div className="row">
-              <div className="col-xs-12">
-                <table id="simple-table" className="table  table-bordered table-hover">
-                  <thead>
-                    <tr>
-                      <th width="5%"><div align="center">#</div></th>
-                      <th width="30%">Fullname</th>
-                      <th width="15%">Email</th>
-                      <th width="10%">Position</th>
-                      <th width="10%"><div align="center">Agent</div></th>
-                      <th width="10%"><div align="center">Coordinator</div></th>
-                      <th width="10%"><div align="center">Admin</div></th>
-                      <th width="10%"><div align="center"><i className="ace-icon fa fa-bookmark" /></div></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      this.state.groupResults.map((data, i) => {
-                        i += 1;
-                        return data.response === 'FAILED' ? <tr><td colSpan={4}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
-                          :
-                          <tr>
-                            <td><div align="center">{i}</div></td>
-                            <td>{data.fullName}</td>
-                            <td>{data.email}</td>
-                            <td>
-                              {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
-                            </td>
-                            <td>
-                              <div align="center">
-                                <input name="set_agent" type="checkbox" className="lbl" onClick={this.setAsAgent} checked={data.positionName === 'Agent' ? !this.state.setAgent : false} onChange={(e) => this.setState({ setAgent: !this.state.setAgent })} />
-                              </div>
-                            </td>
-                            <td>
-                              <div align="center">
-                                <input name="set_co" type="checkbox" className="lbl" onClick={this.setAsCoordinator} checked={data.positionName === 'Coordinator' ? !this.state.setCoordinator : false} onChange={(e) => this.setState({ setCoordinator: !this.state.setCoordinator })} />
-                              </div>
-                            </td>
-                            <td>
-                              <div align="center">
-                                <input name="set_admin" type="checkbox" className="lbl" onClick={this.setAsAdmin} checked={data.positionName === 'Admin' ? !this.state.setAdmin : false} onChange={(e) => this.setState({ setAdmin: e.target.value })} />
-                              </div>
-                            </td>
-                            <td><div align="center">
-                              {(this.state.shID.shID !== data.hId && data.positionName !== 'Admin') &&
-                                <button className="btn btn-minier btn-danger" onClick={this.removeFromGroup}>Remove</button>
-                              }
-                            </div>
-                            </td>
-                          </tr>
-                      })
-                    }
-                  </tbody>
-                </table>
-              </div>{/* /.span */}
-            </div>
-          }
-          <br />
+            }
+            <br />
+          </div>
         </div>
-        <Footer />
-      </div>
+      }
+      />
     );
   }
 }

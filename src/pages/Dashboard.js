@@ -1,6 +1,6 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import Header from './Header';
+import { Redirect } from 'react-router-dom';
+import Layout from './Layout';
 import Footer from './Footer';
 import DashboardService from '../web_service/dashboard/DashboardService';
 
@@ -54,7 +54,7 @@ class Dashboard extends React.Component {
   getTotalCaseByAgentData() {
     DashboardService.getTotalCaseByAgent(this.state.token).then(res => {
       // console.log(res)
-      this.setState({ 
+      this.setState({
         totalAssignedAgent: res.map(data => data.totalAssigned) ?? 0,
         totalCancelAgent: res.map(data => data.totalCancelled) ?? 0,
         totalCaseAgent: res.map(data => data.totalCase) ?? 0,
@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
     const userSHID = this.state.shID.shID
     DashboardService.getTotalCaseByGroup(this.state.token, userSHID).then(res => {
       // console.log(res)
-      this.setState({ 
+      this.setState({
         totalGroupCase: res.map(data => data.totalCase) ?? 0,
         totalGroupCancelCase: res.map(data => data.totalCancelled) ?? 0,
         totalGroupNewCase: res.map(data => data.totalNew) ?? 0,
@@ -83,7 +83,7 @@ class Dashboard extends React.Component {
   getNationWideGroupData() {
     DashboardService.getTotalCaseByGroup(this.state.token, this.state.nationValue).then(res => {
       console.log(res);
-      this.setState({ 
+      this.setState({
         nationWideTotalAssign: res[0].totalAssigned ?? 0,
         nationWideTotalCancel: res[0].totalCancelled ?? 0,
         nationWideTotalCase: res[0].totalCase ?? 0,
@@ -94,14 +94,14 @@ class Dashboard extends React.Component {
 
     DashboardService.getTotalResolvedByGroup(this.state.token, this.state.nationValue).then(res => {
       console.log(res);
-      this.setState({ nationWideTotalResolvedCase: res[0].total ?? 0})
+      this.setState({ nationWideTotalResolvedCase: res[0].total ?? 0 })
     })
   }
 
   getRegisterUserData() {
     DashboardService.getTotalRegisteredUserByState(this.state.token).then(res => {
       // console.log(res);
-      this.setState({ totalRegisterUser: res.reduce((prevData, currentData) => prevData + currentData.total, 0) ?? 0});
+      this.setState({ totalRegisterUser: res.reduce((prevData, currentData) => prevData + currentData.total, 0) ?? 0 });
       // this.setState({ totalRegisterUserInAllStatesData: res })
     })
   }
@@ -110,7 +110,7 @@ class Dashboard extends React.Component {
     DashboardService.getTotalCaseByState(this.state.token).then(res => {
       // console.log(res)
       // this.setState({ totalOverallCaseByState: res })
-      this.setState({ totalOverallCaseByState: res.reduce((prevData, currentData) => prevData + currentData.total, 0) ?? 0})
+      this.setState({ totalOverallCaseByState: res.reduce((prevData, currentData) => prevData + currentData.total, 0) ?? 0 })
     });
   }
 
@@ -125,9 +125,8 @@ class Dashboard extends React.Component {
 
   render() {
     return (
-      <div>
-        <Header />
-        <div className="row">
+        <Layout pageContent={
+          <div className="row">
           <div className="page-header">
             <h1>Dashboard</h1>
           </div>
@@ -359,8 +358,8 @@ class Dashboard extends React.Component {
             </div>
           </div>
         </div>
-        <Footer />
-      </div>
+        }
+        />
     );
   }
 }
