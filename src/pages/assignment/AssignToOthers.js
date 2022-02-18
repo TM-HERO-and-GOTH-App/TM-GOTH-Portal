@@ -18,7 +18,7 @@ function AssignToOther(props) {
   const [caseOwner, setCaseOwner] = useState({});
   const [isCoordinator, setIsCoordinator] = useState([]);
   const [isAdmin, setIsAdmin] = useState([]);
-  const [stakeholderGroup, setStakeHolderGroup] = useState("0");
+  const [stakeholderGroup, setStakeholderGroup] = useState("0");
 
   useEffect(() => {
     const getGroupResult = () => {
@@ -131,7 +131,7 @@ function AssignToOther(props) {
                   name="shID"
                   dataPlaceholder="Choose a Group..."
                   value={stakeholderGroup}
-                  onChange={(e) => setStakeHolderGroup(e.target.value)}
+                  onChange={(e) => setStakeholderGroup(e.target.value)}
                 >
                   <option value="0">All Group/Stakeholder ...</option>
                   {lovData
