@@ -7,18 +7,18 @@ const CreateCaseService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                customerName: customerName,
-                nricNum: nricNum,
-                mobileNum: mobileNum,
-                caseContent: caseContent,
-                areaLocationID: areaLocationID,
-                flag: flag,
-                sourceID: sourceID,
-                subSourceID: subSourceID,
-                caseTypeID: caseTypeID
+                'authToken': authToken,
+                'customerName': customerName,
+                'nricNum': nricNum,
+               ' mobileNum': mobileNum,
+                'caseContent': caseContent,
+                'areaLocationID': areaLocationID,
+                'flag': 'COMPLAINT',
+                'sourceID': sourceID,
+                'subSourceID': subSourceID,
+                'caseTypeID': caseTypeID
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(responseData => {return responseData}).catch(err => console.log(err))
     }
 }
 

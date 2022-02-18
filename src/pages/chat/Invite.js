@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../Layout';
-import Footer from '../Footer';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ChatService from '../../web_service/chat_service/ChatService';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';

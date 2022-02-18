@@ -7,8 +7,8 @@ const AssignmentService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                caseStatusID: caseStatusID
+                'authToken': authToken,
+                'caseStatusID': caseStatusID
             })
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
     },
@@ -18,10 +18,10 @@ const AssignmentService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                shID: shID,
-                caseStatusID: caseStatusID,
-                caseTypeID: caseTypeID
+                'authToken': authToken,
+                'shID': shID,
+                'caseStatusID': caseStatusID,
+                'caseTypeID': caseTypeID
             })
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
     },
@@ -31,8 +31,8 @@ const AssignmentService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                caseStatusID: caseStatusID
+                'authToken': authToken,
+                'caseStatusID': caseStatusID
             })
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     },
@@ -42,8 +42,8 @@ const AssignmentService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                shID: shID
+                'authToken': authToken,
+                'shID': shID
             })
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     }

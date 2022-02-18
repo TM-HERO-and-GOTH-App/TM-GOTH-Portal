@@ -9,20 +9,20 @@ const DashboardService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                days: 5
+                'authToken': authToken,
+                'days': 5
             })
         }).then(res => res.json()).then(resData => {return resData}).catch(err => console.log(err))
     },
 
-    getTotalResolvedByGroup(authToken, shID){
-        return fetch( url + '/case/total-resolved-within-days-by-group/', {
+    async getTotalResolvedByGroup(authToken, shID){
+        return await fetch( url + '/case/total-resolved-within-days-by-group/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                shID: shID,
-                days: 5
+                'authToken': authToken,
+                'shID': shID,
+                'days': 5
             })
         }).then(res => res.json()).then(resData => {return resData}).catch(err => console.log(err))
     },
@@ -32,29 +32,18 @@ const DashboardService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken
+               'authToken': authToken
             })
         }).then(res => res.json()).then(resData => {return resData}).catch(err => console.log(err))
     },
 
-    getTotalCaseByGroup(authToken, shID){
-        // return axios({
-        //     method: 'POST',
-        //     url: url + '/case/get-total-case-by-stakeholder/',
-        //     headers: headers,
-        //     data: {
-        //         authToken: authToken,
-        //         shID: shID
-        //     },
-        //     responseType: 'json'
-        // }).then(res => {return res.data}).catch(err => console.log(err));
-
-        return fetch( url + '/case/get-total-case-by-stakeholder/', {
+    async getTotalCaseByGroup(authToken, shID){
+        return await fetch( url + '/case/get-total-case-by-stakeholder/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                shID: shID,
+                'authToken': authToken,
+                'shID': shID,
             })
         }).then(res => res.json()).catch(err => console.log(err))
     },
@@ -64,9 +53,9 @@ const DashboardService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                startDate: '2018-01-01',
-                endDate: '2018-01-01'
+                'authToken': authToken,
+                'startDate': '2018-01-01',
+                'endDate': '2018-01-01'
             })
         }).then(res => res.json()).catch(err => console.log(err))
     },
@@ -76,9 +65,9 @@ const DashboardService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                startDate: '2018-01-01',
-                endDate: '2018-01-01'
+                'authToken': authToken,
+                'startDate': '2018-01-01',
+                'endDate': '2018-01-01'
             })
         }).then(res => res.json()).catch(err => console.log(err))
     }
