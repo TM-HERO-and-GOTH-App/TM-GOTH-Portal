@@ -3,15 +3,17 @@ import ForgotPasswordService from "../web_service/forgot_password_service/Forgot
 import LoginTheme from "./LoginTheme";
 
 function Forgotpassword() {
-  const [email, setEmail] = useState("");
-  const [isAlert, setIsAlert] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+  const [resetPasswordInput, setResetPasswordInput] = useState('')
+  const [alertStatus, setAlertStatus] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(false);
 
   const submitForgotPassword = (e) => {
     e.preventDefault();
-    ForgotPasswordService.forgotPassword(email).then((res) => {
+    ForgotPasswordService.forgotPassword(emailInput).then((res) => {
       console.log(res);
-      if (email === "" || email === null) {
-        setIsAlert(true);
+      if (emailInput === "" || emailInput === null) {
+        setAlertStatus(true);
       } else {
         alert("Success");
       }
@@ -21,7 +23,7 @@ function Forgotpassword() {
   return (
     <LoginTheme
       children={
-        <div id="forgot-box" className="forgot-box widget-box">
+        <div id="forgot-box" className="forgot-box visible widget-box no-border">
           <div className="widget-body">
             <div className="widget-main">
               <h4 className="header red lighter bigger">
@@ -32,19 +34,19 @@ function Forgotpassword() {
               <p>Enter your email and to receive further instructions</p>
               <form onSubmit={submitForgotPassword}>
                 <fieldset>
-                  {isAlert === true ? (
+                  {alertStatus && (
                     <div className="alert alert-">
-                      The email address does not exist. Your request to reset
-                      password was rejected.
                       <button
                         type="button"
                         className="close"
                         data-dismiss="alert"
                       >
                         <i className="ace-icon fa fa-times" />
+                        The email address does not exist. Your request to reset
+                        password was rejected.
                       </button>
                     </div>
-                  ) : null}
+                  )}
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
                       <input
@@ -52,12 +54,23 @@ function Forgotpassword() {
                         className="form-control"
                         name="email"
                         placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
                       />
                       <i className="ace-icon fa fa-envelope" />
                     </span>
                   </label>
+
+                  {showPasswordField && (
+                    <label class="block clearfix">
+                      <span class="block input-icon input-icon-right">
+                        <input type="text" class="form-control" name="resetKey" placeholder="code" readonly="yes" value={resetPasswordInput} 
+                        onChange={(e) => setResetPasswordInput(e.target.value)}/>
+                        <i class="ace-icon fa fa-key"></i>
+                      </span>
+                    </label>
+                  )}
+
                   <label className="block clearfix">
                     <span className="block input-icon input-icon-right">
                       <input
@@ -65,8 +78,10 @@ function Forgotpassword() {
                         id="showPasswordBox"
                         type="checkbox"
                         className="ace"
-                        defaultValue={1}
-                        onClick="showPassword(this)"
+                        value={showPasswordField}
+                        defaultValue={showPasswordField}
+                        checked={showPasswordField}
+                        onChange={() => setShowPasswordField(!showPasswordField)}
                       />
                       <span className="lbl"> Show Password</span>
                     </span>

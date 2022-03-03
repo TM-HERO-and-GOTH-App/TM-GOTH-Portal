@@ -4,22 +4,22 @@ import SignupService from "../web_service/register_service/SignupService";
 // import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 // const auth = getAuth();
 
-function Register() {
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
+function Register(props) {
+  const [emailInput, setEmailInput] = useState("");
+  const [fullNameInput, setFullNameInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [repeatPasswordInput, setRepeatPasswordInput] = useState("");
+  const [mobileNumberInput, setMobileNumberInput] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const [incomplete, setIncomplete] = useState(false);
   const [alertStatus, setAlertStatus] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
 
   const onReset = () => {
-    setEmail("");
-    setFullName("");
-    setPassword("");
-    setRepeatPassword("");
-    setMobileNumber("");
+    setEmailInput("");
+    setFullNameInput("");
+    setPasswordInput("");
+    setRepeatPasswordInput("");
+    setMobileNumberInput("");
   };
 
   const onSubmit = (e) => {
@@ -29,29 +29,30 @@ function Register() {
 
   const signup = () => {
     SignupService.signup(
-      email,
-      fullName,
-      password,
-      repeatPassword,
-      mobileNumber
+      emailInput,
+      fullNameInput,
+      passwordInput,
+      repeatPasswordInput,
+      mobileNumberInput
     ).then((res) => {
       if (
-        email === "" ||
-        fullName === "" ||
-        password === "" ||
-        repeatPassword === "" ||
-        mobileNumber === ""
+        emailInput === "" ||
+        fullNameInput === "" ||
+        passwordInput === "" ||
+        repeatPasswordInput === "" ||
+        mobileNumberInput === ""
       ) {
         // console.log(res)
         setIncomplete(true);
       } else if (res[0].response === "FAILED") {
         // console.log(res)
         // alertStatus: true,
+        setAlertStatus(true);
         setAlertMessage(res[0].message);
       } else {
         console.log(res);
         console.log("Registered Successful");
-        history.replace("/activate");
+        props.history.replace("/activate");
       }
     });
   };
@@ -72,7 +73,7 @@ function Register() {
   return (
     <LoginTheme
       children={
-        <div id="signup-box" className="signup-box widget-box">
+        <div id="signup-box" className="signup-box visible widget-box no-border">
           <div className="widget-body">
             <div className="widget-main">
               <h4 className="header green lighter bigger">
@@ -83,15 +84,15 @@ function Register() {
               <p>All inputs below are compulsory. Thank you</p>
               <form onSubmit={onSubmit} onReset={onReset}>
                 <fieldset>
-                  {alertMessage !== "" && (
+                  {alertStatus && (
                     <div className="alert alert-danger">
-                      {alertMessage}
                       <button
                         type="button"
                         className="close"
                         data-dismiss="alert"
-                      >
+                        >
                         <i className="ace-icon fa fa-times" />
+                        {alertMessage}
                       </button>
                     </div>
                   )}
@@ -109,8 +110,8 @@ function Register() {
                         required
                         placeholder="Email (as your Login ID)"
                         name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
                       />
                       <i className="ace-icon fa fa-envelope" />
                     </span>
@@ -123,8 +124,8 @@ function Register() {
                         required
                         placeholder="Fullname"
                         name="fullname"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
+                        value={fullNameInput}
+                        onChange={(e) => setFullNameInput(e.target.value)}
                       />
                       <i className="ace-icon fa fa-user" />
                     </span>
@@ -137,8 +138,8 @@ function Register() {
                         required
                         placeholder="Password"
                         name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={passwordInput}
+                        onChange={(e) => setPasswordInput(e.target.value)}
                       />
                       <i className="ace-icon fa fa-lock" />
                     </span>
@@ -151,8 +152,8 @@ function Register() {
                         required
                         placeholder="Repeat password"
                         name="repeat-password"
-                        value={repeatPassword}
-                        onChange={(e) => setRepeatPassword(e.target.value)}
+                        value={repeatPasswordInput}
+                        onChange={(e) => setRepeatPasswordInput(e.target.value)}
                       />
                       <i className="ace-icon fa fa-retweet" />
                     </span>
@@ -165,8 +166,8 @@ function Register() {
                         required
                         placeholder="Mobile Number"
                         name="Mobilenumber"
-                        value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value)}
+                        value={mobileNumberInput}
+                        onChange={(e) => setMobileNumberInput(e.target.value)}
                       />
                       <i className="ace-icon fa fa-phone" />
                     </span>

@@ -28,7 +28,10 @@ class LoginTheme extends React.Component {
 
                 <div class="space-6"/>
 
-                {this.props.children}
+                <div class="position-relative">
+                  {this.props.children}
+                </div>
+
                 {/* This div tag is use to make space */}
                 <div className="space-6" />
                 <div className="position-relative">

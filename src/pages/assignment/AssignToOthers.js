@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout";
-import Footer from "../Footer";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
 import ManageUserService from "../../web_service/manage_user_service/ManageUserService";
 
 function AssignToOther(props) {
-  const caseToken = useState(props.match.params.id);
-  const lovData = useState(JSON.parse(sessionStorage.getItem("LovData")));
-  const token = useState(JSON.parse(sessionStorage.getItem("userToken")));
-  const userData = useState(JSON.parse(sessionStorage.getItem("UserData")));
+  const [caseToken, setCaseToken] = useState(props.match.params.id);
+  const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem("LovData")));
+  const [token, setToken] = useState(JSON.parse(sessionStorage.getItem("userToken")));
+  const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem("UserData")));
   const [caseDetailData, setCaseDetailData] = useState({});
   const [groupMember, setGroupMember] = useState([]);
   const [alertStatus, setAlertStatus] = useState(false);
@@ -37,6 +36,7 @@ function AssignToOther(props) {
         // console.log(res)
         setCaseDetailData(res);
         setCaseOwner(res.ownerName);
+        console.log(res.ownerName)
       });
     };
 

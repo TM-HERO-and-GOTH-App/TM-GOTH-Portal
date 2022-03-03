@@ -5,19 +5,19 @@ import CaseDetailService from "../../web_service/case_detail_service/CaseDetailS
 import { Link } from "react-router-dom";
 
 function EditCaseDetail(props) {
-  const token = useState(JSON.parse(sessionStorage.getItem("userToken")));
-  const lovData = useState(JSON.parse(sessionStorage.getItem("LovData")));
-  const caseToken = useState(props.match.params.id);
+  const [token, setToken] = useState(JSON.parse(sessionStorage.getItem("userToken")));
+  const [lovData, LovData] = useState(JSON.parse(sessionStorage.getItem("LovData")));
+  const [caseToken, setCaseToken] = useState(props.match.params.id);
   const [caseDetailData, setCaseDetailData] = useState([]);
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [statusBadge, setStatusBadge] = useState("");
-  const [customerName, setCustomerName] = useState("");
-  const [packageName, setPackageName] = useState("");
-  const [serviceAddress, setServiceAddress] = useState("");
-  const [serviceID, setServiceID] = useState("");
-  const [srNumber, setSrNumber] = useState("");
-  const [ttNumber, setTtNumber] = useState("");
+  const [customerNameInput, setCustomerNameInput] = useState("");
+  const [packageNameInput, setPackageNameInput] = useState("");
+  const [serviceAddressInput, setServiceAddressInput] = useState("");
+  const [serviceIDInput, setServiceIDInput] = useState("");
+  const [srNumberInput, setSrNumberInput] = useState("");
+  const [ttNumberInput, setTtNumberInput] = useState("");
   const [caseType, setCaseType] = useState("0");
   const [locationType, setLocationType] = useState("0");
   const [productType, setProductType] = useState("0");
@@ -42,16 +42,16 @@ function EditCaseDetail(props) {
       caseToken,
       caseType,
       productType,
-      packageName,
-      serviceID,
-      serviceAddress,
-      srNumber,
-      ttNumber,
+      packageNameInput,
+      serviceIDInput,
+      serviceAddressInput,
+      srNumberInput,
+      ttNumberInput,
       locationType,
-      customerName,
+      customerNameInput,
       segmentType
     ).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res.response === "FAILED") {
         setAlertStatus(true);
         setStatusBadge("danger");
@@ -65,12 +65,12 @@ function EditCaseDetail(props) {
   };
 
   const reset = () => {
-    setCustomerName("");
-    setPackageName("");
-    setServiceAddress("");
-    setServiceID("");
-    setSrNumber("");
-    setTtNumber("");
+    setCustomerNameInput("");
+    setPackageNameInput("");
+    setServiceAddressInput("");
+    setServiceIDInput("");
+    setSrNumberInput("");
+    setTtNumberInput("");
     setCaseType("0");
     setLocationType("0");
     setProductType("0");
@@ -85,10 +85,10 @@ function EditCaseDetail(props) {
         <div>
           <div className="page-header">
             <h1>CASE DETAIL : {caseDetailData.caseNum}</h1>
-          </div>{" "}
+          </div>
           {/* <!-- /.page-header --> */}
           <div className="row">
-            {alertStatus && (
+            {!alertStatus && (
               <div className="col-sm-12">
                 <div className={`alert alert-block alert-${statusBadge}`}>
                   <button type="button" className="close" data-dismiss="alert">
@@ -153,8 +153,7 @@ function EditCaseDetail(props) {
 
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: "20%" }}>
-                      {" "}
-                      HERO{" "}
+                      HERO
                     </div>
 
                     <div className="profile-info-value">
@@ -182,8 +181,8 @@ function EditCaseDetail(props) {
                           type="text"
                           name="actualCustomerName"
                           placeholder="Actual Customer Name"
-                          value={customerName}
-                          onChange={(e) => setCustomerName(e.target.value)}
+                          value={customerNameInput}
+                          onChange={(e) => setCustomerNameInput(e.target.value)}
                         />
                       </span>
                     </div>
@@ -191,7 +190,6 @@ function EditCaseDetail(props) {
 
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ color: "red" }}>
-                      {" "}
                       State{" "}
                     </div>
 
@@ -287,8 +285,7 @@ function EditCaseDetail(props) {
                       className="profile-info-name"
                       style={{ color: "red", width: "20%" }}
                     >
-                      {" "}
-                      Case Type{" "}
+                      Case Type
                     </div>
                     <div className="profile-info-value">
                       <select
@@ -313,7 +310,6 @@ function EditCaseDetail(props) {
                   </div>
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ color: "red" }}>
-                      {" "}
                       Product Name
                     </div>
                     <div className="profile-info-value">
@@ -369,8 +365,8 @@ function EditCaseDetail(props) {
                           type="text"
                           name="packageName"
                           placeholder="Package Name"
-                          value={packageName}
-                          onChange={(e) => setPackageName(e.target.value)}
+                          value={packageNameInput}
+                          onChange={(e) => setPackageNameInput(e.target.value)}
                         />
                       </span>
                     </div>
@@ -385,8 +381,8 @@ function EditCaseDetail(props) {
                           type="text"
                           name="serviceID"
                           placeholder="Service ID"
-                          value={serviceID}
-                          onChange={(e) => setServiceID(e.target.value)}
+                          value={serviceIDInput}
+                          onChange={(e) => setServiceIDInput(e.target.value)}
                         />
                       </span>
                     </div>
@@ -402,8 +398,8 @@ function EditCaseDetail(props) {
                           type="text"
                           name="serviceAddress"
                           placeholder="Service Address"
-                          value={serviceAddress}
-                          onChange={(e) => setServiceAddress(e.target.value)}
+                          value={serviceAddressInput}
+                          onChange={(e) => setServiceAddressInput(e.target.value)}
                         />
                       </span>
                     </div>
@@ -411,8 +407,7 @@ function EditCaseDetail(props) {
 
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ color: "red" }}>
-                      {" "}
-                      SR Number{" "}
+                      SR Number
                     </div>
                     <div className="profile-info-value">
                       <span className="editable" id="signup">
@@ -422,8 +417,8 @@ function EditCaseDetail(props) {
                           type="text"
                           name="srNum"
                           placeholder="SR Number"
-                          value={srNumber}
-                          onChange={(e) => setSrNumber(e.target.value)}
+                          value={srNumberInput}
+                          onChange={(e) => setSrNumberInput(e.target.value)}
                         />
                       </span>
                     </div>
@@ -439,8 +434,8 @@ function EditCaseDetail(props) {
                           type="text"
                           name="ttNum"
                           placeholder="TT Number"
-                          value={ttNumber}
-                          onChange={(e) => setTtNumber(e.target.value)}
+                          value={ttNumberInput}
+                          onChange={(e) => setTtNumberInput(e.target.value)}
                         />
                       </span>
                     </div>

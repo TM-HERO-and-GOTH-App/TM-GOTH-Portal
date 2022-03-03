@@ -14,14 +14,15 @@ function InviteChat(props) {
   const [stakeholderType, setStakeholderType] = useState(0);
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-
+  
+  const getGroupMembers = () => {
+    ChatService.getProfilesByGroupChat(token, caseToken).then((res) => {
+      // console.log(res)
+      setGroupMembers(res);
+    });
+  };
+  
   useEffect(() => {
-    const getGroupMembers = () => {
-      ChatService.getProfilesByGroupChat(token, caseToken).then((res) => {
-        // console.log(res)
-        setGroupMembers(res);
-      });
-    };
 
     const getCaseDetail = () => {
       CaseDetailService.getCaseDetail(token, caseToken).then((res) => {
@@ -250,7 +251,7 @@ function InviteChat(props) {
           </div>
           <div className="row">
             <div className="col-sm-3">
-              <form name="form" onClick={this.getGroupMembers}>
+              <form name="form" onClick={getGroupMembers}>
                 <select
                   className="chosen-select form-control"
                   name="shID"

@@ -97,8 +97,7 @@ function CaseDetail(props) {
                                     </Link>
                                 }
 
-                                {(
-                                    !caseData.ownerName || isCoordinator) &&
+                                {(!caseData.ownerName || isCoordinator) &&
                                     <Link className="btn btn-warning" to={`/edit-case/${caseToken}`}>
                                         <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
                                         Edit Case Detail

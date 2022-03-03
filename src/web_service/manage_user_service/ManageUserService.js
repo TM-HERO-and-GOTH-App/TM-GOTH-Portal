@@ -28,13 +28,13 @@ const ManageUserService = {
         }).then(res => res.json()).catch(err => console.log(err));
     },
 
-    getProfileByKeyword(authToken, keyword){
-        return fetch( url + '/user/get-profiles-by-keywords/', {
+    async getProfileByKeyword(authToken, keyword){
+        return await fetch( url + '/user/get-profiles-by-keywords/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                keywords: keyword
+                'authToken': authToken,
+                'keywords': keyword
             })
         }).then(res => res.json()).catch(err => console.log(err));
     },
