@@ -7,36 +7,13 @@ import QuickSearchService from '../web_service/quick_search_service/QuickSearchS
 function Layout(props) {
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
-  const [dropDownOpen, setDropDownOpen] = useState(false);
-  const [collabDropdown, setCollabDropDown] = useState(false);
+  const [myAssignmentDropDownOpen, setMyAssignmentDropDownOpen] = useState(false);
+  const [collaborationDropdown, setCollaborationDropDown] = useState(false);
+  const [groupDropDownOpen, setGroupDropDownOpen] = useState(false);
+  const [allAssignmentDropDownOpen, setAllAssignmentDropDownOpen] = useState(false);
+  const [manageUserDropDownOpen, setManageUserDropDownOpen] = useState(false);
   const [advanceSearch, setAdvanceSearch] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(false);
   const [searchInput, setUserInput] = useState('');
-
-  // For hover and sub-menu open
-  const toggle = () => {
-    setDropDownOpen(prevState => !prevState)
-  }
-
-  const collabToggle = () => {
-    setCollabDropDown(prevState => !prevState);
-  }
-
-  const onMouseEnter = () => {
-    setDropDownOpen(true);
-  }
-
-  const onMouseEnterCollab = () => {
-    setCollabDropDown(true);
-  }
-
-  const onMouseLeave = () => {
-    setDropDownOpen(false);
-  }
-
-  const onMouseLeaveCollab = () => {
-    setCollabDropDown(false);
-  }
 
   const clearsessionStorage = () => {
     sessionStorage.clear();
@@ -102,7 +79,7 @@ function Layout(props) {
                     </a>
                   </li>
 
-                  {(userData.stakeholderName == 'RRT') &&
+                  {(userData.stakeholderName === 'RRT' || userData.stakeholderName === 'Dr UNIFI') &&
                     <li>
                       <a href="/create-case">
                         <i className="ace-icon fa fa-pencil" />
@@ -125,7 +102,45 @@ function Layout(props) {
 
           <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
             <ul className="nav navbar-nav">
+            {/* <li>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Overview &nbsp;
+								<i class="ace-icon fa fa-angle-down bigger-110"></i>
+							</a>
+
+							<ul class="dropdown-menu dropdown-light-blue dropdown-caret">
+								<li>
+									<a href="#">
+										<i class="ace-icon fa fa-eye bigger-110 blue"></i>
+										Monthly Visitors
+									</a>
+								</li>
+
+								<li>
+									<a href="#">
+										<i class="ace-icon fa fa-user bigger-110 blue"></i>
+										Active Users
+									</a>
+								</li>
+
+								<li>
+									<a href="#">
+										<i class="ace-icon fa fa-cog bigger-110 blue"></i>
+										Settings
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li>
+							<a href="#">
+								<i class="ace-icon fa fa-envelope"></i>
+								Messages
+								<span class="badge badge-warning">5</span>
+							</a>
+						</li> */}
             </ul>
+
             <form className="navbar-form navbar-left form-search" role="search" onSubmit={quickSearchResult}>
               <div className="form-group">
                 <input type="text" name="keywords" placeholder="search" style={{ width: 250 }} value={searchInput} onChange={(e) => setAdvanceSearch(e.target.value)} />
@@ -137,19 +152,27 @@ function Layout(props) {
           </nav>
         </div>{/* /.navbar-container */}
       </div>
+
       <div className="main-container ace-save-state" id="main-container">
+        {/* {
+          ace.settings.loadState('main-container')
+        } */}
         <div id="sidebar" className="sidebar h-sidebar navbar-collapse collapse ace-save-state">
           <div className="sidebar-shortcuts" id="sidebar-shortcuts" style={{ width: 150 }}>
             <img src={img3} width={125} />
           </div>{/* /.sidebar-shortcuts */}
+
           <ul className="nav nav-list">
             <li className={window.location.pathname === '/' ? 'active open hover' : 'hover'}>
               <a href="/">
                 <i className="menu-icon fa fa-tachometer" />
                 <span className="nav_menu-item"> Dashboard </span>
               </a>
+
+              <b class="arrow"/>
             </li>
-            <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={onMouseEnter} onMouseLeave={onMouseLeave}>
+
+            <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setMyAssignmentDropDownOpen(true)} onMouseLeave={() => setMyAssignmentDropDownOpen(false)}>
               <a href="/MyAssignments-Assigned">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> My Assignments </span>
@@ -158,7 +181,7 @@ function Layout(props) {
 
               <b className="arrow" />
 
-              {dropDownOpen && <ul className="submenu">
+              {myAssignmentDropDownOpen && <ul className="submenu">
                 <li className="hover">
                   <a href="/MyAssignments-Assigned">
                     <i className="menu-icon fa fa-caret-right" />
@@ -186,7 +209,8 @@ function Layout(props) {
               }
 
             </li>
-            <li className={window.location.href.indexOf("MyCollaboration") > -1 ? 'active open hover' : 'hover'} onMouseOver={onMouseEnterCollab} onMouseLeave={onMouseLeaveCollab}>
+
+            <li className={window.location.href.indexOf("MyCollaboration") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setCollaborationDropDown(true)} onMouseLeave={() => setCollaborationDropDown(false)}>
               <a href="/MyCollaboration-Assigned">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> My Collaboration </span>
@@ -195,7 +219,7 @@ function Layout(props) {
 
               <b className="arrow" />
 
-              {collabDropdown &&
+              {collaborationDropdown &&
                 <ul className="submenu">
                   <li className="hover">
                     <a href="/MyCollaboration-Assigned">
@@ -216,7 +240,8 @@ function Layout(props) {
               }
 
             </li>
-            <li className={window.location.href.indexOf("GroupAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={onMouseEnterCollab} onMouseLeave={onMouseLeaveCollab}>
+
+            <li className={window.location.href.indexOf("GroupAssignments") > -1 ? 'active open hover' : 'hover'} onMouseEnter={() => setGroupDropDownOpen(true)} onMouseLeave={() => setGroupDropDownOpen(false)}>
               <a href="/GroupAssignments-Assigned">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> Group Assignments </span>
@@ -225,7 +250,7 @@ function Layout(props) {
 
               <b className="arrow" />
 
-              {collabDropdown &&
+              {groupDropDownOpen &&
                 <ul className="submenu">
                   <li className="hover">
                     <a href="/GroupAssignments-Assigned">
@@ -261,8 +286,8 @@ function Layout(props) {
               }
             </li>
 
-            {(userData.hGroup !== 'SALES') &&
-              <li className={window.location.href.indexOf("AllAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={onMouseEnterCollab} onMouseLeave={onMouseLeaveCollab}>
+            {(userData.hGroup !== 'SALES-TMP') &&
+              <li className={window.location.href.indexOf("AllAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setAllAssignmentDropDownOpen(true)} onMouseLeave={() => setAllAssignmentDropDownOpen(false)}>
                 <a href="/AllAssignments-Unassigned">
                   <i className="menu-icon glyphicon glyphicon-globe" />
                   <span className="menu-text"> ALL Assignments </span>
@@ -271,7 +296,7 @@ function Layout(props) {
 
                 <b className="arrow" />
 
-                {collabDropdown && <ul className="submenu">
+                {allAssignmentDropDownOpen && <ul className="submenu">
                   {/*<li class="hover">
 								<a href="<?php //echo APPNAME; ?>/assignment/all/">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -315,8 +340,8 @@ function Layout(props) {
               </li>
             }
 
-            {(userData.positionName === 'Admin') &&
-              <li className={window.location.href.indexOf("ManageUsers") > -1 ? 'active open hover' : 'hover'} onMouseOver={onMouseEnterCollab} onMouseLeave={onMouseLeaveCollab}>
+            {(userData.positionName === 'ADMIN') &&
+              <li className={window.location.href.indexOf("ManageUsers") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setManageUserDropDownOpen(true)} onMouseLeave={() => setManageUserDropDownOpen(false)}>
                 <a href="/ManageUsers-Groupmembers">
                   <i className="menu-icon fa fa-users" />
                   <span className="menu-text"> Manage Users </span>
@@ -325,7 +350,7 @@ function Layout(props) {
 
                 <b className="arrow" />
 
-                {collabDropdown && <ul className="submenu">
+                {manageUserDropDownOpen && <ul className="submenu">
                   <li className="hover">
                     <a href="/ManageUsers-RegisteredUser">
                       <i className="menu-icon fa fa-caret-right" />
@@ -600,11 +625,12 @@ function Layout(props) {
 
         <div className="main-content">
           <div className="main-content-inner">
-            <div className="page-content">
+            <div className="page-content" >
               <div className="ace-settings-container" id="ace-settings-container">
                 <div className="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-                  <i className="ace-icon fa fa-cog bigger-130" />
+                  <i className="ace-icon fa fa-cog bigger-130"/>
                 </div>
+
                 <div className="ace-settings-box clearfix" id="ace-settings-box">
                   <div className="pull-left width-50">
                     <div className="ace-settings-item">
@@ -629,6 +655,10 @@ function Layout(props) {
                   </div>{/* /.pull-left */}
                 </div>{/* /.ace-settings-box */}
               </div>{/* /.ace-settings-container */}
+              
+              <div class="page-header">
+							<h1>{props.pageTitle}</h1>
+						</div>{/* <!-- /.page-header --> */}
 
               <div className="row">
                 <div className="col-xs-12">

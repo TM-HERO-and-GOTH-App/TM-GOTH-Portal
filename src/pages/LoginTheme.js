@@ -20,6 +20,7 @@ class LoginTheme extends React.Component {
         <div className="main-container">
           <div className="main-content">
             <div className="row">
+            <div class="col-sm-10 col-sm-offset-1">
               <div className="login-container">
                 <div className="center" style={{ paddingTop: 20 }}>
                   <img src={logo} width="350px" /><br /><br />
@@ -43,6 +44,7 @@ class LoginTheme extends React.Component {
               </div>{/* /.col */}
 
             </div>{/* /.row */}
+            </div>
           </div>{/* /.main-content */}
         </div>
       </div>

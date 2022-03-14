@@ -116,14 +116,15 @@ function Loginbox(props) {
             <h4 className="header blue lighter bigger">
               <i className="ace-icon fa fa-coffee green" />
               Sign In
-              {/* { testXML && testXML.data.name } */}
             </h4>
             <div className="space-6" />
             <form onSubmit={handleSubmit}>
               <fieldset>
                 {alertStatus &&
                   <div className="alert alert-danger">
-                    <button type="button" className="close" data-dismiss="alert"><i className="ace-icon fa fa-times"></i></button>
+                    <button type="button" className="close" data-dismiss="alert">
+                      <i className="ace-icon fa fa-times" />
+                    </button>
                     {alertMessage ?? 'Invalid Username/Password OR Profile not exist. Please try the Forgot Password for assistant'}
                   </div>
                 }
@@ -133,14 +134,22 @@ function Loginbox(props) {
                     <i className="ace-icon fa fa-envelope" />
                   </span>
                 </label>
+
                 <label className="block clearfix">
                   <span className="block input-icon input-icon-right">
                     <input type="password" className="form-control" name="password" placeholder="Password" value={userPassword} onChange={handlePassword} />
                     <i className="ace-icon fa fa-lock" />
                   </span>
                 </label>
+
                 <div className="space" />
+
                 <div className="clearfix">
+                  {/* <label class="inline">
+                    <input type="checkbox" class="ace" />
+                    <span class="lbl"> Remember Me</span>
+                  </label> */}
+
                   <button className="width-35 pull-right btn btn-sm btn-primary">
                     <i className="ace-icon fa fa-key" />
                     <span className="bigger-110">Sign In</span>
@@ -150,6 +159,7 @@ function Loginbox(props) {
               </fieldset>
             </form>
           </div>{/* /.widget-main */}
+
           <div className="toolbar clearfix">
             <div>
               <a href="/forgotpassword" data-target="#forgot-box" className="forgot-password-link">
@@ -159,7 +169,7 @@ function Loginbox(props) {
             </div>
             <div>
               <a href="/activate" data-target="#activate-box" className="user-signup-link">
-                <i className="ace-icon fa fa-arrow-right" />
+                <i className="ace-icon fa fa-unlock" />
                 Activate Account
               </a>
               <a href="/signup" data-target="#signup-box" className="user-signup-link">
