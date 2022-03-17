@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ForgotPasswordService from "../web_service/forgot_password_service/ForgotPassword";
-import LoginTheme from "./LoginTheme";
+import LoginTheme from '../utils/login-page-placeholder/LoginTheme';
 
 function Forgotpassword() {
   const [emailInput, setEmailInput] = useState("");

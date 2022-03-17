@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LoginTheme from "./LoginTheme";
+import LoginTheme from '../utils/login-page-placeholder/LoginTheme';
 import SignupService from "../web_service/register_service/SignupService";
 // import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 // const auth = getAuth();

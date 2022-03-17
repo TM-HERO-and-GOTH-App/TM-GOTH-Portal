@@ -4,7 +4,7 @@ import axios from 'axios';
 // import xmlParser from 'react-xml-parser';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import convert from 'xml-js'
-import LoginTheme from './LoginTheme';
+import LoginTheme from '../utils/login-page-placeholder/LoginTheme';
 import LoginService from '../web_service/login_service/LoginService';
 // import db from '../firebase_login/LoginAuth';
 // import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -19,6 +19,10 @@ function Loginbox(props) {
   const [alertMessage, setAlertMessage] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
+
+  useEffect(() => {
+    document.title = 'Login - HERO Portal'
+  })
 
   const handleEmail = (e) => {
     setUserEmail(e.target.value)

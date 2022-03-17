@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import Layout from './Layout';
-import Footer from './Footer';
+import AssignmentDashboard from '../components/dashboard/Assignment_Dashboard';
 import DashboardService from '../web_service/dashboard/DashboardService';
 
 function Dashboard() {
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
   const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
-  const [closeNavBar, setCloseNavBar] = useState(false);
+  // const [closeNavBar, setCloseNavBar] = useState(false);
   const [totalCaseResolveAgent, setTotalCaseResolveAgent] = useState(0);
   const [totalCaseResolveGroup, setTotalCaseResolveGroup] = useState('0');
   const [totalCaseResolveNation, setTotalCaseResolveNation] = useState(0);
@@ -107,302 +107,28 @@ function Dashboard() {
           <br /><br /><br />
 
           {/* My assignment Table */}
-          <div className="col-sm-4">
-            <div className="widget-box transparent">
-              <div className="widget-header widget-header-flat">
-                <h4 className="widget-title lighter">
-                  <i className="ace-icon fa fa-star orange" />
-                  My Assignments
-                </h4>
-                <div className="widget-toolbar">
-                  <a href="#" data-action="collapse">
-                    <i className="ace-icon fa fa-chevron-up" />
-                  </a>
-                </div>
-              </div>
-              <div className="widget-body">
-                <div className="widget-main no-padding">
-                  <table className="table table-bordered table-striped">
-                    {agentCase?.map((data, index) => {
-                      return <tbody key={index}>
-                          <tr>
-                            <td>Resolved In 5 Days</td>
-                            <td align="right">
-                              <b className="green">{totalCaseResolveAgent === 0 ? 0 : (totalCaseResolveAgent / data.totalCase * 100).toFixed(2)}%</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Closed</td>
-                            <td align="right">
-                              <b className="blue">{data?.totalClosed}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>In-Progress</td>
-                            <td align="right">
-                              <b className="blue">{data?.totalInProgress}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Assigned</td>
-                            <td align="right">
-                              <b className="blue">{data?.totalAssigned}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><b>Total Case</b></td>
-                            <td align="right">
-                              <b className="green">{data?.totalCase}</b>
-                            </td>
-                          </tr>
-                        </tbody>
-                    }) ?? <tbody>
-                    <tr>
-                      <td>Resolved In 5 Days</td>
-                      <td align="right">
-                        <b className="green">0%</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Closed</td>
-                      <td align="right">
-                        <b className="blue">0</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>In-Progress</td>
-                      <td align="right">
-                        <b className="blue">0</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Assigned</td>
-                      <td align="right">
-                        <b className="blue">0</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Un-Assigned</td>
-                      <td align="right">
-                        <b className="blue">0</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><b>Total Case</b></td>
-                      <td align="right">
-                        <b className="green">0</b>
-                      </td>
-                    </tr>
-                  </tbody> 
-                    }
-                  </table>
-                </div>{/* /.widget-main */}
-              </div>{/* /.widget-body */}
-            </div>{/* /.widget-box */}
-          </div>{/* /.col */}
+          <AssignmentDashboard
+          typesOfAssignment='My Assignment'
+            assignmentData={agentCase}
+            resolvedInFiveDays={totalCaseResolveAgent}
+          />
+          {/*  */}
 
           {/* Group assignment Table */}
-          <div className="col-sm-4">
-            <div className="widget-box transparent">
-              <div className="widget-header widget-header-flat">
-                <h4 className="widget-title lighter" style={{ color: 'blue' }}>
-                  <i className="ace-icon fa fa-group orange" />
-                  My Group Assignments
-                </h4>
-
-                <div className="widget-toolbar">
-                  <a href="#" data-action="collapse">
-                    <i className="ace-icon fa fa-chevron-up" />
-                  </a>
-                </div>
-              </div>
-              <div className="widget-body">
-                <div className="widget-main no-padding">
-                  <table className="table table-bordered table-striped">
-                    {groupCase?.map((data, index) => {
-                      return <tbody key={index}>
-                        <tr>
-                          <td>Resolved In 5 Days</td>
-                          <td align="right">
-                            <b className="green">{totalCaseResolveGroup !== 0 ? ((totalCaseResolveGroup / data.totalCase) * 100).toFixed(2) : 0}%</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Closed</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalClosed}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>In-Progress</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalInProgress}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Assigned</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalAssigned}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Un-Assigned</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalNew}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Total Case</b></td>
-                          <td align="right">
-                            <b className="green">{data?.totalCase}</b>
-                          </td>
-                        </tr>
-                      </tbody>
-                    }) ?? <tbody>
-                        <tr>
-                          <td>Resolved In 5 Days</td>
-                          <td align="right">
-                            <b className="green">0%</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Closed</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>In-Progress</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Assigned</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Un-Assigned</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Total Case</b></td>
-                          <td align="right">
-                            <b className="green">0</b>
-                          </td>
-                        </tr>
-                      </tbody>
-                    }
-                  </table>
-                </div>{/* /.widget-main */}
-              </div>{/* /.widget-body */}
-            </div>{/* /.widget-box */}
-          </div>{/* /.col */}
+          <AssignmentDashboard
+            typesOfAssignment='My Group Assignment'
+            assignmentData={groupCase}
+            resolvedInFiveDays={totalCaseResolveGroup}
+          />
+          {/*  */}
 
           {/* Other group assignment table */}
-          <div className="col-sm-4">
-            <div className="widget-box transparent">
-              <div className="widget-header widget-header-flat">
-                <h4 className="widget-title lighter" style={{ color: 'purple' }}>
-                  <i className="ace-icon fa fa-globe orange" />
-                  Others Group Assignments
-                </h4>
-                <div className="widget-toolbar">
-                  <a href="#" data-action="collapse">
-                    <i className="ace-icon fa fa-chevron-up" />
-                  </a>
-                </div>
-              </div>
-              <div className="widget-body">
-                <div className="widget-main no-padding">
-                  <table className="table table-bordered table-striped">
-                    {nationCase?.map((data, index) => {
-                      return <tbody key={index}>
-                        <tr>
-                          <td>Resolved In 5 Days</td>
-                          <td align="right">
-                            <b className="green">{totalCaseResolveNation !== 0 ? ((totalCaseResolveNation / data.totalCase) * '100').toFixed(2) : 0}%</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Closed</td>
-                          <td align="right">
-                            <b className="blue">{data !== 0 ? data.totalClosed : 0}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>In-Progress</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalInProgress ?? 0}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Assigned</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalAssigned ?? 0}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Un-Assigned</td>
-                          <td align="right">
-                            <b className="blue">{data?.totalNew ?? 0}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Total Case</b></td>
-                          <td align="right">
-                            <b className="green">{data?.totalCase ?? 0}</b>
-                          </td>
-                        </tr>
-                      </tbody>
-                    }) ?? <tbody>
-                        <tr>
-                          <td>Resolved In 5 Days</td>
-                          <td align="right">
-                            <b className="green">0%</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Closed</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>In-Progress</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Assigned</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Un-Assigned</td>
-                          <td align="right">
-                            <b className="blue">0</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Total Case</b></td>
-                          <td align="right">
-                            <b className="green">0</b>
-                          </td>
-                        </tr>
-                      </tbody>
-                    }
-                  </table>
-                </div>{/* /.widget-main */}
-              </div>{/* /.widget-body */}
-            </div>{/* /.widget-box */}
-          </div>{/* /.col */}{/* /.row */}
+          <AssignmentDashboard
+            typesOfAssignment='Other Group Assignment'
+            assignmentData={nationCase}
+            resolvedInFiveDays={totalCaseResolveNation}
+          />
+          {/*  */}
 
           <br /><br />
 

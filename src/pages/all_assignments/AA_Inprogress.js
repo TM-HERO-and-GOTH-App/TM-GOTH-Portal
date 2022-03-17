@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-import { Link } from 'react-router-dom';
+import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 
 function AA_Inprogress() {
   const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
@@ -13,10 +13,10 @@ function AA_Inprogress() {
 
   useEffect(() => {
     const allAssignmentData = () => {
-      const shID = this.state.shID.shID;
-      AssignmentService.viewCaseByGroup(this.state.token, shID, 67).then(res => {
+      const shID = userData.shID;
+      AssignmentService.viewCaseByGroup(token, shID, 67).then(res => {
         // console.log(res);
-        this.setState({ allAssignCase: res })
+        setInProgressCase(res)
       })
     }
 
@@ -25,118 +25,48 @@ function AA_Inprogress() {
 
 
   return (
-    <Layout pageContent={
-      <div>
-
-        <div className="page-header">
-          <h1>Nationwide Assignments : IN-PROGRESS</h1>
-        </div> {/* <!-- /.page-header --> */}
-
-
-        <div className="row">
-          <form name="form">
-            <div className="col-sm-3">
-              <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={groupType} onChange={(e) => setGroupType(e.target.value)}>
-                <option value="0"> All Group/Stakeholder ...</option>
-                {lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                  return <option key={key} value={data.lovName}> {data.lovName} </option>
-                })
-                }
-              </select>
-            </div>
-            <div className="col-sm-3">
-              <select className="chosen-select form-control" name="caseTypeID" data-placeholder="Choose a Case Type..." value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-                <option value="0" >All Case Type ...</option>
-                {
-                  lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                    return <option key={key} value={data.lovName}>{data.lovName}</option>
+    <Layout
+      pageTitle='Nationwide Assignments : IN-PROGRESS'
+      pageContent={
+        <React.Fragment>
+          <div className="row">
+            <form name="form">
+              <div className="col-sm-3">
+                <select className="chosen-select form-control" name="shID" data-placeholder="Choose a Group..." value={groupType} onChange={(e) => setGroupType(e.target.value)}>
+                  <option value="0"> All Group/Stakeholder ...</option>
+                  {lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
+                    return <option key={key} value={data.lovName}> {data.lovName} </option>
                   })
-                }
-              </select>
-            </div>
-          </form>
-
-          <div className="col-xs-12">
-            <div className="clearfix">
-              <div className="pull-right tableTools-container"></div>
-            </div>
-            <div>
-              <table id="dynamic-table" className="table table-striped table-bordered table-hover"> {/* <!-- id="simple-table" className="table table-bordered table-hover" --> */}
-                <thead>
-                  <tr>
-                    <th>Case ID</th>
-                    <th><div align="center">Status</div></th>
-                    <th width="6%">Aging</th>
-                    <th>Type</th>
-                    <th><div align="center">VIP</div></th>
-                    <th width="8%">Product</th>
-                    <th>Customer</th>
-                    <th>HERO</th>
-                    <th>Owner</th>
-                    <th><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell"></i></div></th>
-                    <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th>
-                  </tr>
-                </thead>
-
-                <tbody>
+                  }
+                </select>
+              </div>
+              <div className="col-sm-3">
+                <select className="chosen-select form-control" name="caseTypeID" data-placeholder="Choose a Case Type..." value={caseType} onChange={(e) => setCaseType(e.target.value)}>
+                  <option value="0" >All Case Type ...</option>
                   {
-                    inProgressCase.map((data) => {
-                      return data.response === 'FAILED' ?
-                        <tr>
-                          <td colSpan="11">
-                            <span style={{ color: 'red' }}>List is empty</span>
-                          </td>
-                        </tr>
-                        :
-                        (caseType === '0' || caseType === data.caseType) &&
-                          <tr>
-                            <td>
-                              <Link to={`/case-detail/${data.cToken}`}>
-                                {data.caseNum}
-                              </Link>
-                            </td>
-                            <td><div align="center">
-                              <span className='badge badge-info'>{data.caseStatus ? 'IP' : '-'}</span>
-                            </div></td>
-                            <td>
-                              <div align="center">
-                                {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
-                              </div>
-                            </td>
-                            <td>{data.caseType}</td>
-                            <td>
-                              <div align="center">
-                                {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                              </div>
-                            </td>
-                            <td>{data.productName}</td>
-                            <td>{data.customerName}</td>
-                            <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
-                            <td>
-                              <div align="center" style={{ fontSize: 10 }}>
-                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
-                              </div>
-                            </td>
-                            <td>
-                              <div align="center">
-                                <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
-                                  Open
-                                  <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
+                    lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                      return <option key={key} value={data.lovName}>{data.lovName}</option>
                     })
                   }
-                </tbody>
+                </select>
+              </div>
+            </form>
 
-              </table>
-            </div>
-          </div>  {/* //<!-- /.span --> */}
-        </div> {/* // <!-- /.row --> */}
-      </div>
-    }
+            <div className="col-xs-12">
+              <div className="clearfix">
+                <div className="pull-right tableTools-container"></div>
+              </div>
+              <div>
+                <AllAssignmentTable
+                  tableData={inProgressCase}
+                  caseType={caseType}
+                  groupType={groupType}
+                />
+              </div>
+            </div>  {/* //<!-- /.span --> */}
+          </div> {/* // <!-- /.row --> */}
+        </React.Fragment>
+      }
     />
   );
 }

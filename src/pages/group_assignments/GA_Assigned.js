@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
+import AssignmentTable from '../../components/assignments/AssignmentTableData';
 
 function GA_Assigned() {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')))
@@ -17,17 +17,13 @@ function GA_Assigned() {
     }
 
     loggerCase()
-  }, [assignedCase])
+  }, [])
 
 
   return (
-    <Layout pageContent={
-      <div>
-
-        <div className="page-header">
-          <h1>Group Assignments : ASSIGNED</h1>
-        </div>
-
+    <Layout
+      pageTitle='Group Assignments : ASSIGNED'
+      pageContent={
         <div className="row">
           <div className="col-xs-12">
             <div className="alert alert-block alert-success">
@@ -45,78 +41,13 @@ function GA_Assigned() {
               <div className="pull-right tableTools-container" />
             </div>
             <div>
-              <table id="dynamic-table" className="table table-striped table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>Case ID</th>
-                    <th><div align="center">Status</div></th>
-                    <th width="6%">Aging</th>
-                    <th>Type</th>
-                    <th><div align="center">VIP</div></th>
-                    <th width="8%">Product</th>
-                    <th>Customer</th>
-                    <th>HERO</th>
-                    <th>Owner</th>
-                    <th><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell" /></div></th>
-                    <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o" /></div></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    assignedCase.map((data, index) => {
-                      return data.response === 'FAILED' ? <tr><td colSpan={11}><span style={{ color: 'red' }}>List is empty</span></td></tr>
-                        :
-                        <tr key={index}>
-                          <td>
-                            <Link to={`/case-detail/${data.cToken}`}>
-                              {data.caseNum}
-                            </Link>
-                          </td>
-                          <td>
-                            <div align="center">
-                              <span className={`badge badge-${data.caseStatus ? 'info' : 'pink'}`}>{data.caseStatus ? 'A' : '-'}</span>
-                            </div>
-                          </td>
-                          <td>
-                            <div align="center">
-                              {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'wanring'}`}> aging </span>}
-                            </div>
-                          </td>
-                          <td>{data.caseType}</td>
-                          <td>
-                            <div align="center">
-                              {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                            </div>
-                          </td>
-                          <td>{data.productName}</td>
-                          <td>{data.customerName}</td>
-                          <td>
-                            {data.vip ? <span className="label label-success arrowed-right"> {data.fullname} </span> : data.fullname}
-                          </td>
-                          <td>{data.ownerName}</td>
-                          <td>
-                            <div align="center" style={{ fontSize: 10 }}>
-                              {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning"> {data.totalNewAlert} </span> : 0}
-                            </div>
-                          </td>
-                          <td>
-                            <div align="center">
-                              <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
-                                Open
-                                <i className="ace-icon fa fa-arrow-right icon-on-right" />
-                              </Link>
-                            </div>
-                          </td>
-                        </tr>
-                    })
-                  }
-                </tbody>
-              </table>
+              <AssignmentTable
+                tableData={assignedCase}
+              />
             </div>
           </div>{/* /.span */}
-        </div>{/* /.row */}
-      </div>
-    }
+        </div>// {/* /.row */}
+      }
     />
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LoginTheme from "./LoginTheme";
+import LoginTheme from '../utils/login-page-placeholder/LoginTheme';
 import ActivateAccountService from "../web_service/activate_account/ActivateAccountService";
 
 function ActivateAcc(props) {

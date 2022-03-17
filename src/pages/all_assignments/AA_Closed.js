@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
-import { Link } from 'react-router-dom';
+import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 
 function AA_Closed() {
   const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-  const [closedCase, setClosedCase] = useState([]);
+  const [closedData, setClosedCase] = useState([]);
   const [caseType, setCaseType] = useState('0');
   const [groupType, setGroupType] = useState('0');
 
@@ -23,14 +23,10 @@ function AA_Closed() {
   }, [])
 
   return (
-    <Layout pageContent={
+    <Layout 
+    pageTitle='Nationwide Assignments : CLOSED'
+    pageContent={
       <div>
-
-        <div className="page-header">
-          <h1>Nationwide Assignments : CLOSED</h1>
-        </div> {/* <!-- /.page-header --> */}
-
-
         <div className="row">
           <form name="form">
             <div className="col-sm-3">
@@ -60,77 +56,12 @@ function AA_Closed() {
               <div className="pull-right tableTools-container"></div>
             </div>
             <div>
-              <table id="dynamic-table" className="table table-striped table-bordered table-hover"> {/* <!-- id="simple-table" className="table table-bordered table-hover" --> */}
-                <thead>
-                  <tr>
-                    <th>Case ID</th>
-                    <th><div align="center">Status</div></th>
-                    <th width="6%">Aging</th>
-                    <th>Type</th>
-                    <th><div align="center">VIP</div></th>
-                    <th width="8%">Product</th>
-                    <th>Customer</th>
-                    <th>HERO</th>
-                    <th>Owner</th>
-                    <th><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell"></i></div></th>
-                    <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th>
-                  </tr>
-                </thead>
+            <AllAssignmentTable
+                tableData={closedData}
+                caseType={caseType}
+                groupType={groupType}
+              />
 
-                <tbody>
-                  {
-                    closedCase.map((data, index) => {
-                      return data.response === 'FAILED' ?
-                        <tr>
-                          <td colSpan="11">
-                            <span style={{ color: 'red' }}>List is empty</span>
-                          </td>
-                        </tr>
-                        :
-                        (caseType === '0' || caseType === data.caseType) &&
-                          <tr key={index}>
-                            <td>
-                              <Link to={`/case-detail/${data.cToken}`}>
-                                {data.caseNum}
-                              </Link>
-                            </td>
-                            <td><div align="center">
-                              <span className='badge badge-info'>{data.caseStatus ? 'C' : '-'}</span>
-                            </div></td>
-                            <td>
-                              <div align="center">
-                                {data.caseStatus === 'CLOSED' ? 'closedAging' : <span className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>unclosedAging</span>}
-                              </div>
-                            </td>
-                            <td>{data.caseType}</td>
-                            <td>
-                              <div align="center">
-                                {data.vip ? <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}
-                              </div>
-                            </td>
-                            <td>{data.productName}</td>
-                            <td>{data.customerName}</td>
-                            <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                            <td>{data.ownerName + '-' + data.stakeholderName}</td>
-                            <td>
-                              <div align="center" style={{ fontSize: 10 }}>
-                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : '0'}
-                              </div>
-                            </td>
-                            <td>
-                              <div align="center">
-                                <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${data.cToken}`}>
-                                  Open
-                                  <i className="ace-icon fa fa-arrow-right icon-on-right"></i>
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                    })
-                  }
-                </tbody>
-
-              </table>
             </div>
           </div>  {/* //<!-- /.span --> */}
         </div> {/* // <!-- /.row --> */}

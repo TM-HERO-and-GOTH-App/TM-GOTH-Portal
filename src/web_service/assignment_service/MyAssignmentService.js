@@ -1,3 +1,5 @@
+import getApiPort from "../PortAPIDetector";
+
 const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -14,7 +16,8 @@ const AssignmentService = {
     },
 
     viewCaseByGroup(authToken, shID, caseStatusID, caseTypeID = 0){
-        return fetch( url + '/case/view-cases-by-group/', {
+        const groupCaseAPI =  url + '/case/view-cases-by-group/'
+        return fetch(groupCaseAPI, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({

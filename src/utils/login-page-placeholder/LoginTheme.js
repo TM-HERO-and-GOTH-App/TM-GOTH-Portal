@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../images/guardian-login.png';
+import logo from '../../images/guardian-login.png';
 
 class LoginTheme extends React.Component {
   constructor(props) {
