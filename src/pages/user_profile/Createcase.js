@@ -61,8 +61,10 @@ function Createcase(props) {
   }
 
   return (
-    <Layout pageContent={
-      <div>
+    <Layout 
+    pageTitle='Create New Case'
+    pageContent={
+      <>
 
         <form name="form" onSubmit={createCase} onReset={resetForm}>
           {
@@ -203,7 +205,7 @@ function Createcase(props) {
             </div>
           </div>
         </form>
-      </div>
+      </>
     }
     />
   );

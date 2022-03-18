@@ -25,9 +25,12 @@ function AA_Unassigned() {
 
   return (
     <Layout
-      pageTitle='Nationwide Assignments : UN-ASSIGNED'
+      pageTitle={
+        <span>
+          Nationwide Assignments : <span style={{color: 'green'}}>UN-ASSIGNED</span>
+        </span>
+      }
       pageContent={
-        <React.Fragment>
           <div className="row">
             <form name="form">
               <div className="col-sm-3">
@@ -66,8 +69,7 @@ function AA_Unassigned() {
                 />
               </div>
             </div>  {/* //<!-- /.span --> */}
-          </div> {/* // <!-- /.row --> */}
-        </React.Fragment>
+          </div>
       }
     />
   );

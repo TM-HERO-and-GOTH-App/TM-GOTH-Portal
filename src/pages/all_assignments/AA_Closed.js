@@ -24,9 +24,12 @@ function AA_Closed() {
 
   return (
     <Layout 
-    pageTitle='Nationwide Assignments : CLOSED'
+    pageTitle={
+      <span>
+        Nationwide Assignments : <span style={{color: 'green'}}>CLOSED</span>
+      </span>
+    }
     pageContent={
-      <div>
         <div className="row">
           <form name="form">
             <div className="col-sm-3">
@@ -64,8 +67,7 @@ function AA_Closed() {
 
             </div>
           </div>  {/* //<!-- /.span --> */}
-        </div> {/* // <!-- /.row --> */}
-      </div>
+        </div>
     }
     />
   );

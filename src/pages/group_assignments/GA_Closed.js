@@ -21,7 +21,11 @@ function GA_Closed() {
 
   return (
     <Layout 
-    pageTitle='Group Assignments : CLOSED'
+    pageTitle={
+      <span>
+        Group Assignments : <span style={{color:'green'}}>CLOSED</span>
+      </span>
+    }
     pageContent={
         <div className="row">
           <div className="col-xs-12">

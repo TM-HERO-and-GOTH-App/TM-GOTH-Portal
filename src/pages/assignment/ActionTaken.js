@@ -79,8 +79,7 @@ function ActionTaken(props) {
 
     return (
         <Layout pageContent={
-            <div>
-
+            <>
                 {
                     alertStatus &&
                     <div className="row">
@@ -252,7 +251,7 @@ function ActionTaken(props) {
                         </div>
                     </form>
                 }
-            </div>
+            </>
         }
         />
     )

@@ -23,7 +23,11 @@ function MC_Assigned() {
 
   return (
     <Layout
-    pageTitle='My Collaboration : ASSIGNED'
+    pageTitle={
+      <span>
+        My Collaboration : <span style={{color:'green'}}>ASSIGNED</span>
+      </span>
+    }
     pageContent={
         <div className="row">
           <div className="col-xs-12">

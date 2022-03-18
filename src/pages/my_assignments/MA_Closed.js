@@ -23,13 +23,13 @@ function MA_Closed() {
 
 
   return (
-    <Layout pageContent={
-      <div>
-
-        <div className="page-header">
-          <h1>My Assignments : Closed</h1>
-        </div> {/* <!-- /.page-header --> */}
-
+    <Layout 
+    pageTitle={
+      <span>
+        My Assignments : <span style={{ color: 'green' }}>CLOSED</span>
+      </span>
+    }
+    pageContent={
         <div className="row">
           <div className="col-xs-12">
             <div className="alert alert-block alert-success">
@@ -52,8 +52,7 @@ function MA_Closed() {
               />
             </div>
           </div>{/* /.span */}
-        </div>{/* /.row */}
-      </div>
+        </div>
     }
     />
   );

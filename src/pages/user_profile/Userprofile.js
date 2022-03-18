@@ -22,10 +22,10 @@ function Userprofile(props) {
   }
 
     return (
-      <Layout pageContent={
-        <div>
-
-          <div>
+      <Layout 
+      pageTitle='My Profile'
+      pageContent={
+          <>
             <div className="col-xs-12 col-sm-3 center">
               <div>
                 <span className="profile-picture">
@@ -275,8 +275,7 @@ function Userprofile(props) {
               </div>
               <div className="space-20" />
             </div>
-          </div>
-        </div>
+          </>
       }
       />
     );

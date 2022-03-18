@@ -35,14 +35,16 @@ function AllAssignmentTable(props) {
                         })
                         const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
                         const agingKey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
-                        return data.response === 'FAILED' ?
+                        return (data.response === 'FAILED') ?
                             <tr>
                                 <td colSpan="12">
                                     <span style={{ color: 'red' }}>List is empty</span>
                                 </td>
                             </tr>
                             :
-                            // (props.caseType === '0' || props.caseType === data.caseType || props.groupType === data.stakeholderName) &&
+                            (props.caseType === '0' || props.caseType === data.caseType || 
+                            props.groupType === data.stakeholderName || 
+                            (props.caseType === data.caseType && props.groupType === data.stakeholderName)) &&
                             <tr key={index}>
                                 <td>
                                     <Link to={`/case-detail/${data.cToken}`}>

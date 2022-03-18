@@ -25,7 +25,7 @@ function EditUser() {
 
     return (
         <Layout pageContent={
-            <div>
+            <>
 
                 <form onSubmit={handleSubmit}>
                     <div className="col-xs-12 col-sm-6">
@@ -243,7 +243,7 @@ function EditUser() {
 
                     </div>
                 </form>
-            </div>
+            </>
         }
         />
     )

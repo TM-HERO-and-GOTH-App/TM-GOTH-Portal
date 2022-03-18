@@ -22,7 +22,11 @@ function GA_Unassigned() {
 
   return (
     <Layout 
-    pageTitle='Group Assignments : UNASSIGNED'
+    pageTitle={
+      <span>
+        Nationwide Assignments : <span style={{color: 'green'}}>UN-ASSIGNED</span>
+      </span>
+    }
     pageContent={
         <div className="row">
           <div className="col-xs-12">

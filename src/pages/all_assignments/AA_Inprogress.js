@@ -26,9 +26,12 @@ function AA_Inprogress() {
 
   return (
     <Layout
-      pageTitle='Nationwide Assignments : IN-PROGRESS'
+      pageTitle={
+        <span>
+          Nationwide Assignments : <span style={{color: 'green'}}>IN-PROGRESS</span>
+        </span>
+      }
       pageContent={
-        <React.Fragment>
           <div className="row">
             <form name="form">
               <div className="col-sm-3">
@@ -64,8 +67,7 @@ function AA_Inprogress() {
                 />
               </div>
             </div>  {/* //<!-- /.span --> */}
-          </div> {/* // <!-- /.row --> */}
-        </React.Fragment>
+          </div>
       }
     />
   );

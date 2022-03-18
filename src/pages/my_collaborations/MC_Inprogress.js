@@ -21,7 +21,11 @@ function MC_Inprogress() {
 
   return (
     <Layout 
-    pageTitle='My Collaboration : IN-PROGRESSED'
+    pageTitle={
+      <span>
+        My Collaboration : <span style={{color:'green'}}>ASSIGNED</span>
+      </span>
+    }
     pageContent={
         <div class="row">
           <div class="col-xs-12">

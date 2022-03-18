@@ -22,7 +22,11 @@ function GA_Assigned() {
 
   return (
     <Layout
-      pageTitle='Group Assignments : ASSIGNED'
+      pageTitle={
+        <span>
+          Group Assignments : <span style={{color:'green'}}>ASSIGNED</span>
+        </span>
+      }
       pageContent={
         <div className="row">
           <div className="col-xs-12">

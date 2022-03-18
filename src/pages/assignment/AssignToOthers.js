@@ -92,7 +92,7 @@ function AssignToOther(props) {
   return (
     <Layout
       pageContent={
-        <div>
+        <>
           <div class="row">
             <div class="col-sm-4">
               <Link class="btn btn-primary" to={`/case-detail/${caseToken}`}>
@@ -241,7 +241,7 @@ function AssignToOther(props) {
             </div>
             {/* <!-- /.span --> */}
           </div>
-        </div>
+        </>
       }
     />
   );

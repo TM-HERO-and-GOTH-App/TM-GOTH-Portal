@@ -115,8 +115,6 @@ function MU_Groupmember() {
 
   return (
     <Layout pageContent={
-      <div>
-
         <div>
           <a name="group-members" />
 
@@ -273,7 +271,6 @@ function MU_Groupmember() {
           }
           <br />
         </div>
-      </div>
     }
     />
   );

@@ -22,7 +22,11 @@ function GA_Inprogress() {
 
   return (
     <Layout 
-    pageTitle='Group Assignments : IN-PROGRESS'
+    pageTitle={
+      <span>
+        Nationwide Assignments : <span style={{color: 'green'}}>IN-PROGRESS</span>
+      </span>
+    }
     pageContent={
         <div className="row">
           <div className="col-xs-12">
