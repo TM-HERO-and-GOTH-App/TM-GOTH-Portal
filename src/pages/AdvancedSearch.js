@@ -8,6 +8,8 @@ function AdvancedSearch(props) {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
   const [showHeroGroupOption, setShowHeroGroupOption] = useState(false);
+  const [caseType, setCaseType] = useState('0');
+  const [heroGroupType, setHeroGroupType] = useState('0');
   const [startDateInput, setStartDateInput] = useState('');
   const [endDateInput, setEndDateInput] = useState('');
   const [fullNameInput, setFullNameInput] = useState('');
@@ -20,10 +22,11 @@ function AdvancedSearch(props) {
   const [ttNumberInput, setTTNumberInput] = useState('');
   const [searchResult, setSearchResult] = useState([]);
 
+  // TODO: fix advance search caseType and HERO Group API
   const advancedSearch = (e) => {
     e.preventDefault();
     AdvancedSearchService.advancedSearch(token, emailInput, fullNameInput, nricInput, srNumberInput,
-      ttNumberInput, caseNumberInput, vipNameInput, customerNameInput)
+      ttNumberInput, caseNumberInput, vipNameInput, customerNameInput, caseType, startDateInput, endDateInput,  heroGroupType)
       .then(res => {
         console.log(res);
         setSearchResult(res)
@@ -39,6 +42,10 @@ function AdvancedSearch(props) {
     setCustomerNameInput('');
     setSRNumberInput('');
     setTTNumberInput('');
+    setCaseType('0')
+    startDateInput('')
+    endDateInput('')
+    heroGroupType('0')
   }
 
   return (
@@ -72,10 +79,10 @@ function AdvancedSearch(props) {
                 </div>
               </div>
 
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
-                <select className="chosen-select form-control" name="inputs[keyCaseTypeID]" data-placeholder="Case Type..." style={{ display: "none" }}>
+              <div className="col-sm-2  chosen-container chosen-container-single" style={{ paddingLeft: "10px" }}>
+                <select className="chosen-select form-control" name="keyCaseTypeID" value={caseType} onChange={(e) => setCaseType(e.target.value)} data-placeholder="Case Type..." style={{ width: "220px" }}>
                   <option value="0">Case Type...</option>
-                  <option value="28">Assurance</option>
+                  <option value='28'>Assurance</option>
                   <option value="37">Billing</option>
                   <option value="503">Caution Report</option>
                   <option value="557">Dr UNIFI</option>
@@ -92,31 +99,25 @@ function AdvancedSearch(props) {
                   <option value="40">UniFi Mobile</option>
                   <option value="521">Unifi Public Wifi</option>
                 </select>
-                <div className="chosen-container chosen-container-single" style={{ width: "220px" }} title="">
-                  <a className="chosen-single chosen-default">
-                    <span>Case Type...</span>
-                    <div>
-                      <b></b>
-                    </div>
-                  </a>
-                  <div className="chosen-drop">
+                
+                  {/* <div className="chosen-drop">
                     <div className="chosen-search">
                       <input type="text" autocomplete="off" />
                     </div>
                     <ul className="chosen-results">
                     </ul>
-                  </div>
-                </div>
+                  </div> */}
+                {/* </div> */}
               </div>
 
-              <div className="col-sm-2" style={{ paddingLeft: 10 }}>
-                <select className="chosen-select form-control" name="keyHeroGroup" data-placeholder="HERO Group..." style={{ display: 'none' }}>
+              <div className="col-sm-2 chosen-container chosen-container-single" style={{ paddingLeft: 10 }}>
+                <select className="chosen-select form-control" name="keyHeroGroup" value={heroGroupType} onChange={(e) => setHeroGroupType(e.currentTarget.value)} data-placeholder="HERO Group..."  style={{ width: "220px" }}>
                   <option value="0">HERO Group...</option>
                   <option value="WKTM">WKTM</option>
                   <option value="TMCC">TMCC</option>
                   <option value="Others">Others</option>
                 </select>
-                <div className="chosen-container chosen-container-single" style={{ width: "220px" }} title="">
+                {/* <div className="chosen-container chosen-container-single" style={{ width: "220px" }} title="">
                   <a className="chosen-single chosen-default">
                     <span>HERO Group...</span>
                     <div>
@@ -129,7 +130,7 @@ function AdvancedSearch(props) {
                     </div>
                     <ul className="chosen-results" />
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="space-20" />
@@ -200,7 +201,7 @@ function AdvancedSearch(props) {
               </thead>
               <tbody>
                 {
-                  searchResult.length === 0 ?
+                  (searchResult.length === 0 || searchResult === undefined)?
                     <tr><td colSpan={14}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
                     :
                     searchResult.map((data, index) => {
