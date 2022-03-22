@@ -4,8 +4,8 @@ const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AssignmentService = {
-    viewCaseByOwner(authToken, caseStatusID){
-        return fetch( url + '/case/view-cases-by-owner/', {
+    async viewCaseByOwner(authToken, caseStatusID){
+        return await fetch( url + '/case/view-cases-by-owner/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -15,9 +15,9 @@ const AssignmentService = {
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
     },
 
-    viewCaseByGroup(authToken, shID, caseStatusID, caseTypeID = 0){
+    async viewCaseByGroup(authToken, shID, caseStatusID, caseTypeID = 0){
         const groupCaseAPI =  url + '/case/view-cases-by-group/'
-        return fetch(groupCaseAPI, {
+        return await fetch(groupCaseAPI, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -40,8 +40,8 @@ const AssignmentService = {
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     },
 
-    viewUnassignedCase(authToken, shID){
-        return fetch( url + '/case/view-unassigned-cases/', {
+    async viewUnassignedCase(authToken, shID){
+        return await fetch( url + '/case/view-unassigned-cases/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({

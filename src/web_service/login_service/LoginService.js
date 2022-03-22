@@ -23,9 +23,9 @@ const LoginService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                email: email,
-                password: password
+                'authToken': authToken,
+                'email': email,
+                'password': password
             })
         })
             .then(res => res.json())
@@ -38,7 +38,7 @@ const LoginService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken
+                'authToken': authToken
             })
         })
             .then(res => res.json())
@@ -51,7 +51,7 @@ const LoginService = {
 			method: 'POST',
             headers,
             body: JSON.stringify({
-                authToken: authToken
+                'authToken': authToken
             })
 		})
 			.then(res => res.json())

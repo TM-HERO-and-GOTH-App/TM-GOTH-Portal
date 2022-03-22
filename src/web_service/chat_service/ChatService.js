@@ -19,9 +19,9 @@ const ChatService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                cToken: cToken,
-                flag: flag
+                'authToken': authToken,
+                'cToken': cToken,
+                'flag': flag
             })
         }).then(res => res.json()).catch(err => console.log(err));
     },

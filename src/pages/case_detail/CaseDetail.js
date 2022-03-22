@@ -18,6 +18,7 @@ function CaseDetail(props) {
     const [alertMessage, setAlertMessage] = useState('');
     const [statusBadge, setStatusBadge] = useState('');
     const [isCoordinator, setCoordinator] = useState('');
+    const [isAdmin, setAdmin] = useState('');
 
     useEffect(() => {
         const getCaseDetail = () => {
@@ -26,8 +27,17 @@ function CaseDetail(props) {
                 setCaseData(res)
             })
         }
+        
+        const getGroupResult = () => {
+            ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
+                // console.log(res);
+                setCoordinator(res.filter(filter => filter.positionName === "Coordinator"))
+                setAdmin(res.filter(filter => filter.positionName === "Admin"))
+            })
+        }
 
         getCaseDetail();
+        getGroupResult();
     }, [])
 
 
@@ -46,10 +56,9 @@ function CaseDetail(props) {
         })
     }
 
-    const getGroupResult = () => {
-        ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
-            // console.log(res);
-            setCoordinator(res.filter(filter => filter.positionName === "Coordinator"))
+    const reopenCase = () => {
+        CaseDetailService.reopenCase(token, caseToken).then(res => {
+            if(res.response === 'OK') return setAlertMessage('The case has been reverted to IN-PROGRESS')
         })
     }
 
@@ -120,6 +129,13 @@ function CaseDetail(props) {
                                 <Link className="btn btn-primary" to={`/internal-chat/${caseToken}`}>
                                     Internal Chat
                                 </Link>
+                            }
+                            { isAdmin && caseData.caseStatus === 'CLOSED' && (userData.stakeholderName === 'RRT'
+                            || userData.stakeholderName === 'CSM HQ') &&
+                                <button className="btn btn-danger"
+                                    onClick={reopenCase}>
+                                    Re-Open Case
+                                </button>
                             }
                         </div>
                         <br />
