@@ -9,12 +9,12 @@ const SignupService = {
             method: 'POST',
             headers,
             body: JSON.stringify({
-                apiKey: apiKey,
-                email: email,
-                fullName: fullName,
-                password: password,
-                password2: password2,
-                mobileNum: mobileNum
+                'apiKey': apiKey,
+                'email': email,
+                'fullName': fullName,
+                'password': password,
+                'password2': password2,
+                'mobileNum': mobileNum
             })
         }).then((res) => res.json()).catch((err) => console.log(err));
     }

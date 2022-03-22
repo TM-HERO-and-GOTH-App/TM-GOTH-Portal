@@ -7,8 +7,8 @@ const ActivateAccountService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                email: email,
-                activationKey: activationCode
+                'email': email,
+                'activationKey': activationCode
             })
         }).then(res => res.json()).catch(err => console.log(err))
     }

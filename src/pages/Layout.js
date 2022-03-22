@@ -210,7 +210,7 @@ function Layout(props) {
 
             </li>
 
-            <li className={window.location.href.indexOf("MyCollaboration") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setCollaborationDropDown(true)} onMouseLeave={() => setCollaborationDropDown(false)}>
+            {/* <li className={window.location.href.indexOf("MyCollaboration") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setCollaborationDropDown(true)} onMouseLeave={() => setCollaborationDropDown(false)}>
               <a href="/MyCollaboration-Assigned">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> My Collaboration </span>
@@ -239,7 +239,7 @@ function Layout(props) {
                 </ul>
               }
 
-            </li>
+            </li> */}
 
             <li className={window.location.href.indexOf("GroupAssignments") > -1 ? 'active open hover' : 'hover'} onMouseEnter={() => setGroupDropDownOpen(true)} onMouseLeave={() => setGroupDropDownOpen(false)}>
               <a href="/GroupAssignments-Assigned">

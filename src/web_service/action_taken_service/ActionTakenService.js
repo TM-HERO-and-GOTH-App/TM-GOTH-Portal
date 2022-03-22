@@ -10,8 +10,8 @@ const ActionTakenService = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                authToken: authToken,
-                cToken: cToken
+                'authToken': authToken,
+                'cToken': cToken
             })
         }).then(res => res.json()).catch(err => console.log(err));
     },
