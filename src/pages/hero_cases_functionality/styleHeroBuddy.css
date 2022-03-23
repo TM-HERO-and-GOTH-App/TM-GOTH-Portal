@@ -55,12 +55,16 @@ form .hb-input-group {
 .hb-input-box input{
     height: 40px;
     width: 100%;
-    outline: none;
-    border-radius: 5px;
+    outline: 0;
     border: 1px solid #ccc;
+    border-bottom-width: 2px;
+    /*-moz-border-radius: 5px;*/
+    /*-webkit-border-radius: 5px;*/
+    border-radius: 5px!important;
+    overflow: hidden;
+    -webkit-appearance: none;
     padding-left: 10px;
     font-size: 16px;
-    border-bottom-width: 2px;
     transition: all 0.3s ease;
 }
 .hb-input-box select:focus{
@@ -73,7 +77,8 @@ form .hb-input-group {
     height: 40px;
     width: 100%;
     outline: none;
-    border-radius: 5px;
+    border-radius: 5px!important;
+    -moz-border-radius: 5px;
     border: 1px solid #ccc;
     padding-left: 10px;
     font-size: 16px;
