@@ -19,7 +19,6 @@ function AA_Inprogress() {
         setInProgressCase(res)
       })
     }
-
     allAssignmentData();
   }, [])
 
