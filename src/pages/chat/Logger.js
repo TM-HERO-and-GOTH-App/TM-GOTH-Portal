@@ -22,13 +22,13 @@ function Logger(props) {
     const [remarkTextOption, setRemarkTextOption] = useState('0');
 
     useEffect(() => {
-        const getGroupResult = () => {
-            ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
-                // console.log(res);
-                setCoordinator(res.map(map => map.positionName === "Coordinator"))
-                setAdmin(res.map(map => map.positionName === "Admin"))
-            })
-        }
+        // const getGroupResult = () => {
+        //     ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
+        //         // console.log(res);
+        //         setCoordinator(res.map(map => map.positionName === "Coordinator"))
+        //         setAdmin(res.map(map => map.positionName === "Admin"))
+        //     })
+        // }
 
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
@@ -46,7 +46,7 @@ function Logger(props) {
         }
 
         getCaseDetail();
-        getGroupResult();
+        // getGroupResult();
         getMessage();
     }, [])
 
@@ -70,8 +70,14 @@ function Logger(props) {
     }
 
     return (
-        <Layout pageContent={
-            <div>
+        <Layout
+        pageTitle={
+            <span>
+                HERO CHATS : <span style={{color: 'green'}}>{caseData.caseNum}</span>
+            </span>
+        }
+        pageContent={
+            <>
 
                 <div className="row">
                     <div className="col-sm-12">
@@ -149,7 +155,7 @@ function Logger(props) {
                 <div className="row">
                     <div className="col-sm-12">
                         {
-                            messageData.map(data => {
+                            messageData?.map(data => {
                                 return data.response === "FAILED" ?
                                     <i style={{ color: "red" }}>HERO Chat is empty</i>
                                     :
@@ -189,7 +195,7 @@ function Logger(props) {
                 </div>
                 <div className="space-8" />
                 {/* <!--<span className="label label-xs label-inverse arrowed-right" style="font-size:11px;padding-top:4px"><i>Source From : <?php //echo ( $source == 'API' ) ? $source : 'Cache - 30 sec'; ?></i></span> --> */}
-            </div>
+            </>
         }
         />
     )

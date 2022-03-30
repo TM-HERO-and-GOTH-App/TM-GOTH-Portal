@@ -49,7 +49,7 @@ const ManageUserService = {
                 shID: shID,
                 activationStatus: 'Y'
             })
-        }).then(res => res.json()).catch(err => console.log(err));
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
     },
 
     setAsStakeholder(authToken, hToken, shID){
