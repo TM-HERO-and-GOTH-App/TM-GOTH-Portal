@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import xml2js from 'xml2js';
-// import xmlParser from 'react-xml-parser';
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
-import convert from 'xml-js'
 import LoginTheme from '../utils/login-page-placeholder/LoginTheme';
 import LoginService from '../web_service/login_service/LoginService';
 // import db from '../firebase_login/LoginAuth';
@@ -15,7 +11,6 @@ import LoginService from '../web_service/login_service/LoginService';
 function Loginbox(props) {
   const [alertStatus, setAlertStatus] = useState(false);
   const [formSubmit, setFormSubmit] = useState(false);
-  const [testXML, setTestXML] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');

@@ -35,11 +35,11 @@ function ActionTaken(props) {
         }
 
         const getGroupResult = () => {
-            ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
+            ManageUserService.getProfileByGroup(token, userData.shID).then((res) => {
                 // console.log(res);
                 setGroupMembers(res);
-                setCoordinator(groupMembers.filter(filter => filter.positionName === "Coordinator"));
-                setAdmin(groupMembers.filter(filter => filter.positionName === "Admin"))
+                setCoordinator(res.map(data => data.positionName === "Coordinator"));
+                setAdmin(res.map(data => data.positionName === "Admin"))
             })
         }
 
@@ -55,7 +55,7 @@ function ActionTaken(props) {
         getActionRemark();
         getCaseDetail();
         getGroupResult();
-    }, [caseRemarks])
+    }, [])
 
 
 
@@ -77,8 +77,13 @@ function ActionTaken(props) {
             })
     }
 
+
     return (
-        <Layout pageContent={
+        <Layout 
+        pageTitle={<span>
+            CASE DETAIL : <span style={{color: 'green'}}>{caseData.caseNum}</span>
+        </span>}
+        pageContent={
             <>
                 {
                     alertStatus &&

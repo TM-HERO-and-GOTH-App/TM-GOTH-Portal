@@ -50,9 +50,9 @@ function AllAssignmentTable(props) {
                 areaLocation,
                 totalNewAlert
             }));
-    let tBody;
     console.log(filteredData);
 
+    let tBody;
     if (filteredData.length !== 0) {
         tBody =
             <tbody>
@@ -135,7 +135,6 @@ function AllAssignmentTable(props) {
             </tr>
             </tbody>
     }
-    console.log(props.response)
 
     return (
         <table id="dynamic-table"
