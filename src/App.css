@@ -1,0 +1,88 @@
+.login-layout {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.login-container {
+    max-width: 800px;
+    width: calc(100% * 0.9 + 30px);
+    transition: all 0.3s ease;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.login-header .login-logo {
+    width: 350px;
+    padding-bottom: 10px;
+}
+
+.login-box {
+    padding-top: 10px;
+}
+
+.footer {
+    position: relative;
+    align-items: center;
+    color: silver;
+    text-align: center;
+    width: 100%;
+}
+
+@media (max-width: 584px) {
+    .login-box .toolbar > div {
+        width: 100%;
+    }
+
+    .login-box .toolbar > div:first-child {
+        float: right;
+        text-align: right;
+    }
+
+    .min-width-100 {
+        width: 100% !important;
+    }
+
+    .login-layout {
+        padding: 0;
+    }
+
+    .login-container {
+        width: 100%;
+        padding-bottom: 100px;
+    }
+
+    .login-header h5 {
+        font-size: small;
+    }
+
+    .login-box {
+        margin: 0 7px 0 7px
+    }
+
+    .footer {
+        display: grid;
+        position: fixed;
+        height: 100px;
+        background-color: #333333;
+        bottom: 0;
+    }
+
+    .footer .copyright {
+        position: absolute;
+        font-size: 0.8em;
+        padding: 10px;
+    }
+}
+@media (max-width: 450px){
+    .login-header .login-logo {
+        width: calc(100% * 0.75);
+        transition: all 1s ease
+    }
+}
+
