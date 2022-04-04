@@ -44,6 +44,10 @@
         text-align: right;
     }
 
+    .login-box .toolbar > div:first-child {
+        padding: 9px 0 0 0;
+    }
+
     .min-width-100 {
         width: 100% !important;
     }
