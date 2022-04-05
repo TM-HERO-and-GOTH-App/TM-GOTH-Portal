@@ -30,15 +30,15 @@ class LoginTheme extends React.Component {
                                 <div class="login-box">
                                     {this.props.children}
                                 </div>
-                                <div className="footer">
-                                    <div className="copyright">
-                                        Copyright © 2018 Telekom Malaysia Berhad (128740-P) ALL RIGHTS RESERVED
-                                        <br/>
-                                        For the best viewing experience, please use either Mozilla Firefox or IE browser
-                                        with resolution at 1280 x 800 pixels and above
-                                    </div>
-                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className="footer">
+                        <div className="copyright">
+                            Copyright © 2018 Telekom Malaysia Berhad (128740-P) ALL RIGHTS RESERVED
+                            <br/>
+                            For the best viewing experience, please use either Mozilla Firefox or IE browser
+                            with resolution at 1280 x 800 pixels and above
                         </div>
                     </div>
                 </div>
