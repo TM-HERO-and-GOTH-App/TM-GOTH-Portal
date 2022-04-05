@@ -32,20 +32,18 @@
     color: silver;
     text-align: center;
     width: 100%;
+    height: 100%;
 }
 
 @media (max-width: 584px) {
     .login-box .toolbar > div {
         width: 100%;
+        display: grid;
     }
 
-    .login-box .toolbar > div:first-child {
-        float: right;
-        text-align: right;
-    }
-
-    .login-box .toolbar > div:first-child {
-        padding: 9px 0 0 0;
+    .login-box .toolbar > div > a {
+        text-align: center;
+        padding: 2.5px 0;
     }
 
     .min-width-100 {

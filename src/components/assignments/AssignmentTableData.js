@@ -42,7 +42,6 @@ function AssignmentTable(props) {
                                 </td>
                             </tr>
                             :
-                            // (props.caseType === '0' || props.caseType === data.caseType || props.groupType === data.stakeholderName) &&
                             <tr key={index}>
                                 <td>
                                     <Link to={`/case-detail/${data.cToken}`}>

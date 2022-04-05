@@ -180,7 +180,7 @@ function Loginbox(props) {
                 className="forgot-password-link"
               >
                 <i className="ace-icon fa fa-arrow-left" />
-                  {(' ' + 'I forgot my Password')}
+                <span> I forgot my Password</span>
               </a>
             </div>
             <div>
@@ -190,17 +190,17 @@ function Loginbox(props) {
                 className="user-activate-link"
               >
                 <i className="ace-icon fa fa-unlock" />
-                {(' ' + 'Activate Account')}
+                <span> Activate Account</span>
               </a>
               <a
                 href="/signup"
                 data-target="#signup-box"
                 className="user-signup-link"
               >
-                  {('Sign Up' + ' ')}
+                <span>Sign Up </span>
                 <i className="ace-icon fa fa-arrow-right" />
               </a>
-            </div>
+              </div>
           </div>
         </div>
       </div>

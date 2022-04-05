@@ -45,7 +45,7 @@ const DashboardService = {
                 'authToken': authToken,
                 'shID': shID,
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     },
 
     async getTotalRegisteredUserByState(authToken){
