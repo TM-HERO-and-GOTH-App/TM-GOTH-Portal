@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { CustomPicker } from 'react-color';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
@@ -14,6 +15,8 @@ function Layout(props) {
   const [manageUserDropDownOpen, setManageUserDropDownOpen] = useState(false);
   const [advanceSearch, setAdvanceSearch] = useState(false);
   const [searchInput, setUserInput] = useState('');
+  const [setting, setSetting] = useState(false);
+  const [changeNavBarColor, setChangeNavBarColor] = useState(false);
 
   const clearsessionStorage = () => {
     sessionStorage.clear();
@@ -102,7 +105,7 @@ function Layout(props) {
 
           <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
             <ul className="nav navbar-nav">
-            {/* <li>
+              {/* <li>
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								Overview &nbsp;
 								<i class="ace-icon fa fa-angle-down bigger-110"></i>
@@ -154,25 +157,23 @@ function Layout(props) {
       </div>
 
       <div className="main-container ace-save-state" id="main-container">
-        {/* {
-          ace.settings.loadState('main-container')
-        } */}
+
         <div id="sidebar" className="sidebar h-sidebar navbar-collapse collapse ace-save-state">
           <div className="sidebar-shortcuts" id="sidebar-shortcuts" style={{ width: 150 }}>
             <img src={img3} width={125} />
           </div>{/* /.sidebar-shortcuts */}
 
-          <ul className="nav nav-list">
+          <ul className={`nav nav-list ${changeNavBarColor === '#222A2D' ? 'skin-1' : ''} `}>
             <li className={window.location.pathname === '/' ? 'active open hover' : 'hover'}>
               <a href="/">
                 <i className="menu-icon fa fa-tachometer" />
                 <span className="nav_menu-item"> Dashboard </span>
               </a>
 
-              <b class="arrow"/>
+              <b class="arrow" />
             </li>
 
-            <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setMyAssignmentDropDownOpen(true)} onMouseLeave={() => setMyAssignmentDropDownOpen(false)}>
+            <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover skin-1'} onMouseOver={() => setMyAssignmentDropDownOpen(true)} onMouseLeave={() => setMyAssignmentDropDownOpen(false)}>
               <a href="/MyAssignments-Assigned">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> My Assignments </span>
@@ -340,7 +341,7 @@ function Layout(props) {
               </li>
             }
 
-            {(userData.positionName === 'ADMIN') &&
+            {(userData.positionName === 'Admin') &&
               <li className={window.location.href.indexOf("ManageUsers") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setManageUserDropDownOpen(true)} onMouseLeave={() => setManageUserDropDownOpen(false)}>
                 <a href="/ManageUsers-Groupmembers">
                   <i className="menu-icon fa fa-users" />
@@ -627,20 +628,28 @@ function Layout(props) {
           <div className="main-content-inner">
             <div className="page-content" >
               <div className="ace-settings-container" id="ace-settings-container">
-                <div className="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-                  <i className="ace-icon fa fa-cog bigger-130"/>
+                {/* Setting Icon */}
+                {/* 1. Decide where to put the 'onClick' and the logic inside of it */}
+                <div className="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn" onClick={() => setSetting(!setting)}>
+                  <i className="ace-icon fa fa-cog bigger-130" />
                 </div>
+                {/* End of setting Icon */}
 
-                <div className="ace-settings-box clearfix" id="ace-settings-box">
+                {/* Setting code begin Here */}
+                {/* 2. Add 'open' className to open the Setting Icon */}
+                <div className={`ace-settings-box clearfix ${setting === true ? 'open' : ''} `} id="ace-settings-box">
                   <div className="pull-left width-50">
                     <div className="ace-settings-item">
                       <div className="pull-left">
-                        <select id="skin-colorpicker" className="hide">
+                        {/* TODO: Need to change the option to Color Picker like */}
+                        <select id="skin-colorpicker" className='show'
+                          onChange={(e) => setChangeNavBarColor(e.currentTarget.value)} value={changeNavBarColor}>
                           <option data-skin="no-skin" value="#438EB9">#438EB9</option>
                           <option data-skin="skin-1" value="#222A2D">#222A2D</option>
                           {/*<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-												    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>*/}
+												    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>*/}\
                         </select>
+                        {/* End of TODO */}
                       </div>
                       <span>&nbsp; Choose Skin</span>
                     </div>
@@ -653,12 +662,14 @@ function Layout(props) {
                       <label className="lbl" htmlFor="ace-settings-sidebar"> Fixed Sidebar</label>
                     </div>
                   </div>{/* /.pull-left */}
-                </div>{/* /.ace-settings-box */}
+                </div>{/* .ace-settings-box */}
+                {/* Setting code end here */}
+
               </div>{/* /.ace-settings-container */}
-              
+
               <div class="page-header">
-							<h1>{props.pageTitle}</h1>
-						</div>{/* <!-- /.page-header --> */}
+                <h1>{props.pageTitle}</h1>
+              </div>{/* <!-- /.page-header --> */}
 
               <div className="row">
                 <div className="col-xs-12">
