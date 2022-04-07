@@ -3262,7 +3262,7 @@ body.mob-safari .sidebar.sidebar-fixed {
         position: relative;
         float: none !important;
         width: auto;
-        margin-top: 17px;
+        /*margin-top: 17px;*/
         border-width: 0 !important;
         box-shadow: none;
     }
@@ -5943,7 +5943,7 @@ body.mob-safari .sidebar.sidebar-fixed {
     right: 12px;
     bottom: 4px;
     padding: 8px;
-    line-height: 36px;
+    /*!*line-height: 36px;*!  removed due to overflow*/
     border-top: 3px double #E5E5E5;
 }
 

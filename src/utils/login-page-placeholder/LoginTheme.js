@@ -33,7 +33,7 @@ class LoginTheme extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="footer">
+                    <div className="login-footer">
                         <div className="copyright">
                             Copyright © 2018 Telekom Malaysia Berhad (128740-P) ALL RIGHTS RESERVED
                             <br/>

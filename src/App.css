@@ -26,7 +26,8 @@
     padding-top: 10px;
 }
 
-.footer {
+.login-footer {
+    padding-top: 75px;
     position: relative;
     align-items: center;
     color: silver;
@@ -43,7 +44,7 @@
 
     .login-box .toolbar > div > a {
         text-align: center;
-        padding: 2.5px 0;
+        padding: 3px 0;
     }
 
     .min-width-100 {
@@ -63,11 +64,18 @@
         font-size: small;
     }
 
+    .login-header .login-logo {
+        width: calc(100% * 0.75);
+        max-width: 484px;
+        transition: all 1s ease;
+    }
+
     .login-box {
         margin: 0 7px 0 7px
     }
 
-    .footer {
+    .login-footer {
+        left: 0;
         display: grid;
         position: fixed;
         height: 100px;
@@ -75,16 +83,9 @@
         bottom: 0;
     }
 
-    .footer .copyright {
+    .login-footer .copyright {
         position: absolute;
         font-size: 0.8em;
         padding: 10px;
     }
 }
-@media (max-width: 450px){
-    .login-header .login-logo {
-        width: calc(100% * 0.75);
-        transition: all 1s ease
-    }
-}
-
