@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense, Spinner } from "react";
-import { Link } from 'react-router-dom';
-import { CSVLink } from 'react-csv';
+import React, {useMemo, Suspense, Spinner} from "react";
+import {Link} from 'react-router-dom';
+import {CSVLink} from 'react-csv';
 
 function AllAssignmentTable(props) {
     let prepData = useMemo(() => props, [props]);
@@ -56,7 +56,7 @@ function AllAssignmentTable(props) {
     let tBody;
     if (filteredData.length !== 0) {
         tBody =
-            <Suspense fallback={<Spinner />}>
+            <Suspense fallback={<Spinner/>}>
                 <tbody>
                 {
                     filteredData.map((data, index) => {
@@ -142,45 +142,45 @@ function AllAssignmentTable(props) {
     return (
         <div className="table-container">
             <div className="pull-right tableTools-container dt-buttons btn-overlap btn-group">
-            <CSVLink
-                className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right"
-                data={filteredData} filename={"assignment-table.csv"}
-            >
-                <i className="fa fa-database bigger-110 orange"/> Export to CSV
-            </CSVLink>
+                <CSVLink
+                    className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right"
+                    data={filteredData} filename={"assignment-table.csv"}
+                >
+                    <i className="fa fa-database bigger-110 orange"/> Export to CSV
+                </CSVLink>
             </div>
-        <table id="dynamic-table"
-               className="table table-striped table-bordered table-hover">
-            {/* <!-- id="simple-table" className="table table-bordered table-hover" --> */}
-            <thead>
-            <tr>
-                <th>Case ID</th>
-                <th>
-                    <div align="center">Status</div>
-                </th>
-                <th width="6%">Aging</th>
-                <th>Type</th>
-                <th>
-                    <div align="center">VIP</div>
-                </th>
-                <th>
-                    <div align="center" title="Eligibility">ELG</div>
-                </th>
-                <th width="8%">Product</th>
-                <th>Customer</th>
-                <th>HERO</th>
-                <th>Owner / Group</th>
-                <th>
-                    <div align="center">State</div>
-                </th>
-                <th>
-                    <div align="center"><i className="ace-icon fa fa-bell icon-animated-bell"></i></div>
-                </th>
-                {/* <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th> */}
-            </tr>
-            </thead>
-            {tBody}
-        </table>
+            <table id="dynamic-table"
+                   className="table table-striped table-bordered table-hover">
+                {/* <!-- id="simple-table" className="table table-bordered table-hover" --> */}
+                <thead>
+                <tr>
+                    <th>Case ID</th>
+                    <th>
+                        <div align="center">Status</div>
+                    </th>
+                    <th width="6%">Aging</th>
+                    <th>Type</th>
+                    <th>
+                        <div align="center">VIP</div>
+                    </th>
+                    <th>
+                        <div align="center" title="Eligibility">ELG</div>
+                    </th>
+                    <th width="8%">Product</th>
+                    <th>Customer</th>
+                    <th>HERO</th>
+                    <th>Owner / Group</th>
+                    <th>
+                        <div align="center">State</div>
+                    </th>
+                    <th>
+                        <div align="center"><i className="ace-icon fa fa-bell icon-animated-bell"></i></div>
+                    </th>
+                    {/* <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o"></i></div></th> */}
+                </tr>
+                </thead>
+                {tBody}
+            </table>
         </div>
     )
 }
