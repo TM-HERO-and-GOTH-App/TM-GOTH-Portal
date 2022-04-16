@@ -16,7 +16,8 @@ function Layout(props) {
   const [advanceSearch, setAdvanceSearch] = useState(false);
   const [searchInput, setUserInput] = useState('');
   const [setting, setSetting] = useState(false);
-  const [changeNavBarColor, setChangeNavBarColor] = useState(false);
+  const [showColorOption, setShowColorOption] = useState(false);
+  const [changeNavBarColor, setChangeNavBarColor] = useState('#438EB9');
 
   const clearsessionStorage = () => {
     sessionStorage.clear();
@@ -36,7 +37,7 @@ function Layout(props) {
   }
 
   return (
-    <div class="no-skin">
+    <div class={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
       <div id="navbar" className="navbar navbar-default navbar-collapse ace-save-state">
         <div className="navbar-container ace-save-state" id="navbar-container">
           <div className="navbar-header pull-left">
@@ -82,13 +83,17 @@ function Layout(props) {
                     </a>
                   </li>
 
-                  {(userData.stakeholderName === 'RRT' || userData.stakeholderName === 'Dr UNIFI') &&
-                    <li>
-                      <a href="/create-case">
-                        <i className="ace-icon fa fa-pencil" />
-                        Create New Case
-                      </a>
-                    </li>
+                  {(userData.stakeholderName === 'RRT'
+                    || userData.stakeholderName === 'CSM'
+                    || userData.stakeholderName === 'Dr UNIFI') &&
+                    (
+                      <li>
+                        <a href="/create-case">
+                          <i className="ace-icon fa fa-pencil" />
+                          Create New Case
+                        </a>
+                      </li>
+                    )
                   }
 
                   <li className="divider" />
@@ -182,31 +187,34 @@ function Layout(props) {
 
               <b className="arrow" />
 
-              {myAssignmentDropDownOpen && <ul className="submenu">
-                <li className="hover">
-                  <a href="/MyAssignments-Assigned">
-                    <i className="menu-icon fa fa-caret-right" />
-                    Assigned Cases
-                  </a>
-                  <b className="arrow" />
-                </li>
+              {myAssignmentDropDownOpen &&
+                (
+                  <ul className="submenu">
+                    <li className="hover">
+                      <a href="/MyAssignments-Assigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Assigned Cases
+                      </a>
+                      <b className="arrow" />
+                    </li>
 
-                <li className="hover">
-                  <a href="/MyAssignments-Inprogress">
-                    <i className="menu-icon fa fa-caret-right" />
-                    In-Progress Cases
-                  </a>
-                  <b className="arrow" />
-                </li>
+                    <li className="hover">
+                      <a href="/MyAssignments-Inprogress">
+                        <i className="menu-icon fa fa-caret-right" />
+                        In-Progress Cases
+                      </a>
+                      <b className="arrow" />
+                    </li>
 
-                <li className="hover">
-                  <a href="/MyAssignments-Closed">
-                    <i className="menu-icon fa fa-caret-right" />
-                    Closed Cases
-                  </a>
-                  <b className="arrow" />
-                </li>
-              </ul>
+                    <li className="hover">
+                      <a href="/MyAssignments-Closed">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Closed Cases
+                      </a>
+                      <b className="arrow" />
+                    </li>
+                  </ul>
+                )
               }
 
             </li>
@@ -628,12 +636,9 @@ function Layout(props) {
           <div className="main-content-inner">
             <div className="page-content" >
               <div className="ace-settings-container" id="ace-settings-container">
-                {/* Setting Icon */}
-                {/* 1. Decide where to put the 'onClick' and the logic inside of it */}
                 <div className="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn" onClick={() => setSetting(!setting)}>
                   <i className="ace-icon fa fa-cog bigger-130" />
                 </div>
-                {/* End of setting Icon */}
 
                 {/* Setting code begin Here */}
                 {/* 2. Add 'open' className to open the Setting Icon */}
@@ -641,15 +646,29 @@ function Layout(props) {
                   <div className="pull-left width-50">
                     <div className="ace-settings-item">
                       <div className="pull-left">
-                        {/* TODO: Need to change the option to Color Picker like */}
-                        <select id="skin-colorpicker" className='show'
+                        <select className="hide" style={{ color: `${showColorOption}`, zIndex: 2000, display: 'inline' }}
                           onChange={(e) => setChangeNavBarColor(e.currentTarget.value)} value={changeNavBarColor}>
                           <option data-skin="no-skin" value="#438EB9">#438EB9</option>
                           <option data-skin="skin-1" value="#222A2D">#222A2D</option>
                           {/*<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-												    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>*/}\
+												    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>*/}
                         </select>
-                        {/* End of TODO */}
+
+                        {/* Change NavBar color option here */}
+                        <div className={`dropdown dropdown-colorpicker ${showColorOption ? "open" : "close"}`} onClick={() => setShowColorOption(!showColorOption)}>
+                          <a className="dropdown-toggle" aria-expanded={showColorOption ? "true" : "false"}>
+                            <span className="btn-colorpicker" style={{ backgroundColor: `${changeNavBarColor}` }} />
+                          </a>
+                          <ul className={`dropdown-menu dropdown-caret ${showColorOption ? "dropdown-caret:after" : "dropdown-caret:before"}`}>
+                            <li onClick={() => setChangeNavBarColor('#438EB9')}>
+                              <a className={`colorpick-btn ${changeNavBarColor == "#438EB9" ? "selected" : ""}`} style={{ backgroundColor: "#438EB9" }} data-color="#438EB9" href="#" />
+                            </li>
+                            <li onClick={() => setChangeNavBarColor('#222A2D')}>
+                              <a className={`colorpick-btn  ${changeNavBarColor == "#222A2D" ? "selected" : ""}`} style={{ backgroundColor: "#222A2D" }} data-color="#222A2D" href="#" />
+                            </li>
+                          </ul>
+                        </div>
+                        {/* End of NavBar color option */}
                       </div>
                       <span>&nbsp; Choose Skin</span>
                     </div>
@@ -701,13 +720,11 @@ function Layout(props) {
                   Collapse/Expand Menu
 									</button>
 								</div> */}
-                  {/* BEGIN PAGE CONTENT BY CONTROLLER */}
+                  {/* BEGIN PAGE*/}
 
                   {props.pageContent}
 
-                  {/* END PAGE CONTENT BY CONTROLLER */}
-
-                  {/* PAGE CONTENT ENDS */}
+                  {/* END PAGE*/}
 
                 </div>{/* /.col */}
               </div>{/* /.row */}

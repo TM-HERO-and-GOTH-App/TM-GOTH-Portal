@@ -18,7 +18,7 @@ function MA_Closed() {
     }
 
     loggerCase()
-  }, [closedCase])
+  }, [])
 
 
 

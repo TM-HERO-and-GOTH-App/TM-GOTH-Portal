@@ -26,6 +26,20 @@ const CaseDetailService = {
         }).then(res => res.json()).catch(err => console.log(err))
     },
 
+    async getHeroBuddyInfo( authToken, cToken ) {
+        await fetch( url + '/case/get-herobuddy-info/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                'authToken': authToken,
+                'cToken': cToken
+            })
+        })
+            .then( res => res.json())
+            .then( responseData => { return responseData})
+            .catch( err => console.log(err))
+    },
+
     transferOwnership(authToken, cToken, shID) {
         return fetch(url + '/case/transfer-ownership/', {
             method: 'POST',

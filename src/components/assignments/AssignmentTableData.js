@@ -24,7 +24,8 @@ function AssignmentTable(props) {
                   fullname,
                   ownerName,
                   areaLocation,
-                  totalNewAlert
+                  totalNewAlert,
+                  response
               }, keys) =>
             ({
                 createdDate,
@@ -44,7 +45,8 @@ function AssignmentTable(props) {
                 fullname,
                 ownerName,
                 areaLocation,
-                totalNewAlert
+                totalNewAlert,
+                response
             }));
 
     const csvheaders = [
