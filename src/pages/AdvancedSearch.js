@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from './Layout';
 import AdvancedSearchService from '../web_service/advance_search_service/AdvanceSearch';
-import { Link } from 'react-router-dom';
+import Calendar from '../components/calendar/Calendar';
 
 function AdvancedSearch(props) {
   const [caseToken, setCaseToken] = useState(props.match.params.id);
@@ -22,262 +23,22 @@ function AdvancedSearch(props) {
   const [ttNumberInput, setTTNumberInput] = useState('');
   const [calendarDays, setCalendarDays] = useState('');
   const [calendarMonth, setCalendarMonth] = useState('');
+  const [calendarYear, setCalendarYear] = useState('');
+  const [calendarDecade, setCalendarDecade] = useState('');
+  const [calendarCentury, setCalendarCentury] = useState('');
   const [searchResult, setSearchResult] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showDaysOption, setShowDaysOption] = useState(false);
+  const [showMonthOption, setShowMonthOption] = useState(false);
+  const [showYearOption, setShowYearOption] = useState(false);
+  const [showDecadeOption, setShowDecadeOption] = useState(false);
+  const [showCenturiesOption, setShowCenturiesOption] = useState(false);
   const [nextMonth, setNextMonth] = useState(false);
   const [previousMonth, setPreviousMonth] = useState(false);
-
-  const Calendar = () => {
-    return (
-      <div className={`datepicker datepicker-dropdown dropdown-menu datepicker-orient-left datepicker-orient-bottom ${showCalendar ? "datepicker-dropdown:after datepicker-orient-left:after datepicker-orient-bottom:after" : "datepicker-orient-bottom:before datepicker-orient-left:before datepicker-dropdown:before"}`} 
-      style={{ marginTop: "50px", marginLeft: "11.5px", display: "block" }}><div className="datepicker-days" style={{ display: "block" }}>
-        <table className=" table-condensed">
-          <thead>
-            <tr>
-              <th colSpan="7" className="datepicker-title" style={{ display: "none" }}>
-              </th>
-            </tr>
-            <tr>
-              <th className="prev" style={{ visibility: "visible" }}>«</th>
-              <th colSpan="5" className="datepicker-switch">April 2022</th>
-              <th className="next" style={{ visibility: "visible" }} onClick={() => alert('forward button pressed')}>»</th>
-            </tr>
-            <tr>
-              <th className="dow">Su</th>
-              <th className="dow">Mo</th>
-              <th className="dow">Tu</th>
-              <th className="dow">We</th>
-              <th className="dow">Th</th>
-              <th className="dow">Fr</th>
-              <th className="dow">Sa</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="old day">27</td>
-              <td className="old day">28</td>
-              <td className="old day">29</td>
-              <td className="old day">30</td>
-              <td className="old day">31</td>
-              <td className="day">1</td>
-              <td className="day">2</td>
-            </tr>
-            <tr>
-              <td className="day">3</td>
-              <td className="day">4</td>
-              <td className="day">5</td>
-              <td className="day">6</td>
-              <td className="day">7</td>
-              <td className="day">8</td>
-              <td className="day">9</td>
-            </tr>
-            <tr>
-              <td className="day">10</td>
-              <td className="day">11</td>
-              <td className="day">12</td>
-              <td className="day">13</td>
-              <td className="day">14</td>
-              <td className="day">15</td>
-              <td className="today day">16</td>
-            </tr>
-            <tr>
-              <td className="day">17</td>
-              <td className="day">18</td>
-              <td className="day">19</td>
-              <td className="day">20</td>
-              <td className="day">21</td>
-              <td className="day">22</td>
-              <td className="day">23</td>
-            </tr>
-            <tr>
-              <td className="day">24</td>
-              <td className="day">25</td>
-              <td className="day">26</td>
-              <td className="day">27</td>
-              <td className="day">28</td>
-              <td className="day">29</td>
-              <td className="day">30</td>
-            </tr>
-            <tr>
-              <td className="new day">1</td>
-              <td className="new day">2</td>
-              <td className="new day">3</td>
-              <td className="new day">4</td>
-              <td className="new day">5</td>
-              <td className="new day">6</td>
-              <td className="new day">7</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colSpan="7" className="today" style={{ display: "none" }}>Today</th>
-            </tr>
-            <tr>
-              <th colSpan="7" className="clear" style={{ display: "none" }}>Clear</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-        <div className="datepicker-months" style={{ display: "none" }}>
-          <table className="table-condensed">
-            <thead>
-              <tr>
-                <th colSpan="7" className="datepicker-title" style={{ display: "none" }}></th>
-              </tr>
-              <tr>
-                <th className="prev" style={{ visibility: "visible" }}>«</th>
-                <th colSpan="5" className="datepicker-switch">2022</th>
-                <th className="next" style={{ visibility: "visible" }}>»</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan="7">
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Jan</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Feb</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Mar</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Apr</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>May</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Jun</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Jul</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Aug</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Sep</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Oct</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Nov</span>
-                  <span className={nextMonth || previousMonth ? "month focused" : "month"}>Dec</span>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th colSpan="7" className="today" style={{ display: "none" }}>Today</th>
-              </tr>
-              <tr>
-                <th colSpan="7" className="clear" style={{ display: "none" }}>Clear</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div className="datepicker-years" style={{ display: "none" }}><table className="table-condensed">
-          <thead>
-            <tr>
-              <th colSpan="7" className="datepicker-title" style={{ display: "none" }}></th>
-            </tr>
-            <tr>
-              <th className="prev" style={{ visibility: "visible" }}>«</th>
-              <th colSpan="5" className="datepicker-switch">2020-2029</th>
-              <th className="next" style={{ visibility: "visible" }}>»</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan="7"><span className="year old">2019</span><span className="year">2020</span>
-                <span className="year">2021</span>
-                <span className="year focused">2022</span>
-                <span className="year">2023</span>
-                <span className="year">2024</span>
-                <span className="year">2025</span>
-                <span className="year">2026</span>
-                <span className="year">2027</span>
-                <span className="year">2028</span>
-                <span className="year">2029</span>
-                <span className="year new">2030</span>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colSpan="7" className="today" style={{ display: "none" }}>Today</th>
-            </tr>
-            <tr>
-              <th colSpan="7" className="clear" style={{ display: "none" }}>Clear</th>
-            </tr>
-          </tfoot>
-        </table>
-        </div>
-        <div className="datepicker-decades" style={{ display: "none" }}>
-          <table className="table-condensed">
-            <thead>
-              <tr>
-                <th colSpan="7" className="datepicker-title" style={{ display: "none" }}></th>
-              </tr>
-              <tr>
-                <th className="prev" style={{ visibility: "visible" }}>«</th>
-                <th colSpan="5" className="datepicker-switch">2000-2090</th>
-                <th className="next" style={{ visibility: "visible" }}>»</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan="7">
-                  <span className="decade old">1990</span>
-                  <span className="decade">2000</span>
-                  <span className="decade">2010</span>
-                  <span className="decade">2020</span>
-                  <span className="decade">2030</span>
-                  <span className="decade">2040</span>
-                  <span className="decade">2050</span>
-                  <span className="decade">2060</span>
-                  <span className="decade">2070</span>
-                  <span className="decade">2080</span>
-                  <span className="decade">2090</span>
-                  <span className="decade new">2100</span>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th colSpan="7" className="today" style={{ display: "none" }}>Today</th>
-              </tr>
-              <tr>
-                <th colSpan="7" className="clear" style={{ display: "none" }}>Clear</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div className="datepicker-centuries" style={{ display: "none" }}>
-          <table className="table-condensed">
-            <thead>
-              <tr>
-                <th colSpan="7" className="datepicker-title" style={{ display: "none" }}></th>
-              </tr>
-              <tr>
-                <th className="prev" style={{ visibility: "visible" }}>«</th>
-                <th colSpan="5" className="datepicker-switch">2000-2900</th>
-                <th className="next" style={{ visibility: "visible" }}>»</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan="7">
-                  <span className="century old">1900</span>
-                  <span className="century">2000</span>
-                  <span className="century">2100</span>
-                  <span className="century">2200</span>
-                  <span className="century">2300</span>
-                  <span className="century">2400</span>
-                  <span className="century">2500</span>
-                  <span className="century">2600</span>
-                  <span className="century">2700</span>
-                  <span className="century">2800</span>
-                  <span className="century">2900</span>
-                  <span className="century new">3000</span>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th colSpan="7" className="today" style={{ display: "none" }}>Today</th>
-              </tr>
-              <tr>
-                <th colSpan="7" className="clear" style={{ display: "none" }}>Clear</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    )
-  }
+  let newDate = new Date()
+  let date = newDate.getDate();
+  let month = newDate.getMonth() + 1;
+  let year = newDate.getFullYear();
 
   // TODO: fix advance search caseType and HERO Group API
   const advancedSearch = (e) => {
@@ -317,10 +78,14 @@ function AdvancedSearch(props) {
             <form name="form" onSubmit={advancedSearch} onReset={reset}>
               <div className="col-sm-2">
                 <div className="input-group">
-                  <input className="form-control date-picker" id="id-date-picker-1" name="keyStartDate" type='text' style={{ width: 180 }} data-date-format="yyyy-mm-dd" value={startDateInput} onChange={(e) => setStartDateInput(e.currentTarget.valueAsDate)} placeholder="Date Created (Start)" />
-                  <span className="input-group-addon" onClick={() =>
-                    setShowCalendar(!showCalendar)
-                    // alert('Calendar Icon being clicked')
+                  <input className="form-control date-picker" id="id-date-picker-1" name="keyStartDate" type='date' style={{ width: 180 }} data-date-format="yyyy-mm-dd" value={calendarYear + '- ' + calendarMonth + '- ' + calendarDays} onChange={(e) => setStartDateInput(e.currentTarget.valueAsDate)} placeholder="Date Created (Start)" />
+                  <span className="input-group-addon" onClick={() =>{
+                      const startDate = document.getElementById('id-date-picker-1');
+                      startDate.focus()
+                    // setShowCalendar(!showCalendar)
+                    // // alert('Calendar Icon being clicked')
+                    // setShowDaysOption(!showDaysOption)
+                    }
                   }>
                     <i className="fa fa-calendar bigger-110" />
                   </span>
@@ -545,8 +310,29 @@ function AdvancedSearch(props) {
             </table>
           </div>{/* /.span */}
           {/* /.row */}
-          <div id="limiterBox" className="limiterBox" style={{ position: "absolute", display: "none" }}/>
-          {showCalendar && <Calendar />}
+          {/* <div id="limiterBox" className="limiterBox" style={{ position: "absolute", display: "none" }} />
+          {showCalendar && 
+            <Calendar 
+              showCalendar={showCalendar}
+              showDaysCalendar={showDaysOption}
+              showMonthOnclick={() => {setShowMonthOption(!showMonthOption); setShowDaysOption(!showDaysOption)}}
+              date={date}
+              selectDay={() => {setCalendarDays('20'); console.log(calendarDays);}}
+              showMonthCalendar={showMonthOption}
+              showYear={() => {setShowYearOption(!showYearOption); setShowMonthOption(false);}}
+              selectMonth={() => {setCalendarMonth('April'); console.log(calendarMonth); setShowMonthOption(!showMonthOption); setShowDaysOption(!showDaysOption);}}
+              month={month}
+              showDecadesOptionCalendar={() => {setShowDecadeOption(!showDecadeOption); setShowYearOption(!showYearOption);}}
+              showYearOptionCalendar={showYearOption}
+              year={year}
+              selectYear={() => {setCalendarYear('2022'); console.log(calendarYear); setShowYearOption(!showYearOption); setShowMonthOption(!showMonthOption);}}
+              showDecadeCalendar={showDecadeOption}
+              showCenturiesOptionCalendar={() => {setShowCenturiesOption(!showCenturiesOption); setShowYearOption(!showYearOption)}}
+              selectDecade={() => { setCalendarDecade('2020'); console.log(calendarDecade); setShowDecadeOption(!showDecadeOption); setShowYearOption(!showYearOption) }}
+              showCenturiesCalendar={showCenturiesOption}
+              selectCentury={() => { setCalendarCentury('2000'); console.log(calendarCentury); setShowCenturiesOption(!showCenturiesOption); setShowDecadeOption(!showDecadeOption); }}
+            />
+          } */}
         </>
       }
     />

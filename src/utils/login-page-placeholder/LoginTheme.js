@@ -27,7 +27,7 @@ class LoginTheme extends React.Component {
                                         HERO PORTAL For Case Resolution by Internal Team
                                     </h5>
                                 </div>
-                                <div class="login-box">
+                                <div className="login-box">
                                     {this.props.children}
                                 </div>
                             </div>
