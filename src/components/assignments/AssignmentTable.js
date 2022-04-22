@@ -1,4 +1,4 @@
-import React, {useMemo, useState, useEffect} from "react";
+import React, {useMemo, useState} from "react";
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,8 +14,6 @@ import {Link} from 'react-router-dom';
 //Component
 import AssignmentTableToolbar from './AssignmentTableToolbar'
 import AssignmentTableHead from './AssignmentTableHead'
-
-//Export
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -38,60 +36,63 @@ function escapeRegExp(value) {
 }
 
 function AssignmentTable(props) {
-    let prepData = useMemo(() => props, [props]);
+    let prepData = useMemo(
+        () => props.tableData
+            .filter((item) =>
+                (item.caseType === props.caseType && item.stakeholderName === props.groupType)
+                || (props.caseType === item.caseType && props.groupType === "0")
+                || (props.groupType === item.stakeholderName && props.caseType === "0")
+                || (props.caseType === "0" && props.groupType === "0")
+            )
+            .map(({
+                      createdDate,
+                      caseStatus,
+                      closedAging,
+                      unclosedAging,
+                      closedAgingDH,
+                      unclosedAgingDH,
+                      caseType,
+                      stakeholderName,
+                      cToken,
+                      caseNum,
+                      vip,
+                      eligibility,
+                      productName,
+                      customerName,
+                      fullname,
+                      ownerName,
+                      areaLocation,
+                      totalNewAlert
+                  }, keys) =>
+                ({
+                    createdDate,
+                    caseStatus,
+                    closedAging,
+                    unclosedAging,
+                    closedAgingDH,
+                    unclosedAgingDH,
+                    caseType,
+                    stakeholderName,
+                    cToken,
+                    caseNum,
+                    vip,
+                    eligibility,
+                    productName,
+                    customerName,
+                    fullname,
+                    ownerName,
+                    areaLocation,
+                    totalNewAlert
+                }))
+        , [props]);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('case_id');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [dense, setDense] = useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [searchText, setSearchText] = useState('');
     const [filteredData, setFilteredData] = useState([]);
-
-    const handleDataUpdate = () => {
-        setFilteredData(
-            prepData.tableData
-                .filter((item) =>
-                    (item.caseType === props.caseType && item.stakeholderName === props.groupType)
-                    || (props.caseType === item.caseType && props.groupType === "0")
-                    || (props.groupType === item.stakeholderName && props.caseType === "0")
-                    || (props.caseType === "0" && props.groupType === "0")
-                )
-                .map(({
-                          createdDate,
-                          caseStatus,
-                          closedAging,
-                          unclosedAging,
-                          closedAgingDH,
-                          unclosedAgingDH,
-                          caseType,
-                          stakeholderName,
-                          cToken,
-                          caseNum,
-                          vip,
-                          eligibility,
-                          productName,
-                          customerName,
-                          fullname,
-                          ownerName,
-                          areaLocation,
-                          totalNewAlert
-                      }, keys) =>
-                    ({
-                        createdDate,
-                        caseStatus,
-                        closedAging,
-                        unclosedAging,
-                        closedAgingDH,
-                        unclosedAgingDH,
-                        caseType,
-                        stakeholderName,
-                        cToken,
-                        caseNum,
-                        vip,
-                        eligibility,
-                        productName,
-                        customerName,
-                        fullname,
-                        ownerName,
-                        areaLocation,
-                        totalNewAlert
-                    }))
-        )
-    };
 
     const csvheaders = [
         {label: "Case ID", key: "case_id"},
@@ -107,14 +108,6 @@ function AssignmentTable(props) {
         {label: "State", key: "state"},
         {label: "Alert", key: "alert"}
     ];
-
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('case_id');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [searchText, setSearchText] = React.useState('');
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -134,7 +127,6 @@ function AssignmentTable(props) {
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
         let newSelected = [];
-
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, name);
         } else if (selectedIndex === 0) {
@@ -147,7 +139,6 @@ function AssignmentTable(props) {
                 selected.slice(selectedIndex + 1),
             );
         }
-
         setSelected(newSelected);
     };
 
@@ -171,30 +162,23 @@ function AssignmentTable(props) {
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
     const requestSearch = (searchValue) => {
-        setSearchText(searchValue);
+        setSearchText(searchValue)
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = filteredData.filter((row) => {
-            return Object.keys(row).some((field) => {
-                if (row[field] !== null) {
-                    return searchRegex.test(row[field].toString());
-                } else {
-                    return false;
-                }
-            });
-        });
-        console.log(filteredData);
-        setFilteredData(filteredRows);
+        if (searchText !== '') {
+            const filteredRows = prepData.filter((row) => {
+                return Object.keys(row).some((field) => {
+                    if (row[field] !== null) {
+                        return searchRegex.test(row[field].toString());
+                    } else {
+                        return false;
+                    }
+                })
+            })
+            setFilteredData(filteredRows)
+        } else {
+            setFilteredData(prepData)
+        }
     };
-
-    useEffect(() => {
-        if (searchText === "") {
-            handleDataUpdate()
-        }
-        if (searchText !== "") {
-            handleDataUpdate()
-            setSearchText(searchText)
-        }
-    }, [prepData.tableData, searchText])
 
     return (
         <div className="table-container">
@@ -203,7 +187,7 @@ function AssignmentTable(props) {
                     <AssignmentTableToolbar
                         numSelected={selected.length}
                         searchText={searchText}
-                        onChange={(event) => requestSearch(event.target.value)}
+                        onChange={(e) => requestSearch(e.target.value)}
                         clearSearch={() => requestSearch('')}
                     />
                     <TableContainer>
@@ -222,7 +206,7 @@ function AssignmentTable(props) {
                             />
                             <TableBody>
                                 {
-                                    filteredData
+                                    (searchText.length >= 1 ? filteredData : prepData)
                                         .slice()
                                         .sort(getComparator(order, orderBy))
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
