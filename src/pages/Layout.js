@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { CustomPicker } from 'react-color';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
@@ -9,7 +8,7 @@ function Layout(props) {
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
   const [myAssignmentDropDownOpen, setMyAssignmentDropDownOpen] = useState(false);
-  const [collaborationDropdown, setCollaborationDropDown] = useState(false);
+  const [openUserModal, setOpenUserModal] = useState(false);
   const [groupDropDownOpen, setGroupDropDownOpen] = useState(false);
   const [allAssignmentDropDownOpen, setAllAssignmentDropDownOpen] = useState(false);
   const [manageUserDropDownOpen, setManageUserDropDownOpen] = useState(false);
@@ -59,8 +58,8 @@ function Layout(props) {
           </div>
           <div className="navbar-buttons navbar-header pull-right  collapse navbar-collapse" role="navigation">
             <ul className="nav ace-nav">
-              <li className="light-blue dropdown-modal">
-                <a data-toggle="dropdown" href="#" className="dropdown-toggle">
+              <li className={`light-blue dropdown-modal ${openUserModal ? "open" : ""}`}>
+                <a data-toggle="dropdown" href="#" className="dropdown-toggle" aria-expanded={` ${openUserModal ? "true" : "false"}`}>
                   <img className="nav-user-photo" src={img2} alt="User's Photo" />
                   <span className="user-info">
                     <small>Welcome,</small>
@@ -69,7 +68,7 @@ function Layout(props) {
                   <i className="ace-icon fa fa-caret-down" />
                 </a>
 
-                <ul className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                   {/*<li>
 									<a href="#">
 										<i class="ace-icon fa fa-cog"></i>
@@ -641,7 +640,6 @@ function Layout(props) {
                 </div>
 
                 {/* Setting code begin Here */}
-                {/* 2. Add 'open' className to open the Setting Icon */}
                 <div className={`ace-settings-box clearfix ${setting === true ? 'open' : ''} `} id="ace-settings-box">
                   <div className="pull-left width-50">
                     <div className="ace-settings-item">
@@ -655,7 +653,7 @@ function Layout(props) {
                         </select>
 
                         {/* Change NavBar color option here */}
-                        <div className={`dropdown dropdown-colorpicker ${showColorOption ? "open" : "close"}`} onClick={() => setShowColorOption(!showColorOption)}>
+                        <div className={`dropdown dropdown-colorpicker ${showColorOption ? "open" : ""}`} onClick={() => setShowColorOption(!showColorOption)}>
                           <a className="dropdown-toggle" aria-expanded={showColorOption ? "true" : "false"}>
                             <span className="btn-colorpicker" style={{ backgroundColor: `${changeNavBarColor}` }} />
                           </a>

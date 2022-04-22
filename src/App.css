@@ -37,13 +37,23 @@
     height: 100%;
 }
 
+/* Dropdown List */
+@media only screen and (max-height: 540px) {
+    #user-dropdown-menu {
+        width: 320px;
+        left: 514px;
+        right: auto;
+        top: 82px;
+    }
+}
+
 @media (max-width: 584px) {
-    .login-box .toolbar > div {
+    .login-box .toolbar>div {
         width: 100%;
         display: grid;
     }
 
-    .login-box .toolbar > div > a {
+    .login-box .toolbar>div>a {
         text-align: center;
         padding: 3px 0;
     }
