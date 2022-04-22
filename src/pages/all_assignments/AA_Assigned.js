@@ -3,6 +3,10 @@ import Layout from '../Layout';
 import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
 
+//Test Table
+import AssignmentTableUI from '../../components/assignments/AssignmentTableUI';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
+
 
 function AA_Assigned() {
     const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
@@ -63,7 +67,7 @@ function AA_Assigned() {
                             <div className="pull-right tableTools-container"/>
                         </div>
                         <div>
-                            <AllAssignmentTable
+                            <AssignmentTable
                                 tableData={assignedData}
                                 caseType={caseType}
                                 groupType={groupType}

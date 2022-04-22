@@ -1,0 +1,4 @@
+.table-toolbar input[type=text],
+textarea {
+    border: 0;
+}
