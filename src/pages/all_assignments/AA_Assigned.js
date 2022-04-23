@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Layout from '../Layout';
 import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-
 //Test Table
-import AssignmentTableUI from '../../components/assignments/AssignmentTableUI';
 import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 
