@@ -82,8 +82,6 @@ const AssignmentTableToolbar = (props) => {
                 }}
             />
         </Box>}
-
-
     </Toolbar>);
 };
 

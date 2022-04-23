@@ -11,6 +11,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import {Link} from 'react-router-dom';
+import DataToCSV from '../../utils/assignment-table/CSVConfiguration';
+import {CSVLink} from 'react-csv';
+
 //Component
 import AssignmentTableToolbar from './AssignmentTableToolbar'
 import AssignmentTableHead from './AssignmentTableHead'
@@ -117,7 +120,7 @@ function AssignmentTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = filteredData.map((n) => n.caseNum);
+            const newSelecteds = prepData.map((n) => n.caseNum);
             setSelected(newSelecteds);
             return;
         }
@@ -182,6 +185,19 @@ function AssignmentTable(props) {
 
     return (
         <div className="table-container">
+            <div className="pull-right tableTools-container dt-buttons btn-overlap btn-group">
+                <CSVLink
+                    className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right"
+                    data={selected.length === 0 ?
+                        (searchText.length >= 1 ? DataToCSV(filteredData) : DataToCSV(prepData)):
+                        DataToCSV(prepData.filter((item) => selected.includes(item.caseNum)))
+                    }
+                    filename={"HERO Portal Back-End Control System.csv"}
+                    headers={csvheaders}
+                >
+                    <i className="fa fa-database bigger-110 orange"/> Export to CSV
+                </CSVLink>
+            </div>
             <Box sx={{width: '100%'}}>
                 <Paper sx={{width: '100%', mb: 2}}>
                     <AssignmentTableToolbar
@@ -202,7 +218,7 @@ function AssignmentTable(props) {
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={filteredData.length}
+                                rowCount={prepData.length}
                             />
                             <TableBody>
                                 {
