@@ -29,7 +29,7 @@
   },
   "scripts": {
 	  "start": "react-scripts start --openssl-legacy-provider",
-    "build": "react-scripts build --openssl-legacy-provider",
+    "build": "react-scripts --openssl-legacy-provider build",
     "deploy": "react-scripts build && firebase deploy --only hosting:goth-testing",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

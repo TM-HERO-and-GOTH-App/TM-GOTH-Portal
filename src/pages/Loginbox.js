@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import LoginTheme from "../utils/login-page-placeholder/LoginTheme";
 import LoginService from "../web_service/login_service/LoginService";
-// import db from '../firebase_login/LoginAuth';
-// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-// const auth = getAuth();
+// Thank you for the creator of this package for custom Loading Icons
+// https://www.npmjs.com/package/react-loading-icons
+import { Oval } from "react-loading-icons";
 
 function Loginbox(props) {
   const [alertStatus, setAlertStatus] = useState(false);
-  const [formSubmit, setFormSubmit] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
 
   useEffect(() => {
     document.title = "Login - HERO Portal";
-  });
+  }, []);
 
   const handleEmail = (e) => {
     setUserEmail(e.target.value);
@@ -46,7 +45,7 @@ function Loginbox(props) {
   // Make a base logic and then pass the data down through parameters
   // The logic is identical to HERO login logic
   const handleSubmit = (e, email, password) => {
-    setFormSubmit(true);
+    setIsValidating(true);
     e.preventDefault();
     email = userEmail;
     password = userPassword;
@@ -57,8 +56,8 @@ function Loginbox(props) {
     LoginService.requestToken(email).then((res) => {
       console.log(res);
       if (res[0].status === "FAILED") {
+        setIsValidating(false);
         setAlertStatus(true);
-        setFormSubmit(false);
       } else {
         const authToken = res[0].authToken;
         sessionStorage.setItem("userToken", JSON.stringify(authToken));
@@ -73,7 +72,7 @@ function Loginbox(props) {
       if (res.response === "FAILED") {
         setAlertStatus(true);
         setAlertMessage("Email or Password does not match.");
-        setFormSubmit(false);
+        setIsValidating(false);
       } else {
         getLoggerProfile(authToken);
       }
@@ -86,7 +85,7 @@ function Loginbox(props) {
       if (res.category !== "STAKEHOLDER") {
         setAlertStatus(true);
         setAlertMessage("Your account is not yet registered as Stakeholder");
-        setFormSubmit(false);
+        setIsValidating(false);
       } else {
         sessionStorage.setItem("UserData", JSON.stringify(res));
         getLov(authToken);
@@ -98,6 +97,7 @@ function Loginbox(props) {
     LoginService.getSystemLOV(authToken).then((res) => {
       console.log(res);
       sessionStorage.setItem("LovData", JSON.stringify(res));
+      setIsValidating(false);
       props.history.replace("/");
       // return <Redirect to='/'/>
     });
@@ -122,7 +122,7 @@ function Loginbox(props) {
                       className="close"
                       data-dismiss="alert"
                     >
-                      <i className="ace-icon fa fa-times" />
+                      <i className="ace-icon fa fa-times" onClick={() => setAlertMessage(!alertStatus)}/>
                     </button>
                     {alertMessage ??
                       "Invalid Username/Password OR Profile not exist. Please try the Forgot Password for assistant"}
@@ -157,13 +157,13 @@ function Loginbox(props) {
                 </label>
                 <div className="space" />
                 <div className="clearfix">
-                  {/*<label class="inline">*/}
-                  {/*  <input type="checkbox" class="ace" />*/}
-                  {/*  <span class="lbl"> Remember Me</span>*/}
-                  {/*</label>*/}
                   <button className="min-width-100 width-35 pull-right btn btn-sm btn-primary">
-                    <i className="ace-icon fa fa-key" />
-                    <span className="bigger-110">Sign In</span>
+                    {isValidating === true ? <Oval height={20}/> :
+                      <>
+                        <i className="ace-icon fa fa-key" />
+                        <span className="bigger-110">Sign In</span>
+                      </>
+                    }
                   </button>
                 </div>
                 <div className="space-4" />
@@ -200,7 +200,7 @@ function Loginbox(props) {
                 <span>Sign Up </span>
                 <i className="ace-icon fa fa-arrow-right" />
               </a>
-              </div>
+            </div>
           </div>
         </div>
       </div>

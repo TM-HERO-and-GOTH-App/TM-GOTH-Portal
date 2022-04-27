@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 // --> https://www.npmjs.com/package/@react-google-maps/api
 // For documentation: https://react-google-maps-api-docs.netlify.app/#marker
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Oval } from "react-loading-icons";
 import Layout from '../Layout';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
@@ -14,30 +15,48 @@ function CaseDetail(props) {
     const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [caseData, setCaseData] = useState({});
     const [alertStatus, setAlertStatus] = useState(false);
+    const [fetchData, setFetchData] = useState(false);
     const [left, setLeft] = useState(true);
     const [alertMessage, setAlertMessage] = useState('');
     const [statusBadge, setStatusBadge] = useState('');
     const [isCoordinator, setCoordinator] = useState('');
     const [isAdmin, setAdmin] = useState('');
+    const [heroBuddyData, setHeroBuddyData] = useState([]);
 
     useEffect(() => {
         const getCaseDetail = () => {
+            setFetchData(true)
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                // console.log(res)
+                console.log(res)
                 setCaseData(res)
+                setFetchData(false)
             })
         }
         
         const getGroupResult = () => {
+            setFetchData(true)
             ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
                 // console.log(res);
-                setCoordinator(res.filter(filter => filter.positionName === "Coordinator"))
-                setAdmin(res.filter(filter => filter.positionName === "Admin"))
+                if(res) {
+                    setCoordinator(res.filter(filter => filter.positionName === "Coordinator"))
+                    setAdmin(res.filter(filter => filter.positionName === "Admin"))
+                    setFetchData(false)
+                }
+            })
+        }
+
+        const getHeroBuddyData = () => {
+            setFetchData(true)
+            CaseDetailService.getHeroBuddyInfo(token, caseToken).then(res => {
+                // console.log(res);
+                setHeroBuddyData(res);
+                setFetchData(false)
             })
         }
 
         getCaseDetail();
         getGroupResult();
+        getHeroBuddyData();
     }, [])
 
 
@@ -65,12 +84,14 @@ function CaseDetail(props) {
     return (
         <Layout
             pageTitle={
-                <span>
-                    Case Detail: <span style={{ color: "green" }}>{caseData.caseNum}</span>
-                </span>
+                fetchData === false &&
+                (<span>
+                    Case Detail: <span style={{ color: "green" }}>{caseData?.caseNum}</span>
+                </span>)
             }
             pageContent={
-                <>
+                fetchData === true ?  <Oval height={20} color={"red"}/> :
+                ( <>
                     {
                         alertStatus &&
                         <div className="row">
@@ -91,8 +112,8 @@ function CaseDetail(props) {
 
                     <div className="row">
                         {
-                            (caseData.caseStatus !== 'CLOSED' || caseData.caseStatus !== 'CANCELLED') &&
-                            <div className="col-sm-5">
+                            (caseData.caseStatus !== "CLOSED") &&
+                             ( <div className="col-sm-5">
                                 {
                                     caseData.ownerName !== null &&
                                     <button className="btn btn-primary" onClick={assignCaseToMe}>
@@ -113,10 +134,10 @@ function CaseDetail(props) {
                                         Edit Case Detail
                                     </Link>
                                 }
-                            </div>
+                            </div> )
                         }
 
-                        <div className="col-sm-7" align='right'>
+                        <div className="col-sm-7" align={caseData.caseStatus === "CLOSED" || caseData.caseStatus === "CANCELLED" ? "" : "right"}>
                             <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
                                 Action Taken
                                 {/* <!--<i className="ace-icon fa fa-arrow-right icon-on-right"></i>--> */}
@@ -415,6 +436,20 @@ function CaseDetail(props) {
                             </div>
                         </div>
                     </div>{/* <!-- /.row --> */}
+                    <div className="space-20"/>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <h4 className="header green">HEROBUDDY INFO</h4>
+                            { heroBuddyData === undefined ? (<i style={{color:"red"}}>Data not available</i>) :
+                            heroBuddyData.map((data, index) => {
+                                return data !== null && 
+                                <br key={index}>
+                                    <b>{data}</b>
+                                </br>
+                                })
+                            }
+                        </div>
+                    </div>
                     <div className="space-20" />
                     <div className="row">
                         <div className="col-sm-12">
@@ -465,7 +500,7 @@ function CaseDetail(props) {
                             </div>
                         </div>
                     }
-                </>
+                </> )
             }
         />
     )

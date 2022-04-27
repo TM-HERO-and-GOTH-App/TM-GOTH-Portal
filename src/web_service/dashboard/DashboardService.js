@@ -67,9 +67,14 @@ const DashboardService = {
             body: JSON.stringify({
                 'authToken': authToken,
                 'startDate': '2018-01-01',
-                'endDate': '2018-01-01'
+                'endDate': '2018-01-01',
+                "category": "COMPLAINT"
             })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => {
+            if(res.ok) return res.json(); 
+            else throw new Error("Status code error :" + res.status)})
+            .then(data => { return data })
+            .catch(err => console.log(err))
     }
 }
 
