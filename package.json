@@ -19,6 +19,7 @@
     "react-color": "^2.19.3",
     "react-csv": "^2.2.2",
     "react-dom": "^17.0.2",
+    "react-loading-icons": "^1.0.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-table": "^7.7.0",
@@ -27,8 +28,8 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-	"start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
+	  "start": "react-scripts start --openssl-legacy-provider",
+    "build": "react-scripts build --openssl-legacy-provider",
     "deploy": "react-scripts build && firebase deploy --only hosting:goth-testing",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
