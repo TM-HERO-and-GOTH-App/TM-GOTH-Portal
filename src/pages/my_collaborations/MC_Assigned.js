@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-import AssignmentTable from '../../components/assignments/AssignmentTableData';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function MC_Assigned() {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));

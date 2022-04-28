@@ -13,7 +13,7 @@ function AA_Assigned() {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const allAssignmentData = async() => {
+        const allAssignmentData = async () => {
             setIsLoading(true);
             const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 64)
             setAssignedCase(res)
@@ -39,7 +39,8 @@ function AA_Assigned() {
                                 {
                                     lovData
                                         .filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN')
-                                        .map((data, key) => <option key={key} value={data.lovName}>{data.lovName} </option>)
+                                        .map((data, key) => <option key={key}
+                                                                    value={data.lovName}>{data.lovName} </option>)
                                 }
                             </select>
                         </div>
@@ -51,7 +52,8 @@ function AA_Assigned() {
                                 {
                                     lovData
                                         .filter(filter => filter.lovGroup === 'CASE-TYPE')
-                                        .map((data, key) => <option key={key} value={data.lovName}>{data.lovName}</option>)
+                                        .map((data, key) => <option key={key}
+                                                                    value={data.lovName}>{data.lovName}</option>)
                                 }
                             </select>
                         </div>

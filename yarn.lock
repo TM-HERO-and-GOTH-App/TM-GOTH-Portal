@@ -10381,7 +10381,7 @@ react-is@^17.0.1, react-is@^17.0.2:
 
 react-loading-icons@^1.0.8:
   version "1.0.8"
-  resolved "https://registry.npmjs.org/react-loading-icons/-/react-loading-icons-1.0.8.tgz"
+  resolved "https://registry.yarnpkg.com/react-loading-icons/-/react-loading-icons-1.0.8.tgz#8799af7507d92401778590b27de8d7ed679e2b95"
   integrity sha512-j0myUwDUPoo3qaPkbgnA7U2RNHqLLC+wXcpMWe+rtk3Iw+mGHltZ3QitPSHFKtsFKlpM9UlMmZGZ6sw6WVVW7w==
 
 react-refresh@^0.8.3:

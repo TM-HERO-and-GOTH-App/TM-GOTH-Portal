@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
-import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function AA_Closed() {
