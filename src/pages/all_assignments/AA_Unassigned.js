@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
 import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function AA_Unassigned() {
   const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
@@ -10,18 +11,17 @@ function AA_Unassigned() {
   const [unAssignedCase, setUnAssignedCase] = useState([]);
   const [caseType, setCaseType] = useState('0');
   const [groupType, setGroupType] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const unAssignedData = () => {
-      AssignmentService.viewCaseByGroup(token, userData.shID, 61).then(res => {
-        // console.log(res);
-        setUnAssignedCase(res)
-      })
+    const allAssignmentData = async() => {
+      setIsLoading(true);
+      const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 61)
+      setUnAssignedCase(res)
+      setIsLoading(false);
     }
-
-    unAssignedData();
+    allAssignmentData();
   }, [])
-
 
   return (
     <Layout
@@ -62,10 +62,11 @@ function AA_Unassigned() {
                 <div className="pull-right tableTools-container"></div>
               </div>
               <div>
-                <AllAssignmentTable
+                <AssignmentTable
                   tableData={unAssignedCase}
                   caseType={caseType}
                   groupType={groupType}
+                  isLoading={isLoading}
                 />
               </div>
             </div>  {/* //<!-- /.span --> */}

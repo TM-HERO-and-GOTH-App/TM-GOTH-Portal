@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import AssignmentTable from '../../components/assignments/AssignmentTableData';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
 
@@ -7,21 +7,21 @@ function GA_Inprogress() {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
   const [inProgressCase, setInProgressCase] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const loggerCase = () => {
-      AssignmentService.viewCaseByGroup(token, userData.shID, 67).then(res => {
-        // console.log(res);
-        setInProgressCase(res)
-      })
+    const loggerCase = async () => {
+      setIsLoading(true)
+      const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 67)
+      setInProgressCase(res)
+      setIsLoading(false)
     }
-
     loggerCase()
   }, [])
 
 
   return (
-    <Layout 
+    <Layout
     pageTitle={
       <span>
         Nationwide Assignments : <span style={{color: 'green'}}>IN-PROGRESS</span>
@@ -47,6 +47,7 @@ function GA_Inprogress() {
             <div>
               <AssignmentTable
                 tableData={inProgressCase}
+                isLoading={isLoading}
               />
             </div>
           </div>{/* /.span */}

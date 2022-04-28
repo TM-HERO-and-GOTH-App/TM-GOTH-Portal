@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
 import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function AA_Inprogress() {
   const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
@@ -10,14 +11,14 @@ function AA_Inprogress() {
   const [inProgressCase, setInProgressCase] = useState([]);
   const [caseType, setCaseType] = useState('0');
   const [groupType, setGroupType] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const allAssignmentData = () => {
-      const shID = userData.shID;
-      AssignmentService.viewCaseByGroup(token, shID, 67).then(res => {
-        // console.log(res);
-        setInProgressCase(res)
-      })
+    const allAssignmentData = async() => {
+      setIsLoading(true);
+      const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 67)
+      setInProgressCase(res)
+      setIsLoading(false);
     }
     allAssignmentData();
   }, [])
@@ -59,10 +60,11 @@ function AA_Inprogress() {
                 <div className="pull-right tableTools-container"></div>
               </div>
               <div>
-                <AllAssignmentTable
+                <AssignmentTable
                   tableData={inProgressCase}
                   caseType={caseType}
                   groupType={groupType}
+                  isLoading={isLoading}
                 />
               </div>
             </div>  {/* //<!-- /.span --> */}

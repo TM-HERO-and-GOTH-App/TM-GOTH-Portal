@@ -11,75 +11,89 @@ import {visuallyHidden} from '@mui/utils';
 const headCells = [
     {
         id: 'caseNum',
-        numeric: false,
-        disablePadding: true,
+        center: false,
+        disablePadding: false,
         label: 'Case ID',
+        sortable: true,
     },
     {
         id: 'caseStatus',
-        numeric: false,
+        center: true,
         disablePadding: false,
         label: 'Status',
+        sortable: false,
     },
     {
         id: 'unclosedAging',
-        numeric: false,
-        disablePadding: false,
+        center: true,
+        disablePadding: true,
+        width: '6%',
         label: 'Aging',
+        sortable: true,
     },
     {
         id: 'caseType',
-        numeric: false,
+        center: false,
         disablePadding: false,
         label: 'Type',
+        sortable: true,
     },
     {
         id: 'vip',
-        numeric: true,
-        disablePadding: false,
+        center: true,
+        disablePadding: true,
         label: 'VIP',
+        sortable: false,
     },
     {
         id: 'eligibility',
-        numeric: false,
-        disablePadding: false,
+        center: true,
+        disablePadding: true,
         label: 'ELG',
+        sortable: false,
     },
     {
         id: 'productName',
-        numeric: false,
+        center: false,
         disablePadding: false,
+        width: '8%',
         label: 'Product',
+        sortable: true,
     },
     {
         id: 'customerName',
-        numeric: false,
-        disablePadding: false,
+        center: false,
+        disablePadding: true,
         label: 'Customer',
+        sortable: true,
     },
     {
         id: 'fullname',
-        numeric: false,
+        center: false,
         disablePadding: false,
         label: 'HERO',
+        sortable: true,
     },
     {
         id: 'ownerName',
-        numeric: false,
-        disablePadding: false,
+        center: false,
+        disablePadding: true,
         label: 'Owner / Group',
+        sortable: true,
     },
     {
         id: 'areaLocation',
-        numeric: false,
+        center: true,
         disablePadding: false,
         label: 'State',
+        sortable: false,
     },
     {
         id: 'totalNewAlert',
-        numeric: false,
-        disablePadding: false,
+        center: true,
+        disablePadding: true,
         label: <i className="ace-icon fa fa-bell icon-animated-bell"/>,
+        sortable: false,
     },
 ];
 
@@ -93,9 +107,11 @@ function AssignmentTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell padding="checkbox"
+                sx={{display: "none"}}>
                     <Checkbox
                         color="primary"
+                        size="small"
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
@@ -107,14 +123,22 @@ function AssignmentTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align={headCell.center ? 'center' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        sx={{minWidth: headCell.width ? headCell.width : ''}}
                     >
                         <TableSortLabel
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
+                            onClick={!headCell.sortable ? null : createSortHandler(headCell.id)}
+                            hideSortIcon={!headCell.sortable}
+                            sx={headCell.sortable ? {} :
+                                {
+                                    color: '#1E90FF',
+                                    '&:hover': {cursor: 'auto', color: '#1E90FF'},
+                                }
+                            }
                         >
                             {headCell.label}
                             {orderBy === headCell.id ? (

@@ -1,10 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '../Layout';
-import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-//Test Table
 import AssignmentTable from '../../components/assignments/AssignmentTable';
-
 
 function AA_Assigned() {
     const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
@@ -13,17 +10,17 @@ function AA_Assigned() {
     const [assignedData, setAssignedCase] = useState([]);
     const [caseType, setCaseType] = useState('0');
     const [groupType, setGroupType] = useState('0');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const allAssignmentData = () => {
-            AssignmentService.viewCaseByGroup(token, userData.shID, 64).then(res => {
-                // console.log(res);
-                setAssignedCase(res)
-            })
+        const allAssignmentData = async() => {
+            setIsLoading(true);
+            const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 64)
+            setAssignedCase(res)
+            setIsLoading(false);
         }
         allAssignmentData();
     }, [])
-
 
     return (
         <Layout
@@ -69,6 +66,7 @@ function AA_Assigned() {
                                 tableData={assignedData}
                                 caseType={caseType}
                                 groupType={groupType}
+                                isLoading={isLoading}
                             />
                         </div>
                     </div>

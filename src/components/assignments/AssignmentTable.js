@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useRef, useState} from "react";
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,8 +13,6 @@ import Switch from '@mui/material/Switch';
 import {Link} from 'react-router-dom';
 import DataToCSV from '../../utils/assignment-table/CSVConfiguration';
 import {CSVLink} from 'react-csv';
-
-//Component
 import AssignmentTableToolbar from './AssignmentTableToolbar'
 import AssignmentTableHead from './AssignmentTableHead'
 
@@ -29,9 +27,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
+    return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function escapeRegExp(value) {
@@ -39,55 +35,51 @@ function escapeRegExp(value) {
 }
 
 function AssignmentTable(props) {
-    let prepData = useMemo(
-        () => props.tableData
-            .filter((item) =>
-                (item.caseType === props.caseType && item.stakeholderName === props.groupType)
-                || (props.caseType === item.caseType && props.groupType === "0")
-                || (props.groupType === item.stakeholderName && props.caseType === "0")
-                || (props.caseType === "0" && props.groupType === "0")
-            )
-            .map(({
-                      createdDate,
-                      caseStatus,
-                      closedAging,
-                      unclosedAging,
-                      closedAgingDH,
-                      unclosedAgingDH,
-                      caseType,
-                      stakeholderName,
-                      cToken,
-                      caseNum,
-                      vip,
-                      eligibility,
-                      productName,
-                      customerName,
-                      fullname,
-                      ownerName,
-                      areaLocation,
-                      totalNewAlert
-                  }, keys) =>
-                ({
-                    createdDate,
-                    caseStatus,
-                    closedAging,
-                    unclosedAging,
-                    closedAgingDH,
-                    unclosedAgingDH,
-                    caseType,
-                    stakeholderName,
-                    cToken,
-                    caseNum,
-                    vip,
-                    eligibility,
-                    productName,
-                    customerName,
-                    fullname,
-                    ownerName,
-                    areaLocation,
-                    totalNewAlert
-                }))
-        , [props]);
+    let prepData = useMemo(() => props.tableData
+        .filter((item) =>
+            (typeof props.caseType !== 'undefined' && typeof props.groupType !== 'undefined') ?
+            (item.caseType === props.caseType && item.stakeholderName === props.groupType) || (props.caseType === item.caseType && props.groupType === "0") || (props.groupType === item.stakeholderName && props.caseType === "0") || (props.caseType === "0" && props.groupType === "0"):
+                (item)
+        )
+        .map(({
+                  createdDate,
+                  caseStatus,
+                  closedAging,
+                  unclosedAging,
+                  closedAgingDH,
+                  unclosedAgingDH,
+                  caseType,
+                  stakeholderName,
+                  cToken,
+                  caseNum,
+                  vip,
+                  eligibility,
+                  productName,
+                  customerName,
+                  fullname,
+                  ownerName,
+                  areaLocation,
+                  totalNewAlert
+              }, keys) => ({
+            createdDate,
+            caseStatus,
+            closedAging,
+            unclosedAging,
+            closedAgingDH,
+            unclosedAgingDH,
+            caseType,
+            stakeholderName,
+            cToken,
+            caseNum,
+            vip,
+            eligibility,
+            productName,
+            customerName,
+            fullname,
+            ownerName,
+            areaLocation,
+            totalNewAlert
+        })), [props]);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('case_id');
     const [selected, setSelected] = useState([]);
@@ -109,8 +101,25 @@ function AssignmentTable(props) {
         {label: "HERO", key: "hero"},
         {label: "Owner/Group", key: "owner_group"},
         {label: "State", key: "state"},
-        {label: "Alert", key: "alert"}
+        {label: "Alert", key: "alert"},
     ];
+
+    const [csvData, setCSVData] = useState([])
+    const csvLink = useRef()
+    const isMounted = useRef(false)
+    const getCSVData = async() => {
+        const res =  await (selected.length === 0 ? (searchText.length >= 1 ? DataToCSV(filteredData) : DataToCSV(prepData)) : DataToCSV(prepData.filter((item) => selected.includes(item.caseNum))))
+        setCSVData(res)
+        isMounted.current = true
+    }
+    //useEffect only CSVData is changed
+    React.useEffect(() => {
+        //to prevent useEffect from running on initial render
+        if (isMounted.current) {
+            csvLink.current.link.click()
+            isMounted.current = false
+        }
+    }, [csvData])
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -137,10 +146,7 @@ function AssignmentTable(props) {
         } else if (selectedIndex === selected.length - 1) {
             newSelected = newSelected.concat(selected.slice(0, -1));
         } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
+            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1),);
         }
         setSelected(newSelected);
     };
@@ -160,10 +166,7 @@ function AssignmentTable(props) {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    // Avoid a layout jump when reaching the last page with empty filteredData.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
-
+    // RegExp is include in the requestSearch function to ensure consisten
     const requestSearch = (searchValue) => {
         setSearchText(searchValue)
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
@@ -183,145 +186,139 @@ function AssignmentTable(props) {
         }
     };
 
-    return (
-        <div className="table-container">
+    return (<div className="table-container">
+        <Box sx={{width: '100%'}}>
+            <Paper sx={{width: '100%', mb: 2}}>
+                <AssignmentTableToolbar
+                    numSelected={selected.length}
+                    searchText={searchText}
+                    onChange={(e) => requestSearch(e.target.value)}
+                    clearSearch={() => requestSearch('')}
+                    cancelSelection={handleSelectAllClick}
+                />
+                <TableContainer>
+                    <Table
+                        sx={{minWidth: 750}}
+                        aria-labelledby="tableTitle"
+                        size={dense ? 'small' : 'medium'}
+                    >
+                        <AssignmentTableHead
+                            numSelected={selected.length}
+                            order={order}
+                            orderBy={orderBy}
+                            onSelectAllClick={handleSelectAllClick}
+                            onRequestSort={handleRequestSort}
+                            rowCount={prepData.length}
+                        />
+                        <TableBody>
+                            {props.isLoading === true ? (
+                                    <TableRow><TableCell colSpan={12}>{'Add Loading Context Here !!!'}</TableCell></TableRow>) : //loading prop
+                                (searchText.length >= 1 ? filteredData : prepData)
+                                    .slice()
+                                    .sort(getComparator(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((data, index) => {
+                                        const isItemSelected = isSelected(data.caseNum);
+                                        const labelId = `assignment-table-checkbox-${index}`;
+                                        const date = new Date(data.createdDate)
+                                        const formattedDate = date.toLocaleDateString("en-GB", {
+                                            day: "numeric",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                            hour: 'numeric',
+                                            minute: 'numeric',
+                                            hourCycle: 'h12'
+                                        })
+                                        const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
+                                        const agingKey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
+                                        return (<TableRow
+                                                hover
+                                                onClick={(event) => handleClick(event, data.caseNum)}
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                tabIndex={-1}
+                                                key={data.caseNum}
+                                                selected={isItemSelected}
+                                            >
+                                                <TableCell
+                                                    padding="checkbox"
+                                                    sx={{display: "none"}}
+                                                >
+                                                    <Checkbox
+                                                        size="small"
+                                                        color="primary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell component="th" id={labelId} scope="row"><Link
+                                                    to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
+                                                    <small title="Created Date">{formattedDate}</small>
+                                                </TableCell>
+                                                <TableCell align="center" padding="none"><span
+                                                    className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>
+                                                </TableCell>
+                                                <TableCell align="center" padding="none"
+                                                           title='Day:Hour'>{agingDay < 16 ? agingKey :
+                                                    <span style={{fontSize: "10px"}}
+                                                          className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
+                                                        </span>}
+                                                </TableCell>
+                                                <TableCell>{data.caseType}</TableCell>
+                                                <TableCell align="center">{data.vip ?
+                                                    <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}</TableCell>
+                                                <TableCell align="center">{data.eligibility}</TableCell>
+                                                <TableCell>{data.productName === null ? '-' : data.productName}</TableCell>
+                                                <TableCell padding="none">{data.customerName}</TableCell>
+                                                <TableCell>{data.vip ? <span
+                                                    className="label label-success arrowed-right">{data.fullname}
+                                                </span> : data.fullname}</TableCell>
+                                                <TableCell
+                                                    padding="none">{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</TableCell>
+                                                <TableCell align="center">{data.areaLocation}</TableCell>
+                                                <TableCell align="center">{data.totalNewAlert > 0 ?
+                                                    <span style={{fontSize: 10}}
+                                                          className="badge badge-warning">{data.totalNewAlert}
+                                                        </span> : '-'}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={(searchText.length >= 1 ? filteredData : prepData).length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
+            <FormControlLabel
+                control={<Switch checked={dense} onChange={handleChangeDense}/>}
+                label="Dense padding"
+            />
             <div className="pull-right tableTools-container dt-buttons btn-overlap btn-group">
+                <button onClick={getCSVData}
+                        className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right">
+                    <i className="fa fa-database bigger-110 orange"/> Export to CSV
+                </button>
                 <CSVLink
-                    className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right"
-                    data={selected.length === 0 ?
-                        (searchText.length >= 1 ? DataToCSV(filteredData) : DataToCSV(prepData)):
-                        DataToCSV(prepData.filter((item) => selected.includes(item.caseNum)))
-                    }
+                    className="hidden"
+                    data={csvData}
                     filename={"HERO Portal Back-End Control System.csv"}
                     headers={csvheaders}
-                >
-                    <i className="fa fa-database bigger-110 orange"/> Export to CSV
-                </CSVLink>
-            </div>
-            <Box sx={{width: '100%'}}>
-                <Paper sx={{width: '100%', mb: 2}}>
-                    <AssignmentTableToolbar
-                        numSelected={selected.length}
-                        searchText={searchText}
-                        onChange={(e) => requestSearch(e.target.value)}
-                        clearSearch={() => requestSearch('')}
-                    />
-                    <TableContainer>
-                        <Table
-                            sx={{minWidth: 750}}
-                            aria-labelledby="tableTitle"
-                            size={dense ? 'small' : 'medium'}
-                        >
-                            <AssignmentTableHead
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={handleSelectAllClick}
-                                onRequestSort={handleRequestSort}
-                                rowCount={prepData.length}
-                            />
-                            <TableBody>
-                                {
-                                    (searchText.length >= 1 ? filteredData : prepData)
-                                        .slice()
-                                        .sort(getComparator(order, orderBy))
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((data, index) => {
-                                            const isItemSelected = isSelected(data.caseNum);
-                                            const labelId = `assignment-table-checkbox-${index}`;
-                                            const date = new Date(data.createdDate)
-                                            const formattedDate = date.toLocaleDateString("en-GB", {
-                                                day: "numeric",
-                                                month: "2-digit",
-                                                year: "numeric",
-                                                hour: 'numeric',
-                                                minute: 'numeric',
-                                                hourCycle: 'h12'
-                                            })
-                                            const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
-                                            const agingKey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    onClick={(event) => handleClick(event, data.caseNum)}
-                                                    role="checkbox"
-                                                    aria-checked={isItemSelected}
-                                                    tabIndex={-1}
-                                                    key={data.caseNum}
-                                                    selected={isItemSelected}
-                                                >
-                                                    <TableCell padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell component="th" id={labelId} scope="row"
-                                                               padding="none"><Link
-                                                        to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
-                                                        <small title="Created Date">{formattedDate}</small>
-                                                    </TableCell>
-                                                    <TableCell align="center"><span
-                                                        className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>
-                                                    </TableCell>
-                                                    <TableCell align="center"
-                                                               title='Day:Hour'>{agingDay < 16 ? agingKey :
-                                                        <span style={{fontSize: "10px"}}
-                                                              className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
-                                                </span>}
-                                                    </TableCell>
-                                                    <TableCell>{data.caseType}</TableCell>
-                                                    <TableCell align="center">{data.vip ?
-                                                        <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}</TableCell>
-                                                    <TableCell align="center">{data.eligibility}</TableCell>
-                                                    <TableCell>{data.productName === null ? '-' : data.productName}</TableCell>
-                                                    <TableCell>{data.customerName}</TableCell>
-                                                    <TableCell>{data.vip ?
-                                                        <span
-                                                            className="label label-success arrowed-right">{data.fullname}
-                                                </span> : data.fullname}</TableCell>
-                                                    <TableCell>{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</TableCell>
-                                                    <TableCell align="center">{data.areaLocation}</TableCell>
-                                                    <TableCell align="center">{data.totalNewAlert > 0 ?
-                                                        <span style={{fontSize: 10}}
-                                                              className="badge badge-warning">{data.totalNewAlert}
-                                                </span> : '-'}
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                {emptyRows > 0 && (
-                                    <TableRow
-                                        style={{
-                                            height: (dense ? 33 : 53) * emptyRows,
-                                        }}
-                                    >
-                                        <TableCell colSpan={6}/>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={filteredData.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Paper>
-                <FormControlLabel
-                    control={<Switch checked={dense} onChange={handleChangeDense}/>}
-                    label="Dense padding"
+                    ref={csvLink}
+                    target='_blank'
                 />
-            </Box>
-        </div>
-    );
+            </div>
+        </Box>
+    </div>);
 }
 
 export default AssignmentTable;
