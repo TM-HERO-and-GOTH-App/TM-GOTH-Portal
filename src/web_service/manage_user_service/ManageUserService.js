@@ -25,7 +25,10 @@ const ManageUserService = {
                 shID: 0,
                 activationStatus: keyword
             })
-        }).then(res => res.json()).catch(err => console.log(err));
+        }).then(res => {
+            if(res.ok) return res.json();
+            else throw new Error("Status code error :" + res.status)
+        }).catch(err => console.log(err));
     },
 
     async getProfileByKeyword(authToken, keyword){

@@ -1,4 +1,7 @@
-import React, {useMemo, useRef, useState} from "react";
+import React, { useMemo, useRef, useState } from "react";
+import { Link } from 'react-router-dom';
+import { CSVLink } from 'react-csv';
+import { Oval } from 'react-loading-icons';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,9 +13,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import {Link} from 'react-router-dom';
 import DataToCSV from '../../utils/assignment-table/CSVConfiguration';
-import {CSVLink} from 'react-csv';
 import AssignmentTableToolbar from './AssignmentTableToolbar'
 import AssignmentTableHead from './AssignmentTableHead'
 
@@ -38,29 +39,10 @@ function AssignmentTable(props) {
     let prepData = useMemo(() => props.tableData
         .filter((item) =>
             (typeof props.caseType !== 'undefined' && typeof props.groupType !== 'undefined') ?
-            (item.caseType === props.caseType && item.stakeholderName === props.groupType) || (props.caseType === item.caseType && props.groupType === "0") || (props.groupType === item.stakeholderName && props.caseType === "0") || (props.caseType === "0" && props.groupType === "0"):
+                (item.caseType === props.caseType && item.stakeholderName === props.groupType) || (props.caseType === item.caseType && props.groupType === "0") || (props.groupType === item.stakeholderName && props.caseType === "0") || (props.caseType === "0" && props.groupType === "0") :
                 (item)
         )
         .map(({
-                  createdDate,
-                  caseStatus,
-                  closedAging,
-                  unclosedAging,
-                  closedAgingDH,
-                  unclosedAgingDH,
-                  caseType,
-                  stakeholderName,
-                  cToken,
-                  caseNum,
-                  vip,
-                  eligibility,
-                  productName,
-                  customerName,
-                  fullname,
-                  ownerName,
-                  areaLocation,
-                  totalNewAlert
-              }, keys) => ({
             createdDate,
             caseStatus,
             closedAging,
@@ -78,7 +60,28 @@ function AssignmentTable(props) {
             fullname,
             ownerName,
             areaLocation,
-            totalNewAlert
+            totalNewAlert,
+            response
+        }, keys) => ({
+            createdDate,
+            caseStatus,
+            closedAging,
+            unclosedAging,
+            closedAgingDH,
+            unclosedAgingDH,
+            caseType,
+            stakeholderName,
+            cToken,
+            caseNum,
+            vip,
+            eligibility,
+            productName,
+            customerName,
+            fullname,
+            ownerName,
+            areaLocation,
+            totalNewAlert,
+            response
         })), [props]);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('case_id');
@@ -90,25 +93,25 @@ function AssignmentTable(props) {
     const [filteredData, setFilteredData] = useState([]);
 
     const csvheaders = [
-        {label: "Case ID", key: "case_id"},
-        {label: "Status", key: "status"},
-        {label: "Aging", key: "aging"},
-        {label: "Type", key: "type"},
-        {label: "VIP", key: "vip"},
-        {label: "ELG", key: "eligibility"},
-        {label: "Product", key: "product"},
-        {label: "Customer", key: "customer"},
-        {label: "HERO", key: "hero"},
-        {label: "Owner/Group", key: "owner_group"},
-        {label: "State", key: "state"},
-        {label: "Alert", key: "alert"},
+        { label: "Case ID", key: "case_id" },
+        { label: "Status", key: "status" },
+        { label: "Aging", key: "aging" },
+        { label: "Type", key: "type" },
+        { label: "VIP", key: "vip" },
+        { label: "ELG", key: "eligibility" },
+        { label: "Product", key: "product" },
+        { label: "Customer", key: "customer" },
+        { label: "HERO", key: "hero" },
+        { label: "Owner/Group", key: "owner_group" },
+        { label: "State", key: "state" },
+        { label: "Alert", key: "alert" },
     ];
 
     const [csvData, setCSVData] = useState([])
     const csvLink = useRef()
     const isMounted = useRef(false)
-    const getCSVData = async() => {
-        const res =  await (selected.length === 0 ? (searchText.length >= 1 ? DataToCSV(filteredData) : DataToCSV(prepData)) : DataToCSV(prepData.filter((item) => selected.includes(item.caseNum))))
+    const getCSVData = async () => {
+        const res = await (selected.length === 0 ? (searchText.length >= 1 ? DataToCSV(filteredData) : DataToCSV(prepData)) : DataToCSV(prepData.filter((item) => selected.includes(item.caseNum))))
         setCSVData(res)
         isMounted.current = true
     }
@@ -187,8 +190,8 @@ function AssignmentTable(props) {
     };
 
     return (<div className="table-container">
-        <Box sx={{width: '100%'}}>
-            <Paper sx={{width: '100%', mb: 2}}>
+        <Box sx={{ width: '100%' }}>
+            <Paper sx={{ width: '100%', mb: 2 }}>
                 <AssignmentTableToolbar
                     numSelected={selected.length}
                     searchText={searchText}
@@ -198,7 +201,7 @@ function AssignmentTable(props) {
                 />
                 <TableContainer>
                     <Table
-                        sx={{minWidth: 750}}
+                        sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
                     >
@@ -211,8 +214,14 @@ function AssignmentTable(props) {
                             rowCount={prepData.length}
                         />
                         <TableBody>
-                            {props.isLoading === true ? (
-                                    <TableRow><TableCell colSpan={12}>{'Add Loading Context Here !!!'}</TableCell></TableRow>) : //loading prop
+                            {props.isLoading ? (
+                                <TableRow>
+                                    <TableCell colSpan={12} align="center">
+                                        <Oval color="black" height={40} alignmentBaseline="central"/>
+                                        <p>Getting the data...</p>
+                                    </TableCell>
+                                </TableRow>
+                                ) : //loading prop
                                 (searchText.length >= 1 ? filteredData : prepData)
                                     .slice()
                                     .sort(getComparator(order, orderBy))
@@ -231,7 +240,14 @@ function AssignmentTable(props) {
                                         })
                                         const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
                                         const agingKey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
-                                        return (<TableRow
+                                        return (data.response === "FAILED") ?
+                                            (
+                                                <TableRow>
+                                                    <TableCell style={{ color: 'red' }}>List is empty</TableCell>
+                                                </TableRow>
+                                            )
+                                            :
+                                            (<TableRow
                                                 hover
                                                 onClick={(event) => handleClick(event, data.caseNum)}
                                                 role="checkbox"
@@ -242,7 +258,7 @@ function AssignmentTable(props) {
                                             >
                                                 <TableCell
                                                     padding="checkbox"
-                                                    sx={{display: "none"}}
+                                                    sx={{ display: "none" }}
                                                 >
                                                     <Checkbox
                                                         size="small"
@@ -254,16 +270,16 @@ function AssignmentTable(props) {
                                                     />
                                                 </TableCell>
                                                 <TableCell component="th" id={labelId} scope="row"><Link
-                                                    to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
+                                                    to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br />
                                                     <small title="Created Date">{formattedDate}</small>
                                                 </TableCell>
                                                 <TableCell align="center" padding="none"><span
                                                     className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>
                                                 </TableCell>
                                                 <TableCell align="center" padding="none"
-                                                           title='Day:Hour'>{agingDay < 16 ? agingKey :
-                                                    <span style={{fontSize: "10px"}}
-                                                          className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
+                                                    title='Day:Hour'>{agingDay < 16 ? agingKey :
+                                                        <span style={{ fontSize: "10px" }}
+                                                            className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
                                                         </span>}
                                                 </TableCell>
                                                 <TableCell>{data.caseType}</TableCell>
@@ -279,12 +295,12 @@ function AssignmentTable(props) {
                                                     padding="none">{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</TableCell>
                                                 <TableCell align="center">{data.areaLocation}</TableCell>
                                                 <TableCell align="center">{data.totalNewAlert > 0 ?
-                                                    <span style={{fontSize: 10}}
-                                                          className="badge badge-warning">{data.totalNewAlert}
-                                                        </span> : '-'}
+                                                    <span style={{ fontSize: 10 }}
+                                                        className="badge badge-warning">{data.totalNewAlert}
+                                                    </span> : '-'}
                                                 </TableCell>
                                             </TableRow>
-                                        );
+                                            );
                                     })}
                         </TableBody>
                     </Table>
@@ -300,13 +316,13 @@ function AssignmentTable(props) {
                 />
             </Paper>
             <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense}/>}
+                control={<Switch checked={dense} onChange={handleChangeDense} />}
                 label="Dense padding"
             />
             <div className="pull-right tableTools-container dt-buttons btn-overlap btn-group">
                 <button onClick={getCSVData}
-                        className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right">
-                    <i className="fa fa-database bigger-110 orange"/> Export to CSV
+                    className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right">
+                    <i className="fa fa-database bigger-110 orange" /> Export to CSV
                 </button>
                 <CSVLink
                     className="hidden"

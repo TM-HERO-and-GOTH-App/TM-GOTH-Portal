@@ -16,6 +16,12 @@ function Layout(props) {
   const [searchInput, setUserInput] = useState('');
   const [setting, setSetting] = useState(false);
   const [showColorOption, setShowColorOption] = useState(false);
+  const [fixedNavBar, setFixedNavBar] = useState(false);
+  const [fixedSideBar, setSideNavBar] = useState(false);
+  const [showMyAssignmentNavbarDropDown, setShowMyAssignmentNavBarDropDown] = useState(false);
+  const [showGroupAssignmentNavbarDropDown, setShowGroupAssignmentNavBarDropDown] = useState(false);
+  const [showAllAssignmentNavbarDropDown, setShowAllAssignmentNavBarDropDown] = useState(false);
+  const [showManageUserNavbarDropDown, setShowManageUserNavBarDropDown] = useState(false);
   const [changeNavBarColor, setChangeNavBarColor] = useState('#438EB9');
 
   const clearsessionStorage = () => {
@@ -37,7 +43,7 @@ function Layout(props) {
 
   return (
     <div class={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
-      <div id="navbar" className="navbar navbar-default navbar-collapse ace-save-state">
+      <div id="navbar" className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ? "navbar-fixed-top" : ""}`}>
         <div className="navbar-container ace-save-state" id="navbar-container">
           <div className="navbar-header pull-left">
             <a href="/" className="navbar-brand">
@@ -69,12 +75,6 @@ function Layout(props) {
                 </a>
 
                 <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                  {/*<li>
-									<a href="#">
-										<i class="ace-icon fa fa-cog"></i>
-										Settings
-									</a>
-								</li>*/}
                   <li>
                     <a href="/user-profile">
                       <i className="ace-icon fa fa-user" />
@@ -108,46 +108,6 @@ function Layout(props) {
           </div>
 
           <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
-            <ul className="nav navbar-nav">
-              {/* <li>
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								Overview &nbsp;
-								<i class="ace-icon fa fa-angle-down bigger-110"></i>
-							</a>
-
-							<ul class="dropdown-menu dropdown-light-blue dropdown-caret">
-								<li>
-									<a href="#">
-										<i class="ace-icon fa fa-eye bigger-110 blue"></i>
-										Monthly Visitors
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<i class="ace-icon fa fa-user bigger-110 blue"></i>
-										Active Users
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<i class="ace-icon fa fa-cog bigger-110 blue"></i>
-										Settings
-									</a>
-								</li>
-							</ul>
-						</li>
-
-						<li>
-							<a href="#">
-								<i class="ace-icon fa fa-envelope"></i>
-								Messages
-								<span class="badge badge-warning">5</span>
-							</a>
-						</li> */}
-            </ul>
-
             <form className="navbar-form navbar-left form-search" role="search" onSubmit={quickSearchResult}>
               <div className="form-group">
                 <input type="text" name="keywords" placeholder="search" style={{ width: 250 }} value={searchInput} onChange={(e) => setAdvanceSearch(e.target.value)} />
@@ -162,12 +122,12 @@ function Layout(props) {
 
       <div className="main-container ace-save-state" id="main-container">
 
-        <div id="sidebar" className="sidebar h-sidebar navbar-collapse collapse ace-save-state">
+        <div id="sidebar" className={`sidebar h-sidebar navbar-collapse collapse ace-save-state ${fixedSideBar && "sidebar-fixed lower-highlight"}`}>
           <div className="sidebar-shortcuts" id="sidebar-shortcuts" style={{ width: 150 }}>
             <img src={img3} width={125} />
           </div>{/* /.sidebar-shortcuts */}
 
-          <ul className={`nav nav-list ${changeNavBarColor === '#222A2D' ? 'skin-1' : ''} `}>
+          <ul className="nav nav-list">
             <li className={window.location.pathname === '/' ? 'active open hover' : 'hover'}>
               <a href="/">
                 <i className="menu-icon fa fa-tachometer" />
@@ -177,18 +137,18 @@ function Layout(props) {
               <b class="arrow" />
             </li>
 
-            <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover skin-1'} onMouseOver={() => setMyAssignmentDropDownOpen(true)} onMouseLeave={() => setMyAssignmentDropDownOpen(false)}>
-              <a href="/MyAssignments-Assigned">
+            <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setMyAssignmentDropDownOpen(true)} onMouseLeave={() => setMyAssignmentDropDownOpen(false)}>
+              <a href="#">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> My Assignments </span>
-                <b className="arrow fa fa-angle-down" />
+                <b className="arrow fa fa-angle-down" onClick={() => setShowMyAssignmentNavBarDropDown(!showMyAssignmentNavbarDropDown)} />
               </a>
 
               <b className="arrow" />
 
               {myAssignmentDropDownOpen &&
                 (
-                  <ul className="submenu">
+                  <ul className={`submenu ${showMyAssignmentNavbarDropDown === true ? "nav-show" : "nav-hide"}`} style={{ display: showMyAssignmentNavbarDropDown ? "block" : "none" }}>
                     <li className="hover">
                       <a href="/MyAssignments-Assigned">
                         <i className="menu-icon fa fa-caret-right" />
@@ -215,51 +175,22 @@ function Layout(props) {
                   </ul>
                 )
               }
-
+              <div className="scroll-track scroll-detached no-track scroll-thin scroll-margin scroll-visible" style={{ display: "none", top: "69px;", left: "183px;" }}>
+                <div className="scroll-bar" style={{ top: 0 }}></div>
+              </div>
             </li>
 
-            {/* <li className={window.location.href.indexOf("MyCollaboration") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setCollaborationDropDown(true)} onMouseLeave={() => setCollaborationDropDown(false)}>
-              <a href="/MyCollaboration-Assigned">
-                <i className="menu-icon fa fa-list" />
-                <span className="menu-text"> My Collaboration </span>
-                <b className="arrow fa fa-angle-down" />
-              </a>
-
-              <b className="arrow" />
-
-              {collaborationDropdown &&
-                <ul className="submenu">
-                  <li className="hover">
-                    <a href="/MyCollaboration-Assigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Assigned Cases
-                    </a>
-                    <b className="arrow" />
-                  </li>
-
-                  <li className="hover">
-                    <a href="/MyCollaboration-Inprogress">
-                      <i className="menu-icon fa fa-caret-right" />
-                      In-Progress Cases
-                    </a>
-                    <b className="arrow" />
-                  </li>
-                </ul>
-              }
-
-            </li> */}
-
             <li className={window.location.href.indexOf("GroupAssignments") > -1 ? 'active open hover' : 'hover'} onMouseEnter={() => setGroupDropDownOpen(true)} onMouseLeave={() => setGroupDropDownOpen(false)}>
-              <a href="/GroupAssignments-Assigned">
+              <a href="#">
                 <i className="menu-icon fa fa-list" />
                 <span className="menu-text"> Group Assignments </span>
-                <b className="arrow fa fa-angle-down" />
+                <b className="arrow fa fa-angle-down" onClick={() => setShowGroupAssignmentNavBarDropDown(!showGroupAssignmentNavbarDropDown)} />
               </a>
 
               <b className="arrow" />
 
               {groupDropDownOpen &&
-                <ul className="submenu">
+                <ul className={`submenu ${showGroupAssignmentNavbarDropDown === true ? "nav-show" : "nav-hide"}`} style={{ display: showGroupAssignmentNavbarDropDown ? "block" : "none" }}>
                   <li className="hover">
                     <a href="/GroupAssignments-Assigned">
                       <i className="menu-icon fa fa-caret-right" />
@@ -296,87 +227,81 @@ function Layout(props) {
 
             {(userData.hGroup !== 'SALES-TMP') &&
               <li className={window.location.href.indexOf("AllAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setAllAssignmentDropDownOpen(true)} onMouseLeave={() => setAllAssignmentDropDownOpen(false)}>
-                <a href="/AllAssignments-Unassigned">
+                <a href="#">
                   <i className="menu-icon glyphicon glyphicon-globe" />
                   <span className="menu-text"> ALL Assignments </span>
-                  <b className="arrow fa fa-angle-down" />
+                  <b className="arrow fa fa-angle-down" onClick={() => setShowAllAssignmentNavBarDropDown(!showAllAssignmentNavbarDropDown)} />
                 </a>
 
                 <b className="arrow" />
 
-                {allAssignmentDropDownOpen && <ul className="submenu">
-                  {/*<li class="hover">
-								<a href="<?php //echo APPNAME; ?>/assignment/all/">
-									<i class="menu-icon fa fa-caret-right"></i>
-									ALL Status
-								</a>
+                {allAssignmentDropDownOpen &&
+                  <ul className={`submenu ${showAllAssignmentNavbarDropDown === true ? "nav-show" : "nav-hide"}`} style={{ display: showAllAssignmentNavbarDropDown ? "block" : "none" }}>
+                    <li className="hover">
+                      <a href="/AllAssignments-Assigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Assigned Cases
+                      </a>
+                      <b className="arrow" />
+                    </li>
 
-								<b class="arrow"></b>
-							</li>*/}
-                  <li className="hover">
-                    <a href="/AllAssignments-Assigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Assigned Cases
-                    </a>
-                    <b className="arrow" />
-                  </li>
+                    <li className="hover">
+                      <a href="/AllAssignments-Closed">
+                        <i className="menu-icon fa fa-caret-right" />
+                        Closed Cases
+                      </a>
+                      <b className="arrow" />
+                    </li>
 
-                  <li className="hover">
-                    <a href="/AllAssignments-Closed">
-                      <i className="menu-icon fa fa-caret-right" />
-                      Closed Cases
-                    </a>
-                    <b className="arrow" />
-                  </li>
+                    <li className="hover"> {/* active */}
+                      <a href="/AllAssignments-Inprogress">
+                        <i className="menu-icon fa fa-caret-right" />
+                        In-Progress Cases
+                      </a>
+                      <b className="arrow" />
+                    </li>
 
-                  <li className="hover"> {/* active */}
-                    <a href="/AllAssignments-Inprogress">
-                      <i className="menu-icon fa fa-caret-right" />
-                      In-Progress Cases
-                    </a>
-                    <b className="arrow" />
-                  </li>
-
-                  <li className="hover">
-                    <a href="/AllAssignments-Unassigned">
-                      <i className="menu-icon fa fa-caret-right" />
-                      <span style={{ color: 'red' }}>Unassigned Cases</span>
-                    </a>
-                    <b className="arrow" />
-                  </li>
-                </ul>}
+                    <li className="hover">
+                      <a href="/AllAssignments-Unassigned">
+                        <i className="menu-icon fa fa-caret-right" />
+                        <span style={{ color: 'red' }}>Unassigned Cases</span>
+                      </a>
+                      <b className="arrow" />
+                    </li>
+                  </ul>}
               </li>
             }
 
             {(userData.positionName === 'Admin') &&
               <li className={window.location.href.indexOf("ManageUsers") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setManageUserDropDownOpen(true)} onMouseLeave={() => setManageUserDropDownOpen(false)}>
-                <a href="/ManageUsers-Groupmembers">
+                <a href="#">
                   <i className="menu-icon fa fa-users" />
                   <span className="menu-text"> Manage Users </span>
-                  <b className="arrow fa fa-angle-down" />
+                  <b className="arrow fa fa-angle-down" onClick={() => setShowManageUserNavBarDropDown(!showManageUserNavbarDropDown)}/>
                 </a>
 
                 <b className="arrow" />
 
-                {manageUserDropDownOpen && <ul className="submenu">
-                  <li className="hover">
-                    <a href="/ManageUsers-RegisteredUser">
-                      <i className="menu-icon fa fa-caret-right" />
-                      ALL Registered User
-                    </a>
-                    <b className="arrow" />
-                  </li>
+                {manageUserDropDownOpen &&
+                  <ul className={`submenu ${showManageUserNavbarDropDown === true ? "nav-show" : "nav-hide"}`} style={{ display: showManageUserNavbarDropDown ? "block" : "none" }}>
+                    <li className="hover">
+                      <a href="/ManageUsers-RegisteredUser">
+                        <i className="menu-icon fa fa-caret-right" />
+                        ALL Registered User
+                      </a>
+                      <b className="arrow" />
+                    </li>
 
-                  <li className="hover">
-                    <a href="/ManageUsers-Groupmembers">
-                      <i className="menu-icon fa fa-caret-right" />
-                      My Group Members
-                    </a>
-                    <b className="arrow" />
+                    <li className="hover">
+                      <a href="/ManageUsers-Groupmembers">
+                        <i className="menu-icon fa fa-caret-right" />
+                        My Group Members
+                      </a>
+                      <b className="arrow" />
 
 
-                  </li>
-                </ul>
+                    </li>
+                  </ul>
                 }
               </li>
             }
@@ -389,245 +314,6 @@ function Layout(props) {
                 <b className="arrow fa fa-angle-down" />
               </a>
             </li>
-            {/*<li class="hover">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-pencil-square-o"></i>
-							<span class="menu-text"> Forms </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="hover">
-								<a href="form-elements.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Form Elements
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="form-elements-2.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Form Elements 2
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="form-wizard.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Wizard &amp; Validation
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="wysiwyg.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Wysiwyg &amp; Markdown
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="dropzone.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Dropzone File Upload
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>
-
-					<li class="hover">
-						<a href="widgets.html">
-							<i class="menu-icon fa fa-list-alt"></i>
-							<span class="menu-text"> Widgets </span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-
-					<li class="hover">
-						<a href="calendar.html">
-							<i class="menu-icon fa fa-calendar"></i>
-
-							<span class="menu-text">
-								Calendar
-
-								<span class="badge badge-transparent tooltip-error" title="2 Important Events">
-									<i class="ace-icon fa fa-exclamation-triangle red bigger-130"></i>
-								</span>
-							</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-
-					<li class="hover">
-						<a href="gallery.html">
-							<i class="menu-icon fa fa-picture-o"></i>
-							<span class="menu-text"> Gallery </span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-
-					<li class="hover">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-tag"></i>
-							<span class="menu-text"> More Pages </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="hover">
-								<a href="profile.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									User Profile
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="inbox.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Inbox
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="pricing.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Pricing Tables
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="invoice.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Invoice
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="timeline.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Timeline
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="search.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Search Results
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="email.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Email Templates
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="login.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Login &amp; Register
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>
-
-					<li class="hover">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-file-o"></i>
-
-							<span class="menu-text">
-								Other Pages
-
-								<span class="badge badge-primary">5</span>
-							</span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="hover">
-								<a href="faq.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									FAQ
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="error-404.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Error 404
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="error-500.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Error 500
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="grid.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Grid
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="hover">
-								<a href="blank.html">
-									<i class="menu-icon fa fa-caret-right"></i>
-									Blank Page
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>*/}
           </ul>{/* /.nav-list */}
         </div>
 
@@ -671,12 +357,12 @@ function Layout(props) {
                       <span>&nbsp; Choose Skin</span>
                     </div>
                     <div className="ace-settings-item">
-                      <input type="checkbox" className="ace ace-checkbox-2 ace-save-state" id="ace-settings-navbar" autoComplete="off" />
-                      <label className="lbl" htmlFor="ace-settings-navbar"> Fixed Navbar</label>
+                      <input type="checkbox" className="ace ace-checkbox-2 ace-save-state" id="ace-settings-navbar" autoComplete="off" defaultChecked={fixedNavBar} onChange={() => setFixedNavBar(!fixedNavBar)} />
+                      <label className="lbl" htmlFor="ace-settings-navbar">Fixed Navbar</label>
                     </div>
                     <div className="ace-settings-item">
-                      <input type="checkbox" className="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar" autoComplete="off" />
-                      <label className="lbl" htmlFor="ace-settings-sidebar"> Fixed Sidebar</label>
+                      <input type="checkbox" className="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar" autoComplete="off" value={fixedSideBar} onChange={() => { setSideNavBar(!fixedSideBar); setFixedNavBar(!fixedNavBar) }} />
+                      <label className="lbl" htmlFor="ace-settings-sidebar">Fixed Sidebar</label>
                     </div>
                   </div>{/* /.pull-left */}
                 </div>{/* .ace-settings-box */}
@@ -712,12 +398,6 @@ function Layout(props) {
                     <em>minimized</em>.
                   </div>
 
-                  {/*<div class="hidden-sm hidden-xs">
-									<button type="button" class="sidebar-collapse btn btn-white btn-primary" data-target="#sidebar">
-                  <i class="ace-icon fa fa-angle-double-up" data-icon1="ace-icon fa fa-angle-double-up" data-icon2="ace-icon fa fa-angle-double-down"></i>
-                  Collapse/Expand Menu
-									</button>
-								</div> */}
                   {/* BEGIN PAGE*/}
 
                   {props.pageContent}
@@ -737,21 +417,6 @@ function Layout(props) {
               <div style={{ padding: 0 }}>
                 Copyright &copy; 2018 Telekom Malaysia Berhad (128740-P) ALL RIGHTS RESERVED</div>
               <div style={{ padding: 0 }}>For the best viewing experience, please use either Mozilla Firefox or IE browser with resolution at 1280 x 800 pixels and above</div>
-
-              {/* &nbsp; &nbsp;
-						<span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span> */}
             </div>
           </div>
         </div>
