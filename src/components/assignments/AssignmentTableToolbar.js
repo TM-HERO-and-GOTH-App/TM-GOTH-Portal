@@ -8,11 +8,12 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ClearIcon from '@mui/icons-material/Clear';
 import Tooltip from '@mui/material/Tooltip';
 import TextField from '@mui/material/TextField';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 
 const AssignmentTableToolbar = (props) => {
-    const {numSelected, clearSearch, onChange, searchText, cancelSelection} = props;
+    const {numSelected, clearSearch, onChange, searchText, handleSelection} = props;
 
     return (
         <Toolbar className="table-toolbar"
@@ -31,7 +32,7 @@ const AssignmentTableToolbar = (props) => {
                 >
                     <Tooltip title="Cancel">
                         <IconButton
-                            onClick={cancelSelection}
+                            onClick={handleSelection}
                         ><CancelIcon/></IconButton>
                     </Tooltip>
                     {numSelected} selected
@@ -44,7 +45,18 @@ const AssignmentTableToolbar = (props) => {
                 component="div"
                 >
                 Assignment Table
-                </Typography>)}
+                </Typography>)
+            }
+
+            { numSelected > 0 ?
+                null
+                :
+                <Tooltip title="Select All">
+                    <IconButton
+                        onClick={handleSelection}
+                    ><PlaylistAddCheckIcon/></IconButton>
+                </Tooltip>
+            }
 
             {<Box
                 sx={{
@@ -86,7 +98,7 @@ AssignmentTableToolbar.propTypes = {
     clearSearch: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     searchText: PropTypes.string.isRequired,
-    cancelSelection: PropTypes.func.isRequired,
+    handleSelection: PropTypes.func.isRequired,
 };
 
 export default AssignmentTableToolbar;

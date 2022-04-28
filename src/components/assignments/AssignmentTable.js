@@ -130,8 +130,11 @@ function AssignmentTable(props) {
         setOrderBy(property);
     };
 
+    //This function is originally used for AssignmentTableHead Checkbox to select all.
+    //And was reused to handle selection on AssignmentTableToolbar as the Checkbox was
+    //hidden.
     const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
+        if (event.target.checked || selected.length === 0) {
             const newSelecteds = prepData.map((n) => n.caseNum);
             setSelected(newSelecteds);
             return;
@@ -197,7 +200,7 @@ function AssignmentTable(props) {
                     searchText={searchText}
                     onChange={(e) => requestSearch(e.target.value)}
                     clearSearch={() => requestSearch('')}
-                    cancelSelection={handleSelectAllClick}
+                    handleSelection={handleSelectAllClick}
                 />
                 <TableContainer>
                     <Table
