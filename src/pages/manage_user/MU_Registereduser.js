@@ -39,13 +39,12 @@ function MU_Registereduser() {
     };
 
     useEffect(() => {
-        const getUserData = () => {
-            ManageUserService.getAllUser(token, '').then(res => {
-                setRegisterUser(res);
-                setTMUser(res.filter(filter => filter.category === 'TM').length)
-                setTotalStakeholderUser(res.filter(filter => filter.category === 'STAKEHOLDER').length)
-                setIsFetchingData(false);
-            });
+        const getUserData = async () => {
+            const res = await ManageUserService.getAllUser(token, '')
+            setRegisterUser(res);
+            setTMUser(res.filter(filter => filter.category === 'TM').length)
+            setTotalStakeholderUser(res.filter(filter => filter.category === 'STAKEHOLDER').length)
+            setIsFetchingData(false);
         }
         getUserData();
         return () => setIsFetchingData(false);
@@ -61,6 +60,7 @@ function MU_Registereduser() {
                   registeredDate,
                   stakeholderName
               }, keys) => ({
+            keys,
             category,
             email,
             fullName,
@@ -68,7 +68,6 @@ function MU_Registereduser() {
             registeredDate,
             stakeholderName,
         })), [registerUser])
-    // console.log(allTMUser)
 
     return (
         <Layout pageContent={
@@ -117,7 +116,7 @@ function MU_Registereduser() {
                                                                 hover
                                                             >
                                                                 <TableCell>
-                                                                    {allTMUser.indexOf(data)+1}
+                                                                    {data.keys + 1}
                                                                 </TableCell>
                                                                 <TableCell component="th" scope="row">
                                                                     {data.fullName}
