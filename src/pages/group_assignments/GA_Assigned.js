@@ -17,7 +17,9 @@ function GA_Assigned() {
             setIsLoading(false)
         }
         loggerCase()
-    }, [])
+
+        return () => {};
+    }, [token, userData.shID])
 
 
     return (

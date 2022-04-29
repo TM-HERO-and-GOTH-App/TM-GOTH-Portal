@@ -20,7 +20,9 @@ function AA_Inprogress() {
             setIsLoading(false);
         }
         allAssignmentData();
-    }, [])
+
+        return () => {};
+    }, [token, userData.shID])
 
 
     return (

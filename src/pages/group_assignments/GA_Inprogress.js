@@ -16,8 +16,10 @@ function GA_Inprogress() {
       setInProgressCase(res)
       setIsLoading(false)
     }
-    loggerCase()
-  }, [])
+    loggerCase();
+
+    return () => {};
+  }, [token, userData.shID])
 
 
   return (

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
 import AssignmentTable from '../../components/assignments/AssignmentTable';
@@ -20,22 +20,24 @@ function AA_Closed() {
             setIsLoading(false)
         }
         allAssignmentData()
-    }, [])
+
+        return () => setIsLoading(false);
+    }, [token, userData.shID])
 
     return (
         <Layout
             pageTitle={
                 <span>
-        Nationwide Assignments : <span style={{color: 'green'}}>CLOSED</span>
-      </span>
+                    Nationwide Assignments : <span style={{ color: 'green' }}>CLOSED</span>
+                </span>
             }
             pageContent={
                 <div className="row">
                     <form name="form">
                         <div className="col-sm-3">
                             <select className="chosen-select form-control" name="shID"
-                                    data-placeholder="Choose a Group..." value={groupType}
-                                    onChange={(e) => setGroupType(e.target.value)}>
+                                data-placeholder="Choose a Group..." value={groupType}
+                                onChange={(e) => setGroupType(e.target.value)}>
                                 <option value="0"> All Group/Stakeholder ...</option>
                                 {lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
                                     return <option key={key} value={data.lovName}> {data.lovName} </option>
@@ -46,8 +48,8 @@ function AA_Closed() {
 
                         <div className="col-sm-3">
                             <select className="chosen-select form-control" name="caseTypeID"
-                                    data-placeholder="Choose a Case Type..." value={caseType}
-                                    onChange={(e) => setCaseType(e.target.value)}>
+                                data-placeholder="Choose a Case Type..." value={caseType}
+                                onChange={(e) => setCaseType(e.target.value)}>
                                 <option value="0">All Case Type ...</option>
                                 {
                                     lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {

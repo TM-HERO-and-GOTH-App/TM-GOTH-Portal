@@ -17,7 +17,9 @@ function GA_Closed() {
             setIsLoading(false)
         }
         loggerCase()
-    }, [])
+
+        return () => {};
+    }, [token, userData.shID])
 
     return (
         <Layout

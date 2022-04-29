@@ -17,7 +17,9 @@ function GA_Unassigned() {
       setIsLoading(false)
     }
     loggerCase();
-  }, [])
+
+    return () => {};
+  }, [token, userData.shID])
 
 
   return (

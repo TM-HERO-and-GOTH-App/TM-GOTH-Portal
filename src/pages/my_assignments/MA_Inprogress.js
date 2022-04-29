@@ -18,7 +18,9 @@ function MA_Inprogress() {
             setIsLoading(false)
         }
         loggerCase();
-    }, [])
+
+        return () => {};
+    }, [token])
 
     return (
         <Layout

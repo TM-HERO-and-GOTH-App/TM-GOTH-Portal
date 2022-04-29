@@ -20,7 +20,9 @@ function AA_Assigned() {
             setIsLoading(false);
         }
         allAssignmentData();
-    }, [])
+
+        return () => setIsLoading(false);
+    }, [token, userData.shID])
 
     return (
         <Layout

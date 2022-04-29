@@ -17,7 +17,9 @@ function MA_Assigned() {
             setIsLoading(false)
         }
         loggerCase();
-    }, [])
+
+        return () => {};
+    }, [token])
 
     return (
         <Layout

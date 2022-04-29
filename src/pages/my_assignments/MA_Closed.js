@@ -18,7 +18,9 @@ function MA_Closed() {
             setIsLoading(false)
         }
         loggerCase();
-    }, [])
+
+        return () => {};
+    }, [token])
 
 
     return (
