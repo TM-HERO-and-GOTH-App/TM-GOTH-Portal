@@ -277,7 +277,7 @@ function AssignmentTable(props) {
                                                             </TableCell>
                                                             <TableCell component="th" id={labelId} scope="row"><Link
                                                                 to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
-                                                                <small title="Created Date">{formattedDate}</small>
+                                                                <p style={{fontSize: "inherit"}} title="Created Date">{formattedDate}</p>
                                                             </TableCell>
                                                             <TableCell align="center" padding="none"><span
                                                                 className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>

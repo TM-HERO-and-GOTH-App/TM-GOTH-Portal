@@ -1,5 +1,15 @@
+:root {
+    
+}
+
+/*AssignmentTable*/
 .table-toolbar input[type=text],
 textarea {
     border: 0;
     background-color: transparent;
+}
+
+.table-head .table-head-row th{
+    font-size: 13px;
+    font-weight: 700;
 }

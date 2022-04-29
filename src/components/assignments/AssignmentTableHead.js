@@ -105,10 +105,9 @@ function AssignmentTableHead(props) {
     };
 
     return (
-        <TableHead>
-            <TableRow>
-                <TableCell padding="checkbox"
-                sx={{display: "none"}}>
+        <TableHead className="table-head">
+            <TableRow className="table-head-row">
+                <TableCell padding="checkbox" sx={{display: "none"}}>
                     <Checkbox
                         color="primary"
                         size="small"
