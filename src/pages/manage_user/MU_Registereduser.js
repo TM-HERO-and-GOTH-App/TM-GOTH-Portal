@@ -34,7 +34,7 @@ function MU_Registereduser() {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value));
         setPage(0);
     };
 
@@ -101,6 +101,7 @@ function MU_Registereduser() {
                                             {isFetchingData ?
                                                 <TableCell colSpan={12} align="center">
                                                     <CircularProgress/>
+                                                    <p>Getting registered user data...</p>
                                                 </TableCell>
                                                 :
                                                 allTMUser
@@ -111,7 +112,7 @@ function MU_Registereduser() {
                                                         const isItemSelected = isSelected(index);
                                                         return (
                                                             <TableRow
-                                                                key={data.fullName}
+                                                                key={data.key}
                                                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                                                 hover
                                                             >
