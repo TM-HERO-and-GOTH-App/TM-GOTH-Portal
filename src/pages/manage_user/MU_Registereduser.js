@@ -1,52 +1,83 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Oval } from "react-loading-icons";
 // Thanks to Moment.js for the date formatter
 // -> https://momentjs.com/
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import Layout from '../Layout';
-import ManageUserService from '../../web_service/manage_user_service/ManageUserService'
+import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
+import Box from '@mui/material/Box';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableFooter from '@mui/material/TableFooter';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
+import Paper from '@mui/material/Paper';
 
+// TODO: Need to add Table immediately to avoid maximum call stack size error
 function MU_Registereduser() {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
   const [registerUser, setRegisterUser] = useState([]);
+  const [selected, setSelected] = useState([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertStatus, setAlertStatus] = useState(false);
+  const [isFetchingData, setIsFetchingData] = useState(true);
   const [totalStakeHolderUser, setTotalStakeholderUser] = useState(0);
   const [TMUser, setTMUser] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
 
   useEffect(() => {
     const getUserData = () => {
       ManageUserService.getAllUser(token, '').then(res => {
-        console.log(res)
+        // console.log(res)
         setRegisterUser(res);
         setTMUser(res.filter(filter => filter.category === 'TM').length)
         setTotalStakeholderUser(res.filter(filter => filter.category === 'STAKEHOLDER').length)
+        setIsFetchingData(false);
       });
     }
-
     getUserData();
-  }, [])
 
+    return () => setIsFetchingData(false);
+  }, [token])
+
+  // To avoid page crash and long fetching data
+  let allTMUser = [useMemo(() => {
+    registerUser.map(({
+      category,
+      email,
+      fullName,
+      hID,
+      registeredDate,
+      stakeholderName
+    }, keys) => ({
+      category,
+      email,
+      fullName,
+      hID,
+      registeredDate,
+      stakeholderName,
+    }))
+  }, [registerUser])]
 
   return (
     <Layout pageContent={
-
-      <div>
+      <>
         <a name="group-members" />
-        {/* {
-            alertStatus &&
-            <div className="row">
-              <div className="col-sm-12">
-                <div className="alert alert-block alert-success">
-                  <button type="button" className="close" data-dismiss="alert">
-                    <i className="ace-icon fa fa-times" />
-                  </button>
-                  <p>Alert</p>
-                </div>
-              </div>
-              <br /><br />
-              <div className="space-10" />
-            </div>
-          } */}
 
         <div className="row">
           <div className="col-xs-6" />
@@ -58,38 +89,71 @@ function MU_Registereduser() {
               <div className="pull-right tableTools-container-1" style={{ paddingTop: 5 }} />
             </div>
             <div>
-              <table id="dynamic-table-1" className="table table-striped table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th width="5%"><div align="center">#</div></th>
-                    <th width="30%">Fullname</th>
-                    <th width="15%">Email</th>
-                    <th width="10%">Category</th>
-                    <th width="15%">Stakeholder</th>
-                    <th width="15%">Joined Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    registerUser.map((data, index) => {
-                      index += 1;
-                      return data.response ? <tr><td colSpan={6}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td></tr>
+              <Box sx={{ width: '100%', mb: 2 }}>
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table" size="medium" sx={{ minWidth: 750 }}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>#</TableCell>
+                        <TableCell>Full Name</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Category</TableCell>
+                        <TableCell>Stakeholder</TableCell>
+                        <TableCell>Joined Date</TableCell>
+                        <TableCell>VIP</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {isFetchingData ?
+                        <TableCell colSpan={12} align="center">
+                          <CircularProgress />
+                        </TableCell>
                         :
-                        <tr key={index}>
-                          <td><div align="center">{index}</div></td>
-                          <td>{data.fullName}</td>
-                          <td>{data.email}</td>
-                          <td>{data.category}</td>
-                          <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
-
-                          {/* If you want to show date only, uncomment below */}
-                          {/* <td><div align="right">{moment(data.registeredDate).format('DD-MM-YYYY')}</div></td> */}
-                          <td><div align="right">{data.registeredDate}</div></td>
-                        </tr>
-                    })
-                  }
-                </tbody>
-              </table>
+                        (rowsPerPage > 0 ? registerUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : registerUser).map((data, index) => {
+                          const isSelected = (name) => selected.indexOf(name) !== -1;
+                          const isItemSelected = isSelected(index);
+                          index += 1
+                          return (
+                            <TableRow
+                              key={data.fullName}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                              hover
+                            >
+                              <TableCell>
+                                {index}
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {data.fullName}
+                              </TableCell>
+                              <TableCell>{data.email}</TableCell>
+                              <TableCell>{data.category}</TableCell>
+                              <TableCell>
+                                <div>
+                                  {data.stakeholderName ? data.stakeholderName : 'n/a'}
+                                </div>
+                              </TableCell>
+                              <TableCell>{data.registeredDate}</TableCell>
+                              <TableCell>
+                                <input type="checkbox" disabled />
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })
+                      }
+                    </TableBody>
+                    <TableFooter>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        count={registerUser.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                    </TableFooter>
+                  </Table>
+                </TableContainer>
+              </Box>
             </div>
           </div>{/* /.span */}
         </div>
@@ -117,15 +181,17 @@ function MU_Registereduser() {
               <div className="profile-info-row">
                 <div className="profile-info-name">TOTAL</div>
                 <div className="profile-info-value">
-                  <span className="editable" id="username"><b style={{ color: 'red' }}>
-                    {totalStakeHolderUser + TMUser}
-                  </b></span>
+                  <span className="editable" id="username">
+                    <b style={{ color: 'red' }}>
+                      {totalStakeHolderUser + TMUser}
+                    </b>
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     }
     />
   );

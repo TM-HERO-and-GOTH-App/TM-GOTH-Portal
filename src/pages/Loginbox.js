@@ -14,6 +14,7 @@ function Loginbox(props) {
 
   useEffect(() => {
     document.title = "Login - HERO Portal";
+    return () => document.title = "HER0 Portal";
   }, []);
 
   const handleEmail = (e) => {
