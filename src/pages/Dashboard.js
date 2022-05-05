@@ -109,7 +109,6 @@ function Dashboard() {
           <div className="row">
             <form>
               <div className="pull-right col-sm-4">
-                {/* TODO: display the API data based on Option tag. Currently have side effects */}
                 <select className="chosen-select form-control" name="shID" value={stakeholderOption} onChange={(e) => setStakeholderOption(e.currentTarget.value)}>
                   <option value='initialValue'>Choose a group...</option>
                   {
@@ -160,7 +159,7 @@ function Dashboard() {
             <br />
 
             <div className="row">
-              <div className="col-sm-3">
+              <div className="col-sm-3 total-box">
                 <h4 className="blue smaller">
                   <i className="ace-icon fa fa-user orange" />
                   Total Registered User

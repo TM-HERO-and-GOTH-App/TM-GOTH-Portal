@@ -47,6 +47,7 @@
     }
 }
 
+/* Login */
 @media (max-width: 584px) {
     .login-box .toolbar>div {
         width: 100%;
@@ -98,5 +99,17 @@
         position: absolute;
         font-size: 0.8em;
         padding: 10px;
+    }
+}
+
+/* Dashboard */
+@media screen  and (max-width: 480px){
+    .dashboard-box {
+        width: 100%;
+        margin-bottom: 2.5em;
+    }
+
+    .total-box{
+        margin-bottom: 2em;
     }
 }

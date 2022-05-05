@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 // --> https://www.npmjs.com/package/@react-google-maps/api
 // For documentation: https://react-google-maps-api-docs.netlify.app/#marker
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { Oval } from "react-loading-icons";
+import CircularProgress from '@mui/material/CircularProgress';
 import Layout from '../Layout';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
@@ -90,7 +90,7 @@ function CaseDetail(props) {
                 </span>)
             }
             pageContent={
-                fetchData === true ?  <Oval height={20} color={"red"}/> :
+                fetchData === true ?  <CircularProgress size={20} /> :
                 ( <>
                     {
                         alertStatus &&
