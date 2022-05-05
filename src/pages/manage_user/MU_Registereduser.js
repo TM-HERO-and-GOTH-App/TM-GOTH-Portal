@@ -1,7 +1,4 @@
 import React, {useEffect, useMemo, useState} from 'react';
-// Thanks to Moment.js for the date formatter
-// -> https://momentjs.com/
-// import * as moment from 'moment';
 import Layout from '../Layout';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 import Box from '@mui/material/Box';
@@ -16,19 +13,18 @@ import TablePagination from '@mui/material/TablePagination';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 
-// TODO: Need to add Table immediately to avoid maximum call stack size error
 function MU_Registereduser() {
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [registerUser, setRegisterUser] = useState([]);
     const [selected, setSelected] = useState([]);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertStatus, setAlertStatus] = useState(false);
     const [isFetchingData, setIsFetchingData] = useState(true);
     const [totalStakeHolderUser, setTotalStakeholderUser] = useState(0);
     const [TMUser, setTMUser] = useState(0);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
+    // Can refer all the MUI Table example here => 
+    // https://mui.com/material-ui/react-table/#custom-pagination-actions
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -108,8 +104,6 @@ function MU_Registereduser() {
                                                     // .sort(function(a, b){ return a.hID - b.hID })
                                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                     .map((data, index) => {
-                                                        const isSelected = (name) => selected.indexOf(name) !== -1;
-                                                        const isItemSelected = isSelected(index);
                                                         return (
                                                             <TableRow
                                                                 key={data.key}

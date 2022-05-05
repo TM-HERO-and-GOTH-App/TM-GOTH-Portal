@@ -1,7 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Link } from 'react-router-dom';
 import { CSVLink } from 'react-csv';
-import { Oval } from 'react-loading-icons';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoginTheme from "../utils/login-page-placeholder/LoginTheme";
 import LoginService from "../web_service/login_service/LoginService";
-// Thank you for the creator of this package for custom Loading Icons
-// https://www.npmjs.com/package/react-loading-icons
-import { Oval } from "react-loading-icons";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Loginbox(props) {
   const [alertStatus, setAlertStatus] = useState(false);
@@ -98,9 +96,8 @@ function Loginbox(props) {
     LoginService.getSystemLOV(authToken).then((res) => {
       console.log(res);
       sessionStorage.setItem("LovData", JSON.stringify(res));
-      setIsValidating(false);
       props.history.replace("/");
-      // return <Redirect to='/'/>
+      setIsValidating(false);
     });
   };
 
@@ -123,7 +120,7 @@ function Loginbox(props) {
                       className="close"
                       data-dismiss="alert"
                     >
-                      <i className="ace-icon fa fa-times" onClick={() => setAlertMessage(!alertStatus)}/>
+                      <i className="ace-icon fa fa-times" onClick={() => setAlertStatus(!alertStatus)}/>
                     </button>
                     {alertMessage ??
                       "Invalid Username/Password OR Profile not exist. Please try the Forgot Password for assistant"}
@@ -159,7 +156,7 @@ function Loginbox(props) {
                 <div className="space" />
                 <div className="clearfix">
                   <button className="min-width-100 width-35 pull-right btn btn-sm btn-primary">
-                    {isValidating === true ? <Oval height={20}/> :
+                    {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5}/> :
                       <>
                         <i className="ace-icon fa fa-key" />
                         <span className="bigger-110">Sign In</span>
