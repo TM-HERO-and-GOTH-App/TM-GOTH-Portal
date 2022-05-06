@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from './Layout';
 import AdvancedSearchService from '../web_service/advance_search_service/AdvanceSearchService';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 function AdvancedSearch(props) {
   const [caseToken, setCaseToken] = useState(props.match.params.id);
@@ -23,7 +30,6 @@ function AdvancedSearch(props) {
   const [calendarYear, setCalendarYear] = useState('');
   const [searchResult, setSearchResult] = useState([]);
 
-  // TODO: fix advance search caseType and HERO Group API
   const advancedSearch = (e) => {
     e.preventDefault();
     AdvancedSearchService.advancedSearch(token, emailInput, fullNameInput, nricInput, srNumberInput,
@@ -62,10 +68,10 @@ function AdvancedSearch(props) {
               <div className="col-sm-2">
                 <div className="input-group">
                   <input className="form-control date-picker" id="id-date-picker-1" name="keyStartDate" type='date' style={{ width: 180 }} data-date-format="yyyy-mm-dd" value={startDateInput} onChange={(e) => setStartDateInput(e.currentTarget.value)} placeholder="Date Created (Start)" />
-                  <span className="input-group-addon" onClick={() =>{
-                      const startDate = document.getElementById('id-date-picker-1');
-                      startDate.focus()
-                    }
+                  <span className="input-group-addon" onClick={() => {
+                    const startDate = document.getElementById('id-date-picker-1');
+                    startDate.focus()
+                  }
                   }>
                     <i className="fa fa-calendar bigger-110" />
                   </span>
@@ -160,112 +166,107 @@ function AdvancedSearch(props) {
             <div className="clearfix">
               <div className="pull-right tableTools-container-search" style={{ paddingTop: 10 }} />
             </div>
-            <table id="dynamic-table-search" className="table table-striped table-bordered table-hover dataTable no-footer">
-              <thead>
-                <tr>
-                  <th>Case ID</th>
-                  <th><div align="center">Status</div></th>
-                  <th style={{ width: '6%' }}>Aging</th>
-                  <th>Type</th>
-                  <th><div align="center">VIP</div></th>
-                  <th><div align="center" title="Eligibility">ELG</div></th>
-                  <th width="8%">Product</th>
-                  <th style={{ width: "12%" }}>Customer</th>
-                  <th style={{ width: "12%" }}>HERO</th>
-                  <th style={{ width: "12%" }}>Owner</th>
-                  <th style={{ width: "15%" }}>Latest Remark</th>
-                  <th><div align="center">State</div></th>
-                  <th><div align="center"><i className="ace-icon fa fa-bell icon-animated-bell" /></div></th>
-                  <th width="5%"><div align="center"><i className="ace-icon fa fa-comment-o" /></div></th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  (searchResult === [] || searchResult === undefined|| searchResult.length === 0) ?
-                    <tr><td colSpan={14}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
-                    :
-                    searchResult.map((data, index) => {
-                      const date = new Date(data.createdDate)
-                      const formattedDate = date.toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hourCycle: 'h12'
-                      })
-                      const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
-                      const agingkey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
-                      // const formattedTime = date.toLocaleDateString('en-GB', {
-                      //   hour: 'numeric',
-                      //   minute: 'numeric',
-                      //   hourCycle: 'h12'
-                      // })
-                      return (data.response === 'FAILED') ?
-                        <tr><td colSpan={11}><span style={{ color: 'red' }}>Search result is empty</span></td></tr>
-                        :
-                        <tr key={index}>
-                          <td>
-                            <Link to={`/case-detail/${data.cToken}`}>
-                              {data.caseNum}
-                            </Link>
-                            <br />
-                            <small title="Created Date">{formattedDate}</small>
-                            {/* <br /> */}
-                            {/* <small title="Created Date">{formattedTime}</small> */}
-                          </td>
-                          <td>
-                            <div align="center">
-                              {
-                                data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
-                                  data.caseStatus === 'IN-PROGRESS' ? <span className='badge badge-info'>IP</span> :
-                                    data.caseStatus === 'ASSIGNED' ? <span className='badge badge-info'>A</span> :
-                                      data.caseStatus === 'CLOSED' ? <span className='badge badge-success'>CL</span> :
-                                        data.caseStatus === 'CANCELLED' ? <span className='badge badge-info'>CA</span> :
-                                          <span className='badge badge-pink'>TBD</span>
-                              }
-                            </div>
-                          </td>
-                          <td>
-                            <div align="center" title='Day:Hour'>
-                              {agingDay < 16 ? agingkey : <span style={{ fontSize: "10px" }} className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingkey}</span>}
-                            </div>
-                          </td>
-                          <td>{data.caseType}</td>
-                          <td>
-                            <div align="center">
-                              {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
-                            </div>
-                          </td>
-                          <td align='center'>{data.eligibility}</td>
-                          <td>{data.productName}</td>
-                          <td>{data.customerName}</td>
-                          <td>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</td>
-                          <td>{data.ownerName} <span className="label label-lg label-info arrowed-right">
-                            <small>
-                              {data.stakeholderName}
-                            </small>
-                          </span></td>
-                          <td>{data.remark}</td>
-                          <td>{data.areaLocation}</td>
-                          <td>
-                            <div align="center">
-                              {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
-                            </div>
-                          </td>
-                          <td>
-                            <div align="center">
-                              <Link className="btn btn-minier btn-yellow" to={`/hero-chat/${caseToken}`}>
-                                Open
-                                <i className="ace-icon fa fa-arrow-right icon-on-right" />
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Case ID</TableCell>
+                    <TableCell align="center">Status</TableCell>
+                    <TableCell align="center">Aging</TableCell>
+                    <TableCell>Type</TableCell>
+                    <TableCell align="center">VIP</TableCell>
+                    <TableCell align="center">ELG</TableCell>
+                    <TableCell>Product</TableCell>
+                    <TableCell>Customer</TableCell>
+                    <TableCell>HERO</TableCell>
+                    <TableCell>Owner</TableCell>
+                    <TableCell>STH</TableCell>
+                    <TableCell>Latest Remark</TableCell>
+                    <TableCell align="center">State</TableCell>
+                    <TableCell align="center"><i class="ace-icon fa fa-bell icon-animated-bell"></i></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {
+                    (searchResult === [] || searchResult === undefined || searchResult.length === 0) ?
+                      <TableRow><TableCell colSpan={14}><span style={{ color: 'red' }}>Search result is empty</span></TableCell></TableRow>
+                      :
+                      searchResult.map((data, index) => {
+                        const date = new Date(data.createdDate)
+                        const formattedDate = date.toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: 'numeric',
+                          minute: 'numeric',
+                          hourCycle: 'h12'
+                        })
+                        const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
+                        const agingkey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
+                        return (data.response === 'FAILED') ?
+                          <TableRow>
+                            <TableCell colSpan={11}>
+                              <span style={{ color: 'red' }}>Search result is empty</span>
+                            </TableCell>
+                          </TableRow>
+                          :
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Link to={`/case-detail/${data.cToken}`}>
+                                {data.caseNum}
                               </Link>
-                            </div>
-                          </td>
-                        </tr>
-                    })
-                }
-              </tbody>
-            </table>
+                              <br />
+                              <small title="Created Date">{formattedDate}</small>
+                              {/* <br /> */}
+                              {/* <small title="Created Date">{formattedTime}</small> */}
+                            </TableCell>
+                            <TableCell>
+                              <div align="center">
+                                {
+                                  data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
+                                    data.caseStatus === 'IN-PROGRESS' ? <span className='badge badge-info'>IP</span> :
+                                      data.caseStatus === 'ASSIGNED' ? <span className='badge badge-info'>A</span> :
+                                        data.caseStatus === 'CLOSED' ? <span className='badge badge-success'>CL</span> :
+                                          data.caseStatus === 'CANCELLED' ? <span className='badge badge-info'>CA</span> :
+                                            <span className='badge badge-pink'>TBD</span>
+                                }
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div align="center" title='Day:Hour'>
+                                {agingDay < 16 ? agingkey : <span style={{ fontSize: "10px" }} className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingkey}</span>}
+                              </div>
+                            </TableCell>
+                            <TableCell>{data.caseType}</TableCell>
+                            <TableCell>
+                              <div align="center">
+                                {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
+                              </div>
+                            </TableCell>
+                            <TableCell align='center'>{data.eligibility}</TableCell>
+                            <TableCell>{data.productName}</TableCell>
+                            <TableCell>{data.customerName}</TableCell>
+                            <TableCell>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</TableCell>
+                            <TableCell>{data.ownerName} <span className="label label-lg label-info arrowed-right">
+                              <small>
+                                {data.stakeholderName}
+                              </small>
+                            </span></TableCell>
+                            <TableCell>{data.stakeholderRef}</TableCell>
+                            <TableCell>{data.remark}</TableCell>
+                            <TableCell>{data.areaLocation}</TableCell>
+                            <TableCell>
+                              <div align="center">
+                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                      })
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
+            
           </div>{/* /.span */}
           {/* /.row */}
           {/* <div id="limiterBox" className="limiterBox" style={{ position: "absolute", display: "none" }} />
