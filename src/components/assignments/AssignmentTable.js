@@ -43,26 +43,26 @@ function AssignmentTable(props) {
                 (item)
         )
         .map(({
-            createdDate,
-            caseStatus,
-            closedAging,
-            unclosedAging,
-            closedAgingDH,
-            unclosedAgingDH,
-            caseType,
-            stakeholderName,
-            cToken,
-            caseNum,
-            vip,
-            eligibility,
-            productName,
-            customerName,
-            fullname,
-            ownerName,
-            areaLocation,
-            totalNewAlert,
-            response
-        }, keys) => ({
+                  createdDate,
+                  caseStatus,
+                  closedAging,
+                  unclosedAging,
+                  closedAgingDH,
+                  unclosedAgingDH,
+                  caseType,
+                  stakeholderName,
+                  cToken,
+                  caseNum,
+                  vip,
+                  eligibility,
+                  productName,
+                  customerName,
+                  fullname,
+                  ownerName,
+                  areaLocation,
+                  totalNewAlert,
+                  response
+              }, keys) => ({
             createdDate,
             caseStatus,
             closedAging,
@@ -83,6 +83,7 @@ function AssignmentTable(props) {
             totalNewAlert,
             response
         })), [props]);
+    // const prepData = []
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('case_id');
     const [selected, setSelected] = useState([]);
@@ -93,18 +94,18 @@ function AssignmentTable(props) {
     const [filteredData, setFilteredData] = useState([]);
 
     const csvheaders = [
-        { label: "Case ID", key: "case_id" },
-        { label: "Status", key: "status" },
-        { label: "Aging", key: "aging" },
-        { label: "Type", key: "type" },
-        { label: "VIP", key: "vip" },
-        { label: "ELG", key: "eligibility" },
-        { label: "Product", key: "product" },
-        { label: "Customer", key: "customer" },
-        { label: "HERO", key: "hero" },
-        { label: "Owner/Group", key: "owner_group" },
-        { label: "State", key: "state" },
-        { label: "Alert", key: "alert" },
+        {label: "Case ID", key: "case_id"},
+        {label: "Status", key: "status"},
+        {label: "Aging", key: "aging"},
+        {label: "Type", key: "type"},
+        {label: "VIP", key: "vip"},
+        {label: "ELG", key: "eligibility"},
+        {label: "Product", key: "product"},
+        {label: "Customer", key: "customer"},
+        {label: "HERO", key: "hero"},
+        {label: "Owner/Group", key: "owner_group"},
+        {label: "State", key: "state"},
+        {label: "Alert", key: "alert"},
     ];
 
     const [csvData, setCSVData] = useState([])
@@ -194,20 +195,21 @@ function AssignmentTable(props) {
 
     return (
         <div className="table-container">
-            <Box sx={{ width: '100%' }}>
-                <Paper sx={{ width: '100%', mb: 2 }}>
+            <Box sx={{width: '100%'}}>
+                <Paper sx={{width: '100%', mb: 2}}>
                     <AssignmentTableToolbar
                         numSelected={selected.length}
                         searchText={searchText}
                         onChange={(e) => requestSearch(e.target.value)}
                         clearSearch={() => requestSearch('')}
-                        cancelSelection={handleSelectAllClick}
+                        handleSelection={handleSelectAllClick}
                     />
                     <TableContainer>
                         <Table
-                            sx={{ minWidth: 750 }}
+                            sx={{minWidth: 750}}
                             aria-labelledby="tableTitle"
                             size={dense ? 'small' : 'medium'}
+                            className=""
                         >
                             <AssignmentTableHead
                                 numSelected={selected.length}
@@ -217,15 +219,15 @@ function AssignmentTable(props) {
                                 onRequestSort={handleRequestSort}
                                 rowCount={prepData.length}
                             />
-                            <TableBody>
+                            <TableBody className="table-body">
                                 {props.isLoading ? ( //loading prop
-                                    <TableRow>
-                                        <TableCell colSpan={12} align="center">
-                                            <CircularProgress />
-                                            <p>Getting the data...</p>
-                                        </TableCell>
-                                    </TableRow>
-                                ) :
+                                        <TableRow>
+                                            <TableCell colSpan={12} align="center">
+                                                <CircularProgress/>
+                                                <p>Getting the data...</p>
+                                            </TableCell>
+                                        </TableRow>
+                                    ) :
                                     (
                                         // depending on which data the table handling, return the correspond
                                         // data and check if the data is not empty. Else return empty row.
@@ -250,68 +252,78 @@ function AssignmentTable(props) {
                                                     const agingKey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
                                                     return (data.response === "FAILED") ?
                                                         (<TableRow>
-                                                            <TableCell colSpan={12} align="center" style={{ color: 'red' }}>
+                                                            <TableCell colSpan={12} align="center"
+                                                                       style={{color: 'red'}}>
                                                                 List is empty
                                                             </TableCell>
                                                         </TableRow>) :
                                                         (<TableRow
-                                                            hover
-                                                            onClick={(event) => handleClick(event, data.caseNum)}
-                                                            role="checkbox"
-                                                            aria-checked={isItemSelected}
-                                                            tabIndex={-1}
-                                                            key={data.caseNum}
-                                                            selected={isItemSelected}
-                                                        >
-                                                            <TableCell
-                                                                padding="checkbox"
-                                                                sx={{ display: "none" }}
+                                                                className="table-row"
+                                                                hover
+                                                                onClick={(event) => handleClick(event, data.caseNum)}
+                                                                role="checkbox"
+                                                                aria-checked={isItemSelected}
+                                                                tabIndex={-1}
+                                                                key={data.caseNum}
+                                                                selected={isItemSelected}
                                                             >
-                                                                <Checkbox
-                                                                    size="small"
-                                                                    color="primary"
-                                                                    checked={isItemSelected}
-                                                                    inputProps={{
-                                                                        'aria-labelledby': labelId,
-                                                                    }}
-                                                                />
-                                                            </TableCell>
-                                                            <TableCell component="th" id={labelId} scope="row"><Link
-                                                                to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
-                                                                <p style={{fontSize: "inherit"}} title="Created Date">{formattedDate}</p>
-                                                            </TableCell>
-                                                            <TableCell align="center" padding="none"><span
-                                                                className='badge badge-info'>{data.caseStatus ? 'A' : '-'}</span>
-                                                            </TableCell>
-                                                            <TableCell align="center" padding="none"
-                                                                title='Day:Hour'>{agingDay < 16 ? agingKey :
-                                                                    <span style={{ fontSize: "10px" }}
-                                                                        className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
+                                                                <TableCell
+                                                                    padding="checkbox"
+                                                                    sx={{display: "none"}}
+                                                                >
+                                                                    <Checkbox
+                                                                        size="small"
+                                                                        color="primary"
+                                                                        checked={isItemSelected}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell component="th" id={labelId} scope="row"><Link
+                                                                    to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
+                                                                    <p className="datetime" title="Created Date">{formattedDate}</p>
+                                                                </TableCell>
+                                                                <TableCell align="center" padding="none">{
+                                                                    data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
+                                                                        data.caseStatus === 'IN-PROGRESS' ? <span className='badge badge-info'>IP</span> :
+                                                                            data.caseStatus === 'ASSIGNED' ? <span className='badge badge-info'>A</span> :
+                                                                                data.caseStatus === 'CLOSED' ? <span className='badge badge-success'>CL</span> :
+                                                                                    data.caseStatus === 'CANCELLED' ? <span className='badge badge-info'>CA</span> :
+                                                                                        <span className='badge badge-pink'>TBD</span>
+                                                                }
+                                                                </TableCell>
+                                                                <TableCell align="center" padding="none"
+                                                                           title='Day:Hour'>{agingDay < 16 ? agingKey :
+                                                                    <span style={{fontSize: "10px"}}
+                                                                          className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
                                                                     </span>}
-                                                            </TableCell>
-                                                            <TableCell>{data.caseType}</TableCell>
-                                                            <TableCell align="center">{data.vip ?
-                                                                <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}</TableCell>
-                                                            <TableCell align="center">{data.eligibility}</TableCell>
-                                                            <TableCell>{data.productName === null ? '-' : data.productName}</TableCell>
-                                                            <TableCell padding="none">{data.customerName}</TableCell>
-                                                            <TableCell>{data.vip ? <span
-                                                                className="label label-success arrowed-right">{data.fullname}
+                                                                </TableCell>
+                                                                <TableCell>{data.caseType}</TableCell>
+                                                                <TableCell align="center">{data.vip ?
+                                                                    <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}</TableCell>
+                                                                <TableCell align="center">{data.eligibility}</TableCell>
+                                                                <TableCell>{data.productName === null ? '-' : data.productName}</TableCell>
+                                                                <TableCell
+                                                                    padding="none" >{data.customerName}</TableCell>
+                                                                <TableCell>{data.vip ? <span
+                                                                    className="label label-success arrowed-right" >{data.fullname}
                                                             </span> : data.fullname}</TableCell>
-                                                            <TableCell
-                                                                padding="none">{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</TableCell>
-                                                            <TableCell align="center">{data.areaLocation}</TableCell>
-                                                            <TableCell align="center">{data.totalNewAlert > 0 ?
-                                                                <span style={{ fontSize: 10 }}
-                                                                    className="badge badge-warning">{data.totalNewAlert}
+                                                                <TableCell
+                                                                    padding="none">{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</TableCell>
+                                                                <TableCell
+                                                                    align="center">{data.areaLocation}</TableCell>
+                                                                <TableCell align="center">{data.totalNewAlert > 0 ?
+                                                                    <span style={{fontSize: 10}}
+                                                                          className="badge badge-warning">{data.totalNewAlert}
                                                                 </span> : '-'}
-                                                            </TableCell>
-                                                        </TableRow>
+                                                                </TableCell>
+                                                            </TableRow>
                                                         );
                                                 }) :
                                             (<TableRow>
                                                 <TableCell colSpan={12} align="center">
-                                                    <p style={{ color: "red", fontSize: 15 }}>List is empty</p>
+                                                    <p style={{color: "red", fontSize: 15}}>List is empty</p>
                                                 </TableCell>
                                             </TableRow>)
                                     )
@@ -330,13 +342,13 @@ function AssignmentTable(props) {
                     />
                 </Paper>
                 <FormControlLabel
-                    control={<Switch checked={dense} onChange={handleChangeDense} />}
+                    control={<Switch checked={dense} onChange={handleChangeDense}/>}
                     label="Dense padding"
                 />
                 <div className="pull-right tableTools-container dt-buttons btn-overlap btn-group">
                     <button onClick={getCSVData}
-                        className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right">
-                        <i className="fa fa-database bigger-110 orange" /> Export to CSV
+                            className="buttons-csv buttons-html5 btn btn-white btn-primary btn-bold pull-right">
+                        <i className="fa fa-database bigger-110 orange"/> Export to CSV
                     </button>
                     <CSVLink
                         className="hidden"

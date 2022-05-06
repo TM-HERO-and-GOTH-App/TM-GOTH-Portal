@@ -26,7 +26,7 @@ const headCells = [
     {
         id: 'unclosedAging',
         center: true,
-        disablePadding: true,
+        disablePadding: false,
         width: '6%',
         label: 'Aging',
         sortable: true,
@@ -43,6 +43,7 @@ const headCells = [
         center: true,
         disablePadding: true,
         label: 'VIP',
+        width: '35px',
         sortable: false,
     },
     {
@@ -50,6 +51,7 @@ const headCells = [
         center: true,
         disablePadding: true,
         label: 'ELG',
+        width: '35px',
         sortable: false,
     },
     {
@@ -78,6 +80,7 @@ const headCells = [
         id: 'ownerName',
         center: false,
         disablePadding: true,
+        width: '100px',
         label: 'Owner / Group',
         sortable: true,
     },

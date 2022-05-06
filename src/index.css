@@ -1,5 +1,61 @@
+/* @link https://utopia.fyi/type/calculator?c=320,10,1.2,1140,13,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+
 :root {
-    
+    /*Gray-color*/
+    --color-gray-300: #e3ebf6;
+    --color-gray-600: #95aac9;
+    --color-gray-700: #6e84a3;
+    --color-gray-800: #3b506c;
+    --color-gray-900: #283e59;
+
+    /*Blue-color*/
+    --color-blue-100: #d2ddec;
+    --color-blue-300: #a6c5f7;
+    --color-blue-700: #2c7be5;
+
+    /*Theme-color*/
+    --color-primary: var(--color-blue-700);
+    --color-secondary: var(--color-gray-300);
+    --color-tertiary: #FF579A;
+    --color-warning: #FF8C00;
+    --color-success: #00CC88;
+    --color-danger: #FF3366;
+    --color-info: #00D4FF;
+
+    /*Font Size*/
+    --step--2: clamp(0.43rem, calc(0.40rem + 0.17vw), 0.52rem);
+    --step--1: clamp(0.52rem, calc(0.47rem + 0.25vw), 0.65rem);
+    --step-0: clamp(0.73rem, calc(0.55rem + 0.37vw), 0.95rem);
+    --step-1: clamp(0.75rem, calc(0.65rem + 0.52vw), 1.12rem);
+    --step-2: clamp(0.90rem, calc(0.76rem + 0.72vw), 1.27rem);
+    --step-3: clamp(1.08rem, calc(0.88rem + 0.99vw), 1.59rem);
+    --step-4: clamp(1.30rem, calc(1.03rem + 1.34vw), 1.98rem);
+    --step-5: clamp(1.56rem, calc(1.19rem + 1.80vw), 2.48rem);
+
+    /*Responsive-space*/
+    --space-3xs: clamp(0.19rem, calc(0.11rem + 0.37vw), 0.38rem);
+    --space-2xs: clamp(0.31rem, calc(0.14rem + 0.85vw), 0.75rem);
+    --space-xs: clamp(0.50rem, calc(0.26rem + 1.22vw), 1.13rem);
+    --space-s: clamp(0.63rem, calc(0.28rem + 1.71vw), 1.50rem);
+    --space-m: clamp(0.94rem, calc(0.43rem + 2.56vw), 2.25rem);
+    --space-l: clamp(1.25rem, calc(0.57rem + 3.41vw), 3.00rem);
+    --space-xl: clamp(1.88rem, calc(0.85rem + 5.12vw), 4.50rem);
+    --space-2xl: clamp(2.50rem, calc(1.13rem + 6.83vw), 6.00rem);
+    --space-3xl: clamp(3.75rem, calc(1.70rem + 10.24vw), 9.00rem);
+
+    /* One-up pairs */
+    --space-3xs-2xs: clamp(0.19rem, calc(-0.03rem + 1.10vw), 0.75rem);
+    --space-2xs-xs: clamp(0.31rem, calc(0.00rem + 1.59vw), 1.13rem);
+    --space-xs-s: clamp(0.50rem, calc(0.11rem + 1.95vw), 1.50rem);
+    --space-s-m: clamp(0.63rem, calc(-0.01rem + 3.17vw), 2.25rem);
+    --space-m-l: clamp(0.94rem, calc(0.13rem + 4.02vw), 3.00rem);
+    --space-l-xl: clamp(1.25rem, calc(-0.02rem + 6.34vw), 4.50rem);
+    --space-xl-2xl: clamp(1.88rem, calc(0.27rem + 8.05vw), 6.00rem);
+    --space-2xl-3xl: clamp(2.50rem, calc(-0.04rem + 12.68vw), 9.00rem);
+
+    /* Custom pairs */
+    --space-s-l: clamp(0.63rem, calc(-0.30rem + 4.63vw), 3.00rem);
+    --space-2xl-l: clamp(2.50rem, calc(2.30rem + 0.98vw), 3.00rem);
 }
 
 /*AssignmentTable*/
@@ -10,6 +66,41 @@ textarea {
 }
 
 .table-head .table-head-row th{
-    font-size: 13px;
+    font-size: var(--step-2);
     font-weight: 700;
+}
+
+.table-body .table-row th,
+.table-body .table-row td{
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size : var(--step-2);
+}
+
+.table-body .table-row th> p{
+    font-size: var(--step-0)
+}
+
+p {
+    margin: 0 0 0;
+}
+
+@media only screen and (max-width: 500px) {
+    #tableTitle {
+        transition: all 0.3s ease;
+        display: none;
+    }
+}
+
+/*Navbar*/
+.navbar .navbar-brand img{
+    width: var(--space-2xl-l)
+}
+
+@media only screen and (max-width: 991px) {
+    /*.navbar {*/
+    /*    background-color: var(--color-blue-500);*/
+    /*    padding-bottom: .75rem !important;*/
+    /*    padding-top: 0.75rem !important;*/
+    /*}*/
 }
