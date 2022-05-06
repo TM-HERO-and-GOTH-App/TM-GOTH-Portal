@@ -67,7 +67,7 @@ function AdvancedSearch(props) {
             <form name="form" onSubmit={advancedSearch} onReset={reset}>
               <div className="col-sm-2">
                 <div className="input-group">
-                  <input className="form-control date-picker" id="id-date-picker-1" name="keyStartDate" type='date' style={{ width: 180 }} data-date-format="yyyy-mm-dd" value={startDateInput} onChange={(e) => setStartDateInput(e.currentTarget.value)} placeholder="Date Created (Start)" />
+                  <input className="form-control date-picker" id="id-date-picker-1" name="keyStartDate" type='date' data-date-format="yyyy-mm-dd" value={startDateInput} onChange={(e) => setStartDateInput(e.currentTarget.value)} placeholder="Date Created (Start)" />
                   <span className="input-group-addon" onClick={() => {
                     const startDate = document.getElementById('id-date-picker-1');
                     startDate.focus()
@@ -78,17 +78,17 @@ function AdvancedSearch(props) {
                 </div>
               </div>
 
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <div className="input-group">
-                  <input className="form-control date-picker" id="id-date-picker-1" name="keyEndDate" type="date" style={{ width: "180px" }} data-date-format="yyyy-mm-dd" value={endDateInput} onChange={(e) => setEndDateInput(e.currentTarget.value)} placeholder="Date Created (End)" />
+                  <input className="form-control date-picker" id="id-date-picker-2" name="keyEndDate" type="date" data-date-format="yyyy-mm-dd" value={endDateInput} onChange={(e) => setEndDateInput(e.currentTarget.value)} placeholder="Date Created (End)" />
                   <span className="input-group-addon">
                     <i className="fa fa-calendar bigger-110" />
                   </span>
                 </div>
               </div>
 
-              <div className="col-sm-2  chosen-container chosen-container-single" style={{ paddingLeft: "10px" }}>
-                <select className="chosen-select form-control" name="keyCaseTypeID" value={caseType} onChange={(e) => setCaseType(e.target.value)} data-placeholder="Case Type..." style={{ width: "220px", backgroundColor: "#FAFAFA" }}>
+              <div className="col-sm-2  chosen-container chosen-container-single">
+                <select className="form-control chosen-select advance-search-select-input" name="keyCaseTypeID" value={caseType} onChange={(e) => setCaseType(e.target.value)} data-placeholder="Case Type..." style={{ backgroundColor: "#FAFAFA" }}>
                   <option value="0">Case Type...</option>
                   <option value='28'>Assurance</option>
                   <option value="37">Billing</option>
@@ -109,8 +109,8 @@ function AdvancedSearch(props) {
                 </select>
               </div>
 
-              <div className="col-sm-2" style={{ paddingLeft: 10 }}>
-                <select className="chosen-select form-control" name="keyHeroGroup" value={heroGroupType} onChange={(e) => setHeroGroupType(e.currentTarget.value)} data-placeholder="HERO Group..." style={{ width: "220px", backgroundColor: "#FAFAFA" }}>
+              <div className="col-sm-2">
+                <select className="form-control chosen-select advance-search-select-input" name="keyHeroGroup" value={heroGroupType} onChange={(e) => setHeroGroupType(e.currentTarget.value)} data-placeholder="HERO Group..." style={{ backgroundColor: "#FAFAFA" }}>
                   <option value="0">HERO Group...</option>
                   <option value="WKTM">WKTM</option>
                   <option value="TMCC">TMCC</option>
@@ -124,13 +124,13 @@ function AdvancedSearch(props) {
               <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keyFullname" placeholder="HERO Name" value={fullNameInput} onChange={(e) => setFullNameInput(e.target.value)} />
               </div>
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keyEmail" placeholder="Email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} />
               </div>
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keyNricNum" placeholder="NRIC Number" value={nricInput} onChange={(e) => setNRICInput(e.target.value)} />
               </div>
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="ikeyCaseNum" placeholder="Case ID" value={caseNumberInput} onChange={(e) => setCaseNumberInput(e.target.value)} />
               </div>
 
@@ -139,13 +139,13 @@ function AdvancedSearch(props) {
               <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keyVipName" placeholder="VIP Name" value={vipNameInput} onChange={(e) => setVIPNameInput(e.target.value)} />
               </div>
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keyCustomerName" placeholder="Customer Name" value={customerNameInput} onChange={(e) => customerNameInput(e.target.value)} />
               </div>
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keySrNum" placeholder="SR Number" value={srNumberInput} onChange={(e) => setSRNumberInput(e.target.value)} />
               </div>
-              <div className="col-sm-2" style={{ paddingLeft: "10px" }}>
+              <div className="col-sm-2">
                 <input type="text" style={{ width: "220px" }} name="keyTtNum" placeholder="TT Number" value={ttNumberInput} onChange={(e) => setTTNumberInput(e.target.value)} />
               </div>
 
@@ -162,113 +162,113 @@ function AdvancedSearch(props) {
             </form>
           </div>
 
-          <div className="col-xs-12">
+          <div className="col-sm-12">
             <div className="clearfix">
               <div className="pull-right tableTools-container-search" style={{ paddingTop: 10 }} />
             </div>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Case ID</TableCell>
-                    <TableCell align="center">Status</TableCell>
-                    <TableCell align="center">Aging</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell align="center">VIP</TableCell>
-                    <TableCell align="center">ELG</TableCell>
-                    <TableCell>Product</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>HERO</TableCell>
-                    <TableCell>Owner</TableCell>
-                    <TableCell>STH</TableCell>
-                    <TableCell>Latest Remark</TableCell>
-                    <TableCell align="center">State</TableCell>
-                    <TableCell align="center"><i class="ace-icon fa fa-bell icon-animated-bell"></i></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    (searchResult === [] || searchResult === undefined || searchResult.length === 0) ?
-                      <TableRow><TableCell colSpan={14}><span style={{ color: 'red' }}>Search result is empty</span></TableCell></TableRow>
-                      :
-                      searchResult.map((data, index) => {
-                        const date = new Date(data.createdDate)
-                        const formattedDate = date.toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "2-digit",
-                          year: "numeric",
-                          hour: 'numeric',
-                          minute: 'numeric',
-                          hourCycle: 'h12'
+            <div className="dataTables_wrapper form-inline no-footer">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead className="table-head">
+                    <TableRow className="table-head-row">
+                      <TableCell>Case ID</TableCell>
+                      <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Aging</TableCell>
+                      <TableCell>Type</TableCell>
+                      <TableCell align="center">VIP</TableCell>
+                      <TableCell align="center">ELG</TableCell>
+                      <TableCell>Product</TableCell>
+                      <TableCell>Customer</TableCell>
+                      <TableCell>HERO</TableCell>
+                      <TableCell>Owner</TableCell>
+                      <TableCell>STH</TableCell>
+                      <TableCell>Latest Remark</TableCell>
+                      <TableCell align="center">State</TableCell>
+                      <TableCell align="center"><i class="ace-icon fa fa-bell icon-animated-bell"></i></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+                      (searchResult === [] || searchResult === undefined || searchResult.length === 0) ?
+                        <TableRow><TableCell colSpan={14}><span style={{ color: 'red' }}>Search result is empty</span></TableCell></TableRow>
+                        :
+                        searchResult.map((data, index) => {
+                          const date = new Date(data.createdDate)
+                          const formattedDate = date.toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hourCycle: 'h12'
+                          })
+                          const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
+                          const agingkey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
+                          return (data.response === 'FAILED') ?
+                            <TableRow>
+                              <TableCell colSpan={11}>
+                                <span style={{ color: 'red' }}>Search result is empty</span>
+                              </TableCell>
+                            </TableRow>
+                            :
+                            <TableRow key={index}>
+                              <TableCell>
+                                <Link to={`/case-detail/${data.cToken}`}>
+                                  {data.caseNum}
+                                </Link>
+                                <br />
+                                <small title="Created Date">{formattedDate}</small>
+                                {/* <br /> */}
+                                {/* <small title="Created Date">{formattedTime}</small> */}
+                              </TableCell>
+                              <TableCell>
+                                <div align="center">
+                                  {
+                                    data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
+                                      data.caseStatus === 'IN-PROGRESS' ? <span className='badge badge-info'>IP</span> :
+                                        data.caseStatus === 'ASSIGNED' ? <span className='badge badge-info'>A</span> :
+                                          data.caseStatus === 'CLOSED' ? <span className='badge badge-success'>CL</span> :
+                                            data.caseStatus === 'CANCELLED' ? <span className='badge badge-info'>CA</span> :
+                                              <span className='badge badge-pink'>TBD</span>
+                                  }
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div align="center" title='Day:Hour'>
+                                  {agingDay < 16 ? agingkey : <span style={{ fontSize: "10px" }} className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingkey}</span>}
+                                </div>
+                              </TableCell>
+                              <TableCell>{data.caseType}</TableCell>
+                              <TableCell>
+                                <div align="center">
+                                  {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
+                                </div>
+                              </TableCell>
+                              <TableCell align='center'>{data.eligibility}</TableCell>
+                              <TableCell>{data.productName}</TableCell>
+                              <TableCell>{data.customerName}</TableCell>
+                              <TableCell>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</TableCell>
+                              <TableCell>{data.ownerName} <span className="label label-lg label-info arrowed-right">
+                                <small>
+                                  {data.stakeholderName}
+                                </small>
+                              </span></TableCell>
+                              <TableCell>{data.stakeholderRef}</TableCell>
+                              <TableCell>{data.remark}</TableCell>
+                              <TableCell>{data.areaLocation}</TableCell>
+                              <TableCell>
+                                <div align="center">
+                                  {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
+                                </div>
+                              </TableCell>
+                            </TableRow>
                         })
-                        const agingDay = (data.caseStatus === 'CLOSED') ? data.closedAging : data.unclosedAging;
-                        const agingkey = (data.caseStatus === 'CLOSED') ? data.closedAgingDH : data.unclosedAgingDH;
-                        return (data.response === 'FAILED') ?
-                          <TableRow>
-                            <TableCell colSpan={11}>
-                              <span style={{ color: 'red' }}>Search result is empty</span>
-                            </TableCell>
-                          </TableRow>
-                          :
-                          <TableRow key={index}>
-                            <TableCell>
-                              <Link to={`/case-detail/${data.cToken}`}>
-                                {data.caseNum}
-                              </Link>
-                              <br />
-                              <small title="Created Date">{formattedDate}</small>
-                              {/* <br /> */}
-                              {/* <small title="Created Date">{formattedTime}</small> */}
-                            </TableCell>
-                            <TableCell>
-                              <div align="center">
-                                {
-                                  data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
-                                    data.caseStatus === 'IN-PROGRESS' ? <span className='badge badge-info'>IP</span> :
-                                      data.caseStatus === 'ASSIGNED' ? <span className='badge badge-info'>A</span> :
-                                        data.caseStatus === 'CLOSED' ? <span className='badge badge-success'>CL</span> :
-                                          data.caseStatus === 'CANCELLED' ? <span className='badge badge-info'>CA</span> :
-                                            <span className='badge badge-pink'>TBD</span>
-                                }
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div align="center" title='Day:Hour'>
-                                {agingDay < 16 ? agingkey : <span style={{ fontSize: "10px" }} className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingkey}</span>}
-                              </div>
-                            </TableCell>
-                            <TableCell>{data.caseType}</TableCell>
-                            <TableCell>
-                              <div align="center">
-                                {data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : '-'}
-                              </div>
-                            </TableCell>
-                            <TableCell align='center'>{data.eligibility}</TableCell>
-                            <TableCell>{data.productName}</TableCell>
-                            <TableCell>{data.customerName}</TableCell>
-                            <TableCell>{data.vip ? <span className="label label-success arrowed-right">{data.fullname}</span> : data.fullname}</TableCell>
-                            <TableCell>{data.ownerName} <span className="label label-lg label-info arrowed-right">
-                              <small>
-                                {data.stakeholderName}
-                              </small>
-                            </span></TableCell>
-                            <TableCell>{data.stakeholderRef}</TableCell>
-                            <TableCell>{data.remark}</TableCell>
-                            <TableCell>{data.areaLocation}</TableCell>
-                            <TableCell>
-                              <div align="center">
-                                {data.totalNewAlert > 0 ? <span style={{ fontSize: 10 }} className="badge badge-warning">{data.totalNewAlert}</span> : 0}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                      })
-                  }
-                </TableBody>
-              </Table>
-            </TableContainer>
-            
-          </div>{/* /.span */}
-          {/* /.row */}
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          </div>
           {/* <div id="limiterBox" className="limiterBox" style={{ position: "absolute", display: "none" }} />
           {showCalendar && 
             <Calendar 

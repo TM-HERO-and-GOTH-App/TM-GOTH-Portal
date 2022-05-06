@@ -37,6 +37,18 @@
     height: 100%;
 }
 
+#id-date-picker-1 {
+    width: 180px
+}
+
+#id-date-picker-2 {
+    width: 180px
+}
+
+.advance-search-select-input {
+    width: 220px
+}
+
 /* Dropdown List */
 @media only screen and (max-height: 540px) {
     #user-dropdown-menu {
@@ -103,13 +115,28 @@
 }
 
 /* Dashboard */
-@media screen  and (max-width: 480px){
+@media screen and (max-width: 480px) {
     .dashboard-box {
         width: 100%;
         margin-bottom: 2.5em;
     }
 
-    .total-box{
+    .total-box {
         margin-bottom: 2em;
+    }
+}
+
+/* Advanced Search */
+@media screen and (max-width: 584px) {
+    #id-date-picker-1 {
+        width: 273px
+    }
+
+    #id-date-picker-2 {
+        width: 275px
+    }
+
+    .advance-search-select-input {
+        width: 315px
     }
 }
