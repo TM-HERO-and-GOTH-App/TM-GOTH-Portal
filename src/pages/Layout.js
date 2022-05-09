@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import img1 from '../images/avatars/user.jpg';
 import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
+import HeroIcon from '../images/icon.png';
 import QuickSearchService from '../web_service/quick_search_service/QuickSearchService';
 
 function Layout(props) {
@@ -43,10 +44,13 @@ function Layout(props) {
 
   return (
     <div class={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
-      <div id="navbar" className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ? "navbar-fixed-top" : ""}`}>
+      <div id="navbar"
+           className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ? 
+               "navbar-fixed-top" : ""}`}>
         <div className="navbar-container ace-save-state" id="navbar-container">
           <div className="navbar-header pull-left">
             <a href="/" className="navbar-brand">
+              {/*<img src={HeroIcon} alt="hero-logo"/>*/}
               <small>
                 HERO Portal
               </small>
@@ -107,6 +111,7 @@ function Layout(props) {
             </ul>
           </div>
 
+          {/*AdvancedSearch*/}
           <nav role="navigation" className="navbar-menu pull-right collapse navbar-collapse">
             <form className="navbar-form navbar-left form-search" role="search" onSubmit={quickSearchResult}>
               <div className="form-group">

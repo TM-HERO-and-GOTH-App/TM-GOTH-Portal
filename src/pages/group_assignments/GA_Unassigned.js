@@ -26,7 +26,7 @@ function GA_Unassigned() {
     <Layout
     pageTitle={
       <span>
-        Nationwide Assignments : <span style={{color: 'green'}}>UN-ASSIGNED</span>
+        Nationwide Assignments : <span style={{color: 'var(--color-danger)'}}>UN-ASSIGNED</span>
       </span>
     }
     pageContent={

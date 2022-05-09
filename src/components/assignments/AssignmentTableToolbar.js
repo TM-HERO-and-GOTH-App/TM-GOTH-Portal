@@ -25,7 +25,7 @@ const AssignmentTableToolbar = (props) => {
         >
             {numSelected > 0 ?
                 (<Typography
-                    sx={{flex: '1 1 100%'}}
+                    sx={{flex: '1 1 100%', fontSize: 'var(--step-2)'}}
                     color="inherit"
                     variant="subtitle1"
                     component="div"
@@ -59,6 +59,7 @@ const AssignmentTableToolbar = (props) => {
             }
 
             {<Box
+                id="tableSearchbar"
                 sx={{
                     p: 0.5,
                     pb: 0,

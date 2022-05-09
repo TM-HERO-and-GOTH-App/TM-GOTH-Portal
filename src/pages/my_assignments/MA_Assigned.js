@@ -23,7 +23,11 @@ function MA_Assigned() {
 
     return (
         <Layout
-            pageTitle='My Assignments : ASSIGNED'
+            pageTitle={
+                <span>
+                    My Assignments : <span style={{color: 'green'}}>ASSIGNED</span>
+                </span>
+            }
             pageContent={
                 <React.Fragment>
                     <div className="row">

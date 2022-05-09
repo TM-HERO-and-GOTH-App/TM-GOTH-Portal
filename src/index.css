@@ -59,10 +59,40 @@
 }
 
 /*AssignmentTable*/
+.page-header h1{
+    font-weight: 300;
+}
+
+.row form> div{
+    min-width: clamp(30%, calc(10rem - 20vw), 45%);
+    margin-bottom: .5rem;
+}
+
+.table-container {
+    background-clip: border-box;
+    border: 1px solid rgba(224, 224, 224, 1);
+    box-shadow: 0 .75rem 1.5rem rgba(18,38,63,.03);
+    border-radius: .5rem;
+    margin-bottom: 1.5rem;
+    word-wrap: break-word; /*test*/
+    flex-direction: column;
+}
+
+#tableTitle {
+    color: var(--color-gray-800);
+    opacity: 0.42;
+}
+
 .table-toolbar input[type=text],
 textarea {
     border: 0;
     background-color: transparent;
+}
+
+.table-head {
+    background-color: var(--color-blue-100);
+    opacity: 0.90;
+    height: 50px;
 }
 
 .table-head .table-head-row th{
@@ -71,14 +101,29 @@ textarea {
 }
 
 .table-body .table-row th,
-.table-body .table-row td{
+.table-body .table-row td,
+.table-body .table-row td> p{
     font-family: Roboto, sans-serif;
     font-weight: 400;
     font-size : var(--step-2);
 }
 
 .table-body .table-row th> p{
-    font-size: var(--step-0)
+    font-size: var(--step-1)
+}
+
+.table-pagination p,
+.table-pagination div{
+    font-size: var(--step-2)
+}
+
+.table-pagination div> button {
+    padding: 15px;
+    margin-right: 20px;
+}
+
+#paddingController span{
+    font-size: var(--step-2);
 }
 
 p {
@@ -87,8 +132,11 @@ p {
 
 @media only screen and (max-width: 500px) {
     #tableTitle {
-        transition: all 0.3s ease;
         display: none;
+    }
+
+    #tableSearchbar {
+        width: 90%;
     }
 }
 

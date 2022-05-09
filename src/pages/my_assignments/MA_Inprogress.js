@@ -26,7 +26,7 @@ function MA_Inprogress() {
         <Layout
             pageTitle={
                 <span>
-        My Assignments : <span style={{color: 'green'}}>IN-PROGRESS</span>
+        My Assignments : <span style={{color: 'var(--color-warning)'}}>IN-PROGRESS</span>
       </span>
             }
             pageContent={

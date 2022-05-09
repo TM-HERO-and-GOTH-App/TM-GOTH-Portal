@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useState } from "react";
-import { Link } from 'react-router-dom';
-import { CSVLink } from 'react-csv';
+import React, {useMemo, useRef, useState} from "react";
+import {Link} from 'react-router-dom';
+import {CSVLink} from 'react-csv';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,7 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -89,7 +88,7 @@ function AssignmentTable(props) {
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [dense, setDense] = useState(false);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchText, setSearchText] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
@@ -194,9 +193,12 @@ function AssignmentTable(props) {
     };
 
     return (
-        <div className="table-container">
+        <div>
             <Box sx={{width: '100%'}}>
-                <Paper sx={{width: '100%', mb: 2}}>
+                <div
+                    variant="outlined"
+                    className="table-container"
+                    sx={{width: '100%', mb: 2}}>
                     <AssignmentTableToolbar
                         numSelected={selected.length}
                         searchText={searchText}
@@ -221,7 +223,7 @@ function AssignmentTable(props) {
                             />
                             <TableBody className="table-body">
                                 {props.isLoading ? ( //loading prop
-                                        <TableRow>
+                                        <TableRow className="table-row">
                                             <TableCell colSpan={12} align="center">
                                                 <CircularProgress/>
                                                 <p>Getting the data...</p>
@@ -241,9 +243,11 @@ function AssignmentTable(props) {
                                                     const labelId = `assignment-table-checkbox-${index}`;
                                                     const date = new Date(data.createdDate)
                                                     const formattedDate = date.toLocaleDateString("en-GB", {
-                                                        day: "numeric",
+                                                        day: "2-digit",
                                                         month: "2-digit",
-                                                        year: "numeric",
+                                                        year: "numeric"
+                                                    })
+                                                    const formattedTime = date.toLocaleTimeString("en-GB", {
                                                         hour: 'numeric',
                                                         minute: 'numeric',
                                                         hourCycle: 'h12'
@@ -283,34 +287,46 @@ function AssignmentTable(props) {
                                                                 <TableCell component="th" id={labelId} scope="row"><Link
                                                                     to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
                                                                     <p className="datetime" title="Created Date">{formattedDate}</p>
+                                                                    <p className="datetime" title="Created Date">{formattedTime}</p>
                                                                 </TableCell>
-                                                                <TableCell align="center" padding="none">{
-                                                                    data.caseStatus === 'NEW' ? <span className='badge badge-danger'>N</span> :
-                                                                        data.caseStatus === 'IN-PROGRESS' ? <span className='badge badge-info'>IP</span> :
-                                                                            data.caseStatus === 'ASSIGNED' ? <span className='badge badge-info'>A</span> :
-                                                                                data.caseStatus === 'CLOSED' ? <span className='badge badge-success'>CL</span> :
-                                                                                    data.caseStatus === 'CANCELLED' ? <span className='badge badge-info'>CA</span> :
-                                                                                        <span className='badge badge-pink'>TBD</span>
+                                                                <TableCell align="center" >{
+                                                                    data.caseStatus === 'NEW' ?
+                                                                        <span className='badge badge-danger'>N</span> :
+                                                                        data.caseStatus === 'IN-PROGRESS' ? <span
+                                                                                className='badge badge-info'>IP</span> :
+                                                                            data.caseStatus === 'ASSIGNED' ? <span
+                                                                                    className='badge badge-info'>A</span> :
+                                                                                data.caseStatus === 'CLOSED' ? <span
+                                                                                        className='badge badge-success'>CL</span> :
+                                                                                    data.caseStatus === 'CANCELLED' ?
+                                                                                        <span
+                                                                                            className='badge badge-info'>CA</span> :
+                                                                                        <span
+                                                                                            className='badge badge-pink'>TBD</span>
                                                                 }
                                                                 </TableCell>
-                                                                <TableCell align="center" padding="none"
+                                                                <TableCell
                                                                            title='Day:Hour'>{agingDay < 16 ? agingKey :
                                                                     <span style={{fontSize: "10px"}}
                                                                           className={`badge badge-sm badge-${data.unclosedAging > 30 ? 'danger' : 'warning'}`}>{agingKey}
                                                                     </span>}
                                                                 </TableCell>
-                                                                <TableCell>{data.caseType}</TableCell>
+                                                                <TableCell padding="none">{data.caseType}</TableCell>
                                                                 <TableCell align="center">{data.vip ?
                                                                     <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}</TableCell>
                                                                 <TableCell align="center">{data.eligibility}</TableCell>
                                                                 <TableCell>{data.productName === null ? '-' : data.productName}</TableCell>
+                                                                <TableCell style={{textTransform: "capitalize"}}
+                                                                           padding="none">{data.customerName}</TableCell>
+                                                                <TableCell>{data.vip ?
+                                                                    <span className="label label-success arrowed-right"
+                                                                          style={{textTransform: "capitalize"}}>{data.fullname}</span> :
+                                                                    <p style={{textTransform: "capitalize"}}>{data.fullname}</p>
+                                                                }</TableCell>
                                                                 <TableCell
-                                                                    padding="none" >{data.customerName}</TableCell>
-                                                                <TableCell>{data.vip ? <span
-                                                                    className="label label-success arrowed-right" >{data.fullname}
-                                                            </span> : data.fullname}</TableCell>
-                                                                <TableCell
-                                                                    padding="none">{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</TableCell>
+                                                                    padding="none">
+                                                                    <p style={{textTransform: "capitalize"}}>{data.ownerName === null ? 'Un - Assigned - ' + data.stakeholderName : data.ownerName + ' - ' + data.stakeholderName}</p>
+                                                                </TableCell>
                                                                 <TableCell
                                                                     align="center">{data.areaLocation}</TableCell>
                                                                 <TableCell align="center">{data.totalNewAlert > 0 ?
@@ -332,7 +348,8 @@ function AssignmentTable(props) {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        className="table-pagination"
+                        rowsPerPageOptions={[10, 25, 50, 100]}
                         component="div"
                         count={(searchText.length >= 1 ? filteredData : prepData).length}
                         rowsPerPage={rowsPerPage}
@@ -340,8 +357,9 @@ function AssignmentTable(props) {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Paper>
+                </div>
                 <FormControlLabel
+                    id="paddingController"
                     control={<Switch checked={dense} onChange={handleChangeDense}/>}
                     label="Dense padding"
                 />

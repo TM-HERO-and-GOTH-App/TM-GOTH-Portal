@@ -14,6 +14,7 @@ const headCells = [
         center: false,
         disablePadding: false,
         label: 'Case ID',
+        width: '120px',
         sortable: true,
     },
     {
@@ -34,14 +35,14 @@ const headCells = [
     {
         id: 'caseType',
         center: false,
-        disablePadding: false,
+        disablePadding: true,
         label: 'Type',
         sortable: true,
     },
     {
         id: 'vip',
         center: true,
-        disablePadding: true,
+        disablePadding: false,
         label: 'VIP',
         width: '35px',
         sortable: false,
@@ -73,6 +74,7 @@ const headCells = [
         id: 'fullname',
         center: false,
         disablePadding: false,
+        width: '130px',
         label: 'HERO',
         sortable: true,
     },
@@ -80,7 +82,7 @@ const headCells = [
         id: 'ownerName',
         center: false,
         disablePadding: true,
-        width: '100px',
+        width: '130px',
         label: 'Owner / Group',
         sortable: true,
     },
@@ -137,8 +139,8 @@ function AssignmentTableHead(props) {
                             hideSortIcon={!headCell.sortable}
                             sx={headCell.sortable ? {} :
                                 {
-                                    color: '#1E90FF',
-                                    '&:hover': {cursor: 'auto', color: '#1E90FF'},
+                                    color: 'var(--color-blue-700)',
+                                    pointerEvents: "none",
                                 }
                             }
                         >

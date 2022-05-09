@@ -26,7 +26,7 @@ function GA_Inprogress() {
     <Layout
     pageTitle={
       <span>
-        Nationwide Assignments : <span style={{color: 'green'}}>IN-PROGRESS</span>
+        Nationwide Assignments : <span style={{color: 'var(--color-warning)'}}>IN-PROGRESS</span>
       </span>
     }
     pageContent={
