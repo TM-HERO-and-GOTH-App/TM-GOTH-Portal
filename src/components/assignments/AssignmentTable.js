@@ -211,7 +211,6 @@ function AssignmentTable(props) {
                             sx={{minWidth: 750}}
                             aria-labelledby="tableTitle"
                             size={dense ? 'small' : 'medium'}
-                            className=""
                         >
                             <AssignmentTableHead
                                 numSelected={selected.length}

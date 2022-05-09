@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import Layout from '../Layout';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
-import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableFooter from '@mui/material/TableFooter';
@@ -21,9 +20,9 @@ function MU_Registereduser() {
     const [totalStakeHolderUser, setTotalStakeholderUser] = useState(0);
     const [TMUser, setTMUser] = useState(0);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // Can refer all the MUI Table example here => 
+    // Can refer all the MUI Table example here =>
     // https://mui.com/material-ui/react-table/#custom-pagination-actions
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -66,125 +65,144 @@ function MU_Registereduser() {
         })), [registerUser])
 
     return (
-        <Layout pageContent={
-            <>
-                <a name="group-members"/>
-                <div className="row">
-                    <div className="col-xs-6"/>
-                </div>
-                <div className="space-2"/>
-                <div className="row">
-                    <div className="col-xs-12">
-                        <div className="clearfix">
-                            <div className="pull-right tableTools-container-1" style={{paddingTop: 5}}/>
+        <Layout
+            pageTitle={
+                <span> All Registered Users </span>
+            }
+            pageContent={
+                <>
+                    {/*<a name="group-members"/>*/}
+                    {/*<div className="row">*/}
+                    {/*    <div className="col-xs-6"/>*/}
+                    {/*</div>*/}
+                    <div className="space-2"/>
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <div className="clearfix">
+                                <div className="pull-right tableTools-container-1" style={{paddingTop: 5}}/>
+                            </div>
+                            <div>
+                                <div
+                                    variant="outlined"
+                                    className="table-container"
+                                    sx={{width: '100%', mb: 2}}>
+                                    <TableContainer component={Paper}>
+                                        <Table
+                                            aria-label="registereduser table"
+                                            size="medium"
+                                            sx={{minWidth: 750}}>
+                                            <TableHead className="table-head">
+                                                <TableRow className="table-head-row">
+                                                    <TableCell sx={{color: 'var(--color-primary)'}}
+                                                               align={'center'}>
+                                                        <h7>#</h7>
+                                                    </TableCell>
+                                                    <TableCell>Full Name</TableCell>
+                                                    <TableCell>Email</TableCell>
+                                                    <TableCell>Category</TableCell>
+                                                    <TableCell>Stakeholder</TableCell>
+                                                    <TableCell>Joined Date</TableCell>
+                                                    <TableCell align={'center'}>VIP</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody className="table-body">
+                                                {isFetchingData ?
+                                                    <TableRow className="table-row">
+                                                        <TableCell colSpan={12} align="center">
+                                                            <CircularProgress/>
+                                                            <p>Getting registered user data...</p>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                    :
+                                                    allTMUser
+                                                        // .sort(function(a, b){ return a.hID - b.hID })
+                                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                        .map((data, index) => {
+                                                            return (
+                                                                <TableRow
+                                                                    key={data.key}
+                                                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                                                    className="table-row"
+                                                                    hover
+                                                                >
+                                                                    <TableCell align={'center'}>
+                                                                        {data.keys + 1}
+                                                                    </TableCell>
+                                                                    <TableCell sx={{textTransform: 'Capitalize'}}
+                                                                               component="th" scope="row">
+                                                                        {data.fullName}
+                                                                    </TableCell>
+                                                                    <TableCell>{data.email}</TableCell>
+                                                                    <TableCell>{data.category}</TableCell>
+                                                                    <TableCell align={'center'}>
+                                                                        <div>
+                                                                            {data.stakeholderName ? data.stakeholderName :
+                                                                                <p style={{color: 'var(--color-danger)'}}>N/A</p>}
+                                                                        </div>
+                                                                    </TableCell>
+                                                                    <TableCell>{data.registeredDate}</TableCell>
+                                                                    <TableCell align={'center'}>
+                                                                        <input type="checkbox" disabled/>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                }
+                                            </TableBody>
+                                            <TableFooter>
+                                                <TablePagination
+                                                    className="table-pagination"
+                                                    rowsPerPageOptions={[10, 25, 50]}
+                                                    count={registerUser.length}
+                                                    rowsPerPage={rowsPerPage}
+                                                    page={page}
+                                                    onPageChange={handleChangePage}
+                                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                                />
+                                            </TableFooter>
+                                        </Table>
+                                    </TableContainer>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <Box sx={{width: '100%', mb: 2}}>
-                                <TableContainer component={Paper}>
-                                    <Table aria-label="simple table" size="medium" sx={{minWidth: 750}}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>#</TableCell>
-                                                <TableCell>Full Name</TableCell>
-                                                <TableCell>Email</TableCell>
-                                                <TableCell>Category</TableCell>
-                                                <TableCell>Stakeholder</TableCell>
-                                                <TableCell>Joined Date</TableCell>
-                                                <TableCell>VIP</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {isFetchingData ?
-                                                <TableCell colSpan={12} align="center">
-                                                    <CircularProgress/>
-                                                    <p>Getting registered user data...</p>
-                                                </TableCell>
-                                                :
-                                                allTMUser
-                                                    // .sort(function(a, b){ return a.hID - b.hID })
-                                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                                    .map((data, index) => {
-                                                        return (
-                                                            <TableRow
-                                                                key={data.key}
-                                                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                                                                hover
-                                                            >
-                                                                <TableCell>
-                                                                    {data.keys + 1}
-                                                                </TableCell>
-                                                                <TableCell component="th" scope="row">
-                                                                    {data.fullName}
-                                                                </TableCell>
-                                                                <TableCell>{data.email}</TableCell>
-                                                                <TableCell>{data.category}</TableCell>
-                                                                <TableCell>
-                                                                    <div>
-                                                                        {data.stakeholderName ? data.stakeholderName : 'n/a'}
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell>{data.registeredDate}</TableCell>
-                                                                <TableCell>
-                                                                    <input type="checkbox" disabled/>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )
-                                                    })
-                                            }
-                                        </TableBody>
-                                        <TableFooter>
-                                            <TablePagination
-                                                rowsPerPageOptions={[5, 10, 25]}
-                                                count={registerUser.length}
-                                                rowsPerPage={rowsPerPage}
-                                                page={page}
-                                                onPageChange={handleChangePage}
-                                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                            />
-                                        </TableFooter>
-                                    </Table>
-                                </TableContainer>
-                            </Box>
-                        </div>
+                        {/* /.span */}
                     </div>
-                    {/* /.span */}
-                </div>
 
-                <h4 className="header green">Total Registered Users</h4>
-                <div className="row">
-                    <div className="col-sm-4">
-                        <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
-                            <div className="profile-info-row">
-                                <div className="profile-info-name">TM/PUBLIC</div>
-                                <div className="profile-info-value">
-                  <span className="editable" id="username">
-                    <b>
-                      {TMUser}
-                    </b>
-                  </span>
+                    <h3 className="header green">Total Registered Users</h3>
+                    <div className="row">
+                        <div className="col-sm-4">
+                            <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">TM/PUBLIC</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="username">
+                                            <b>
+                                                {TMUser}
+                                            </b>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="profile-info-row">
-                                <div className="profile-info-name">STAKEHOLDER</div>
-                                <div className="profile-info-value">
-                                    <span className="editable" id="username"><b>{totalStakeHolderUser}</b></span>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">STAKEHOLDER</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="username"><b>{totalStakeHolderUser}</b></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="profile-info-row">
-                                <div className="profile-info-name">TOTAL</div>
-                                <div className="profile-info-value">
-                  <span className="editable" id="username">
-                    <b style={{color: 'red'}}>
-                      {totalStakeHolderUser + TMUser}
-                    </b>
-                  </span>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">TOTAL</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="username">
+                                            <b style={{color: 'var(--color-danger)'}}>
+                                                {totalStakeHolderUser + TMUser}
+                                            </b>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </>
-        }
+                </>
+            }
         />
     );
 }

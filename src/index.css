@@ -28,7 +28,7 @@
     --step-0: clamp(0.73rem, calc(0.55rem + 0.37vw), 0.95rem);
     --step-1: clamp(0.75rem, calc(0.65rem + 0.52vw), 1.12rem);
     --step-2: clamp(0.90rem, calc(0.76rem + 0.72vw), 1.27rem);
-    --step-3: clamp(1.08rem, calc(0.88rem + 0.99vw), 1.59rem);
+    --step-3: clamp(1.08rem, calc(0.88rem + 0.99vw), 1.49rem);
     --step-4: clamp(1.30rem, calc(1.03rem + 1.34vw), 1.98rem);
     --step-5: clamp(1.56rem, calc(1.19rem + 1.80vw), 2.48rem);
 
@@ -71,7 +71,7 @@
 .table-container {
     background-clip: border-box;
     border: 1px solid rgba(224, 224, 224, 1);
-    box-shadow: 0 .75rem 1.5rem rgba(18,38,63,.03);
+    box-shadow: 0 .75rem 1.5rem rgba(18,38,63,.09);
     border-radius: .5rem;
     margin-bottom: 1.5rem;
     word-wrap: break-word; /*test*/
@@ -96,7 +96,7 @@ textarea {
 }
 
 .table-head .table-head-row th{
-    font-size: var(--step-2);
+    font-size: var(--step-3);
     font-weight: 700;
 }
 
@@ -105,16 +105,16 @@ textarea {
 .table-body .table-row td> p{
     font-family: Roboto, sans-serif;
     font-weight: 400;
-    font-size : var(--step-2);
+    font-size : var(--step-3);
 }
 
 .table-body .table-row th> p{
-    font-size: var(--step-1)
+    font-size: var(--step-2)
 }
 
 .table-pagination p,
 .table-pagination div{
-    font-size: var(--step-2)
+    font-size: var(--step-3)
 }
 
 .table-pagination div> button {
@@ -123,7 +123,7 @@ textarea {
 }
 
 #paddingController span{
-    font-size: var(--step-2);
+    font-size: var(--step-3);
 }
 
 p {
@@ -137,6 +137,11 @@ p {
 
     #tableSearchbar {
         width: 90%;
+    }
+
+    .table-pagination div> button {
+        padding: 5px;
+        margin-right: 7px;
     }
 }
 
