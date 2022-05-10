@@ -146,16 +146,56 @@ p {
 }
 
 /*Navbar*/
-.navbar .navbar-brand img{
-    width: var(--space-2xl-l)
+#navbar {
+    background-color: #438eb9;
+}
+
+#navbar-container {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.ace-nav > li > a {
+    padding: 0;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    border-radius: 0.75rem;
+}
+
+.ace-nav > li > a > span {
+    display: inline-grid;
+    align-items: center;
+    top: 0;
+    padding-left: 10px;
+}
+
+.ace-nav > li > a > .profile-icon{
+    margin-left: 12px;
+}
+
+.navbar {
+    padding: 12px 16px 12px 16px;
+    display: flex;
+}
+
+.navbar .navbar-brand,
+.navbar .navbar-brand img,
+.navbar .navbar-brand small{
+    align-items: center;
+    justify-content: center;
+    width: var(--space-2xl-l);
+    padding: 0;
+    font-size: var(--step-5);
 }
 
 @media only screen and (max-width: 991px) {
-    /*.navbar {*/
-    /*    background-color: var(--color-blue-500);*/
-    /*    padding-bottom: .75rem !important;*/
-    /*    padding-top: 0.75rem !important;*/
-    /*}*/
+    .navbar .navbar-brand{
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 /*Dashboard Slider*/

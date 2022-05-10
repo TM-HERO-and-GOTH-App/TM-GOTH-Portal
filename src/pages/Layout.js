@@ -4,6 +4,8 @@ import img2 from '../images/avatars/avatar2.png';
 import img3 from '../images/guardian.png';
 import HeroIcon from '../images/icon.png';
 import QuickSearchService from '../web_service/quick_search_service/QuickSearchService';
+import Avatar from '@mui/material/Avatar';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 function Layout(props) {
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
@@ -57,7 +59,7 @@ function Layout(props) {
             </a>
             <button className="pull-right navbar-toggle navbar-toggle-img collapsed" type="button" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
               <span className="sr-only">Toggle user menu</span>
-              <img src={img1} alt="User's Photo" />
+              <Avatar alt="User's Photo" src={img1} />
             </button>
             <button className="pull-right navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#sidebar">
               <span className="sr-only">Toggle sidebar</span>
@@ -66,17 +68,18 @@ function Layout(props) {
               <span className="icon-bar" />
             </button>
           </div>
-          <div className="navbar-buttons navbar-header pull-right  collapse navbar-collapse" role="navigation">
-            <ul className="nav ace-nav">
+          <div className="pull-right navbar-buttons navbar-header collapse navbar-collapse" role="navigation">
+                  <ul className="nav ace-nav">
               <li className={`light-blue dropdown-modal ${openUserModal ? "open" : ""}`}>
-                <a data-toggle="dropdown" href="#" className="dropdown-toggle" aria-expanded={` ${openUserModal ? "true" : "false"}`}>
-                  <img className="nav-user-photo" src={img2} alt="User's Photo" />
-                  <span className="user-info">
-                    <small>Welcome,</small>
-                    {userData.fullName ? userData.fullName : 'User Name'}
-                  </span>
-                  <i className="ace-icon fa fa-caret-down" />
-                </a>
+                  <a data-toggle="dropdown" href="#" className="dropdown-toggle" aria-expanded={` ${openUserModal ? "true" : "false"}`}>
+                      <Avatar className="profile-icon" sx={{ width: 48, height: 48 }} alt="User's Photo" src={img1}/>
+                      <span className="user-info">
+                          <small>Welcome,</small>
+                          {userData.fullName ? userData.fullName : 'User Name'}
+                          {/*<i className="ace-icon fa fa-caret-down" />*/}
+                      </span>
+                      <ArrowDropDownIcon sx={{ width: 24, height: 24 }} className="dropdown-icon"/>
+                  </a>
 
                 <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                   <li>
