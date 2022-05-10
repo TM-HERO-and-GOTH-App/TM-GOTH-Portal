@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import AssignmentDashboard from '../components/dashboard/Assignment_Dashboard';
 import DashboardService from '../web_service/dashboard/DashboardService';
+import DashboardSlider from '../components/slider/Slider';
 
 function Dashboard() {
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
@@ -107,6 +108,7 @@ function Dashboard() {
       pageContent={
         <>
           <div className="row">
+            <DashboardSlider/>
             <form>
               <div className="pull-right col-sm-4">
                 <select className="chosen-select form-control" name="shID" value={stakeholderOption} onChange={(e) => setStakeholderOption(e.currentTarget.value)}>
