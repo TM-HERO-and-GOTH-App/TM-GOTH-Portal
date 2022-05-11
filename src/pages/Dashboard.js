@@ -3,6 +3,7 @@ import Layout from './Layout';
 import AssignmentDashboard from '../components/dashboard/Assignment_Dashboard';
 import DashboardService from '../web_service/dashboard/DashboardService';
 import DashboardSlider from '../components/slider/Slider';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Dashboard() {
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
@@ -201,7 +202,8 @@ function Dashboard() {
                 </h4>
                 <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                   {stateCase.map((data, index) => {
-                    return <div className="profile-info-row" key={index}>
+                    return fetchingData ? <CircularProgress/> : 
+                    <div className="profile-info-row" key={index}>
                       <div className="profile-info-name" style={{ width: '70%' }}>
                         <b>{data?.state ?? 'No data'}</b>
                       </div>
@@ -220,7 +222,7 @@ function Dashboard() {
 
                     <div class="profile-info-value">
                       <span class="editable" id="username">
-                        <b>{(!stateCase || stateCase === undefined) ? stateCase : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
+                        <b>{(!stateCase || stateCase === undefined) ? 0 : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
                       </span>
                     </div>
                   </div>
