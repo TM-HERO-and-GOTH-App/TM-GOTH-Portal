@@ -25,6 +25,7 @@ function Layout(props) {
   const [showGroupAssignmentNavbarDropDown, setShowGroupAssignmentNavBarDropDown] = useState(false);
   const [showAllAssignmentNavbarDropDown, setShowAllAssignmentNavBarDropDown] = useState(false);
   const [showManageUserNavbarDropDown, setShowManageUserNavBarDropDown] = useState(false);
+  const [showAnnouncementDropDown, setShowAnnouncementDropDown] = useState(false);
   const [changeNavBarColor, setChangeNavBarColor] = useState('#438EB9');
 
   const clearsessionStorage = () => {
@@ -47,8 +48,8 @@ function Layout(props) {
   return (
     <div class={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
       <div id="navbar"
-           className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ? 
-               "navbar-fixed-top" : ""}`}>
+        className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ?
+          "navbar-fixed-top" : ""}`}>
         <div className="navbar-container ace-save-state" id="navbar-container">
           <div className="navbar-header">
             <a href="/" className="navbar-brand">
@@ -69,17 +70,17 @@ function Layout(props) {
             </button>
           </div>
           <div className="pull-right navbar-buttons navbar-header collapse navbar-collapse" role="navigation">
-                  <ul className="nav ace-nav">
+            <ul className="nav ace-nav">
               <li className={`light-blue dropdown-modal ${openUserModal ? "open" : ""}`}>
-                  <a data-toggle="dropdown" href="#" className="dropdown-toggle" aria-expanded={` ${openUserModal ? "true" : "false"}`}>
-                      <Avatar className="profile-icon" sx={{ width: 48, height: 48 }} alt="User's Photo" src={img1}/>
-                      <span className="user-info">
-                          <small>Welcome,</small>
-                          {userData.fullName ? userData.fullName : 'User Name'}
-                          {/*<i className="ace-icon fa fa-caret-down" />*/}
-                      </span>
-                      <ArrowDropDownIcon sx={{ width: 24, height: 24 }} className="dropdown-icon"/>
-                  </a>
+                <a data-toggle="dropdown" href="#" className="dropdown-toggle" aria-expanded={` ${openUserModal ? "true" : "false"}`}>
+                  <Avatar className="profile-icon" sx={{ width: 48, height: 48 }} alt="User's Photo" src={img1} />
+                  <span className="user-info">
+                    <small>Welcome,</small>
+                    {userData.fullName ? userData.fullName : 'User Name'}
+                    {/*<i className="ace-icon fa fa-caret-down" />*/}
+                  </span>
+                  <ArrowDropDownIcon sx={{ width: 24, height: 24 }} className="dropdown-icon" />
+                </a>
 
                 <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                   <li>
@@ -285,7 +286,7 @@ function Layout(props) {
                 <a href="#">
                   <i className="menu-icon fa fa-users" />
                   <span className="menu-text"> Manage Users </span>
-                  <b className="arrow fa fa-angle-down" onClick={() => setShowManageUserNavBarDropDown(!showManageUserNavbarDropDown)}/>
+                  <b className="arrow fa fa-angle-down" onClick={() => setShowManageUserNavBarDropDown(!showManageUserNavbarDropDown)} />
                 </a>
 
                 <b className="arrow" />
@@ -321,6 +322,36 @@ function Layout(props) {
                 <span className="menu-text"> Advanced Search </span>
                 <b className="arrow fa fa-angle-down" />
               </a>
+            </li>
+
+            <li className={window.location.pathname === '/all_announcements' ? 'active open hover' : 'hover'}  onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
+              <a href="#">
+                <i className="menu-icon fa fa-users" />
+                <span className="menu-text">Announcement</span>
+                {/* Add open function for mobile view */}
+                <b className="arrow fa fa-angle-down" onClick={() => setShowAnnouncementDropDown(!showAnnouncementDropDown)}/>
+              </a>
+
+              <b className="arrow" />
+
+              {showAnnouncementDropDown && <ul className={`submenu ${showAnnouncementDropDown === true ? "nav-show" : "nav-hide"}`} style={{ display: showAnnouncementDropDown ? "block" : "none" }}>
+                <li className='hover'>
+                  <a href="/all_announcements">
+                    <i className="menu-icon fa fa-caret-right" />
+                    All Announcements
+                  </a>
+                  <b className="arrow" />
+                </li>
+
+                {/* TODO: To show to admin user only */}
+                <li className="hover">
+                  <a href="/announcement_form">
+                    <i className="menu-icon fa fa-caret-right" />
+                    Create Announcement
+                  </a>
+                  <b className="arrow" />
+                </li>
+              </ul>}
             </li>
           </ul>{/* /.nav-list */}
         </div>

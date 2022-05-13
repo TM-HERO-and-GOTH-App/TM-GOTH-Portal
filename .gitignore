@@ -25,6 +25,8 @@ src/firebase_login/LoginAuth.js
 .idea/vcs.xml
 .idea/workspace.xml
 src/firebase_login/LoginAuth.js
+.firbaserc
+firebase.json
 .idea/inspectionProfiles/Project_Default.xml
 .idea/misc.xml
 .idea/modules.xml

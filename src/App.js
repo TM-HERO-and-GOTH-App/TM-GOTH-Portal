@@ -5,7 +5,6 @@ import AA_Unassigned from './pages/all_assignments/AA_Unassigned';
 import ActionTaken from './pages/assignment/ActionTaken';
 import Activate from './pages/ActivateAcc';
 import AdvancedSearch from './pages/AdvancedSearch';
-import AnnouncementForm from './pages/mock_screens/AnnouncementForm';
 import AssignToOther from './pages/assignment/AssignToOthers';
 import CaseDetail from './pages/case_detail/CaseDetail';
 import CautionReport from './pages/hero_cases_functionality/CautionReport';
@@ -35,6 +34,8 @@ import SignUp from './pages/Registerbox';
 import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
 import Userprofile from './pages/user_profile/Userprofile';
 import All_Announcement from './pages/announcement/All_Announcement';
+import AnnouncementForm from './pages/announcement/AnnouncementForm';
+import EditAnnouncementForm from './pages/announcement/Edit_Announcement';
 import PrivateRoute from './private-route/PrivateAuthRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -50,7 +51,6 @@ function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/activate" component={Activate} />
         <PrivateRoute>
-          <Route path="/announcement_form" component={AnnouncementForm} />
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/MyAssignments-Assigned" component={MA_Assigned} />
           <Route exact path="/MyAssignments-Inprogress" component={MA_Inprogress} />
@@ -68,6 +68,8 @@ function App() {
           <Route exact path="/ManageUsers-RegisteredUser" component={MU_Registereduser} />
           <Route exact path="/ManageUsers-Groupmembers" component={MU_Groupmember} />
           <Route path="/advance-search" component={AdvancedSearch} />
+          <Route path="/announcement_form" component={AnnouncementForm} />
+          <Route path="/edit_announcement_form/:id" component={EditAnnouncementForm} />
           <Route path="/all_announcements" component={All_Announcement}/>
           <Route path="/user-profile" component={Userprofile} />
           <Route path='/edit-profile' component={EditUser} />

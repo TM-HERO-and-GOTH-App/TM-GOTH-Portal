@@ -151,14 +151,6 @@ function Createcase(props) {
                       </select>
                     </div>
                   </div>
-
-                  {/* <div class="profile-info-row">
-			<div class="profile-info-name"> About Me </div>
-
-			<div class="profile-info-value">
-				<span class="editable" id="about">Editable as WYSIWYG</span>
-			</div>
-		</div> */}
                 </div>
               </div>
             </div>
@@ -181,19 +173,33 @@ function Createcase(props) {
                   </div>
 
                   <div className="profile-info-row">
-                    <div className="profile-info-name"> Sub Source </div>
+                    <div className="profile-info-name" style={{ width: '25%' }}> Case Description </div>
                     <div className="profile-info-value">
-                      <select className='chosen-select form-control' name='subSourceID' value={subSourceType} onChange={(e) => setSubSourceType(e.target.value)}>
-                        <option hidden value='0'>Choose a Sub Source...</option>
-                        {
-                          lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map((data, key) => {
-                            return <option key={key} value={data.lovID}>{data.lovName}</option>
-                          })
-                        }
-                      </select>
+                      <textarea className="form-control limited" rows={10} name="caseContent" maxLength={9999} defaultValue={caseDescriptionInput ? caseDescriptionInput : ''} onChange={(e) => setCaseDescriptionInput(e.target.value)} />
                     </div>
                   </div>
 
+                  <div className="profile-info-row">
+                    <div className="profile-info-name" style={{ width: '25%' }}> Case Description </div>
+                    <div className="profile-info-value">
+                      <textarea className="form-control limited" rows={10} name="caseContent" maxLength={9999} defaultValue={caseDescriptionInput ? caseDescriptionInput : ''} onChange={(e) => setCaseDescriptionInput(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="profile-info-row">
+                    <div className="profile-info-name" style={{ width: '25%' }}> Case Description </div>
+                    <div className="profile-info-value">
+                      <textarea className="form-control limited" rows={10} name="caseContent" maxLength={9999} defaultValue={caseDescriptionInput ? caseDescriptionInput : ''} onChange={(e) => setCaseDescriptionInput(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="profile-info-row">
+                    <div className="profile-info-name" style={{ width: '25%' }}> Case Description </div>
+                    <div className="profile-info-value">
+                      <textarea className="form-control limited" rows={10} name="caseContent" maxLength={9999} defaultValue={caseDescriptionInput ? caseDescriptionInput : ''} onChange={(e) => setCaseDescriptionInput(e.target.value)} />
+                    </div>
+                  </div>
+                  
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: '25%' }}> Case Description </div>
                     <div className="profile-info-value">
