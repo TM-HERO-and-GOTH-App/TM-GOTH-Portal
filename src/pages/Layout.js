@@ -50,7 +50,7 @@ function Layout(props) {
            className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ? 
                "navbar-fixed-top" : ""}`}>
         <div className="navbar-container ace-save-state" id="navbar-container">
-          <div className="navbar-header pull-left">
+          <div className="navbar-header">
             <a href="/" className="navbar-brand">
               {/*<img src={HeroIcon} alt="hero-logo"/>*/}
               <small>

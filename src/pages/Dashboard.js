@@ -215,13 +215,13 @@ function Dashboard() {
                     </div>
                   }
                   )}
-                  <div class="profile-info-row">
-                    <div class="profile-info-name" style={{ width: "70%" }}>
+                  <div className="profile-info-row">
+                    <div className="profile-info-name" style={{ width: "70%" }}>
                       <b>Total Case</b>
                     </div>
 
-                    <div class="profile-info-value">
-                      <span class="editable" id="username">
+                    <div className="profile-info-value">
+                      <span className="editable" id="username">
                         <b>{(!stateCase || stateCase === undefined) ? 0 : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
                       </span>
                     </div>

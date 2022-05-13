@@ -1,79 +1,102 @@
-import {react} from 'react';
+import React from "react";
 import Slider from "react-slick";
 import Box from '@mui/material/Box';
+import PropTypes from 'prop-types';
+// import Typography from '@mui/material/Typography';
+// import CardActions from '@mui/material/CardActions';
+// import Button from '@mui/material/Button';
 
 // Import css files
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-function DashboardSlider() {
+function DashboardSlider(props) {
+    const {announcementData} = props;
     const slides = [
         {
-            city: 'Paris',
-            country: 'France',
+            title: 'Paris',
+            body: 'France',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/paris.jpg',
         },
         {
-            city: 'Singapore',
+            title: 'Singapore',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/singapore.jpg',
         },
         {
-            city: 'Prague',
-            country: 'Czech Republic',
+            title: 'Prague',
+            body: 'Czech Republic',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/prague.jpg',
         },
         {
-            city: 'Amsterdam',
-            country: 'Netherlands',
+            title: 'Amsterdam',
+            body: 'Netherlands',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/amsterdam.jpg',
         },
         {
-            city: 'Moscow',
-            country: 'Russia',
+            title: 'Moscow',
+            body: 'Russia',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/moscow.jpg',
         },
     ];
 
-    var settings = {
+    const settings = {
         dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
-        slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 3000,
+        autoplaySpeed: 4000,
     };
 
     return (
-        <Box sx={{maxWidth: 2200, flexGrow: 1}}>
-            <div className="slider-container">
+        <div className="slider-container">
+            <Box sx={{maxWidth: '100%', flexGrow: 1}}>
                 <Slider {...settings}>
                     {
                         slides.map((data, index) => {
                             return (
                                 <div className="exterior-slider" key={index}>
-                                    {/*<div className="" style={{backgroundImage: `url(${data.img})`}}/>*/}
-                                    <Box
-                                        component="img"
-                                        sx={{
-                                            height: 600,
-                                            display: 'block',
-                                            maxWidth: '100%',
-                                            overflow: 'hidden',
-                                            width: '100%',
-                                        }}
-                                        src={data.img}
-                                        alt={data.city}
-                                    />
+                                    <div className="grid-view">
+                                        <Box className="layer-1"/>
+                                        <Box className="layer-2" href="/">
+                                            <div className="slider-des">
+                                                <div id="title">
+                                                    {data.title}
+                                                </div>
+                                                <div id="description">
+                                                    {data.body}
+                                                </div>
+                                            </div>
+                                            {/*<Button className="slider-info-button" variant="contained" href="#contained-buttons">*/}
+                                            {/*    Read More*/}
+                                            {/*</Button>*/}
+                                        </Box>
+                                        <Box className="layer-3"
+                                             component="img"
+                                             sx={{
+                                                 height: 'var(--space-slider-height)',
+                                                 display: 'block',
+                                                 maxWidth: '1200px',
+                                                 overflow: 'hidden',
+                                                 width: '100%',
+                                                 objectFit: 'cover'
+                                             }}
+                                             src={data.img}
+                                             alt={data.title}
+                                        />
+                                    </div>
                                 </div>
                             )
                         })
                     }
                 </Slider>
-            </div>
-        </Box>
-    )
-        ;
+            </Box>
+        </div>
+    );
+}
+
+DashboardSlider.propTypes = {
+    announcementData: PropTypes.array.isRequired,
 }
 
 export default DashboardSlider;
