@@ -34,7 +34,8 @@ import SignUp from './pages/Registerbox';
 import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
 import Userprofile from './pages/user_profile/Userprofile';
 import All_Announcement from './pages/announcement/All_Announcement';
-import AnnouncementForm from './pages/announcement/AnnouncementForm'
+import AnnouncementForm from './pages/announcement/AnnouncementForm';
+import EditAnnouncementForm from './pages/announcement/Edit_Announcement';
 import PrivateRoute from './private-route/PrivateAuthRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -68,6 +69,7 @@ function App() {
           <Route exact path="/ManageUsers-Groupmembers" component={MU_Groupmember} />
           <Route path="/advance-search" component={AdvancedSearch} />
           <Route path="/announcement_form" component={AnnouncementForm} />
+          <Route path="/edit_announcement_form/:id" component={EditAnnouncementForm} />
           <Route path="/all_announcements" component={All_Announcement}/>
           <Route path="/user-profile" component={Userprofile} />
           <Route path='/edit-profile' component={EditUser} />

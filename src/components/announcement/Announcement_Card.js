@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import Menu from '@mui/material/Menu';
 import MenuItem from "@mui/material/MenuItem";
 import { useHistory } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export default function AnnouncementCard(props) {
     const [moreText, setMoreText] = React.useState(false);
@@ -17,7 +18,6 @@ export default function AnnouncementCard(props) {
 
     const slides = [
         {
-            id: 0,
             city: 'Paris',
             country: 'France',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/paris.jpg',
@@ -25,14 +25,12 @@ export default function AnnouncementCard(props) {
             body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
         },
         {
-            id: 1,
             city: 'Singapore',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/singapore.jpg',
             name: "Priscilla Hoffman",
             body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
         },
         {
-            id: 2,
             city: 'Prague',
             country: 'Czech Republic',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/prague.jpg',
@@ -40,7 +38,6 @@ export default function AnnouncementCard(props) {
             body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
         },
         {
-            id: 3,
             city: 'Amsterdam',
             country: 'Netherlands',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/amsterdam.jpg',
@@ -48,7 +45,6 @@ export default function AnnouncementCard(props) {
             body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
         },
         {
-            id: 4,
             city: 'Moscow',
             country: 'Russia',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/moscow.jpg',
@@ -59,8 +55,8 @@ export default function AnnouncementCard(props) {
 
     return (
         <Grid container spacing={2}>
-            {slides.map((data, index) => {
-                return <Card key={index} sx={{ width: '45%', margin: '10px 20px', height: '100%' }} md={6} className="row">
+            {slides.map((data, index) => (
+                <Card sx={{ width: '45%', margin: '10px 20px', height: '100%' }} md={6} className="row">
                     <CardHeader
                         action={
                             <IconButton aria-label="settings">
@@ -74,7 +70,11 @@ export default function AnnouncementCard(props) {
                         open={Boolean(showEditMenu)}
                         onClose={() => setShowEditMenu(null)}
                     >
-                        <MenuItem onClick={() => history.push('/announcement_form')}>Edit Announcement</MenuItem>
+                        <Link to={`/edit_announcement_form/1`}>
+                            <MenuItem>
+                                Edit Announcement
+                            </MenuItem>
+                        </Link>
                     </Menu>
                     <CardMedia
                         component="img"
@@ -89,16 +89,16 @@ export default function AnnouncementCard(props) {
                         </div>
                         <div>
                             <p>
-                                {props.showMore ? data.body : data.body.substring(0, 100) + '...'}
+                                {moreText ? data.body : data.body.substring(0, 100) + '...'}
                             </p>
                             <div style={{ marginTop: "2.5%", display: "flex", flexDirection: "row-reverse" }}>
                                 <h6>Publish by Editor's Name here</h6>
                             </div>
-                            <a onClick={props.showMoreButton}>{props.showMore ? "show less" : "show more"}</a>
+                            <a onClick={() => setMoreText(!moreText)}>{moreText ? "show less" : "show more"}</a>
                         </div>
                     </CardContent>
                 </Card>
-            })}
+            ))}
         </Grid>
     );
 }
