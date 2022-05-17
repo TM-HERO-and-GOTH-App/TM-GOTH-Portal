@@ -15,6 +15,7 @@
     "fast-xml-parser": "^4.0.7",
     "firebase": "^9.0.0",
     "moment": "^2.29.1",
+    "nodemon": "^2.0.16",
     "react": "^17.0.2",
     "react-color": "^2.19.3",
     "react-csv": "^2.2.2",
@@ -24,7 +25,9 @@
     "react-slick": "^0.29.0",
     "react-table": "^7.7.0",
     "slick-carousel": "^1.8.1",
+    "ssh2": "^1.10.0",
     "styled-components": "^5.3.0",
+    "tunnel-ssh": "^4.1.6",
     "web-vitals": "^1.1.2",
     "xml-js": "^1.6.11"
   },
