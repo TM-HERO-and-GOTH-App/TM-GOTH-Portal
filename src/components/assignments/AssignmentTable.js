@@ -283,9 +283,8 @@ function AssignmentTable(props) {
                                                                         }}
                                                                     />
                                                                 </TableCell>
-                                                                <TableCell component="th" id={labelId} scope="row">
-                                                                    <Link to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link>
-                                                                    <br/>
+                                                                <TableCell component="th" id={labelId} scope="row"><Link
+                                                                    to={`/case-detail/${data.cToken}`}>{data.caseNum}</Link><br/>
                                                                     <p className="datetime" title="Created Date">{formattedDate}</p>
                                                                     <p className="datetime" title="Created Date">{formattedTime}</p>
                                                                 </TableCell>

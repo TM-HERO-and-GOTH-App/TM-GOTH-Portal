@@ -10,19 +10,19 @@ function calculateCaseResolve(totalCase, caseResolveInFiveDays) {
 function AssignmentDashboard(props) {
     return (
         <div className="col-sm-4">
-            <div className="widget-box transparent dashboard-box">
+            <div className="widget-box transparent">
                 <div className="widget-header widget-header-flat">
                     <h4 className="widget-title lighter">
                         <i className="ace-icon fa fa-star orange" />
                         {props.typesOfAssignment}
                     </h4>
-                    <div className="widget-toolbar" onClick={props.widgetOnClick}>
+                    <div className="widget-toolbar">
                         <a href="#" data-action="collapse">
-                            <i className={props.chevronClassName} />
+                            <i className="ace-icon fa fa-chevron-up" />
                         </a>
                     </div>
                 </div>
-                <div className="widget-body" style={{display: props.display === true ? "block" : "none"}}>
+                <div className="widget-body">
                     <div className="widget-main no-padding">
                         <table className="table table-bordered table-striped">
                             {props.assignmentData?.map((data, index) => {
@@ -44,7 +44,7 @@ function AssignmentDashboard(props) {
                                             <b className="blue">
                                                 {
                                                     data.totalClosed === null
-                                                    || !data ? 0 : data.totalClosed.toLocaleString()
+                                                    || !data ? 0 : data.totalClosed
                                                 }
                                             </b>
                                         </td>
@@ -55,7 +55,7 @@ function AssignmentDashboard(props) {
                                             <b className="blue">
                                                 {
                                                     data.totalInProgress === null
-                                                    || !data ? 0 : data.totalInProgress.toLocaleString()
+                                                    || !data ? 0 : data.totalInProgress
                                                 }
                                             </b>
                                         </td>
@@ -66,7 +66,7 @@ function AssignmentDashboard(props) {
                                             <b className="blue">
                                                 {
                                                     data.totalAssigned === null
-                                                    || !data ? 0 : data.totalAssigned.toLocaleString()
+                                                    || !data ? 0 : data.totalAssigned
                                                 }
                                             </b>
                                         </td>
@@ -77,7 +77,7 @@ function AssignmentDashboard(props) {
                                             <b className="green">
                                                 {
                                                     data.totalCase === null
-                                                    || !data ? 0 : data.totalCase.toLocaleString()
+                                                    || !data ? 0 : data.totalCase
                                                 }
                                             </b>
                                         </td>

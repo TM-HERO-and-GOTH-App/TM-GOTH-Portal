@@ -1,104 +1,150 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
+import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { red } from '@mui/material/colors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Grid from '@mui/material/Grid';
-import Menu from '@mui/material/Menu';
-import MenuItem from "@mui/material/MenuItem";
-import { useHistory } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import CardActions from '@mui/material/CardActions';
+import Collapse from '@mui/material/Collapse';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function AnnouncementCard(props) {
-    const [moreText, setMoreText] = React.useState(false);
-    const [showEditMenu, setShowEditMenu] = React.useState(null);
-    let history = useHistory();
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
+}));
+
+export default function AnnouncementCard() {
+    const [expanded, setExpanded] = React.useState({});
+    const [moreText, setMoreText] = React.useState(false)
 
     const slides = [
         {
+            id: 0,
             city: 'Paris',
             country: 'France',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/paris.jpg',
-            name: "Signe Mclean",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
+            name: "Signe Mclean"
         },
         {
+            id: 1,
             city: 'Singapore',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/singapore.jpg',
-            name: "Priscilla Hoffman",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
+            name: "Priscilla Hoffman"
         },
         {
+            id: 2,
             city: 'Prague',
             country: 'Czech Republic',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/prague.jpg',
-            name: "Hamilton Horne",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
+            name: "Hamilton Horne"
         },
         {
+            id: 3,
             city: 'Amsterdam',
             country: 'Netherlands',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/amsterdam.jpg',
-            name: "Callie Knowles",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
+            name: "Callie Knowles"
         },
         {
+            id: 4,
             city: 'Moscow',
             country: 'Russia',
             img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/moscow.jpg',
-            name: "Carlos Dejesus",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium sem tortor, at rutrum odio porta et. Quisque vel lectus tortor. Donec dignissim, metus nec venenatis mattis, augue justo dignissim mauris, at hendrerit ante tortor at nulla. Curabitur accumsan sem risus, sed eleifend metus malesuada nec. Donec vulputate, eros vitae rutrum rutrum, ex ante eleifend velit, quis pharetra felis nunc lacinia arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse accumsan dolor vitae dolor tincidunt, ut luctus justo semper. Cras a sollicitudin lectus, sit amet consequat ante. Ut vitae congue enim.'
+            name: "Carlos Dejesus"
         },
     ];
 
+    const handleExpandClick = (id) => {
+        setExpanded((expanded) => ({
+            ...expanded,
+            [id]: !expanded[id]
+        }));
+        setMoreText(!moreText)
+    };
+
     return (
         <Grid container spacing={2}>
-            {slides.map((data, index) => (
-                <Card sx={{ width: '45%', margin: '10px 20px', height: '100%' }} md={6} className="row">
+            {slides.map((data, index) => {
+                let date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                // let fullDate = date.getFullYear() + '-' +  date.getMonth() + '-' +  date.getDay();
+                return <Card sx={{ width: '45%', margin: '10px 20px', height: '100%' }} md={6} className="row">
                     <CardHeader
                         action={
                             <IconButton aria-label="settings">
-                                <MoreVertIcon onClick={(e) => setShowEditMenu(e.currentTarget)} />
+                                <MoreVertIcon />
                             </IconButton>
                         }
                     />
-                    <Menu
-                        id="simple-menu"
-                        anchorEl={showEditMenu}
-                        open={Boolean(showEditMenu)}
-                        onClose={() => setShowEditMenu(null)}
-                    >
-                        <Link to={`/edit_announcement_form/1`}>
-                            <MenuItem>
-                                Edit Announcement
-                            </MenuItem>
-                        </Link>
-                    </Menu>
                     <CardMedia
                         component="img"
                         height="194"
                         image={data.img}
                     />
                     <CardContent>
-                        <div>
-                            <h3>
-                                Some Title
-                            </h3>
-                        </div>
-                        <div>
-                            <p>
-                                {moreText ? data.body : data.body.substring(0, 100) + '...'}
-                            </p>
-                            <div style={{ marginTop: "2.5%", display: "flex", flexDirection: "row-reverse" }}>
-                                <h6>Publish by Editor's Name here</h6>
-                            </div>
-                            <a onClick={() => setMoreText(!moreText)}>{moreText ? "show less" : "show more"}</a>
-                        </div>
+                        <Typography gutterBottom variant="h5" component="div">
+                            Title Here
+                        </Typography>
+                        <Typography sx={{overflow: "hidden", textOverflow: "ellipsis"}} variant="body2" color="text.secondary">
+                            This impressive paella is a perfect party dish and a fun meal to cook
+                            together with your guests. Add 1 cup of frozen peas along with the mussels,
+                            if you like.
+                        </Typography>
                     </CardContent>
+                    <CardActions disableSpacing>
+                        <ExpandMore
+                            expand={expanded}
+                            onClick={(id) => handleExpandClick(data.id)}
+                            aria-expanded={expanded}
+                            aria-label="show more"
+                        >
+                            <ExpandMoreIcon />
+                        </ExpandMore>
+                    </CardActions>
+                    <Collapse in={expanded[data.id]} timeout="auto" unmountOnExit>
+                        <CardContent>
+                            <Typography paragraph>Method:</Typography>
+                            <Typography paragraph>
+                                Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
+                                aside for 10 minutes.
+                            </Typography>
+                            <Typography paragraph>
+                                Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
+                                medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
+                                occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
+                                large plate and set aside, leaving chicken and chorizo in the pan. Add
+                                pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
+                                stirring often until thickened and fragrant, about 10 minutes. Add
+                                saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
+                            </Typography>
+                            <Typography paragraph>
+                                Add rice and stir very gently to distribute. Top with artichokes and
+                                peppers, and cook without stirring, until most of the liquid is absorbed,
+                                15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
+                                mussels, tucking them down into the rice, and cook again without
+                                stirring, until mussels have opened and rice is just tender, 5 to 7
+                                minutes more. (Discard any mussels that don&apos;t open.)
+                            </Typography>
+                            <Typography>
+                                Set aside off of the heat to let rest for 10 minutes, and then serve.
+                            </Typography>
+                        </CardContent>
+                    </Collapse>
                 </Card>
-            ))}
+            })}
         </Grid>
     );
 }
