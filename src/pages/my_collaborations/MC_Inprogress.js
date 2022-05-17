@@ -1,7 +1,7 @@
 import React, { useEffect, useState, } from 'react';
 import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-import AssignmentTable from '../../components/assignments/AssignmentTableData';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function MC_Inprogress() {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
@@ -20,7 +20,7 @@ function MC_Inprogress() {
 
 
   return (
-    <Layout 
+    <Layout
     pageTitle={
       <span>
         My Collaboration : <span style={{color:'green'}}>ASSIGNED</span>

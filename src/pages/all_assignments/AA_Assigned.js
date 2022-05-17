@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '../Layout';
-import AllAssignmentTable from '../../components/assignments/AllAssignmentTableData';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
-
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function AA_Assigned() {
     const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
@@ -11,17 +10,18 @@ function AA_Assigned() {
     const [assignedData, setAssignedCase] = useState([]);
     const [caseType, setCaseType] = useState('0');
     const [groupType, setGroupType] = useState('0');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const allAssignmentData = () => {
-            AssignmentService.viewCaseByGroup(token, userData.shID, 64).then(res => {
-                // console.log(res);
-                setAssignedCase(res)
-            })
+        const allAssignmentData = async () => {
+            setIsLoading(true);
+            const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 64)
+            setAssignedCase(res)
+            setIsLoading(false);
         }
         allAssignmentData();
-    }, [])
-
+        return () => setIsLoading(false);
+    }, [token, userData.shID])
 
     return (
         <Layout
@@ -40,7 +40,8 @@ function AA_Assigned() {
                                 {
                                     lovData
                                         .filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN')
-                                        .map((data, key) => <option key={key} value={data.lovName}>{data.lovName} </option>)
+                                        .map((data, key) => <option key={key}
+                                                                    value={data.lovName}>{data.lovName} </option>)
                                 }
                             </select>
                         </div>
@@ -52,7 +53,8 @@ function AA_Assigned() {
                                 {
                                     lovData
                                         .filter(filter => filter.lovGroup === 'CASE-TYPE')
-                                        .map((data, key) => <option key={key} value={data.lovName}>{data.lovName}</option>)
+                                        .map((data, key) => <option key={key}
+                                                                    value={data.lovName}>{data.lovName}</option>)
                                 }
                             </select>
                         </div>
@@ -63,10 +65,11 @@ function AA_Assigned() {
                             <div className="pull-right tableTools-container"/>
                         </div>
                         <div>
-                            <AllAssignmentTable
+                            <AssignmentTable
                                 tableData={assignedData}
                                 caseType={caseType}
                                 groupType={groupType}
+                                isLoading={isLoading}
                             />
                         </div>
                     </div>

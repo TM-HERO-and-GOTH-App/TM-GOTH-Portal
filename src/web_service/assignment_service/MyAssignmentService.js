@@ -1,4 +1,4 @@
-import getApiPort from "../PortAPIDetector";
+// import getApiPort from "../PortAPIDetector";
 
 const url = 'https://hero.tm.com.my';
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };

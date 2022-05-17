@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
-import AssignmentTable from '../../components/assignments/AssignmentTableData';
+import AssignmentTable from '../../components/assignments/AssignmentTable';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
 
 function GA_Unassigned() {
   const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')))
   const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')))
   const [unassignedCase, setUnassignedCase] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const loggerCase = () => {
-      AssignmentService.viewUnassignedCase(token, userData.shID).then(res => {
-        console.log(res);
-        setUnassignedCase(res)
-      })
+    const loggerCase = async() => {
+      setIsLoading(true)
+      const res = await AssignmentService.viewUnassignedCase(token, userData.shID)
+      setUnassignedCase(res)
+      setIsLoading(false)
     }
-
     loggerCase();
-  }, [])
+
+    return () => {};
+  }, [token, userData.shID])
 
 
   return (
-    <Layout 
+    <Layout
     pageTitle={
       <span>
-        Nationwide Assignments : <span style={{color: 'green'}}>UN-ASSIGNED</span>
+        Nationwide Assignments : <span style={{color: 'var(--color-danger)'}}>UN-ASSIGNED</span>
       </span>
     }
     pageContent={
@@ -47,6 +49,7 @@ function GA_Unassigned() {
             <div>
               <AssignmentTable
                 tableData={unassignedCase}
+                isLoading={isLoading}
               />
             </div>
           </div>{/* /.span */}
