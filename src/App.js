@@ -5,7 +5,7 @@ import AA_Unassigned from './pages/all_assignments/AA_Unassigned';
 import ActionTaken from './pages/assignment/ActionTaken';
 import Activate from './pages/ActivateAcc';
 import AdvancedSearch from './pages/AdvancedSearch';
-import AnnouncementForm from './pages/mock_screens/AnnouncementForm';
+// import AnnouncementForm from './pages/mock_screens/AnnouncementForm';
 import AssignToOther from './pages/assignment/AssignToOthers';
 import CaseDetail from './pages/case_detail/CaseDetail';
 import CautionReport from './pages/hero_cases_functionality/CautionReport';
@@ -50,7 +50,7 @@ function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/activate" component={Activate} />
         <PrivateRoute>
-          <Route path="/announcement_form" component={AnnouncementForm} />
+          {/* <Route path="/announcement_form" component={AnnouncementForm} /> */}
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/MyAssignments-Assigned" component={MA_Assigned} />
           <Route exact path="/MyAssignments-Inprogress" component={MA_Inprogress} />
