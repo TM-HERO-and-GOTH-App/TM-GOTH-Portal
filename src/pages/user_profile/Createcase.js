@@ -16,6 +16,8 @@ function Createcase(props) {
   const [stateType, setStateType] = useState('0');
   const [sourceType, setSourceType] = useState('0');
   const [subSourceType, setSubSourceType] = useState('0');
+  const [productType, setProductType] = useState('0');
+  const [areaType, setAreaType] = useState('0');
 
   const userInput = () => {
     const userInput = {
@@ -49,6 +51,21 @@ function Createcase(props) {
       })
   }
 
+  const createCaseLocal = (e) => {
+    e.preventDefault();
+    fetch("http://localhost:3002/case/insert", {
+      customerName: customerNameInput,
+      ic: nricInput,
+      loggerPhone: mobileNumberInput,
+      state: stateType,
+      caseType: caseType,
+      sourceType: sourceType,
+      areaType: areaType,
+      productType: productType
+    }).catch(e => alert(e))
+    alert('case have been successfully created.');
+  }
+
   const resetForm = () => {
     setCaseDescriptionInput('')
     setCustomerNameInput('')
@@ -61,7 +78,7 @@ function Createcase(props) {
   }
 
   return (
-    <Layout 
+    <Layout
     pageTitle='Create New Case'
     pageContent={
       <>
@@ -199,7 +216,7 @@ function Createcase(props) {
                       <textarea className="form-control limited" rows={10} name="caseContent" maxLength={9999} defaultValue={caseDescriptionInput ? caseDescriptionInput : ''} onChange={(e) => setCaseDescriptionInput(e.target.value)} />
                     </div>
                   </div>
-                  
+
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: '25%' }}> Case Description </div>
                     <div className="profile-info-value">
