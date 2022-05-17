@@ -1,53 +1,70 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 
 function Createcase(props) {
-  const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-  const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
-  const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
-  const [alertStatus, setAlertStatus] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [caseDescriptionInput, setCaseDescriptionInput] = useState('');
-  const [customerNameInput, setCustomerNameInput] = useState('');
-  const [nricInput, setNRICInput] = useState('');
-  const [mobileNumberInput, setMobileNumberInput] = useState('');
-  const [caseType, setCaseType] = useState('0');
-  const [stateType, setStateType] = useState('0');
-  const [sourceType, setSourceType] = useState('0');
-  const [subSourceType, setSubSourceType] = useState('0');
+    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
+    const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
+    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [caseDescriptionInput, setCaseDescriptionInput] = useState('');
+    const [customerNameInput, setCustomerNameInput] = useState('');
+    const [nricInput, setNRICInput] = useState('');
+    const [mobileNumberInput, setMobileNumberInput] = useState('');
+    const [caseType, setCaseType] = useState('0');
+    const [stateType, setStateType] = useState('0');
+    const [sourceType, setSourceType] = useState('0');
+    const [subSourceType, setSubSourceType] = useState('0');
+    const [productType, setProductType] = useState('0');
+    const [areaType, setAreaType] = useState('0');
 
-  const userInput = () => {
-    const userInput = {
-      location: stateType,
-      caseTypeID: caseType,
-      sourceID: sourceType,
-      subSourceID: subSourceType
+    const userInput = () => {
+        const userInput = {
+            location: stateType,
+            caseTypeID: caseType,
+            sourceID: sourceType,
+            subSourceID: subSourceType
+        }
+
+        const sessionData = sessionStorage.setItem('caseInput', JSON.stringify(userInput))
+        return sessionData;
     }
 
-    const sessionData = sessionStorage.setItem('caseInput', JSON.stringify(userInput))
-    return sessionData;
-  }
+    const createCase = (e) => {
+        e.preventDefault();
+        CreateCaseService.createCase(token, customerNameInput, nricInput, mobileNumberInput,
+            caseDescriptionInput, stateType, sourceType, subSourceType, caseType)
+            .then(res => {
+                console.log(res);
+                if (customerNameInput !== '' && sourceType !== 0 && caseDescriptionInput !== '') {
+                    if (res.response === 'FAILED') {
+                        setAlertStatus(true)
+                        setAlertMessage('Please insert all the required field')
+                    } else {
+                        props.history.replace('/');
+                    }
+                } else {
+                    setAlertStatus(true);
+                    setAlertMessage('Please insert all the required field');
+                }
+            })
+    }
 
-  const createCase = (e) => {
-    e.preventDefault();
-    CreateCaseService.createCase(token, customerNameInput, nricInput, mobileNumberInput,
-      caseDescriptionInput, stateType, sourceType, subSourceType, caseType)
-      .then(res => {
-        console.log(res);
-        if (customerNameInput !== '' && sourceType !== 0 && caseDescriptionInput !== '') {
-          if (res.response === 'FAILED') {
-            setAlertStatus(true)
-            setAlertMessage('Please insert all the required field')
-          } else {
-            props.history.replace('/');
-          }
-        } else {
-          setAlertStatus(true);
-          setAlertMessage('Please insert all the required field');
-        }
-      })
-  }
+    const createCaseLocal = (e) => {
+        e.preventDefault();
+        fetch("http://localhost:3002/case/insert", {
+            customerName: customerNameInput,
+            ic: nricInput,
+            loggerPhone: mobileNumberInput,
+            state: stateType,
+            caseType: caseType,
+            sourceType: sourceType,
+            areaType: areaType,
+            productType: productType
+        }).catch(e => alert(e))
+        alert('case have been successfully created.');
+    }
 
   const resetForm = () => {
     setCaseDescriptionInput('')
