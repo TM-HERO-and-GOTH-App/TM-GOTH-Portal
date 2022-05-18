@@ -37,16 +37,16 @@
     height: 100%;
 }
 
-#id-date-picker-1 {
-    width: 180px
-}
+/*#id-date-picker-1 {*/
+/*    min-width: 180px*/
+/*}*/
 
-#id-date-picker-2 {
-    width: 180px
-}
+/*#id-date-picker-2 {*/
+/*    min-width: 180px*/
+/*}*/
 
 .advance-search-select-input {
-    width: 220px
+    min-width: 250px
 }
 
 /* Dropdown List */
