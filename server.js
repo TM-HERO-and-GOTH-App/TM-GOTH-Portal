@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const { Client } = require('ssh2');
-const sshClient = new Client();
-const Tunnel = require('tunnel-ssh');
+// const { Client } = require('ssh2');
+// const sshClient = new Client();
+// var Tunnel = require('tunnel-ssh');
 const mysql = require('mysql');
 const path = require('path');
 
@@ -44,7 +44,7 @@ app.post("/case/insert", (req, res) => {
     const customerAccountNumber = req.body.customerAccountNumber
     const customerPhone = req.body.customerPhone
     const issue = req.body.issue
-    const sqlInsert = "INSERT INTO TBL_CASE_copy(logger_name, logger_phone_number, customer_name, customer_service_number, customer_account_number, customer_phone_number, issue, status) VALUES(?,?,?,?,?,?,?,'open', null)"
+    const sqlInsert = "INSERT INTO TBL_CASE(logger_name, logger_phone_number, customer_name, customer_service_number, customer_account_number, customer_phone_number, issue, status) VALUES(?,?,?,?,?,?,?,'open', null)"
     db.query(sqlInsert, [loggerName, loggerPhone, customerName, customerUsername, customerAccountNumber, customerPhone, issue], (err, result) => {
         if(err) return console.log(err);
         console.log(result);

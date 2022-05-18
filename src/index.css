@@ -59,10 +59,10 @@
     font-weight: 300;
 }
 
-.row form > div {
+/* .row form > div {
     min-width: clamp(30%, calc(10rem - 20vw), 45%);
     margin-bottom: .5rem;
-}
+} */
 
 .table-container {
     background-clip: border-box;

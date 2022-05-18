@@ -19,18 +19,6 @@ function Createcase(props) {
     const [productType, setProductType] = useState('0');
     const [areaType, setAreaType] = useState('0');
 
-    const userInput = () => {
-        const userInput = {
-            location: stateType,
-            caseTypeID: caseType,
-            sourceID: sourceType,
-            subSourceID: subSourceType
-        }
-
-        const sessionData = sessionStorage.setItem('caseInput', JSON.stringify(userInput))
-        return sessionData;
-    }
-
     const createCase = (e) => {
         e.preventDefault();
         CreateCaseService.createCase(token, customerNameInput, nricInput, mobileNumberInput,
@@ -83,7 +71,7 @@ function Createcase(props) {
     pageContent={
       <>
 
-        <form name="form" onSubmit={createCase} onReset={resetForm}>
+        <form name="form" onSubmit={createCaseLocal} onReset={resetForm}>
           {
             alertStatus &&
             <div className="row">
