@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.49eeda47.chunk.css",
+    "main.js": "/static/js/main.0c5a7845.chunk.js",
+    "main.js.map": "/static/js/main.0c5a7845.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.df554e97.js",
+    "runtime-main.js.map": "/static/js/runtime-main.df554e97.js.map",
+    "static/js/2.d8dc0431.chunk.js": "/static/js/2.d8dc0431.chunk.js",
+    "static/js/2.d8dc0431.chunk.js.map": "/static/js/2.d8dc0431.chunk.js.map",
+    "static/js/3.57ba7bc2.chunk.js": "/static/js/3.57ba7bc2.chunk.js",
+    "static/js/3.57ba7bc2.chunk.js.map": "/static/js/3.57ba7bc2.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.49eeda47.chunk.css.map": "/static/css/main.49eeda47.chunk.css.map",
+    "static/js/2.d8dc0431.chunk.js.LICENSE.txt": "/static/js/2.d8dc0431.chunk.js.LICENSE.txt",
+    "static/media/guardian-login.dba7758c.png": "/static/media/guardian-login.dba7758c.png",
+    "static/media/guardian.e187b384.png": "/static/media/guardian.e187b384.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.df554e97.js",
+    "static/js/2.d8dc0431.chunk.js",
+    "static/css/main.49eeda47.chunk.css",
+    "static/js/main.0c5a7845.chunk.js"
+  ]
+}
