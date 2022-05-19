@@ -15,7 +15,7 @@ async function asyncFunction() {
         // const CREATED_DATE = "";
 
         // Insert query with parameter placeholders
-        const insertQuery = "INSERT INTO heroserver.tbl_case(first_name, last_name, email) VALUES (?, ?, ?)";
+        const insertQuery = "INSERT INTO emdev.TBL_CASE(H_ID, CASE_NUM, CLOSED_DATE) VALUES (?, ?, ?)";
 
         // Insert new customer record using pool.query function
         const result = await db.pool.query(insertQuery, [first_name, last_name, email]);

@@ -1,17 +1,14 @@
 const mariadb = require('mariadb');
-const {NodeSSH} = require('node-ssh')
-
-const ssh = new NodeSSH()
 
 async function asyncFunction() {
     let conn;
     try {
         // Create a new connection
         conn = await mariadb.createConnection({
-            host: '172.20.197.194',
+            host: 'localhost',
             port: '3306',
-            user: 'hero_app',
-            password: 'Pswd2022',
+            user: 'root',
+            password: '1234',
         });
 
         // Print connection thread

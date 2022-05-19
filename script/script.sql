@@ -1,4 +1,4 @@
-create table if not exists TBL_ACTION_REMARK
+create or replace table TBL_ACTION_REMARK
 (
     AR_ID       int auto_increment
         primary key,
@@ -12,10 +12,10 @@ create table if not exists TBL_ACTION_REMARK
 )
     comment 'AUDIT TRAIL FOR ACTION REMARKS/UPDATES' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_ACTION_REMARK (C_ID, H_ID, CT_ID, B_ID);
 
-create table if not exists TBL_ANNOUNCEMENT
+create or replace table TBL_ANNOUNCEMENT
 (
     TBL_ANNOUNCEMENT int          not null
         primary key,
@@ -26,13 +26,13 @@ create table if not exists TBL_ANNOUNCEMENT
     TAG              varchar(50)  null
 );
 
-create index if not exists G_ID
+create or replace index G_ID
     on TBL_ANNOUNCEMENT (G_ID);
 
-create index if not exists TAG
+create or replace index TAG
     on TBL_ANNOUNCEMENT (TAG);
 
-create table if not exists TBL_APP_VERSION
+create or replace table TBL_APP_VERSION
 (
     V_ID        int(7) auto_increment
         primary key,
@@ -45,10 +45,10 @@ create table if not exists TBL_APP_VERSION
 )
     charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_APP_VERSION (APP_ID, APP_EXPIRED, APP_VERSION);
 
-create table if not exists TBL_ASSIGNMENT_LOG
+create or replace table TBL_ASSIGNMENT_LOG
 (
     AL_ID        int auto_increment
         primary key,
@@ -61,10 +61,10 @@ create table if not exists TBL_ASSIGNMENT_LOG
 )
     comment 'Log for every time case assignment occur' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_ASSIGNMENT_LOG (C_ID, H_ID, H_ID_SUPPORT, SH_ID);
 
-create table if not exists TBL_AUTH_TOKEN
+create or replace table TBL_AUTH_TOKEN
 (
     T_ID           int auto_increment
         primary key,
@@ -75,10 +75,10 @@ create table if not exists TBL_AUTH_TOKEN
 )
     comment 'AUTHENTICATION TOKEN need to be called for each API. Token validity is 15 sec  ' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_AUTH_TOKEN (H_ID, AUTH_TOKEN, REQUESTED_DATE);
 
-create table if not exists TBL_BLOB
+create or replace table TBL_BLOB
 (
     B_ID         int auto_increment
         primary key,
@@ -87,7 +87,7 @@ create table if not exists TBL_BLOB
 )
     comment 'Store BLOB content. Will be referred from TBL_PICTURE & TBL_HERO_PROFILE' charset = latin1;
 
-create table if not exists TBL_CASE
+create or replace table TBL_CASE
 (
     C_ID             int auto_increment
         primary key,
@@ -103,48 +103,26 @@ create table if not exists TBL_CASE
 )
     comment 'To store Case detail' charset = latin1;
 
-create index if not exists CASE_INDEX
+create or replace index CASE_INDEX
     on TBL_CASE (CASE_NUM, H_ID, OWNER_ID, OWNER_ID_SUPPORT, C_TOKEN);
 
-create trigger if not exists backup_tbl_case
+create or replace definer = root@`%` trigger backup_tbl_case
     before delete
     on TBL_CASE
     for each row
-BEGIN
+begin
+    -- missing source code
+end;
 
-   
-   INSERT INTO BAK_CASE
-   ( C_ID,
-     H_ID,
-     CASE_NUM,
-     CREATED_DATE,
-     CLOSED_DATE,
-     OWNER_ID,
-     OWNER_ID_SUPPORT,
-     C_TOKEN,
-     DELETED_BY)
-   VALUES
-   ( OLD.C_ID,
-     OLD.H_ID,
-     OLD.CASE_NUM,
-     OLD.CREATED_DATE,
-     OLD.CLOSED_DATE,
-     OLD.OWNER_ID,
-     OLD.OWNER_ID_SUPPORT,
-     OLD.C_TOKEN,
-     USER());
-
-END;
-
-create trigger if not exists create_new_case
+create or replace definer = root@`%` trigger create_new_case
     before insert
     on TBL_CASE
     for each row
-BEGIN
-	SET NEW.C_TOKEN = MD5(CURRENT_TIMESTAMP);
-END;
+begin
+    -- missing source code
+end;
 
-create table if not exists TBL_CASE_DETAIL
+create or replace table TBL_CASE_DETAIL
 (
     CD_ID           int auto_increment
         primary key,
@@ -178,61 +156,19 @@ create table if not exists TBL_CASE_DETAIL
 )
     comment 'Store the case details' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_CASE_DETAIL (C_ID, SH_ID, CASE_TYPE, PRODUCT_NAME, CASE_STATUS, AREA_LOCATION, SERVICE_ID, SR_NUM, TT_NUM,
                         SEGMENT_ID, FLAG, SOURCE_ID, SUB_SOURCE_ID, SMS_DESC, STAKEHOLDER_REF);
 
-create trigger if not exists backup_tbl_case_detail
+create or replace definer = root@`%` trigger backup_tbl_case_detail
     before delete
     on TBL_CASE_DETAIL
     for each row
-BEGIN
+begin
+    -- missing source code
+end;
 
-   
-   INSERT INTO BAK_CASE_DETAIL
-   ( CD_ID,
-	 C_ID,
-     SH_ID,
-     CASE_TYPE,
-     PRODUCT_NAME,
-     RATING,
-     RATING_REMARK,
-     CASE_CONTENT,
-     CASE_STATUS,
-     PACKAGE_NAME,
-     SERVICE_ID,
-     SERVICE_ADDRESS,
-     SR_NUM,
-     TT_NUM,
-     AREA_LOCATION,
-     SEGMENT_ID,
-     FLAG,
-     SOURCE_ID,
-     DELETED_BY)
-   VALUES
-   ( OLD.CD_ID,
-	 OLD.C_ID,
-     OLD.SH_ID,
-     OLD.CASE_TYPE,
-     OLD.PRODUCT_NAME,
-     OLD.RATING,
-     OLD.RATING_REMARK,
-     OLD.CASE_CONTENT,
-     OLD.CASE_STATUS,
-     OLD.PACKAGE_NAME,
-     OLD.SERVICE_ID,
-     OLD.SERVICE_ADDRESS,
-     OLD.SR_NUM,
-     OLD.TT_NUM,
-     OLD.AREA_LOCATION,
-     OLD.SEGMENT_ID,
-     OLD.FLAG,
-     OLD.SOURCE_ID,
-     USER());
-
-END;
-
-create table if not exists TBL_CHAT
+create or replace table TBL_CHAT
 (
     CHAT_ID int auto_increment
         primary key,
@@ -244,16 +180,16 @@ create table if not exists TBL_CHAT
     PICTURE blob                   null
 );
 
-create index if not exists C_ID
+create or replace index C_ID
     on TBL_CHAT (C_ID);
 
-create index if not exists G_ID
+create or replace index G_ID
     on TBL_CHAT (G_ID);
 
-create index if not exists HB_ID
+create or replace index HB_ID
     on TBL_CHAT (HB_ID);
 
-create table if not exists TBL_CLEANUP_LOG
+create or replace table TBL_CLEANUP_LOG
 (
     CL_ID       int(7) auto_increment
         primary key,
@@ -262,10 +198,10 @@ create table if not exists TBL_CLEANUP_LOG
 )
     charset = latin1;
 
-create index if not exists C_ID
+create or replace index C_ID
     on TBL_CLEANUP_LOG (C_ID);
 
-create table if not exists TBL_CUSTOMER_PROFILE
+create or replace table TBL_CUSTOMER_PROFILE
 (
     CP_ID                int auto_increment
         primary key,
@@ -277,10 +213,10 @@ create table if not exists TBL_CUSTOMER_PROFILE
 )
     comment 'Store Customer Details per Case' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_CUSTOMER_PROFILE (C_ID, CUSTOMER_NAME, ACTUAL_CUSTOMER_NAME);
 
-create table if not exists TBL_GOTH_LOGGER
+create or replace table TBL_GOTH_LOGGER
 (
     G_ID              int auto_increment
         primary key,
@@ -295,22 +231,22 @@ create table if not exists TBL_GOTH_LOGGER
     G_GROUP           varchar(5)  default 'USER'              null
 );
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_GOTH_LOGGER (EMAIL);
 
-create index if not exists FULLNAME
+create or replace index FULLNAME
     on TBL_GOTH_LOGGER (FULLNAME);
 
-create index if not exists G_ID
+create or replace index G_ID
     on TBL_GOTH_LOGGER (G_ID);
 
-create index if not exists LDAP_EMAIL
+create or replace index LDAP_EMAIL
     on TBL_GOTH_LOGGER (LDAP_EMAIL);
 
-create index if not exists PASSWORD
+create or replace index PASSWORD
     on TBL_GOTH_LOGGER (PASSWORD);
 
-create table if not exists TBL_GROUP_CHAT
+create or replace table TBL_GROUP_CHAT
 (
     GC_ID       int auto_increment
         primary key,
@@ -320,10 +256,10 @@ create table if not exists TBL_GROUP_CHAT
 )
     comment 'ONLY USERS IN THE SAME GROUP CAN PUSH/PULL CHAT-MESSAGE FOR THAT PARTICULAR CASE' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_GROUP_CHAT (C_ID, H_ID);
 
-create table if not exists TBL_HERO
+create or replace table TBL_HERO
 (
     H_ID              int auto_increment comment 'HERO_ID FOR SYS USED'
         primary key,
@@ -339,18 +275,18 @@ create table if not exists TBL_HERO
 )
     comment 'To store Hero profiles' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_HERO (EMAIL, H_TOKEN, H_GROUP, PASSWORD, FULLNAME, H_ID, LDAP_EMAIL);
 
-create trigger if not exists create_new_user
+create or replace definer = root@`%` trigger create_new_user
     before insert
     on TBL_HERO
     for each row
-BEGIN
-	SET NEW.H_TOKEN = MD5(CURRENT_TIMESTAMP);
-END;
+begin
+    -- missing source code
+end;
 
-create table if not exists TBL_HEROBUDDY_INFO
+create or replace table TBL_HEROBUDDY_INFO
 (
     HB_ID       int auto_increment
         primary key,
@@ -362,10 +298,10 @@ create table if not exists TBL_HEROBUDDY_INFO
 )
     charset = latin1;
 
-create index if not exists C_ID
+create or replace index C_ID
     on TBL_HEROBUDDY_INFO (C_ID);
 
-create table if not exists TBL_INFOBLAST_LOG
+create or replace table TBL_INFOBLAST_LOG
 (
     IB_ID       int auto_increment
         primary key,
@@ -375,10 +311,10 @@ create table if not exists TBL_INFOBLAST_LOG
 )
     comment 'OUTGOING SMS HISTORY' charset = latin1;
 
-create index if not exists RECIPIENT
+create or replace index RECIPIENT
     on TBL_INFOBLAST_LOG (RECIPIENT);
 
-create table if not exists TBL_LDAP_PROFILE
+create or replace table TBL_LDAP_PROFILE
 (
     LP_ID       int auto_increment
         primary key,
@@ -396,13 +332,13 @@ create table if not exists TBL_LDAP_PROFILE
 )
     charset = latin1;
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_LDAP_PROFILE (EMAIL);
 
-create index if not exists STAFF_ID
+create or replace index STAFF_ID
     on TBL_LDAP_PROFILE (STAFF_ID);
 
-create table if not exists TBL_LOGIN_HISTORY
+create or replace table TBL_LOGIN_HISTORY
 (
     LH_ID       int auto_increment
         primary key,
@@ -415,10 +351,10 @@ create table if not exists TBL_LOGIN_HISTORY
 )
     charset = latin1;
 
-create index if not exists LOGIN_INDEX
+create or replace index LOGIN_INDEX
     on TBL_LOGIN_HISTORY (EMAIL, H_ID, AUTH_TYPE, LOGGED_DATE, LH_ID);
 
-create table if not exists TBL_LOV
+create or replace table TBL_LOV
 (
     L_ID      int(7) auto_increment
         primary key,
@@ -430,10 +366,10 @@ create table if not exists TBL_LOV
 )
     charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_LOV (PARENT_ID, L_NAME, L_GROUP);
 
-create table if not exists TBL_LOV_copy
+create or replace table TBL_LOV_copy
 (
     L_ID      int(7) auto_increment
         primary key,
@@ -445,10 +381,10 @@ create table if not exists TBL_LOV_copy
 )
     charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_LOV_copy (PARENT_ID, L_NAME, L_GROUP);
 
-create table if not exists TBL_MESSAGE_BOX
+create or replace table TBL_MESSAGE_BOX
 (
     MB_ID       int auto_increment
         primary key,
@@ -461,10 +397,10 @@ create table if not exists TBL_MESSAGE_BOX
 )
     comment '2-WAY CHAT' charset = latin1;
 
-create index if not exists CHAT_INDEX
+create or replace index CHAT_INDEX
     on TBL_MESSAGE_BOX (C_ID, H_ID, FLAG, B_ID);
 
-create table if not exists TBL_NOTIFICATION
+create or replace table TBL_NOTIFICATION
 (
     N_ID         int auto_increment
         primary key,
@@ -476,18 +412,18 @@ create table if not exists TBL_NOTIFICATION
 )
     comment 'AUTO NOTIFICATION - PUSH TO APP' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_NOTIFICATION (H_ID, C_ID, FLAG);
 
-create trigger if not exists insert_notification_log
+create or replace definer = root@`%` trigger insert_notification_log
     after insert
     on TBL_NOTIFICATION
     for each row
-BEGIN
-   CALL Insert_Notification_Log(NEW.`C_ID`);
-END;
+begin
+    -- missing source code
+end;
 
-create table if not exists TBL_NOTIFICATION_LOG
+create or replace table TBL_NOTIFICATION_LOG
 (
     NL_ID  int auto_increment
         primary key,
@@ -497,10 +433,10 @@ create table if not exists TBL_NOTIFICATION_LOG
 )
     comment 'TO GET TOTAL_NEW_ALERT BY READ STATUS' charset = latin1;
 
-create index if not exists `INDEX`
+create or replace index `INDEX`
     on TBL_NOTIFICATION_LOG (H_ID, C_ID, STATUS);
 
-create table if not exists TBL_NOTIFICATION_TEMPLATE
+create or replace table TBL_NOTIFICATION_TEMPLATE
 (
     NT_ID          int(4) auto_increment
         primary key,
@@ -515,10 +451,10 @@ create table if not exists TBL_NOTIFICATION_TEMPLATE
 )
     comment 'PUSH NOTIFICATION MESSAGE TEMPLATE' charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_NOTIFICATION_TEMPLATE (CONTROLLER, TEMPLATE, B_ID);
 
-create table if not exists TBL_PASSWORD_RETRIEVAL
+create or replace table TBL_PASSWORD_RETRIEVAL
 (
     PR_ID          int auto_increment
         primary key,
@@ -529,10 +465,10 @@ create table if not exists TBL_PASSWORD_RETRIEVAL
 )
     charset = latin1;
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_PASSWORD_RETRIEVAL (EMAIL);
 
-create table if not exists TBL_PICTURE
+create or replace table TBL_PICTURE
 (
     P_ID        int auto_increment
         primary key,
@@ -544,10 +480,10 @@ create table if not exists TBL_PICTURE
 )
     charset = latin1;
 
-create index if not exists INDEXING
+create or replace index INDEXING
     on TBL_PICTURE (C_ID, B_ID);
 
-create table if not exists TBL_PUBLIC_HOLIDAY
+create or replace table TBL_PUBLIC_HOLIDAY
 (
     PH_ID       int(4) auto_increment
         primary key,
@@ -556,10 +492,10 @@ create table if not exists TBL_PUBLIC_HOLIDAY
 )
     comment 'Public Holiday' charset = latin1;
 
-create index if not exists EVENT_DATE
+create or replace index EVENT_DATE
     on TBL_PUBLIC_HOLIDAY (EVENT_DATE);
 
-create table if not exists TBL_RPA_KEYWORD
+create or replace table TBL_RPA_KEYWORD
 (
     RPA_ID  int unsigned auto_increment
         primary key,
@@ -569,10 +505,10 @@ create table if not exists TBL_RPA_KEYWORD
 )
     charset = latin1;
 
-create fulltext index if not exists SUBAREA
+create or replace fulltext index SUBAREA
     on TBL_RPA_KEYWORD (SUBAREA, SYMPTOM);
 
-create table if not exists TBL_RPA_LOG
+create or replace table TBL_RPA_LOG
 (
     RPA_L           int auto_increment
         primary key,
@@ -585,10 +521,10 @@ create table if not exists TBL_RPA_LOG
 )
     comment 'MATCH KEYWORDS WILL BE STORED FOR REFF' charset = latin1;
 
-create index if not exists C_ID
+create or replace index C_ID
     on TBL_RPA_LOG (C_ID);
 
-create table if not exists TBL_SCORE
+create or replace table TBL_SCORE
 (
     S_ID        int auto_increment
         primary key,
@@ -600,26 +536,26 @@ create table if not exists TBL_SCORE
 )
     comment 'Audit trail for each time User get score' charset = latin1;
 
-create index if not exists SCORE_INDEX
+create or replace index SCORE_INDEX
     on TBL_SCORE (H_ID, C_ID);
 
-create trigger if not exists update_total_score
+create or replace definer = root@`%` trigger update_total_score
     after insert
     on TBL_SCORE
     for each row
-BEGIN
-	CALL Update_Total_Score(NEW.H_ID);
-END;
+begin
+    -- missing source code
+end;
 
-create trigger if not exists update_total_score_if_cancelled
+create or replace definer = root@`%` trigger update_total_score_if_cancelled
     after delete
     on TBL_SCORE
     for each row
-BEGIN
-	CALL Update_Total_Score(OLD.H_ID);
-END;
+begin
+    -- missing source code
+end;
 
-create table if not exists TBL_SDZ_STAFF
+create or replace table TBL_SDZ_STAFF
 (
     SID           int(4) auto_increment
         primary key,
@@ -630,10 +566,10 @@ create table if not exists TBL_SDZ_STAFF
 )
     charset = latin1;
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_SDZ_STAFF (EMAIL);
 
-create table if not exists TBL_STAFF
+create or replace table TBL_STAFF
 (
     SID               int auto_increment
         primary key,
@@ -660,19 +596,19 @@ create table if not exists TBL_STAFF
     comment 'Data as of 21Nov; Compulsory Field : PERSONNEL_NO,STAFF_NAME,DESIGNATION,EMAIL,STATE,FLAG,STAFF_ID'
     charset = utf8;
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_STAFF (EMAIL);
 
-create index if not exists FLAG
+create or replace index FLAG
     on TBL_STAFF (FLAG);
 
-create index if not exists STAFF_ID
+create or replace index STAFF_ID
     on TBL_STAFF (STAFF_ID);
 
-create index if not exists STATE
+create or replace index STATE
     on TBL_STAFF (STATE);
 
-create table if not exists TBL_STAFF_OLD
+create or replace table TBL_STAFF_OLD
 (
     SID                   int auto_increment
         primary key,
@@ -699,26 +635,26 @@ create table if not exists TBL_STAFF_OLD
 Compulsory Field : PERSONNEL_NO,STAFF_NAME,EMAIL,STATE,DESIGNATION,FLAG,STAFF_ID
 ' charset = utf8;
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_STAFF_OLD (EMAIL);
 
-create index if not exists FLAG
+create or replace index FLAG
     on TBL_STAFF_OLD (FLAG);
 
-create index if not exists STAFF_ID
+create or replace index STAFF_ID
     on TBL_STAFF_OLD (STAFF_ID);
 
-create index if not exists STATE
+create or replace index STATE
     on TBL_STAFF_OLD (STATE);
 
-create table if not exists TBL_Save_Case
+create or replace table TBL_Save_Case
 (
     name varchar(100) default '' not null,
     Id   int unsigned            not null
 )
     charset = latin1;
 
-create table if not exists TBL_TELEGRAM_ALERT
+create or replace table TBL_TELEGRAM_ALERT
 (
     TA_ID       int auto_increment
         primary key,
@@ -729,13 +665,13 @@ create table if not exists TBL_TELEGRAM_ALERT
 )
     comment 'AUTO NOTIFICATION FROM SYSTEM TO TELEGRAM GCHAT' charset = latin1;
 
-create index if not exists C_ID
+create or replace index C_ID
     on TBL_TELEGRAM_ALERT (C_ID);
 
-create index if not exists GCHAT
+create or replace index GCHAT
     on TBL_TELEGRAM_ALERT (GCHAT);
 
-create table if not exists TBL_TMCC_STAFF
+create or replace table TBL_TMCC_STAFF
 (
     TMCC_ID       int(7) auto_increment
         primary key,
@@ -749,10 +685,10 @@ create table if not exists TBL_TMCC_STAFF
 )
     comment 'FOR SALES TASKFORCE' charset = latin1;
 
-create index if not exists EMAIL
+create or replace index EMAIL
     on TBL_TMCC_STAFF (TMCC_EMAIL);
 
-create view if not exists VW_ACTION_REMARK as
+create or replace definer = root@`%` view VW_ACTION_REMARK as
 select `T1`.`C_ID`        AS `C_ID`,
        `T1`.`CT_ID`       AS `CT_ID`,
        `T1`.`REMARK_TYPE` AS `REMARK_TYPE`,
@@ -774,7 +710,7 @@ from ((((`emdev`.`TBL_ACTION_REMARK` `T1` join `emdev`.`TBL_CASE` `T2` on (`T2`.
 
 -- comment on column VW_ACTION_REMARK.H_ID not supported: HERO_ID FOR SYS USED
 
-create view if not exists VW_ASSIGNMENT_LOG as
+create or replace definer = root@`%` view VW_ASSIGNMENT_LOG as
 select `T2`.`CASE_NUM`     AS `CASE_NUM`,
        `T2`.`CREATED_DATE` AS `CREATED_DATE`,
        `T4`.`FULLNAME`     AS `ASSIGNED_BY`,
@@ -794,7 +730,7 @@ select `T2`.`CASE_NUM`     AS `CASE_NUM`,
 from ((((((((`emdev`.`TBL_ASSIGNMENT_LOG` `T1` join `emdev`.`TBL_CASE` `T2` on (`T1`.`C_ID` = `T2`.`C_ID`)) join `emdev`.`TBL_LOV` `T3` on (`T1`.`SH_ID` = `T3`.`L_ID`)) join `emdev`.`TBL_HERO` `T4` on (`T1`.`H_ID` = `T4`.`H_ID`)) join `emdev`.`TBL_HERO_PROFILE` `T5` on (`T5`.`H_ID` = `T4`.`H_ID`)) join `emdev`.`TBL_LOV` `T9` on (`T5`.`SH_ID` = `T9`.`L_ID`)) left join `emdev`.`TBL_HERO` `T6` on (`T1`.`H_ID_SUPPORT` = `T6`.`H_ID`)) left join `emdev`.`TBL_HERO_PROFILE` `T7` on (`T7`.`H_ID` = `T6`.`H_ID`))
          left join `emdev`.`TBL_LOV` `T8` on (`T7`.`SH_ID` = `T8`.`L_ID`));
 
-create view if not exists VW_ASSIGNMENT_LOG_bak as
+create or replace definer = root@`%` view VW_ASSIGNMENT_LOG_bak as
 select `T1`.`C_ID`         AS `C_ID`,
        `T9`.`C_TOKEN`      AS `C_TOKEN`,
        `T1`.`H_ID`         AS `H_ID`,
@@ -812,7 +748,7 @@ select `T1`.`C_ID`         AS `C_ID`,
 from ((((((((`emdev`.`TBL_ASSIGNMENT_LOG` `T1` join `emdev`.`TBL_HERO` `T2` on (`T1`.`H_ID` = `T2`.`H_ID`)) join `emdev`.`TBL_HERO_PROFILE` `T3` on (`T1`.`H_ID` = `T3`.`H_ID`)) join `emdev`.`TBL_CASE` `T9` on (`T1`.`C_ID` = `T9`.`C_ID`)) left join `emdev`.`TBL_LOV` `T4` on (`T3`.`SH_ID` = `T4`.`L_ID`)) left join `emdev`.`TBL_LOV` `T5` on (`T1`.`SH_ID` = `T5`.`L_ID`)) left join `emdev`.`TBL_HERO` `T6` on (`T1`.`H_ID_SUPPORT` = `T6`.`H_ID`)) left join `emdev`.`TBL_HERO_PROFILE` `T7` on (`T1`.`H_ID_SUPPORT` = `T7`.`H_ID`))
          left join `emdev`.`TBL_LOV` `T8` on (`T7`.`SH_ID` = `T4`.`L_ID`));
 
-create view if not exists VW_CASE_DETAIL as
+create or replace definer = root@`%` view VW_CASE_DETAIL as
 select `T1`.`C_ID`                                                                                          AS `C_ID`,
        `T1`.`C_TOKEN`                                                                                       AS `C_TOKEN`,
        `T1`.`H_ID`                                                                                          AS `H_ID`,
@@ -923,7 +859,7 @@ from ((((((((((((((((((((`emdev`.`TBL_CASE` `T1` join `emdev`.`TBL_CASE_DETAIL` 
 
 -- comment on column VW_CASE_DETAIL.CT_ID not supported: CLOSURE_TYPE; REFER TO L_ID FROM TBL_LOV
 
--- comment on column VW_CASE_DETAIL.SEGMENT_ID not supported: REFER TO TBL_LOV (Consumer/SME/Enterprise/Government) 
+-- comment on column VW_CASE_DETAIL.SEGMENT_ID not supported: REFER TO TBL_LOV (Consumer/SME/Enterprise/Government)
 
 -- comment on column VW_CASE_DETAIL.SOURCE_ID not supported: REFER TO TBL_LOV
 
@@ -935,7 +871,7 @@ from ((((((((((((((((((((`emdev`.`TBL_CASE` `T1` join `emdev`.`TBL_CASE_DETAIL` 
 
 -- comment on column VW_CASE_DETAIL.STAKEHOLDER_REF not supported: RRT,NMO,CSM,NOC
 
-create view if not exists VW_CASE_LS as
+create or replace definer = root@`%` view VW_CASE_LS as
 select `T1`.`C_ID`                                                                                          AS `C_ID`,
        `T1`.`C_TOKEN`                                                                                       AS `C_TOKEN`,
        `T1`.`H_ID`                                                                                          AS `H_ID`,
@@ -1046,7 +982,7 @@ from (((((((((((((((((((`emdev`.`TBL_CASE` `T1` join `emdev`.`TBL_CASE_DETAIL` `
 
 -- comment on column VW_CASE_LS.CT_ID not supported: CLOSURE_TYPE; REFER TO L_ID FROM TBL_LOV
 
--- comment on column VW_CASE_LS.SEGMENT_ID not supported: REFER TO TBL_LOV (Consumer/SME/Enterprise/Government) 
+-- comment on column VW_CASE_LS.SEGMENT_ID not supported: REFER TO TBL_LOV (Consumer/SME/Enterprise/Government)
 
 -- comment on column VW_CASE_LS.SOURCE_ID not supported: REFER TO TBL_LOV
 
@@ -1058,7 +994,7 @@ from (((((((((((((((((((`emdev`.`TBL_CASE` `T1` join `emdev`.`TBL_CASE_DETAIL` `
 
 -- comment on column VW_CASE_LS.STAKEHOLDER_REF not supported: RRT,NMO,CSM,NOC
 
-create view if not exists VW_CHAT_MESSAGES as
+create or replace definer = root@`%` view VW_CHAT_MESSAGES as
 select `T1`.`MB_ID`            AS `MB_ID`,
        `T1`.`C_ID`             AS `C_ID`,
        `T1`.`H_ID`             AS `H_ID`,
@@ -1087,7 +1023,7 @@ order by `T1`.`POSTED_DATE` desc;
 
 -- comment on column VW_CHAT_MESSAGES.B_ID not supported: REFER TO TBL_BLOB
 
-create view if not exists VW_GCHAT_MEMBERS as
+create or replace definer = root@`%` view VW_GCHAT_MEMBERS as
 select `T1`.`C_ID`     AS `C_ID`,
        `T2`.`H_ID`     AS `H_ID`,
        `T2`.`FULLNAME` AS `FULLNAME`,
@@ -1099,7 +1035,7 @@ select `T1`.`C_ID`     AS `C_ID`,
 from ((((`emdev`.`TBL_GROUP_CHAT` `T1` join `emdev`.`TBL_HERO` `T2` on (`T1`.`H_ID` = `T2`.`H_ID`)) join `emdev`.`TBL_HERO_PROFILE` `T3` on (`T2`.`H_ID` = `T3`.`H_ID`)) join `emdev`.`TBL_CASE` `T4` on (`T1`.`C_ID` = `T4`.`C_ID`))
          left join `emdev`.`TBL_LOV` `T5` on (`T3`.`SH_ID` = `T5`.`L_ID`));
 
-create view if not exists VW_HERO_DETAIL as
+create or replace definer = root@`%` view VW_HERO_DETAIL as
 select `T1`.`H_ID`                                                           AS `H_ID`,
        `T1`.`H_TOKEN`                                                        AS `H_TOKEN`,
        `T1`.`FULLNAME`                                                       AS `FULLNAME`,
@@ -1134,7 +1070,7 @@ select `T1`.`H_ID`                                                           AS 
 from ((((((((`emdev`.`TBL_HERO` `T1` join `emdev`.`TBL_HERO_PROFILE` `T2` on (`T1`.`H_ID` = `T2`.`H_ID`)) left join `emdev`.`TBL_LOV` `T3` on (`T2`.`SH_ID` = `T3`.`L_ID`)) left join `emdev`.`TBL_BLOB` `T4` on (`T2`.`B_ID` = `T4`.`B_ID`)) left join `emdev`.`TBL_LOV` `T5` on (`T2`.`STATE_ID` = `T5`.`L_ID`)) left join `emdev`.`TBL_LOV` `T6` on (`T2`.`POSITION_ID` = `T6`.`L_ID`)) left join `emdev`.`TBL_LOV` `T7` on (`T2`.`DIVISION_ID` = `T7`.`L_ID`)) left join `emdev`.`TBL_LOV` `T8` on (`T2`.`ZONE_ID` = `T8`.`L_ID`))
          left join `emdev`.`TBL_LOV` `T9` on (`T2`.`TEAM_ID` = `T9`.`L_ID`));
 
-create view if not exists VW_HERO_DETAIL_WITH_RANK as
+create or replace definer = root@`%` view VW_HERO_DETAIL_WITH_RANK as
 select `T1`.`H_ID`                                                           AS `H_ID`,
        `T1`.`H_TOKEN`                                                        AS `H_TOKEN`,
        `T1`.`FULLNAME`                                                       AS `FULLNAME`,
@@ -1168,7 +1104,7 @@ select `T1`.`H_ID`                                                           AS 
 from ((((((((`emdev`.`TBL_HERO` `T1` join `emdev`.`TBL_HERO_PROFILE` `T2` on (`T1`.`H_ID` = `T2`.`H_ID`)) left join `emdev`.`TBL_LOV` `T3` on (`T2`.`SH_ID` = `T3`.`L_ID`)) left join `emdev`.`TBL_BLOB` `T4` on (`T2`.`B_ID` = `T4`.`B_ID`)) left join `emdev`.`TBL_LOV` `T5` on (`T2`.`STATE_ID` = `T5`.`L_ID`)) left join `emdev`.`TBL_LOV` `T6` on (`T2`.`POSITION_ID` = `T6`.`L_ID`)) left join `emdev`.`TBL_LOV` `T7` on (`T2`.`DIVISION_ID` = `T7`.`L_ID`)) left join `emdev`.`TBL_LOV` `T8` on (`T2`.`ZONE_ID` = `T8`.`L_ID`))
          left join `emdev`.`TBL_LOV` `T9` on (`T2`.`TEAM_ID` = `T9`.`L_ID`));
 
-create view if not exists VW_HERO_LS as
+create or replace definer = root@`%` view VW_HERO_LS as
 select `T1`.`H_ID`                                                           AS `H_ID`,
        `T1`.`H_TOKEN`                                                        AS `H_TOKEN`,
        `T1`.`FULLNAME`                                                       AS `FULLNAME`,
@@ -1203,7 +1139,7 @@ select `T1`.`H_ID`                                                           AS 
 from (((((((`emdev`.`TBL_HERO` `T1` join `emdev`.`TBL_HERO_PROFILE` `T2` on (`T1`.`H_ID` = `T2`.`H_ID`)) left join `emdev`.`TBL_LOV` `T3` on (`T2`.`SH_ID` = `T3`.`L_ID`)) left join `emdev`.`TBL_LOV` `T5` on (`T2`.`STATE_ID` = `T5`.`L_ID`)) left join `emdev`.`TBL_LOV` `T6` on (`T2`.`POSITION_ID` = `T6`.`L_ID`)) left join `emdev`.`TBL_LOV` `T7` on (`T2`.`DIVISION_ID` = `T7`.`L_ID`)) left join `emdev`.`TBL_LOV` `T8` on (`T2`.`ZONE_ID` = `T8`.`L_ID`))
          left join `emdev`.`TBL_LOV` `T9` on (`T2`.`TEAM_ID` = `T9`.`L_ID`));
 
-create view if not exists VW_HERO_REPORTING as
+create or replace definer = root@`%` view VW_HERO_REPORTING as
 select `A`.`CASE_NUM`                                                                                                 AS `HERO_CASE_ID`,
        replace(replace(replace((select `E`.`CUSTOMER_NAME`
                                 from `emdev`.`TBL_CUSTOMER_PROFILE` `E`
@@ -1443,7 +1379,7 @@ where case
 
 -- comment on column VW_HERO_REPORTING.STAKEHOLDER_REF not supported: RRT,NMO,CSM,NOC
 
-create view if not exists VW_HERO_REPORTING_OPEN as
+create or replace definer = root@`%` view VW_HERO_REPORTING_OPEN as
 select `A`.`CASE_NUM`                                                                                                 AS `HERO_CASE_ID`,
        replace(replace(replace((select `E`.`CUSTOMER_NAME`
                                 from `emdev`.`TBL_CUSTOMER_PROFILE` `E`
@@ -1682,7 +1618,7 @@ where case
 
 -- comment on column VW_HERO_REPORTING_OPEN.STAKEHOLDER_REF not supported: RRT,NMO,CSM,NOC
 
-create view if not exists VW_REPORTING as
+create or replace definer = root@`%` view VW_REPORTING as
 select `A`.`CASE_NUM`                                                                                     AS `HERO_CASE_ID`,
        (select `E`.`CUSTOMER_NAME`
         from `emdev`.`TBL_CUSTOMER_PROFILE` `E`
@@ -1793,7 +1729,7 @@ select `A`.`CASE_NUM`                                                           
 from (`emdev`.`TBL_CASE` `A`
          join `emdev`.`TBL_CASE_DETAIL` `B` on (`A`.`C_ID` = `B`.`C_ID`));
 
-create view if not exists VW_STAFF_LS as
+create or replace definer = root@`%` view VW_STAFF_LS as
 select `emdev`.`TBL_STAFF`.`SID`               AS `SID`,
        `emdev`.`TBL_STAFF`.`PERSONNEL_NO`      AS `PERSONNEL_NO`,
        `emdev`.`TBL_STAFF`.`STAFF_NAME`        AS `STAFF_NAME`,
@@ -1819,7 +1755,7 @@ select `emdev`.`TBL_STAFF`.`SID`               AS `SID`,
        `emdev`.`TBL_STAFF`.`SUPERVISOR`        AS `APPROVER_PERSONNEL_NO`
 from `emdev`.`TBL_STAFF`;
 
-create view if not exists VW_STAKEHOLDER_USERS as
+create or replace definer = root@`%` view VW_STAKEHOLDER_USERS as
 select `T1`.`H_TOKEN`           AS `H_TOKEN`,
        `T1`.`FULLNAME`          AS `FULLNAME`,
        `T1`.`ACTIVATION_STATUS` AS `ACTIVATION_STATUS`,
@@ -1828,7 +1764,7 @@ select `T1`.`H_TOKEN`           AS `H_TOKEN`,
 from ((`emdev`.`TBL_HERO` `T1` join `emdev`.`TBL_HERO_PROFILE` `T2` on (`T2`.`H_ID` = `T1`.`H_ID` and `T2`.`CATEGORY` = 'STAKEHOLDER'))
          join `emdev`.`TBL_LOV` `T3` on (`T3`.`L_ID` = `T2`.`SH_ID`));
 
-create view if not exists VW_TELEGRAM_ALERT as
+create or replace definer = root@`%` view VW_TELEGRAM_ALERT as
 select `T1`.`C_ID`        AS `C_ID`,
        `T1`.`GCHAT`       AS `GCHAT`,
        `T1`.`MESSAGE`     AS `MESSAGE`,
@@ -1843,7 +1779,7 @@ from (((`emdev`.`TBL_TELEGRAM_ALERT` `T1` join `emdev`.`TBL_CASE` `T2` on (`T1`.
 
 -- comment on column VW_TELEGRAM_ALERT.SH_ID not supported: STAKEHOLDER_ID = L_ID IN TBL_LOV
 
-create view if not exists VW_TOP10_RANK as
+create or replace definer = root@`%` view VW_TOP10_RANK as
 select `T1`.`FULLNAME` AS `FULLNAME`,
        `T2`.`SCORE`    AS `SCORE`,
        `T2`.`LEVEL`    AS `LEVEL`,
@@ -1854,909 +1790,3 @@ from ((`emdev`.`TBL_HERO` `T1` join `emdev`.`TBL_HERO_PROFILE` `T2` on (`T1`.`H_
 where `T1`.`ACTIVATION_STATUS` = 'Y'
 order by `T2`.`SCORE` desc
 limit 10;
-
-create function ACTIVATE_ACCOUNT(email varchar(50), activationKey varchar(6)) returns int(4)
--- missing source code
-;
-
-create procedure Activate_Account(IN iEmail varchar(50), IN activationKey varchar(6), OUT rowCount int)
--- missing source code
-;
-
-create procedure Bulk_Registration()
--- missing source code
-;
-
-create function CASE_ASSIGNMENT(cToken varchar(32), hID int, hIDsupport int, shID int(4),
-                                assignmentType varchar(10)) returns int
--- missing source code
-;
-
-create function CREATE_FROM_APP(hID int, caseNum varchar(12), caseContent text, customerName varchar(150),
-                                nricNum varchar(50), mobileNum varchar(15), areaLocationID int(7), flag varchar(15),
-                                sourceID int(4)) returns varchar(32)
-    deterministic reads sql data
--- missing source code
-;
-
-create function CREATE_FROM_PORTAL(hID int, caseContent text, customerName varchar(150), nricNum varchar(50),
-                                   mobileNum varchar(15), areaLocationID int(7), flag varchar(15), sourceID int(7),
-                                   subSourceID int(7), caseTypeID int(7), stakeholderRef varchar(10),
-                                   extSysRef varchar(50)) returns varchar(32)
-    deterministic reads sql data
--- missing source code
-;
-
-create function CREATE_NEW_CASE(hID int, caseNum varchar(12), caseContent text, customerName varchar(150),
-                                nricNum varchar(50), mobileNum varchar(15), areaLocation int(7)) returns varchar(32)
-    deterministic reads sql data
--- missing source code
-;
-
-create function CREATE_UUID() returns varchar(40)
--- missing source code
-;
-
-create procedure Case_Assignment(IN cToken varchar(32), IN hID int, IN hIDsupport int, IN shID int(4),
-                                 IN assignmentType varchar(10), OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Create_From_App(IN pCustomerName varchar(150), IN pNricNum varchar(150), IN pMobileNum varchar(150),
-                                 IN pCaseContent text, IN pHID int, IN pCaseNum varchar(40), IN areaLocationID int(7),
-                                 IN iFlag varchar(15), IN sourceID int(7), OUT oCToken varchar(32))
-    modifies sql data
--- missing source code
-;
-
-create procedure Create_From_Portal(IN pCustomerName varchar(150), IN pNricNum varchar(150), IN pMobileNum varchar(150),
-                                    IN pCaseContent text, IN pHID int(7), IN areaLocationID int(7),
-                                    IN iFlag varchar(15), IN sourceID int(7), IN subSourceID int(7),
-                                    IN caseTypeID int(7), IN stakeholderRef varchar(10), IN extSysRef varchar(50),
-                                    OUT oCToken varchar(32))
-    modifies sql data
--- missing source code
-;
-
-create procedure Create_New_Case(IN pCustomerName varchar(150), IN pNricNum varchar(150), IN pMobileNum varchar(150),
-                                 IN pCaseContent text, IN pHID int, IN pCaseNum varchar(40), IN areaLocation int(7),
-                                 OUT oCToken varchar(32))
-    modifies sql data
--- missing source code
-;
-
-create function DELETE_ACTION_REMARK(hID int, cToken varchar(32), aID int) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure Delete_Action_Remark(IN hID int, IN cToken varchar(32), IN aID int, OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create function GENERATE_CASE_NUM() returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function GET_AGING(date1 datetime, date2 datetime) returns varchar(10)
-    deterministic reads sql data
--- missing source code
-;
-
-create function GET_AGING_WEEKDAYS(date1 datetime, date2 datetime) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function GET_AUTHENTICATION_TOKEN(apiKey varchar(40), email varchar(50)) returns varchar(40)
--- missing source code
-;
-
-create function GET_LATEST_NOTIFICATION(hID int) returns varchar(250)
--- missing source code
-;
-
-create function GET_NOTIFICATION_TEMPLATE(caseNum varchar(32), caseStatus varchar(12), controller varchar(15),
-                                          message varchar(250)) returns varchar(250)
--- missing source code
-;
-
-create function GET_TELEGRAM_MESSAGE(caseNum varchar(32), loggerFull varchar(250), stateName varchar(100),
-                                     iDate varchar(30), gChat varchar(20)) returns varchar(500)
-    deterministic reads sql data
--- missing source code
-;
-
-create function GET_TOTAL_CASE_RESOLVED_PERFORMANCE(hID int, category varchar(10), startDate varchar(10),
-                                                    endDate varchar(10)) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create function GET_TOTAL_RESOLVED_BY_AGENT(oID int, days int(2)) returns int(4)
--- missing source code
-;
-
-create function GET_TOTAL_RESOLVED_BY_GROUP(shID int, days int(2)) returns int(4)
--- missing source code
-;
-
-create function GET_VOC_RESULT(hID int, category varchar(10), startDate varchar(10),
-                               endDate varchar(10)) returns varchar(15)
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure Generate_Case_Num(OUT caseNum varchar(10))
--- missing source code
-;
-
-create procedure Get_Action_Remark(IN oID int, IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_All_Case(IN hID int, IN caseStatus int(4))
--- missing source code
-;
-
-create procedure Get_All_Case_By_Collaborator(IN hID int, IN caseStatus int(4))
--- missing source code
-;
-
-create procedure Get_All_Case_By_Logger(IN hID int)
--- missing source code
-;
-
-create procedure Get_All_Case_By_LoginID(IN hID int, IN loginID varchar(40))
--- missing source code
-;
-
-create procedure Get_All_Case_By_Owner(IN oID int, IN caseStatus int(4))
--- missing source code
-;
-
-create procedure Get_All_Case_By_Search(IN nricNum varchar(20), IN fullname varchar(150), IN email varchar(50),
-                                        IN srNum varchar(15), IN ttNum varchar(15), IN caseNum varchar(12),
-                                        IN vipName varchar(150), IN customerName varchar(150), IN startDate varchar(10),
-                                        IN endDate varchar(10), IN caseTypeID int(7), IN heroGroup varchar(10))
--- missing source code
-;
-
-create procedure Get_All_Case_By_Stakeholder(IN hID int, IN shID int(4), IN caseType int(4), IN caseStatus int(4))
--- missing source code
-;
-
-create procedure Get_All_Notification_Msg(IN hID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Get_All_Staff_Profile(IN hID int, IN keywords varchar(100))
--- missing source code
-;
-
-create procedure Get_All_Unassigned_Case(IN hID int, IN shID int(4))
--- missing source code
-;
-
-create procedure Get_All_User_Profile(IN hID int, IN shID int(7), IN iCategory varchar(11),
-                                      IN activationStatus varchar(150))
--- missing source code
-;
-
-create procedure Get_Announcement_Text(IN iController varchar(20), IN iTemplate varchar(30))
--- missing source code
-;
-
-create procedure Get_Authentication_Token(IN apiKey varchar(40), IN iEmail varchar(50), OUT oToken varchar(40))
--- missing source code
-;
-
-create procedure Get_Blob_Content(IN bID int)
--- missing source code
-;
-
-create procedure Get_Case_Assignment_Log(IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Case_Flag(IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Case_Num(IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Cases_By_Keywords(IN keywords varchar(100))
--- missing source code
-;
-
-create procedure Get_Detail_Case_By_ID(IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Herobuddy_Info(IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Latest_Notification(IN hID int, OUT rMessage varchar(250))
-    modifies sql data
--- missing source code
-;
-
-create procedure Get_Latest_Version(IN appID int(7))
--- missing source code
-;
-
-create procedure Get_Profiles_By_Keywords(IN hID int, IN keywords varchar(100))
--- missing source code
-;
-
-create procedure Get_Registered_User()
--- missing source code
-;
-
-create procedure Get_Report_On_Demand(IN beginDate varchar(10), IN endDate varchar(10))
--- missing source code
-;
-
-create procedure Get_Staff_ID_By_Email(IN iEmail varchar(50))
--- missing source code
-;
-
-create procedure Get_System_LoV(IN hID int)
--- missing source code
-;
-
-create procedure Get_System_LoV_N()
--- missing source code
-;
-
-create procedure Get_Telegram_Alert(IN hID int)
--- missing source code
-;
-
-create procedure Get_Telegram_Message(IN caseNum varchar(32), IN loggerFull varchar(250), IN stateName varchar(100),
-                                      IN iDate varchar(30), IN gChat varchar(20), OUT oMessage varchar(500))
--- missing source code
-;
-
-create procedure Get_Telegram_Message_By_ID(IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Topten_Hero_By_State()
--- missing source code
-;
-
-create procedure Get_Total_Case_By_Hero(IN beginDate varchar(10), IN endDate varchar(10))
--- missing source code
-;
-
-create procedure Get_Total_Case_By_Hero_By_State(IN state varchar(30), IN beginDate varchar(10), IN endDate varchar(10))
--- missing source code
-;
-
-create procedure Get_Total_Case_By_Owner(IN oID int, IN caseStatusID int)
--- missing source code
-;
-
-create procedure Get_Total_Case_By_Stakeholder(IN hID int, IN shID int(4))
--- missing source code
-;
-
-create procedure Get_Total_Case_By_State(IN startDate varchar(20), IN endDate varchar(20), IN category varchar(10))
--- missing source code
-;
-
-create procedure Get_Total_Case_Resolved_Agent_Performance(IN oID int, IN startDate varchar(10), IN endDate varchar(10),
-                                                           OUT total int(4))
--- missing source code
-;
-
-create procedure Get_Total_Case_Resolved_Group_Performance(IN shID int, IN startDate varchar(10),
-                                                           IN endDate varchar(10), OUT total int(4))
--- missing source code
-;
-
-create procedure Get_Total_Hero_By_State(IN startDate varchar(20), IN endDate varchar(20))
--- missing source code
-;
-
-create procedure Get_Total_New_Alert(IN hID int, IN cToken varchar(32))
--- missing source code
-;
-
-create procedure Get_Total_Registered_HERO(IN beginDate varchar(10), IN endDate varchar(10), OUT total int(7))
--- missing source code
-;
-
-create procedure Get_Total_Resolved_By_Agent(IN oID int, IN days int(2), OUT oTotal int(4))
--- missing source code
-;
-
-create procedure Get_Total_Resolved_By_Group(IN shID int, IN days int(2), OUT oTotal int(4))
--- missing source code
-;
-
-create procedure Get_Total_Resolved_Nationwide(IN days int(2), OUT oTotal int(4))
--- missing source code
-;
-
-create procedure Get_Total_Unread_Message(IN hID int)
--- missing source code
-;
-
-create procedure Get_User_Profile_By_Email(IN iEmail varchar(50))
--- missing source code
-;
-
-create procedure Get_User_Profile_By_ID(IN hID int)
--- missing source code
-;
-
-create procedure Get_User_Statistic_Info(IN hID int)
--- missing source code
-;
-
-create procedure Get_VOC_Result(IN hID int, IN category varchar(10), IN startDate varchar(10), IN endDate varchar(10),
-                                OUT result varchar(15))
--- missing source code
-;
-
-create function INSERT_AVATAR_PICTURE(hID int, fileName blob) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function INSERT_CASE_PICTURE(cToken varchar(32), fileName blob, longitude varchar(20),
-                                    latitude varchar(20)) returns varchar(12)
--- missing source code
-;
-
-create function INVITE_TO_GCHAT(cToken varchar(32), hToken varchar(32), oID int) returns int
--- missing source code
-;
-
-create function IS_EMAIL_VALID(email varchar(50)) returns int(1)
-    deterministic reads sql data
--- missing source code
-;
-
-create function IS_GCHAT_MEMBER(hID int, cToken varchar(32)) returns tinyint(1)
--- missing source code
-;
-
-create function IS_LOGGER_VIP(hID int) returns varchar(500)
-    deterministic reads sql data
--- missing source code
-;
-
-create function IS_LOGGER_VIP1(hID int) returns varchar(500)
-    deterministic reads sql data
--- missing source code
-;
-
-create function IS_REQUESTOR_ADMIN(hID int) returns tinyint(1)
--- missing source code
-;
-
-create function IS_REQUESTOR_INTERNAL(email varchar(50)) returns int
--- missing source code
-;
-
-create function IS_REQUESTOR_LOGGER(hID int, cToken varchar(32)) returns tinyint(1)
--- missing source code
-;
-
-create function IS_REQUESTOR_OWNER(hID int, cToken varchar(32)) returns tinyint(1)
--- missing source code
-;
-
-create function IS_REQUESTOR_STAKEHOLDER(hID int) returns tinyint(1)
--- missing source code
-;
-
-create function IS_STAKEHOLDER_ADMIN(hID int, shID int(4)) returns tinyint(1)
--- missing source code
-;
-
-create function IS_STAKEHOLDER_COORDINATOR(hID int, shID int(4)) returns tinyint(1)
--- missing source code
-;
-
-create function IS_STAKEHOLDER_MEMBER(hToken varchar(32), hID int, shID int(4)) returns tinyint(1)
--- missing source code
-;
-
-create procedure Insert_Avatar_Picture(IN hID int, IN fileName blob, OUT bID int)
--- missing source code
-;
-
-create procedure Insert_Case_Picture(IN cToken varchar(32), IN fileName blob, IN longitude varchar(20),
-                                     IN latitude varchar(20), OUT oCaseNum varchar(12))
--- missing source code
-;
-
-create procedure Insert_Notification_Log(IN cID int)
--- missing source code
-;
-
-create procedure Invite_To_GChat(IN cToken varchar(32), IN hToken varchar(32), IN oID int, OUT oGCID int)
--- missing source code
-;
-
-create procedure Is_GChat_Member(IN hID int, IN cToken varchar(32), OUT isGChatMember tinyint(1))
--- missing source code
-;
-
-create procedure Is_Logger_VIP(IN hID int, OUT oLogger varchar(500))
--- missing source code
-;
-
-create procedure Is_Logger_VIP1(IN hID int, OUT oLogger varchar(500))
--- missing source code
-;
-
-create procedure Is_Logger_VIP_New(IN hID int, OUT oLogger varchar(500))
--- missing source code
-;
-
-create procedure Is_Requestor_Admin(IN hID int, OUT isAdmin tinyint(1))
--- missing source code
-;
-
-create procedure Is_Requestor_Internal(IN iEmail varchar(50), OUT oHID int)
--- missing source code
-;
-
-create procedure Is_Requestor_Logger(IN hID int, IN cToken varchar(32), OUT isLogger tinyint(1))
--- missing source code
-;
-
-create procedure Is_Requestor_Owner(IN oID int, IN cToken varchar(32), OUT isOwner tinyint(1))
--- missing source code
-;
-
-create procedure Is_Requestor_Stakeholder(IN hID int, OUT isStakeholder tinyint(1))
--- missing source code
-;
-
-create procedure Is_Stakeholder_Admin(IN hID int, IN shID int(4), OUT isStakeholderAdmin tinyint(1))
--- missing source code
-;
-
-create procedure Is_Stakeholder_Coordinator(IN hID int, IN shID int(4), OUT isStakeholderCoordinator tinyint(1))
--- missing source code
-;
-
-create procedure Is_Stakeholder_Member(IN hToken varchar(32), IN hID int, IN shID int(4),
-                                       OUT isStakeholderMember tinyint(1))
--- missing source code
-;
-
-create function PUSH_CHAT_MESSAGE(cToken varchar(32), hID int, message text, flag varchar(2), filename blob) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure Pull_Chat_Message(IN cToken varchar(32), IN hID int, IN iflag varchar(2))
--- missing source code
-;
-
-create procedure Push_Chat_Message(IN cToken varchar(32), IN hID int, IN message text, IN flag varchar(2),
-                                   IN filename blob, OUT oMBID int)
--- missing source code
-;
-
-create function RATE_AGENT(hID int, cToken varchar(32), rating int(1), remark text) returns int(4)
--- missing source code
-;
-
-create function REDEFINED_FLAG(caseContent text) returns varchar(15)
-    deterministic reads sql data
--- missing source code
-;
-
-create function REMOVE_FROM_GCHAT(cToken varchar(32), hToken varchar(32), oID int) returns int(4)
--- missing source code
-;
-
-create function REOPEN_CASE(cToken varchar(32), oID int) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create function RESEND_ACTIVATION_CODE(email varchar(50)) returns varchar(6)
--- missing source code
-;
-
-create function RESEND_RESET_PASSWORD_CODE(email varchar(50)) returns varchar(6)
--- missing source code
-;
-
-create function RESET_PASSWORD(resetKey varchar(6), email varchar(50), password varchar(32)) returns int(4)
--- missing source code
-;
-
-create function RESET_PASSWORD_REQUEST(email varchar(50), resetKey varchar(6)) returns int
--- missing source code
-;
-
-create function RPA_CASE_ASSIGNMENT(iFlag varchar(15), areaLocationID int(7), caseContent text) returns int(7)
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure RPA_Case_Assignment(IN iFlag varchar(15), IN areaLocationID int(7), IN caseContent text, OUT oID int)
--- missing source code
-;
-
-create function RUN_RPA(hID int, oID int, areaLocationID int, caseContent text) returns int(7)
-    deterministic reads sql data
--- missing source code
-;
-
-create function RUN_RPA_FEB(hID int, oID int, areaLocationID int, caseContent text) returns int(7)
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure Rate_Agent(IN hID int, IN cToken varchar(32), IN iRating int(1), IN remark text, OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Remove_From_GChat(IN cToken varchar(32), IN hToken varchar(32), IN oID int, OUT rowCount int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Reopen_Case(IN cToken varchar(32), IN oID int, OUT rowCount int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Reporting_Raw_Data()
--- missing source code
-;
-
-create procedure Resend_Activation_Code(IN iEmail varchar(50), OUT oCode varchar(6))
--- missing source code
-;
-
-create procedure Resend_Reset_Password_Code(IN iEmail varchar(50), OUT oCode varchar(6))
--- missing source code
-;
-
-create procedure Reset_Password(IN resetKey varchar(6), IN iEmail varchar(50), IN iPassword varchar(32),
-                                OUT oRowCount int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Reset_Password_Request(IN iEmail varchar(50), IN resetKey varchar(6), OUT oPID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Run_Cleanup_Job(OUT totalRow int)
--- missing source code
-;
-
-create function SET_ANNOUNCEMENT_TEXT(hID int, template varchar(30), message text, title varchar(200),
-                                      subtitle varchar(200), publishedDate varchar(10), picture blob) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function SET_API_LOGGING(apiKey varchar(40), email varchar(50), logType varchar(10), content text) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function SET_INFOBLAST_LOG(iTo varchar(12), iMessage varchar(500), iDesc varchar(100),
-                                  cToken varchar(32)) returns int(7)
-    deterministic reads sql data
--- missing source code
-;
-
-create function SET_LATEST_VERSION(appID int, appName varchar(45), appVersion varchar(10), appDesc varchar(250),
-                                   appExpired int) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function SET_LDAP_PROFILE(apiKey varchar(40), staffID varchar(10), fullName varchar(100), email varchar(50),
-                                 nricNum varchar(15), mobileNum varchar(15), managerLevel varchar(5),
-                                 designation varchar(50), unit varchar(70), division varchar(70),
-                                 costCenter varchar(10)) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create function SET_LOGIN_HISTORY(email varchar(150), phoneDesc varchar(255)) returns int(7)
-    deterministic reads sql data
--- missing source code
-;
-
-create function SET_LOG_HISTORY(email varchar(50), fullName varchar(150), authType varchar(10),
-                                logType varchar(3)) returns int
--- missing source code
-;
-
-create function SET_NEW_LOV(lovName varchar(150), lovLabel varchar(150), lovGroup varchar(30), parentID int,
-                            lovFlag varchar(10)) returns int
-    deterministic reads sql data
--- missing source code
-;
-
-create function SIGN_IN(iEmail varchar(50), iPassword varchar(32)) returns int
--- missing source code
-;
-
-create function SIGN_OUT(iEmail varchar(50)) returns int
--- missing source code
-;
-
-create function SIGN_UP(apiKey varchar(40), fullName varchar(150), email varchar(50), password varchar(35),
-                        activationKey varchar(6), mobileNum varchar(12)) returns int
--- missing source code
-;
-
-create function SUBMIT_NEW_CASE(hID int, caseNum varchar(12), caseContent text, customerName varchar(150),
-                                mobileNum varchar(15), areaLocationID int(7), flag varchar(15), sourceID int(4),
-                                caseTypeID int(7), productID int(7), segmentCode varchar(5), additionalRemark text,
-                                herobuddyResponse text) returns varchar(32)
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure Set_Announcement_Text(IN hID int, IN template varchar(30), IN message text, IN title varchar(200),
-                                       IN subtitle varchar(200), IN publishedDate varchar(10), IN picture blob,
-                                       OUT ntID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Set_Api_Logging(IN apiKey varchar(40), IN email varchar(50), IN logType varchar(10), IN content text,
-                                 OUT logID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Set_Infoblast_Log(IN iTo varchar(12), IN iMessage varchar(500), IN iDesc varchar(100),
-                                   IN cToken varchar(32), OUT lastInsertedID int(7))
--- missing source code
-;
-
-create procedure Set_LDAP_Profile(IN apiKey varchar(40), IN staffID varchar(10), IN fullName varchar(100),
-                                  IN email varchar(50), IN nricNum varchar(15), IN mobileNum varchar(30),
-                                  IN managerLevel varchar(5), IN designation varchar(50), IN unit varchar(70),
-                                  IN division varchar(70), IN costCenter varchar(10), OUT oID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Set_Latest_Version(IN appID int, IN appName varchar(45), IN appVersion varchar(10),
-                                    IN appDesc varchar(250), IN appExpired int, OUT vID int(7))
-    modifies sql data
--- missing source code
-;
-
-create procedure Set_Log_History(IN iEmail varchar(50), IN iFullName varchar(150), IN authType varchar(10),
-                                 IN logType varchar(3), OUT oLHID int)
--- missing source code
-;
-
-create procedure Set_Login_History(IN iEmail varchar(150), IN phoneDesc varchar(255), OUT rowCount int(7))
--- missing source code
-;
-
-create procedure Set_New_LoV(IN lovName varchar(150), IN lovLabel varchar(150), IN lovGroup varchar(30),
-                             IN parentID int(4), IN lovFlag varchar(10), OUT oLID int(7))
--- missing source code
-;
-
-create procedure Set_Stakeholder_Admin(IN hID int, IN hToken varchar(32), IN shID int(2), OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Set_Stakeholder_Coordinator(IN hID int, IN hToken varchar(32), IN shID int(2), OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Set_Stakeholder_Member(IN hID int, IN hToken varchar(32), IN shID int(2), OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Sign_In(IN iEmail varchar(50), IN iPassword varchar(32), OUT oLHID int)
--- missing source code
-;
-
-create procedure Sign_Out(IN iEmail varchar(50), OUT oLHID int)
--- missing source code
-;
-
-create procedure Sign_Up(IN apiKey varchar(40), IN fullName varchar(150), IN iEmail varchar(50),
-                         IN iPassword varchar(32), IN activationKey varchar(6), IN mobileNum varchar(12), OUT oHID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Submit_New_Case(IN pCustomerName varchar(150), IN pMobileNum varchar(150), IN pCaseContent text,
-                                 IN pHID int, IN pCaseNum varchar(40), IN areaLocationID int(7), IN iFlag varchar(15),
-                                 IN sourceID int(7), IN caseTypeID int(7), IN productID int(7),
-                                 IN segmentCode varchar(5), IN additionalRemark text, IN herobuddyResponse text,
-                                 OUT oCToken varchar(32))
-    modifies sql data
--- missing source code
-;
-
-create function UPDATE_ACTION_REMARK(cToken varchar(32), oID int, closureTypeID int(4), caseStatusID int(4),
-                                     remark text, filename blob) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create function UPDATE_AGENT_PROFILE(hID int, email varchar(50), fullName varchar(150), nricNum varchar(15),
-                                     mobileNum varchar(12), nickName varchar(30), myStatus varchar(15), stateID int,
-                                     divisionID int, zoneID int, teamID int) returns int(4)
--- missing source code
-;
-
-create function UPDATE_CASE_DETAIL(oID int, cToken varchar(32), caseTypeID int(4), productNameID int(4),
-                                   packageName varchar(150), serviceAddress varchar(250), srNum varchar(15),
-                                   ttNum varchar(15), serviceID varchar(15), areaLocationID int(7),
-                                   actualCustomerName varchar(150), segmentID int(7), ckc varchar(1),
-                                   ckcNum varchar(20), loginID varchar(30), stakeholderRef varchar(10),
-                                   extSysRef varchar(50)) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create function UPDATE_CASE_INFO(oID int, cToken varchar(32), caseTypeID int(4), productNameID int(4),
-                                 packageName varchar(150), serviceAddress varchar(250), srNum varchar(15),
-                                 ttNum varchar(15), serviceID varchar(15), areaLocationID int(7)) returns int(4)
--- missing source code
-;
-
-create function UPDATE_CASE_STATUS(cToken varchar(32), oID int, closureTypeID int(4), caseStatusID int(4),
-                                   remark text) returns int(4)
--- missing source code
-;
-
-create function UPDATE_STAKEHOLDER(hID int, hToken varchar(32), shID int(2), theAction varchar(15)) returns int(4)
--- missing source code
-;
-
-create function UPDATE_USER_PROFILE(hID int, email varchar(50), fullName varchar(150), nricNum varchar(15),
-                                    mobileNum varchar(12), nickName varchar(30)) returns int(4)
--- missing source code
-;
-
-create procedure Unset_Stakeholder_Member(IN hID int, IN hToken varchar(32), IN shID int(2), OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_Action_Remark(IN cToken varchar(32), IN oID int, IN closureTypeID int(4),
-                                      IN caseStatusID int(4), IN remark text, IN filename blob, OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_Agent_Profile(IN hID int, IN iEmail varchar(50), IN fullName varchar(150),
-                                      IN nricNum varchar(15), IN mobileNum varchar(12), IN nickName varchar(30),
-                                      IN myStatus varchar(15), IN stateID int(7), IN divisionID int(7),
-                                      IN zoneID int(7), IN teamID int(7), OUT rowCount int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_Case_Detail(IN oID int, IN cToken varchar(32), IN caseTypeID int(4), IN productNameID int(4),
-                                    IN packageName varchar(150), IN serviceAddress varchar(250), IN srNum varchar(15),
-                                    IN ttNum varchar(15), IN serviceID varchar(15), IN areaLocationID int(7),
-                                    IN actualCustomerName varchar(150), IN segmentID int(7), IN ckc varchar(1),
-                                    IN ckcNum varchar(20), IN loginID varchar(30), IN stakeholderRef varchar(10),
-                                    IN extSysRef varchar(50), OUT rowCount int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_Case_Info(IN oID int, IN cToken varchar(32), IN caseTypeID int(4), IN productNameID int(4),
-                                  IN packageName varchar(150), IN serviceAddress varchar(250), IN srNum varchar(15),
-                                  IN ttNum varchar(15), IN serviceID varchar(15), IN areaLocationID int(7),
-                                  OUT rowCount int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_Case_Status(IN cToken varchar(32), IN oID int, IN closureTypeID int(4), IN caseStatusID int(4),
-                                    IN remark text, OUT oRowCount int(4))
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_Total_Score(IN hID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Update_User_Profile(IN hID int, IN iEmail varchar(50), IN fullName varchar(150),
-                                     IN nricNum varchar(15), IN mobileNum varchar(12), IN nickName varchar(30),
-                                     OUT rowCount int)
-    modifies sql data
--- missing source code
-;
-
-create function VALIDATE_ACCOUNT(apiKey varchar(40), eventName varchar(20), email varchar(50),
-                                 ldapEmail varchar(50)) returns int(4)
-    deterministic reads sql data
--- missing source code
-;
-
-create function VALIDATE_TOKEN(authToken varchar(40)) returns int
--- missing source code
-;
-
-create procedure Validate_Account(IN apiKey varchar(40), IN eventName varchar(20), IN iEmail varchar(50),
-                                  IN ldapEmail varchar(50), OUT oHID int)
-    modifies sql data
--- missing source code
-;
-
-create procedure Validate_Token(IN authToken varchar(40), OUT oHID int)
-    modifies sql data
--- missing source code
-;
-
-create function WHO_IS_LOGGER(hID int) returns varchar(20)
-    deterministic reads sql data
--- missing source code
-;
-
-create procedure Who_Is_Logger(IN hID int, OUT oFlag varchar(20))
--- missing source code
-;
-
-create procedure run_HERO_REPOPRTING()
--- missing source code
-;
-
-create procedure run_RPA(IN hID int, IN oID int, IN areaLocationID int(7), IN caseContent text, OUT oSHID int(7))
--- missing source code
-;
-
-create procedure run_RPA_dev(IN hID int, IN oID int, IN areaLocationID int(7), IN caseContent text, OUT oSHID int(7))
--- missing source code
-;
-
-create procedure run_RPA_feb(IN hID int, IN oID int, IN areaLocationID int(7), IN caseContent text, OUT oSHID int(7))
--- missing source code
-;
-
-create procedure run_RPA_local(IN cID int, IN caseContent text)
--- missing source code
-;
-
-create procedure run_RPA_orig(IN hID int, IN oID int, IN areaLocationID int(7), IN caseContent text, OUT oSHID int(7))
--- missing source code
-;
-
-create procedure run_RPA_test(IN cID int, IN caseContent varchar(50))
--- missing source code
-;
-
-create procedure test_dashboard(IN category varchar(10))
--- missing source code
-;
-
-
