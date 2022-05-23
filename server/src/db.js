@@ -1,13 +1,14 @@
 const mysql = require('mysql');
+require("dotenv").config({ path: '../../.env' });
 
 // Expose the Pool object within this module
 const db_config = {
     localPool: mysql.createPool({
-        host: 'localhost',
-        port: '3306',
-        user: 'root',
-        password: '1234',
-        database: 'emdev'
+        host: process.env.DB_HOST,
+        port: 3306,
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
     }),
     pool: mysql.createPool({
         host: "172.20.197.194",

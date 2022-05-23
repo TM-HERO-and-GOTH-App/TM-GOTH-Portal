@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mysql = require('mysql');
 const Joi = require('joi');
-require("dotenv").config({ path: '../../.env' });
+require("dotenv").config({path: '../../.env'});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
