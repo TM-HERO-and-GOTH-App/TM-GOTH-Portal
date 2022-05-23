@@ -12,11 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 const localDB = mysql.createPool({
-    host: process.env.DATABASE_HOST,
+    host: process.env.DB_HOST,
     port: 3308,
-    user: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 app.get('/', (req, res) => {
@@ -26,175 +26,93 @@ app.get('/', (req, res) => {
 // Dashboard API =============
 
 app.post('/dashboard/total-case-by-state', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string().min(32).max(40).required(),
-        startDate: Joi.string().min(10).max(10).required(),
-        endDate: Joi.string().min(10).max(10).required(),
-        category: Joi.string().required()
-    })
-
-    const result = schema.validate(req.body);
-    if (result.error) {
-        res.status(400).send(result.error.details[0].message);
-        return;
-    }
-
-    const getCaseByState = localDB.query('CALL Get_Total_Case_By_State(:startDate,:endDate,:category);', (err, dbResult) => {
-        if (err) {
-            return err
-        }
-        res.status(200).send(dbResult)
-    })
-
-    return getCaseByState;
+    res.send('API for Total Case by State here.');
 });
 
 app.post('/dashboard/total-user-by-state', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string().min(32).max(40).required(),
-        startDate: Joi.string().required(),
-        endDate: Joi.string().required()
-    })
-
-    const result = schema.valid(req.body);
-    if (result.error) {
-        res.sendStatus(400).send(result.error.details[0].message);
-        return;
-    }
-
-    const getTotalUserByState = localDB.query('CALL Get_Total_Hero_By_State(:startDate,:endDate)', (err, dbResult) => {
-        if (err) {
-            return err;
-        }
-        res.status(200).send(dbResult)
-    })
-
-    return getTotalUserByState;
+    res.send('API for Total User by State');
 });
 
 app.post('/dashboard/get-total-case-by-group', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string().min(32).max(40).required(),
-        shID: Joi.number().when(shID, {not: 0, then: Joi.required()}),
-        gID: Joi.number().required()
-    });
-
-    const result = schema.validate(req.body);
-    if (result.error) {
-        res.sendStatus(400).send(result.error.details[0].message);
-        return;
-    }
-
-    const getGroupDashboardCase = localDB.query('CALL Get_Total_Case_By_Stakeholder(:hID,:shID)', (err, dbResult) => {
-        if (err) {
-            return err;
-        }
-        res.status(200).send(dbResult)
-    })
+    res.send('API for Total Case for group');
 });
 
 app.post('/dashboard/get-total-case-by-owner', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string().min(32).max(40).required()
-    });
-
-    const result = schema.validate(req.body);
-    if (result.error) {
-        res.sendStatus(400).send(result.error.details[0].message);
-        return;
-    }
-
-    const getOwnerDashboardCases = localDB.query('SELECT VALIDATE_TOKEN(:authToken)', (dbErr, dbResult) => {
-        if (err) {
-            return err;
-        }
-        res.status(200).send(dbResult)
-    })
+    res.send('API for Total Case by User');
 });
 
 app.post('/dashboard/get-total-case-by-stakeholder', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string.min(32).max(40).required(),
-        shID: Joi.number().when(shID, {not: 0, then: Joi.required()}),
-        gID: Joi.number().required()
-    });
-
-    const result = schema.validate(req.body)
-    if (result.error) {
-        res.sendStatus(400).send(result.error.details[0].message);
-        return;
-    }
-    if (0 === shID) {
-        const JSONresponseMessage = "Error during Token validation!";
-        const JSONdata = "[{\"response\":\"FAILED\",\"status\":\"" + JSONresponseMessage + "\"}]";
-        return JSONdata;
-    }
-
-    const getTotalStakeholderDashboardCase = localDB.query('CALL Get_Total_Case_By_Stakeholder(:hID,:shID)', (dbErr, dbResult) => {
-        if (err) {
-            return err;
-        }
-        res.status(200).send(dbResult)
-    })
-    return getTotalStakeholderDashboardCase;
+    res.send('API for Total Case by Stakeholder');
 });
 
 app.post('/dashboard/get-total-case-resolved-by-owner', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string().min(32).max(40).when(authToken, {not: 0, then: Joi.required()}),
-        days: Joi.number().required()
-    });
-
-    const result = schema.validate(req.body);
-    if (result.error) {
-        res.sendStatus(400).send(result.error.details[0].message);
-        return;
-    }
-
-    localDB.query('SELECT GET_TOTAL_RESOLVED_BY_AGENT(:ownerID, :days)', (dbErr, dbResult) => {
-        if(dbErr){
-            res.send(400).send(dbErr);
-            return;
-        }
-        return res.send(dbResult);
-    })
+    res.send('API for Total Case resolved by Owner');
 });
 
 app.post('/dashboard/get-total-case-resolved-by-group', (req, res) => {
-    const schema = Joi.object({
-        authToken: Joi.string().min(32).max(40).required(),
-        shID: Joi.number().when(shID, {not: 0, then: Joi.required()}),
-        days: Joi.number().required()
-    });
-
-    const result = schema.validate(req.body);
-    if (result.error) {
-        res.sendStatus(400).send(result.error.details[0].message);
-        return;
-    }
-
-    localDB.query('SELECT GET_TOTAL_RESOLVED_BY_GROUP(:shID, :days)', (dbErr, dbResult) => {
-        if(dbErr){
-            res.send(400).send(dbErr);
-            return;
-        }
-        return res.send(dbResult);
-    })
+    res.send('API for Total Case resolved by Group');
 });
 
 // ============
 
-// app.post("/case/insert", (req, res) => {
-//     const H_ID = 1234
-//     const CASE_NUM = 1234
-//     const OWNER_ID = 1234
-//     const OWNER_ID_SUPPORT = 1234
-//     const sqlInsert = "INSERT INTO TBL_CASE(H_ID, CASE_NUM, OWNER_ID, OWNER_ID_SUPPORT) VALUES(?,?,?,?)"
-//     localdb.query(sqlInsert, [H_ID, CASE_NUM, OWNER_ID, OWNER_ID_SUPPORT], (err, result) => {
-//         if(err) return console.log(err);
-//         console.log(result);
-//     });
-// });
+// View Case API
+// ===========
+
+app.post('/case/view-cases-by-owner', (req, res) => {
+    res.send('API for view Case by owner');
+});
+
+app.post('/case/view-cases-by-group', (req, res) => {
+    res.send('API for view case by group');
+});
+
+app.post('/case/view-unassigned-case', (req, res) => {
+    res.send('API for unassign case');
+});
+
+// ============
+
+// Case API
+// ============
+
+// testing DB connection
+app.get('/case/getCase', (req, res) => {
+    localDB.query('SELECT * FROM tbl_case', (dbError, dbResult) => {
+        if(dbError) return res.send(dbError);
+        res.send(dbResult);
+    })
+})
+
+app.post("/case/create-new-case", (req, res) => {
+    const schema = Joi.object({
+        authToken: Joi.string().min(32).max(40).required(),
+        customerName: Joi.string().required(),
+        nric: Joi.number().required(),
+        loggerMobileNumber: Joi.number().required(),
+        stateID: Joi.number().required(),
+        externalSystemReference: Joi.number().required(),
+        stakeholderReferenceID: Joi.number().required(),
+        sourceID: Joi.number().required(),
+        caseDescription: Joi.string().required(),
+        symptomID: Joi.number().required(),
+        areaID: Joi.number().required(),
+        subAreaID: Joi.number().required(),
+        productID: Joi.number().required(),
+        attachment: Joi.any(),
+        customerMobileNumber: Joi.number()
+    });
+
+    const result = schema.validate(req.body);
+    if (result.error) {
+        res.sendStatus(400).send(result.error.details[0].message);
+        return;
+    }
+
+    res.send('API for create case');
+});
+
+// ============
+
 
 app.listen(3002, () => {
     console.log("Running on port 3002")
