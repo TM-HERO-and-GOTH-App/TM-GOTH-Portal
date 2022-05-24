@@ -1,6 +1,6 @@
 const mariadb = require('mariadb');
 const mysql = require('mysql');
-const db = require('../db');
+const db = require('../config/db');
 
 async function asyncFunction() {
     let conn;

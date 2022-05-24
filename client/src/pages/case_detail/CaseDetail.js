@@ -57,7 +57,7 @@ function CaseDetail(props) {
         getCaseDetail();
         getGroupResult();
         getHeroBuddyData();
-    }, [])
+    }, [caseToken, token, userData.shID])
 
 
     const assignCaseToMe = () => {
