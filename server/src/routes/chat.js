@@ -6,7 +6,7 @@ const router = Router();
 const db = require('../config/db');
 
 // Chat =========================================================
-router.post('/chat/push-message/', (req, res, next) => {
+router.post('/push-message/', (req, res, next) => {
     const schema = Joi.object({
         cid: Joi.string().required(),
         message: Joi.string().min(1).max(300).required(),
@@ -34,7 +34,7 @@ router.post('/chat/push-message/', (req, res, next) => {
     })
 })
 
-router.get('/chat/pull-message/:cToken', (req, res) => {
+router.get('/pull-message/:cToken', (req, res) => {
     db.getConnection((err, conn) => {
         if (err) throw err; // not connected
         conn.query(`SELECT *
@@ -50,7 +50,7 @@ router.get('/chat/pull-message/:cToken', (req, res) => {
     })
 })
 
-router.get('/chat/view-users-by-group/', (req, res) => {
+router.get('/view-users-by-group/', (req, res) => {
     res.send('API for View User by Group');
 })
 
