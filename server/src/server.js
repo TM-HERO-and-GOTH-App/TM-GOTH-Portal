@@ -19,7 +19,8 @@ app.get('/', (req, res) => {
 app.use("/chat", routes.chat);
 app.use("/case", routes.cases);
 app.use("/dashboard", routes.dashboard);
-app.use("user", routes.user);
+app.use("/user", routes.user);
+// app.use('/login', routes.)
 
 // Port
 const port = process.env.PORT || 3002;

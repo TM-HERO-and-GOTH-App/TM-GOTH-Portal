@@ -23,19 +23,15 @@ router.post('/case/view-unassigned-case', (req, res) => {
 // Case API
 // ============
 
+// testing DB connection
 router.get('/case/getCase', (req, res) => {
-    db.query('SELECT * FROM tbl_case', (dbError, dbResult) => {
-        if (dbError) return res.send(dbError);
-        res.send(dbResult);
+    localDB.query('SELECT * FROM tbl_case', (dbErr, dbRes) => {
+        if(dbErr) return console.log(dbErr);
+        res.send(dbRes);
     })
 })
 
 router.post("/case/create-new-case", (req, res) => {
-
-    const f = () => {
-        if (res.body.customerName) {
-        }
-    }
     const schema = Joi.object({
         authToken: Joi.string().min(32).max(40).required(),
         customerName: Joi.string().required(),
@@ -66,6 +62,7 @@ router.post("/case/create-new-case", (req, res) => {
 router.post('/case/update-case/:id', (req, res) => {
     res.send(`Update case API for ${req.params.id}`)
 })
+
 
 // ============
 
