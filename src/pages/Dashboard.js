@@ -100,8 +100,8 @@ function Dashboard() {
     getNationWideGroupData();
 
     // During unmount, the DOM wil be empty without any data
-    return () => {};
-  }, [nationCase, stakeholderOption, fetchingData, token, userData.shID])
+    return () => { };
+  }, [nationCase, stakeholderOption])
 
   return (
     <Layout
@@ -109,7 +109,7 @@ function Dashboard() {
       pageContent={
         <>
           <div className="row">
-            <DashboardSlider/>
+            <DashboardSlider />
             <form>
               <div className="pull-right col-sm-4">
                 <select className="chosen-select form-control" name="shID" value={stakeholderOption} onChange={(e) => setStakeholderOption(e.currentTarget.value)}>
@@ -168,19 +168,20 @@ function Dashboard() {
                   Total Registered User
                 </h4>
                 <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                  {registerUser.map((data, index) => {
-                    return <div className="profile-info-row">
-                      <div className="profile-info-name" style={{ width: '70%' }}>
-                        <b>{data?.state ?? 'No data'}</b>
+                  {registerUser != null &&
+                    registerUser.map((data, index) => {
+                      return <div className="profile-info-row">
+                        <div className="profile-info-name" style={{ width: '70%' }}>
+                          <b>{data?.state ?? 'No data'}</b>
+                        </div>
+                        <div className="profile-info-value">
+                          <span className="editable" id="username">
+                            {data == undefined || data == null ? 0 : data?.total}
+                          </span>
+                        </div>
                       </div>
-                      <div className="profile-info-value">
-                        <span className="editable" id="username">
-                          {(data === undefined || !data) ? 0 : data.total.toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  }
-                  )}
+                    }
+                    )}
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: "70%" }}>
                       <b>Total User</b>
@@ -188,7 +189,7 @@ function Dashboard() {
 
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        <b>{registerUser.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
+                        <b>{registerUser != null && registerUser.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
                       </span>
                     </div>
                   </div>
@@ -201,20 +202,21 @@ function Dashboard() {
                   Total Created Case (COMPLAINT)
                 </h4>
                 <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                  {stateCase.map((data, index) => {
-                    return fetchingData ? <CircularProgress/> : 
-                    <div className="profile-info-row" key={index}>
-                      <div className="profile-info-name" style={{ width: '70%' }}>
-                        <b>{data?.state ?? 'No data'}</b>
-                      </div>
-                      <div className="profile-info-value">
-                        <span className="editable" id="username">
-                          {!data ? 0 : data?.total.toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  }
-                  )}
+                  {stateCase != null &&
+                    stateCase.map((data, index) => {
+                      return fetchingData ? <CircularProgress /> :
+                        <div className="profile-info-row" key={index}>
+                          <div className="profile-info-name" style={{ width: '70%' }}>
+                            <b>{fetchingData ? "Fetching data" : data.state }</b>
+                          </div>
+                          <div className="profile-info-value">
+                            <span className="editable" id="username">
+                              {fetchingData ? "Fetching data" : data == null ? 0 : data.total}
+                            </span>
+                          </div>
+                        </div>
+                    }
+                    )}
                   <div className="profile-info-row">
                     <div className="profile-info-name" style={{ width: "70%" }}>
                       <b>Total Case</b>
@@ -222,7 +224,7 @@ function Dashboard() {
 
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        <b>{(!stateCase || stateCase === undefined) ? 0 : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
+                        <b>{fetchingData ? "Calling data" : (stateCase == null || stateCase === undefined) ? '0' : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
                       </span>
                     </div>
                   </div>

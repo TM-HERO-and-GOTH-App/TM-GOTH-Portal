@@ -115,7 +115,7 @@ function CaseDetail(props) {
                             (caseData.caseStatus !== "CLOSED") &&
                              ( <div className="col-sm-5">
                                 {
-                                    caseData.ownerName !== null &&
+                                    caseData.ownerName != null &&
                                     <button className="btn btn-primary" onClick={assignCaseToMe}>
                                         Assign To Me
                                     </button>
@@ -128,7 +128,7 @@ function CaseDetail(props) {
                                     </Link>
                                 }
 
-                                {(!caseData.ownerName || isCoordinator) &&
+                                {(caseData.ownerName == null || caseData.owner === '' || isCoordinator) &&
                                     <Link className="btn btn-warning" to={`/edit-case/${caseToken}`}>
                                         <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
                                         Edit Case Detail

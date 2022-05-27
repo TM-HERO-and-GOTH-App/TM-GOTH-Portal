@@ -73,7 +73,7 @@ function InternalChat(props) {
         <Layout
             pageTitle={
                 <span>
-                    HERO CHATS : <span style={{ color: 'green' }}>{caseData.caseNum}</span>
+                    HERO CHATS : <span style={{ color: 'green' }}>{caseData != null && caseData.caseNum}</span>
                 </span>
             }
             pageContent={
@@ -92,8 +92,18 @@ function InternalChat(props) {
                         </div>
                     </div>
                     <div className="space-6" />
-                    {
-                        (caseData.caseStatus === 'NEW' || caseData.caseStatus === 'ASSIGNED' || caseData.caseStatus === 'IN-PROGRESS') ?
+                    {caseData != null &&
+                        (caseData.caseStatus === 'CLOSED' || caseData.caseStatus === 'CANCELLED') ?
+                        <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="alert alert-block alert-danger">
+                                        <p>Case has been CLOSED & LOCKED</p>
+                                    </div>
+                                </div>
+                                <br />
+                                <div className="space-10" />
+                            </div>
+                            :
                             <form name="form" onSubmit={sendMessage}>
                                 <div className="row">
                                     <div className="col-sm-12">
@@ -115,16 +125,6 @@ function InternalChat(props) {
                                     </div>{/* <!-- /.col --> */}
                                 </div>
                             </form>
-                            :
-                            <div className="row">
-                                <div className="col-sm-12">
-                                    <div className="alert alert-block alert-danger">
-                                        <p>Case has been CLOSED & LOCKED</p>
-                                    </div>
-                                </div>
-                                <br />
-                                <div className="space-10" />
-                            </div>
                     }
 
                     <a href="#" name="chat-ls" />
@@ -148,7 +148,7 @@ function InternalChat(props) {
 
                     <div className="row">
                         <div className="col-sm-12">
-                            {
+                            {messageData != null &&
                                 messageData.map(data => {
                                     return data.response === 'FAILED' ?
                                         <i style={{ color: "red" }} align='center'>Internal Chat is empty</i>

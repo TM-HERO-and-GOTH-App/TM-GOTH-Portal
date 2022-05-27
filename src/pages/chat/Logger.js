@@ -71,132 +71,133 @@ function Logger(props) {
 
     return (
         <Layout
-        pageTitle={
-            <span>
-                HERO CHATS : <span style={{color: 'green'}}>{caseData.caseNum}</span>
-            </span>
-        }
-        pageContent={
-            <>
+            pageTitle={
+                <span>
+                    HERO CHATS : <span style={{ color: 'green' }}>{caseData != null && caseData.caseNum}</span>
+                </span>
+            }
+            pageContent={
+                <>
 
-                <div className="row">
-                    <div className="col-sm-12">
-                        <Link className="btn btn-primary" to={`/case-detail/${caseToken}`}>
-                            <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
-                            Back to Previous Page
-                        </Link>
-                        <Link className="btn btn-yellow" to={`/internal-chat/${caseToken}`}>
-                            <i className="ace-icon fa fa-exchange"></i>
-                            Switch to Internal Chat
-                        </Link>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <Link className="btn btn-primary" to={`/case-detail/${caseToken}`}>
+                                <i className="ace-icon fa fa-arrow-left icon-on-left"></i>
+                                Back to Previous Page
+                            </Link>
+                            <Link className="btn btn-yellow" to={`/internal-chat/${caseToken}`}>
+                                <i className="ace-icon fa fa-exchange"></i>
+                                Switch to Internal Chat
+                            </Link>
+                        </div>
                     </div>
-                </div>
-                <div className="space-6"></div>
-                {(caseData.caseStatus === 'NEW' || caseData.caseStatus === 'ASSIGNED' || caseData.caseStatus === 'IN-PROGRESS') ?
-                    <form name="form" onSubmit={sendMessage}>
+                    <div className="space-6"></div>
+                    {caseData != null &&
+                        (caseData.caseStatus === 'CLOSED' || caseData.caseStatus === 'CANCELLED') ?
                         <div className="row">
                             <div className="col-sm-12">
-                                <div className="well">
-                                    <h4 className="black smaller">Chat Message (with Logger)</h4>
-                                    {/* <!--<input type="text" name="message_fe" placeholder="Text Field" className="form-control" />--> */}
-                                    <div className="form-group">
-                                        <select className="chosen-select form-control" id="remarkText" value={remarkTextOption} onChange={(e) => setRemarkTextOption(e.target.value)}>
-                                            <option value="0">Please select Remark Text Helper (if any)...</option>
-                                            {
-                                                lovData.filter(filter => filter.lovID > 421 && filter.lovID < 426) &&
-                                                lovData.filter(filter => filter.lovGroup === 'REMARK-HELPER').map(data => {
-                                                    return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
-                                                })
-                                            }
-                                        </select>
-                                        <div className="space-2" />
-                                        <textarea value={messageInput} onChange={(e) => setMessageInput(e.target.value)} className="form-control limited" id="message_fe" name="message_fe" maxlength="2000"></textarea>
-                                    </div>
-
-                                    <div className="space-2" />
-                                    <button type='submit' className="btn btn-sm btn-success">
-                                        <i className="ace-icon fa fa-save align-top bigger-125"></i>
-                                        Post New Message
-                                    </button>
+                                <div className="alert alert-block alert-danger">
+                                    <p>Case has been CLOSED & LOCKED</p>
                                 </div>
-                            </div>{/* <!-- /.col --> */}
-                        </div>
-                    </form>
-                    :
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <div className="alert alert-block alert-danger">
-                                <p>Case has been CLOSED & LOCKED</p>
                             </div>
+                            <br />
+                            <div className="space-10"></div>
                         </div>
-                        <br />
-                        <div className="space-10"></div>
-                    </div>
-                }
-                <a name="chat-ls" />
-                {
-                    alertStatus &&
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <div className={`alert alert-block alert-${alertBadge}`}>
-                                <button type="button" className="close" data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times"></i>
-                                </button>
-                                <p>
-                                    {alertMessage}
-                                </p>
-                            </div>
-                        </div>
-                        <br />
-                        <div className="space-10" />
-                    </div>
-                }
-
-                <div className="row">
-                    <div className="col-sm-12">
-                        {
-                            messageData?.map(data => {
-                                return data.response === "FAILED" ?
-                                    <i style={{ color: "red" }}>HERO Chat is empty</i>
-                                    :
-                                    <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name" style={{ width: "10" }}><b>Posted Date</b></div>
-                                            <div className="profile-info-value" style={{ width: "40%" }}><b>Message</b></div>
-                                            <div className="profile-info-value" style={{ width: "20%" }}><b>Posted By</b></div>
-                                            <div className="profile-info-value" align="center" style={{ width: "10%" }}><b>Attachment</b></div>
+                        :
+                        <form name="form" onSubmit={sendMessage}>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="well">
+                                        <h4 className="black smaller">Chat Message (with Logger)</h4>
+                                        {/* <!--<input type="text" name="message_fe" placeholder="Text Field" className="form-control" />--> */}
+                                        <div className="form-group">
+                                            <select className="chosen-select form-control" id="remarkText" value={remarkTextOption} onChange={(e) => setRemarkTextOption(e.target.value)}>
+                                                <option value="0">Please select Remark Text Helper (if any)...</option>
+                                                {
+                                                    lovData.filter(filter => filter.lovID > 421 && filter.lovID < 426) &&
+                                                    lovData.filter(filter => filter.lovGroup === 'REMARK-HELPER').map(data => {
+                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                                    })
+                                                }
+                                            </select>
+                                            <div className="space-2" />
+                                            <textarea value={messageInput} onChange={(e) => setMessageInput(e.target.value)} className="form-control limited" id="message_fe" name="message_fe" maxlength="2000"></textarea>
                                         </div>
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name">
-                                                {data.postedDate}
-                                            </div>
 
-                                            <div className="profile-info-value">
-                                                <span className="editable" id="username">
-                                                    {data.message}
-                                                </span>
-                                            </div>
-
-                                            <div className="profile-info-value">
-                                                <span className="editable" id="username">
-                                                    {data.fullName}
-                                                </span>
-                                            </div>
-
-                                            <div className="profile-info-value" align="center">
-                                                {data.bID ? <a target="_blank" href={data.filename}><i className="ace-icon fa fa-download"></i></a> : '-'}
-                                            </div>
-
-                                        </div>
+                                        <div className="space-2" />
+                                        <button type='submit' className="btn btn-sm btn-success">
+                                            <i className="ace-icon fa fa-save align-top bigger-125"></i>
+                                            Post New Message
+                                        </button>
                                     </div>
-                            })
-                        }
+                                </div>{/* <!-- /.col --> */}
+                            </div>
+                        </form>
+                    }
+                    <a name="chat-ls" />
+                    {
+                        alertStatus &&
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <div className={`alert alert-block alert-${alertBadge}`}>
+                                    <button type="button" className="close" data-dismiss="alert">
+                                        <i className="ace-icon fa fa-times"></i>
+                                    </button>
+                                    <p>
+                                        {alertMessage}
+                                    </p>
+                                </div>
+                            </div>
+                            <br />
+                            <div className="space-10" />
+                        </div>
+                    }
+
+                    <div className="row">
+                        <div className="col-sm-12">
+                            {
+                                messageData?.map(data => {
+                                    return data.response === "FAILED" ?
+                                        <i style={{ color: "red" }}>HERO Chat is empty</i>
+                                        :
+                                        <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                                            <div className="profile-info-row">
+                                                <div className="profile-info-name" style={{ width: "10" }}><b>Posted Date</b></div>
+                                                <div className="profile-info-value" style={{ width: "40%" }}><b>Message</b></div>
+                                                <div className="profile-info-value" style={{ width: "20%" }}><b>Posted By</b></div>
+                                                <div className="profile-info-value" align="center" style={{ width: "10%" }}><b>Attachment</b></div>
+                                            </div>
+                                            <div className="profile-info-row">
+                                                <div className="profile-info-name">
+                                                    {data.postedDate}
+                                                </div>
+
+                                                <div className="profile-info-value">
+                                                    <span className="editable" id="username">
+                                                        {data.message}
+                                                    </span>
+                                                </div>
+
+                                                <div className="profile-info-value">
+                                                    <span className="editable" id="username">
+                                                        {data.fullName}
+                                                    </span>
+                                                </div>
+
+                                                <div className="profile-info-value" align="center">
+                                                    {data.bID ? <a target="_blank" href={data.filename}><i className="ace-icon fa fa-download"></i></a> : '-'}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                })
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className="space-8" />
-                {/* <!--<span className="label label-xs label-inverse arrowed-right" style="font-size:11px;padding-top:4px"><i>Source From : <?php //echo ( $source == 'API' ) ? $source : 'Cache - 30 sec'; ?></i></span> --> */}
-            </>
-        }
+                    <div className="space-8" />
+                    {/* <!--<span className="label label-xs label-inverse arrowed-right" style="font-size:11px;padding-top:4px"><i>Source From : <?php //echo ( $source == 'API' ) ? $source : 'Cache - 30 sec'; ?></i></span> --> */}
+                </>
+            }
         />
     )
 }
