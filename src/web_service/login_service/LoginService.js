@@ -1,5 +1,7 @@
-const url = 'https://hero.tm.com.my';
-const apiKey = '32c70cb3-7381-e2ef-ad1f-b5a61964d408-cxt';
+import axios from 'axios';
+
+const url = process.env.REACT_APP_API_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const LoginService = {
