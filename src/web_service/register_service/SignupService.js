@@ -1,4 +1,4 @@
-const url = 'https://hero.tm.com.my';
+const url = process.env.REACT_APP_API_URL;
 const apiKey = '32c70cb3-7381-e2ef-ad1f-b5a61964d408-cxt';
 
 const SignupService = {

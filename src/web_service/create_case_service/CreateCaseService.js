@@ -1,4 +1,4 @@
-const url = 'https://hero.tm.com.my';
+const url = process.env.REACT_APP_API_URL;
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const CreateCaseService = {

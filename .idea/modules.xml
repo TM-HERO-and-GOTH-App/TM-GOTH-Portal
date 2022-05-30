@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/TM-GOTH-Portal.iml" filepath="$PROJECT_DIR$/.idea/TM-GOTH-Portal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../temp-dev-ldap/.idea/temp-dev-ldap.iml" filepath="$PROJECT_DIR$/../temp-dev-ldap/.idea/temp-dev-ldap.iml" />
     </modules>
   </component>
 </project>

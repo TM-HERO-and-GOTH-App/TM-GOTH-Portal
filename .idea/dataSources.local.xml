@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="PS-221.5080.224">
+  <component name="dataSourceStorageLocal" created-in="PS-221.5591.58">
     <data-source name="@hero_db" uuid="72e5a3bc-91a9-4fa0-971c-3fdc0e229148">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" exact-version="0" />
       <schema-mapping />
     </data-source>
     <data-source name="@localhost" uuid="38600877-c8ad-490b-93c1-3db6d9174e0b">
-      <database-info product="MariaDB" version="10.7.3-MariaDB" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="2.7.3" dbms="MARIADB" exact-version="10.7.3" exact-driver-version="2.7">
+      <database-info product="MariaDB" version="10.8.3-MariaDB" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="2.7.3" dbms="MARIADB" exact-version="10.8.3" exact-driver-version="2.7">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>
       </database-info>
