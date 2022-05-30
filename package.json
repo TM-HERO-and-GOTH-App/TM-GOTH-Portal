@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0-beta1",
+    "chat-ui-react": "^0.3.0",
     "firebase": "^9.0.0",
     "react": "^17.0.2",
     "react-color": "^2.19.3",
