@@ -214,6 +214,36 @@ function Createcase(props) {
                                                 </select>
                                             </div>
                                         </div>
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name">Sub-Area Type</div>
+                                            <div className="profile-info-value">
+                                                <select className='chosen-select form-control' name='caseTypeID'
+                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
+                                                    <option value='0' hidden>Choose a Sub-area Type</option>
+                                                    {
+                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name">Symptom Type</div>
+                                            <div className="profile-info-value">
+                                                <select className='chosen-select form-control' name='caseTypeID'
+                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
+                                                    <option value='0' hidden>Choose a Symptom Type</option>
+                                                    {
+                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
