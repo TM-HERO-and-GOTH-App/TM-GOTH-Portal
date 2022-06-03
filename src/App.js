@@ -35,6 +35,7 @@ import TechnicalCase from './pages/hero_cases_functionality/TechnicalCase';
 import Userprofile from './pages/user_profile/Userprofile';
 import All_Announcement from './pages/announcement/All_Announcement';
 import AnnouncementForm from './pages/announcement/AnnouncementForm';
+import ChatPage from './pages/unifi_buddy_pages/chat/Chat';
 import Chat_2 from './pages/unifi_buddy_pages/chat/Chat2';
 import EditAnnouncementForm from './pages/announcement/Edit_Announcement';
 import PrivateRoute from './private-route/PrivateAuthRoute';
@@ -54,6 +55,7 @@ function App() {
           <Route path="/forgotpassword" component={Forgot} />
           <Route path="/signup" component={SignUp} />
           <Route path="/activate" component={Activate} />
+          <Route path="/chat/1" component={ChatPage} />
           <Route path="/chat/:id" component={Chat_2} />
           <PrivateRoute>
             <Route exact path="/" component={Dashboard} />
