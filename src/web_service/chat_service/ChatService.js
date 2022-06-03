@@ -42,7 +42,7 @@ const ChatService = {
     },
 
     async tempPullChatMessage(cToken) {
-        return await axios.get(`http://localhost:80/chat/pull-message/${cToken}`).then(
+        return await axios.post(`http://localhost:80/icp_eai/evSTTRetrieveServiceAcct`).then(
             (res, err) => {
                 if (err) return err
                 console.log(res.data)
