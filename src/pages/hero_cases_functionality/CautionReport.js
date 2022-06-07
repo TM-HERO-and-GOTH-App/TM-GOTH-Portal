@@ -43,6 +43,19 @@ function CautionReport() {
                 </div>
 
                 <div className="hb-input-group">
+                    <label className="hb-detail" for="loggerNumber">Logger Mobile Number*</label>
+                    <div className="hb-input-box">
+                        <input
+                            type="tel"
+                            id="loggerNumber"
+                            name="loggerName"
+                            min={0}
+                            placeholder="example: 0123456789"
+                        />
+                    </div>
+                </div>
+
+                <div className="hb-input-group">
                     <label className="hb-detail" for="description">Description*</label>
                     <div className="hb-input-box">
                         <input
@@ -57,7 +70,7 @@ function CautionReport() {
                 <div className="hb-input-group">
                     <label className="hb-detail" for="type">Type*</label>
                     <div className="hb-input-box" id="type" name="caution_report">
-                        <p value="caution report">Assurance</p>
+                        <p value="caution_report">Caution Report</p>
                     </div>
                 </div>
 

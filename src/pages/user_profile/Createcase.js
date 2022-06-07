@@ -19,6 +19,8 @@ function Createcase(props) {
     const [subSourceType, setSubSourceType] = useState('0');
     const [productType, setProductType] = useState('0');
     const [areaType, setAreaType] = useState('0');
+    const [externalSystemInput, setExternalSystemInput] = useState('');
+    const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
 
     const createCase = (e) => {
         e.preventDefault();
@@ -183,6 +185,94 @@ function Createcase(props) {
                                             </div>
                                         </div>
 
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> External System Ref. </div>
+
+                                            <div class="profile-info-value">
+                                                <span class="editable" id="username">
+                                                    <input class="input-sm" value={externalSystemInput} onChange={(e) => setExternalSystemInput(e.target.value)} style={{ width: "100%" }} type="text" name="extSysRef" placeholder="External System Reference" />
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> Stakeholder Ref. </div>
+
+                                            <div class="profile-info-value">
+                                                <select class="chosen-select form-control" value={stakeholderReferenceSelect} onChange={(e) => setStakeholderReferenceSelect(e.target.value)} name="stakeholderRef" data-placeholder="Choose a Stakeholder Reference...">
+                                                    <option value="n/a" selected="yes">Choose a Stakeholder Reference...</option>
+                                                    <option value="NMO">NMO</option>
+                                                    <option value="BRD">BRD</option>
+                                                    <option value="PRODUCT">Product</option>
+                                                    <option value="RRT">RRT</option>
+                                                    <option value="RRM">RRM</option>
+                                                    <option value="GIT">GIT</option>
+                                                    <option value="RESELLER">Reseller</option>
+                                                    <option value="CMC">CMC</option>
+                                                    <option value="TMPOINT">TM Point</option>
+                                                    <option value="NOC">NOC</option>
+                                                    <option value="CSM">CSM State</option>
+
+                                                    <option value="SFM">SFM</option>
+                                                    <option value="LOB/PTT">LOB/PTT</option>
+                                                    <option value="Customer">Customer</option>
+                                                    <option value="Contact-Centre">Contact Centre</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name" style={{ width: '25%' }}> Case
+                                                Description
+                                            </div>
+                                            <div className="profile-info-value">
+                                                <textarea className="form-control limited" rows={10} name="caseContent"
+                                                    maxLength={9999}
+                                                    defaultValue={caseDescriptionInput ? caseDescriptionInput : ''}
+                                                    onChange={(e) => setCaseDescriptionInput(e.target.value)} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-6">
+                                <div className="form-group">
+                                    <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name"> Source</div>
+                                            <div className="profile-info-value">
+                                                <select className='chosen-select form-control' name='sourceID'
+                                                    value={sourceType}
+                                                    onChange={(e) => setSourceType(e.target.value)}>
+                                                    <option hidden value='0'>Choose a Source...</option>
+                                                    {
+                                                        lovData.filter(filter => filter.lovGroup === 'SOURCE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name"> Sub Source</div>
+                                            <div className="profile-info-value">
+                                                <select className='chosen-select form-control' name='subSourceID'
+                                                    value={subSourceType}
+                                                    onChange={(e) => setSubSourceType(e.target.value)}>
+                                                    <option hidden value='0'>Choose a Sub Source...</option>
+                                                    {
+                                                        lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Product Type</div>
                                             <div className="profile-info-value">
@@ -229,6 +319,7 @@ function Createcase(props) {
                                                 </select>
                                             </div>
                                         </div>
+
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Symptom Type</div>
                                             <div className="profile-info-value">
@@ -244,58 +335,7 @@ function Createcase(props) {
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-6">
-                                <div className="form-group">
-                                    <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name"> Source</div>
-                                            <div className="profile-info-value">
-                                                <select className='chosen-select form-control' name='sourceID'
-                                                    value={sourceType}
-                                                    onChange={(e) => setSourceType(e.target.value)}>
-                                                    <option hidden value='0'>Choose a Source...</option>
-                                                    {
-                                                        lovData.filter(filter => filter.lovGroup === 'SOURCE').map((data, key) => {
-                                                            return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name"> Sub Source</div>
-                                            <div className="profile-info-value">
-                                                <select className='chosen-select form-control' name='subSourceID'
-                                                    value={subSourceType}
-                                                    onChange={(e) => setSubSourceType(e.target.value)}>
-                                                    <option hidden value='0'>Choose a Sub Source...</option>
-                                                    {
-                                                        lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map((data, key) => {
-                                                            return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div className="profile-info-row">
-                                            <div className="profile-info-name" style={{ width: '25%' }}> Case
-                                                Description
-                                            </div>
-                                            <div className="profile-info-value">
-                                                <textarea className="form-control limited" rows={10} name="caseContent"
-                                                    maxLength={9999}
-                                                    defaultValue={caseDescriptionInput ? caseDescriptionInput : ''}
-                                                    onChange={(e) => setCaseDescriptionInput(e.target.value)} />
-                                            </div>
-                                        </div>
+    
                                     </div>
                                 </div>
                             </div>

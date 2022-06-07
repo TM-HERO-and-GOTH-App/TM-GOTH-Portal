@@ -112,10 +112,10 @@ function CaseDetail(props) {
 
                     <div className="row">
                         {
-                            (caseData.caseStatus !== "CLOSED") &&
+                            (caseData.caseStatus != null && caseData.caseStatus !== "CLOSED") &&
                              ( <div className="col-sm-5">
                                 {
-                                    caseData.ownerName != null &&
+                                    caseData.ownerName == null &&
                                     <button className="btn btn-primary" onClick={assignCaseToMe}>
                                         Assign To Me
                                     </button>

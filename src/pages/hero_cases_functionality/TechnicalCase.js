@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function TechnicalCase() {
     let styles = {
@@ -11,90 +11,153 @@ function TechnicalCase() {
             background: "darkgrey",
         },
     };
+    const [customerNameInput, setCustomerNameInput] = useState('');
+    const [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
+    const [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
+    const [descriptionInput, setDescription] = useState('');
+    const [typeSelect, setTypeSelect] = useState('assurance');
+    const [productSelect, setProduct] = useState('default');
+    const [areaSelect, setArea] = useState('service_failure');
+    const [subAreaSelect, setSubArea] = useState('all_services_down');
+    const [symptomSelect, setSymptom] = useState('default');
+    const [locationSelect, setLocation] = useState('default');
+    const [pictureInput, setPicture] = useState('');
 
     return (
         <body style={styles.body}>
-        <div className="hb-container">
-            <div className="hb-title">Technical Case</div>
-            <form action="#">
-                <div className="hb-input-group">
-                    <label className="hb-detail" for="customerName">Customer Name*</label>
-                    <div className="hb-input-box">
-                        <input
-                            type="text"
-                            id="customerName"
-                            name="customerName"
-                            placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
-                        />
+            <div className="hb-container">
+                <div className="hb-title">Technical Case</div>
+                <form action="#">
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="customerName">Customer Name*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="text"
+                                id="customerName"
+                                name="customerName"
+                                placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
+                                value={customerNameInput}
+                                onChange={(e) => setCustomerNameInput(e.target.value)}
+                            />
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-input-group">
-                    <label className="hb-detail" for="customerNumber">Customer Mobile Number*</label>
-                    <div className="hb-input-box">
-                        <input
-                            type="tel"
-                            id="customerNumber"
-                            name="customerName"
-                            min={0}
-                            placeholder="example: 0123456789"
-                        />
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="customerNumber">Customer Mobile Number*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="tel"
+                                id="customerNumber"
+                                name="customerName"
+                                min={0}
+                                placeholder="example: 0123456789"
+                                value={customerMobileNumberInput}
+                                onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
+                            />
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-input-group">
-                    <label className="hb-detail" for="description">Description*</label>
-                    <div className="hb-input-box">
-                        <input
-                            type="text"
-                            id="description"
-                            name="userDescription"
-                            placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
-                        />
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="loggerNumber">Logger Mobile Number*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="tel"
+                                id="loggerNumber"
+                                name="loggerName"
+                                min={0}
+                                placeholder="example: 0123456789"
+                                value={loggerMobileNumberInput}
+                                onChange={(e) => setLoggerMobileNumber(e.target.value)}
+                            />
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-input-group">
-                    <label className="hb-detail" for="type">Type*</label>
-                    <div className="hb-input-box" id="type" name="assurance">
-                        <p value="assurance">Assurance</p>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="description">Description*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="text"
+                                id="description"
+                                name="userDescription"
+                                placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
+                                value={descriptionInput} 
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-input-group">
-                    <label className="hb-detail" for="product">Product*</label>
-                    <div className="hb-input-box">
-                        <select id="product" name="product">
-                            <option value="empty">Select one</option>
-                            <option value="broadband">Broadband</option>
-                            <option value="telephony">Telephony</option>
-                            <option value="mobile">unifi Mobile</option>
-                            <option value="tv">unifi TV</option>
-                        </select>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="type">Type*</label>
+                        <div className="hb-input-box" id="type" name="assurance">
+                            <select id='type' name='type' value={typeSelect}>
+                                <option value='assurance' disabled>Assurance</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-input-group">
-                    <label className="hb-detail" for="location">Location*</label>
-                    <div className="hb-input-box">
-                        <select id="location" name="location">
-                            <option value="empty">Select one</option>
-                        </select>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="area">Area*</label>
+                        <div className="hb-input-box">
+                            <select id="area" name="area" value={areaSelect}>
+                                <option value="service_failure">Service Failure</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-input-group">
-                    <label className="hb-detail">Attachment</label>
-                    <div className="hb-attachment">
-                        <input type="file" name="imageAttach"/>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="subarea">Sub-Area*</label>
+                        <div className="hb-input-box">
+                            <select id="area" name="area" value={subAreaSelect}>
+                                <option value="all_services_down">All Services Down</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div className="hb-button">
-                    <input className="hb-submit" type="submit" title="Submit"/>
-                </div>
-            </form>
-        </div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="product">Product*</label>
+                        <div className="hb-input-box">
+                            <select id="product" name="product" value={productSelect} onChange={(e) => setProduct(e.target.value)}>
+                                <option value="default">Select one</option>
+                                <option value="broadband">Broadband</option>
+                                <option value="telephony">Telephony</option>
+                                <option value="mobile">unifi Mobile</option>
+                                <option value="tv">unifi TV</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="symptom">Symptom*</label>
+                        <div className="hb-input-box">
+                            <select id="symptom" name="symptom" value={symptomSelect} onChange={(e) => setSymptom(e.target.value)}>
+                                <option value="default" disabled>Select one</option>
+                                <option value="option1">option 1</option>
+                                <option value="option2">option 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="hb-input-group">
+                        <label className="hb-detail" for="location">Location*</label>
+                        <div className="hb-input-box">
+                            <select id="location" name="location">
+                                <option value="default" disabled>Select one</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="hb-input-group">
+                        <label className="hb-detail">Attachment</label>
+                        <div className="hb-attachment">
+                            <input type="file" name="imageAttach" />
+                        </div>
+                    </div>
+
+                    <div className="hb-button">
+                        <input className="hb-submit" type="submit" title="Submit" value={pictureInput} onChange={(e) => setPicture(e.target.value)}/>
+                    </div>
+                </form>
+            </div>
         </body>
     );
 }
