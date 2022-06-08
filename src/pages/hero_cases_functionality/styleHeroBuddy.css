@@ -6,7 +6,6 @@
     font-family: 'Sora', sans-serif;
 }
 .hb-container {
-    height: fit-content;
     max-width: 800px;
     width: 100%;
     background-color: white;
@@ -14,6 +13,7 @@
     border-radius: 5px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.15);
     transition: ease all .5s;
+    overflow-y: auto;
 }
 .hb-container .hb-title{
     font-size: 25px;
@@ -32,7 +32,10 @@
 }
 .hb-container form{
     display: flex;
+    position: relative;
     flex-wrap: wrap;
+    align-items: stretch;
+    -webkit-box-align: stretch;
     justify-content: space-between;
     margin: 25px 0 12px 0;
     transition: ease all .5s;
@@ -42,6 +45,53 @@
 }
 form .hb-input-group {
     width: calc(100% / 2 - 20px);
+}
+.hb-input-group.w-100{
+    width: 100%;
+}
+.hb-input-group #searchbar{
+    display: table;
+    border-collapse: collapse;
+}
+.hb-input-group#searchbar> div{
+    display: table-cell;
+    vertical-align: middle;  /* needed for Safari */
+}
+.hb-input-group-prepend, .hb-input-group-append{
+    color: #777;
+}
+.hb-input-group-prepend select,
+.hb-input-group-append button{
+    height: 40px;
+}
+.hb-input-group-prepend select{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.hb-input-group-append button{
+    display: flex;
+    padding: 0 12px;
+    border-radius: 0 5px 5px 0;
+    align-items: center;
+}
+.hb-input-group-append .btn.btn-secondary{
+    background-color: var(--color-blue-300)!important;
+    border-color: var(--color-blue-300)!important;
+    border-radius: 0;
+}
+.hb-input-group-area{
+    width: 100%;
+    margin-right: 10px;
+}
+.hb-input-box.hb-input-group-area input {
+    width: 100%;
+    padding: 0 12px;
+    border-radius: 0!important;
+}
+.hb-input-group-prepend{
+}
+.hb-input-group-append{
+
 }
 .hb-input-group .hb-input-box{
     height: 45px;
@@ -112,8 +162,11 @@ form .hb-button input{
 form .hb-button input:hover{
     background: linear-gradient(-135deg, orange, cyan)
 }
+
 @media(max-width: 584px){
-    .hb-container{
+    .hb-container {
+        height: 100%;
+        position: relative;
         max-width: 100%;
     }
     .hb-container form .hb-input-group{
@@ -121,21 +174,17 @@ form .hb-button input:hover{
     }
     .hb-container form{
         margin: 25px 0 0 0;
+        max-height: calc(100% * 0.86);
+        overflow-y: auto;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .hb-container::-webkit-scrollbar {
+        display: none;
     }
     form .hb-input-group {
         margin-bottom: 5px;
         width: 100%
     }
 }
-@media(max-height: 750px){
-    .hb-container form{
-        max-height: calc(100% * 0.87);
-        overflow-y: scroll;
-    }
-    .hb-container form::-webkit-scrollbar{
-        width: 5px;
-    }
-    .hb-container {
-        height: 100%;
-    }
-}
+
