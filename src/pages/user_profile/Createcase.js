@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
+import CaseAPI from '../../localAPI_webservice/case_API/Case';
 import Axios from 'axios';
 
 function Createcase(props) {
@@ -8,69 +9,74 @@ function Createcase(props) {
     const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [alertStatus, setAlertStatus] = useState(false);
+    const [successCreateCase, setSuccessCreateCase] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [caseDescriptionInput, setCaseDescriptionInput] = useState('');
     const [customerNameInput, setCustomerNameInput] = useState('');
+    const [customerServiceIDInput, setCustomerServiceIDInput] = useState('');
     const [nricInput, setNRICInput] = useState('');
     const [mobileNumberInput, setMobileNumberInput] = useState('');
     const [caseType, setCaseType] = useState('0');
     const [stateType, setStateType] = useState('0');
     const [sourceType, setSourceType] = useState('0');
-    const [subSourceType, setSubSourceType] = useState('0');
     const [productType, setProductType] = useState('0');
     const [areaType, setAreaType] = useState('0');
+    const [subAreaSelect, setSubAreaSelect] = useState('0');
+    const [symptomSelect, setSymptomSelect] = useState('0');
+    const [siebelTargetSystemSelect, setSiebelTargetSystemSelect] = useState('0');
     const [externalSystemInput, setExternalSystemInput] = useState('');
     const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
 
     const createCase = (e) => {
         e.preventDefault();
-        CreateCaseService.createCase(token, customerNameInput, nricInput, mobileNumberInput,
-            caseDescriptionInput, stateType, sourceType, subSourceType, caseType)
-            .then(res => {
-                console.log(res);
-                if (customerNameInput !== '' && sourceType !== 0 && caseDescriptionInput !== '') {
-                    if (res.response === 'FAILED') {
-                        setAlertStatus(true)
-                        setAlertMessage('Please insert all the required field')
-                    } else {
-                        props.history.replace('/');
-                    }
-                } else {
-                    setAlertStatus(true);
-                    setAlertMessage('Please insert all the required field');
-                }
-            })
-    }
+        // CreateCaseService.createCase(token, customerNameInput, nricInput, mobileNumberInput,
+        //     caseDescriptionInput, stateType, sourceType, subSourceType, caseType)
+        //     .then(res => {
+        //         console.log(res);
+        //         if (customerNameInput !== '' && sourceType !== 0 && caseDescriptionInput !== '') {
+        //             if (res.response === 'FAILED') {
+        //                 setAlertStatus(true)
+        //                 setAlertMessage('Please insert all the required field')
+        //             } else {
+        //                 props.history.replace('/');
+        //             }
+        //         } else {
+        //             setAlertStatus(true);
+        //             setAlertMessage('Please insert all the required field');
+        //         }
+        //     });
 
-    const createCaseLocal = (e) => {
-        e.preventDefault();
-        fetch("http://localhost:3002/case/insert", {
+        Axios.post('http://localhost:3001/case/create-new-case', {
+            authToken: token,
+            gID: userData.hID,
             customerName: customerNameInput,
-            ic: nricInput,
-            loggerPhone: mobileNumberInput,
-            state: stateType,
+            nricNumber: nricInput,
+            customerMobileNumber: mobileNumberInput,
+            stateID: stateType,
+            flag: 'COMPLAINT',
+            externalSystem: externalSystemInput,
+            stakeholderReference: stakeholderReferenceSelect,
+            sourceID: sourceType,
+            caseDescription: caseDescriptionInput,
             caseType: caseType,
-            sourceType: sourceType,
-            caseDescription: caseDescriptionInput
-        }).catch(e => alert(e))
-        alert('case have been successfully created.');
+            areaID: areaType,
+            subAreaID: subAreaSelect,
+            symptomID: symptomSelect,
+            customerServiceID: customerServiceIDInput,
+            siebelTargetSystem: siebelTargetSystemSelect
+        }).then(res => {
+            setAlertStatus(true)
+            setAlertMessage(res.data);
+            console.log(res.data)
+            console.log(res.config.data);
+            if(res.data === 'Case successfully created.'){ 
+                resetForm();
+                setAlertStatus(true);
+                setSuccessCreateCase(true)
+                setAlertMessage(res.data)
+            }
+        }).catch(e => console.log(e));
     }
-
-    const handleSubmit = () => {
-        Axios.post("http://localhost:3002/case/insert", {
-            customerName: customerNameInput,
-            ic: nricInput,
-            loggerPhone: mobileNumberInput,
-            state: stateType,
-            caseType: caseType,
-            sourceType: sourceType,
-            subSourceType: subSourceType,
-            caseDescription: caseDescriptionInput
-        }).then(() => {
-            alert("successfully insert")
-        }).catch(e => alert(e))
-    }
-
     const resetForm = () => {
         setCaseDescriptionInput('')
         setCustomerNameInput('')
@@ -79,7 +85,11 @@ function Createcase(props) {
         setCaseType('0')
         setStateType('0')
         setSourceType('0')
-        setSubSourceType('0')
+        setAreaType('0');
+        subAreaSelect('0');
+        symptomSelect('0');
+        customerNameInput('');
+        setSiebelTargetSystemSelect('0');
     }
 
     return (
@@ -87,14 +97,14 @@ function Createcase(props) {
             pageTitle='Create New Case'
             pageContent={
                 <>
-                    <form name="form" onSubmit={handleSubmit} onReset={resetForm}>
+                    <form name="form" onSubmit={createCase} onReset={resetForm}>
                         {
                             alertStatus &&
                             <div className="row">
                                 <div className="col-xs-12">
-                                    <div className="alert alert-block alert-danger">
-                                        <button type="button" className="close" data-dismiss="alert">
-                                            <i className="ace-icon fa fa-times" />
+                                    <div className={`alert alert-block ${successCreateCase == true ? 'alert-success' : 'alert-danger'}`}>
+                                        <button type="button" onClick={() => setAlertStatus(false)} className="close" data-dismiss="alert">
+                                            <i className="ace-icon fa fa-times"/>
                                         </button>
                                         <p>{alertMessage}</p>
                                     </div>
@@ -143,7 +153,7 @@ function Createcase(props) {
                                         </div>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name"> Mobile No</div>
+                                            <div className="profile-info-name">Mobile No</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
                                                     <input className="input-sm" style={{ width: '100%' }} type="text" name="mobileNum"
@@ -154,11 +164,22 @@ function Createcase(props) {
                                         </div>
 
                                         <div className="profile-info-row">
+                                            <div className="profile-info-name">Customer Service ID / Login ID</div>
+                                            <div className="profile-info-value">
+                                                <span className="editable" id="username">
+                                                    <input className="input-sm" style={{ width: '100%' }} type="text" name="customerServiceID"
+                                                        placeholder="Customer Service ID / Login ID" value={customerServiceIDInput}
+                                                        onChange={(e) => setCustomerServiceIDInput(e.target.value)} />
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="profile-info-row">
                                             <div className="profile-info-name"> State</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='areaLocationID'
                                                     value={stateType}
-                                                    onChange={(e) => setStateType(e.target.value)}>
+                                                    onChange={(e) => setStateType(parseFloat(e.target.value))}>
                                                     <option value='0' hidden>Choose a State...</option>
                                                     {
                                                         lovData.filter(filter => filter.lovGroup === 'AREA-LOCATION').map((data, key) => {
@@ -170,7 +191,7 @@ function Createcase(props) {
                                         </div>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name"> Case Type</div>
+                                            <div className="profile-info-name">Case Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
                                                     value={caseType} onChange={(e) => setCaseType(e.target.value)}>
@@ -229,7 +250,7 @@ function Createcase(props) {
                                             <div className="profile-info-value">
                                                 <textarea className="form-control limited" rows={10} name="caseContent"
                                                     maxLength={9999}
-                                                    defaultValue={caseDescriptionInput ? caseDescriptionInput : ''}
+                                                    value={caseDescriptionInput}
                                                     onChange={(e) => setCaseDescriptionInput(e.target.value)} />
                                             </div>
                                         </div>
@@ -241,7 +262,7 @@ function Createcase(props) {
                                 <div className="form-group">
                                     <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name"> Source</div>
+                                            <div className="profile-info-name">Source</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='sourceID'
                                                     value={sourceType}
@@ -258,29 +279,13 @@ function Createcase(props) {
                                         </div>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name"> Sub Source</div>
-                                            <div className="profile-info-value">
-                                                <select className='chosen-select form-control' name='subSourceID'
-                                                    value={subSourceType}
-                                                    onChange={(e) => setSubSourceType(e.target.value)}>
-                                                    <option hidden value='0'>Choose a Sub Source...</option>
-                                                    {
-                                                        lovData.filter(filter => filter.lovGroup === 'SUB-SOURCE').map((data, key) => {
-                                                            return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="profile-info-row">
                                             <div className="profile-info-name">Product Type</div>
                                             <div className="profile-info-value">
-                                                <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
+                                                <select className='chosen-select form-control' name='productType'
+                                                    value={productType} onChange={(e) => setProductType(e.target.value)}>
                                                     <option value='0' hidden>Choose a Product Type</option>
                                                     {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                        lovData.filter(filter => filter.lovGroup === 'PRODUCT').map((data, key) => {
                                                             return <option key={key}
                                                                 value={data.lovID}>{data.lovName}</option>
                                                         })
@@ -293,29 +298,32 @@ function Createcase(props) {
                                             <div className="profile-info-name">Area Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-                                                    <option value='0' hidden>Choose a Area Type</option>
-                                                    {
+                                                    value={areaType} onChange={(e) => setAreaType(parseFloat(e.target.value))}>
+                                                    <option value='0' disabled>Choose a Area Type</option>
+                                                    {/* {
                                                         lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
                                                                 value={data.lovID}>{data.lovName}</option>
                                                         })
-                                                    }
+                                                    } */}
+                                                    <option value='660'>Service Failure</option>
                                                 </select>
                                             </div>
                                         </div>
+
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Sub-Area Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-                                                    <option value='0' hidden>Choose a Sub-area Type</option>
-                                                    {
+                                                    value={subAreaSelect} onChange={(e) => setSubAreaSelect(parseFloat(e.target.value))}>
+                                                    <option value='0' disabled>Choose a Sub-area Type</option>
+                                                    {/* {
                                                         lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
                                                                 value={data.lovID}>{data.lovName}</option>
                                                         })
-                                                    }
+                                                    } */}
+                                                    <option value='700'>All Services Down </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -323,15 +331,34 @@ function Createcase(props) {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Symptom Type</div>
                                             <div className="profile-info-value">
-                                                <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-                                                    <option value='0' hidden>Choose a Symptom Type</option>
-                                                    {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                <select className='chosen-select form-control' name='symptomType'
+                                                    value={symptomSelect} onChange={(e) => setSymptomSelect(parseFloat(e.target.value))}>
+                                                    <option value='0' disabled>Choose a Symptom Type</option>
+                                                    {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
                                                             return <option key={key}
                                                                 value={data.lovID}>{data.lovName}</option>
                                                         })
-                                                    }
+                                                    } */}
+                                                    <option value='800'>All Services Down</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name">Siebel Target System</div>
+                                            <div className="profile-info-value">
+                                                <select className='chosen-select form-control' name='siebelSystem'
+                                                    value={siebelTargetSystemSelect} onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
+                                                    <option value='0' disabled>Choose a Target System</option>
+                                                    {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                                    <option value='icp'>ICP</option>
+                                                    <option value='nova'>NOVA</option>
                                                 </select>
                                             </div>
                                         </div>
