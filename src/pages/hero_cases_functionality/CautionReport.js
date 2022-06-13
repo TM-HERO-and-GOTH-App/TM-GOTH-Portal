@@ -1,8 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import './styleHeroBuddy.css'
-import SearchIcon from '@mui/icons-material/Search';
-import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
-
 
 function CautionReport() {
 	let styles = {
@@ -16,40 +13,11 @@ function CautionReport() {
 		},
 	};
 
-	const [searchBarType, setSearchBarType] = useState('service');
-	const [searchBarDetail, setSearchBarDetail] = useState('');
-
 	return (
 			<body style={styles.body}>
 			<div className="hb-container">
 				<div className="hb-title">Caution Report</div>
 				<form action="#">
-					<div className="hb-input-group w-100" id="searchbar">
-						<div className="hb-input-group-prepend">
-							<select id="searchbar-type" name="searchbar-type" value={searchBarType}
-							        onChange={(e) => setSearchBarType(e.target.value)}>
-								<option value="service">Service ID</option>
-								<option value="login">Login ID</option>
-							</select>
-						</div>
-						<div className="hb-input-box hb-input-group-area">
-							<input
-									type="text"
-									id="search-detail"
-									name="search-detail"
-									placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
-									value={searchBarDetail}
-									onChange={(e) => setSearchBarDetail(e.target.value)}
-							/>
-						</div>
-						<div className="hb-input-group-append" style={{ display: `${searchBarType === "service" ? "":"none"}`}}>
-							<button className="btn btn-secondary" type="button"><LocationSearchingIcon fontSize="large"/></button>
-						</div>
-						<div className="hb-input-group-append">
-							<button className="btn" type="button"><SearchIcon fontSize="large"/></button>
-						</div>
-					</div>
-
 					<div className="hb-input-group">
 						<label className="hb-detail" for="customerName">Customer Name*</label>
 						<div className="hb-input-box">
