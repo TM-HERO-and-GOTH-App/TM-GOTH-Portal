@@ -33,10 +33,9 @@ function AssignToOther(props) {
 
     const getCaseDetail = () => {
       CaseDetailService.getCaseDetail(token, caseToken).then((res) => {
-        // console.log(res)
-        setCaseDetailData(res);
-        setCaseOwner(res.ownerName);
-        console.log(res.ownerName)
+        setCaseDetailData(res.data);
+        setCaseOwner(res.data.ownerName);
+        console.log(res.data.ownerName)
       });
     };
 

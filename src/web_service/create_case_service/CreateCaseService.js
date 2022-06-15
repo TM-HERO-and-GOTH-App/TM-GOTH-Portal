@@ -1,24 +1,33 @@
-const url = process.env.REACT_APP_API_URL;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
+import Axios from "axios";
+
+const url = process.env.REACT_APP_LOCAL_API_URL;
 
 const CreateCaseService = {
-    createCase(authToken, customerName, nricNum, mobileNum, caseContent, areaLocationID, flag, sourceID, subSourceID, caseTypeID){
-        return fetch( url + '/case/create-from-portal/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                'authToken': authToken,
-                'customerName': customerName,
-                'nricNum': nricNum,
-               ' mobileNum': mobileNum,
-                'caseContent': caseContent,
-                'areaLocationID': areaLocationID,
-                'flag': 'COMPLAINT',
-                'sourceID': sourceID,
-                'subSourceID': subSourceID,
-                'caseTypeID': caseTypeID
-            })
-        }).then(res => res.json()).then(responseData => {return responseData}).catch(err => console.log(err))
+    createCase(token, hID, customerNameInput, nricInput, mobileNumberInput, stateType, externalSystemInput, stakeholderReferenceSelect, sourceType, subSourceType, caseDescriptionInput, caseType, areaType, subAreaSelect, symptomSelect, customerServiceIDInput, siebelTargetSystemSelect) {
+        return Axios.post(url + '/case/create-new-case', {
+            authToken: token,
+            gID: hID,
+            caseContent: caseDescriptionInput,
+            customerName: customerNameInput,
+            nricNumber: nricInput,
+            customerMobileNumber: mobileNumberInput,
+            stateID: stateType,
+            flag: 'COMPLAINT',
+            externalSystem: externalSystemInput,
+            stakeholderReference: stakeholderReferenceSelect,
+            sourceID: sourceType,
+            subSourceID: subSourceType,
+            caseType: caseType,
+            areaID: areaType,
+            subAreaID: subAreaSelect,
+            symptomID: symptomSelect,
+            customerServiceID: customerServiceIDInput,
+            siebelTargetSystem: siebelTargetSystemSelect
+        }).then(res => {
+            return res
+        }).catch(err => {
+            return err
+        })
     }
 }
 
