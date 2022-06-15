@@ -48,8 +48,8 @@ function Layout(props) {
     return (
         <div class={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
             <div id="navbar"
-                 className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ?
-                     "navbar-fixed-top" : ""}`}>
+                className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ?
+                    "navbar-fixed-top" : ""}`}>
                 <div className="navbar-container ace-save-state" id="navbar-container">
                     <div className="navbar-header">
                         <a href="/" className="navbar-brand">
@@ -75,10 +75,10 @@ function Layout(props) {
                                 <a data-toggle="dropdown" href="#" className="dropdown-toggle" aria-expanded={` ${openUserModal ? "true" : "false"}`}>
                                     <Avatar className="profile-icon" sx={{ width: 48, height: 48 }} alt="User's Photo" src={img1} />
                                     <span className="user-info">
-                    <small>Welcome,</small>
+                                        <small>Welcome,</small>
                                         {userData.fullName ? userData.fullName : 'User Name'}
                                         {/*<i className="ace-icon fa fa-caret-down" />*/}
-                  </span>
+                                    </span>
                                     <ArrowDropDownIcon sx={{ width: 24, height: 24 }} className="dropdown-icon" />
                                 </a>
 
@@ -91,8 +91,8 @@ function Layout(props) {
                                     </li>
 
                                     {(userData.stakeholderName === 'RRT'
-                                            || userData.stakeholderName === 'CSM'
-                                            || userData.stakeholderName === 'Dr UNIFI') &&
+                                        || userData.stakeholderName === 'CSM'
+                                        || userData.stakeholderName === 'Dr UNIFI') &&
                                         (
                                             <li>
                                                 <a href="/create-case">
@@ -324,12 +324,12 @@ function Layout(props) {
                             </a>
                         </li>
 
-                        <li className={window.location.pathname === '/all_announcements' ? 'active open hover' : 'hover'}  onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
+                        <li className={window.location.pathname === '/all_announcements' ? 'active open hover' : 'hover'} onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
                             <a href="#">
                                 <i className="menu-icon fa fa-users" />
                                 <span className="menu-text">Announcement</span>
                                 {/* Add open function for mobile view */}
-                                <b className="arrow fa fa-angle-down" onClick={() => setShowAnnouncementDropDown(!showAnnouncementDropDown)}/>
+                                <b className="arrow fa fa-angle-down" onClick={() => setShowAnnouncementDropDown(!showAnnouncementDropDown)} />
                             </a>
 
                             <b className="arrow" />
@@ -370,7 +370,7 @@ function Layout(props) {
                                         <div className="ace-settings-item">
                                             <div className="pull-left">
                                                 <select className="hide" style={{ color: `${showColorOption}`, zIndex: 2000, display: 'inline' }}
-                                                        onChange={(e) => setChangeNavBarColor(e.currentTarget.value)} value={changeNavBarColor}>
+                                                    onChange={(e) => setChangeNavBarColor(e.currentTarget.value)} value={changeNavBarColor}>
                                                     <option data-skin="no-skin" value="#438EB9">#438EB9</option>
                                                     <option data-skin="skin-1" value="#222A2D">#222A2D</option>
                                                     {/*<option data-skin="skin-2" value="#C6487E">#C6487E</option>

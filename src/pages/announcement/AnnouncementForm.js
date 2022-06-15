@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Layout from '../Layout';
 import { Link } from 'react-router-dom';
+import Axios from 'axios';
 
 function AnnouncementForm() {
-    const lovData = sessionStorage.getItem('LovData')
+    const lovData = JSON.parse(sessionStorage.getItem('LovData'));
+    const userData = JSON.parse(sessionStorage.getItem('UserData'));
+    const token = JSON.parse(sessionStorage.getItem('userToken'));
     const [title, setTitle] = useState("");
     const [bodyContent, setBodyContent] = useState("");
     const [picture, setPicture] = useState("");
@@ -29,12 +32,23 @@ function AnnouncementForm() {
         // axios.post("api/uploadfile", formData);
     };
 
+    const createAnnouncement = (e) => {
+        e.preventDefault();
+        Axios.post('http://localhost:3001/announcement/create-announcement', {
+            authToken: token,
+            gID: userData.hID,
+            title: title,
+            bodyContent: bodyContent,
+            tag: announcementTag
+        }).then(res => console.log(res));
+    }
+
     return (
         <Layout
             pageTitle='Add New Announcement'
             pageContent={
                 <>
-                    <form name="form">
+                    <form name="form" onSubmit={createAnnouncement}>
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
@@ -43,7 +57,7 @@ function AnnouncementForm() {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name" style={{ width: '25%' }}>Title</div>
                                             <div className="profile-info-value">
-                                                <span className="editable" id="username">
+                                                <span className="editable" id="announcementTitle">
                                                     <input className="input-sm" value={title} onChange={(e) => setTitle(e.target.value)} style={{ width: '100%' }} type="text" name="announcement_title" placeholder="Insert Title here" />
                                                 </span>
                                             </div>
@@ -52,8 +66,8 @@ function AnnouncementForm() {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Announcement body</div>
                                             <div className="profile-info-value">
-                                                <span className="editable" id="username">
-                                                    <input className="input-sm" value={bodyContent} onChange={(e) => setBodyContent(e.target.value)} style={{ width: '100%' }} type="text" name="announcement_body" placeholder="Insert announcement body here" />
+                                                <span className="editable" id="announcementBodyContent">
+                                                    <textarea className="input-sm" value={bodyContent} onChange={(e) => setBodyContent(e.target.value)} style={{ width: '100%' }} type="text" name="announcement_body" placeholder="Insert announcement body here" />
                                                 </span>
                                             </div>
                                         </div>
@@ -61,7 +75,7 @@ function AnnouncementForm() {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Picture</div>
                                             <div className="profile-info-value">
-                                                <span className="editable" id="username">
+                                                <span className="editable" id="picture">
                                                     <input className="input-sm" value={picture} onChange={(e) => setPicture(e.target.files[0])} style={{ width: '100%' }} type="file" name="announcement_picture" placeholder="Insert picture here" />
                                                 </span>
                                             </div>
@@ -70,10 +84,10 @@ function AnnouncementForm() {
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Tag</div>
                                             <div className="profile-info-value">
-                                                <select className="chosen-select form-control" value={announcementTag} onChange={(e) => announcementTag(e.target.value)}>
-                                                    <option value="first_option">First option</option>
-                                                    <option value="second_option">Second option</option>
-                                                    <option value="third_option">Third option</option>
+                                                <select className="chosen-select form-control" value={announcementTag} onChange={(e) => setAnnouncementTag(e.target.value)}>
+                                                    <option value="1">First option</option>
+                                                    <option value="2">Second option</option>
+                                                    <option value="3">Third option</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -81,6 +95,10 @@ function AnnouncementForm() {
                                 </div>
                             </div>
                         </div>
+                        <button className="btn btn-sm btn-success" type="submit">
+                            <i className="ace-icon fa fa-save align-top bigger-125" />
+                            Create New Announcement
+                        </button>
                     </form>
                 </>
             }

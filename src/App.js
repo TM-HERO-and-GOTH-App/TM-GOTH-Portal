@@ -5,6 +5,7 @@ import AA_Unassigned from './pages/all_assignments/AA_Unassigned';
 import ActionTaken from './pages/assignment/ActionTaken';
 import Activate from './pages/ActivateAcc';
 import AdvancedSearch from './pages/AdvancedSearch';
+import AnnouncementInfo from './pages/announcement/AnnouncementInfo';
 import AssignToOther from './pages/assignment/AssignToOthers';
 import CaseDetail from './pages/case_detail/CaseDetail';
 import CautionReport from './pages/hero_cases_functionality/CautionReport';
@@ -43,54 +44,55 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
   return (
-      // Add navigation route so that it can run properly
-      // Just change the route name to see all the dedicated page
-      <Router>
-        <Switch>
-          {/* For Login page, you need to create a background page Component */}
-          <Route path="/login" component={Loginbox} />
-          <Route path="/forgotpassword" component={Forgot} />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/activate" component={Activate} />
-          <Route path="/chat/1" component={ChatPage} />
-          <Route path="/chat/:id" component={Chat_2} />
-          <PrivateRoute>
-            <Route exact path="/" component={Dashboard} />
-            <Route exact path="/MyAssignments-Assigned" component={MA_Assigned} />
-            <Route exact path="/MyAssignments-Inprogress" component={MA_Inprogress} />
-            <Route exact path="/MyAssignments-Closed" component={MA_Closed} />
-            <Route exact path="/MyCollaboration-Assigned" component={MC_Assigned} />
-            <Route exact path="/MyCollaboration-Inprogress" component={MC_Inprogress} />
-            <Route exact path="/GroupAssignments-Assigned" component={GA_Assigned} />
-            <Route exact path="/GroupAssignments-Closed" component={GA_Closed} />
-            <Route exact path="/GroupAssignments-Inprogress" component={GA_Inprogress} />
-            <Route exact path="/GroupAssignments-Unassigned" component={GA_Unassigned} />
-            <Route exact path="/AllAssignments-Assigned" component={AA_Assigned} />
-            <Route exact path="/AllAssignments-Closed" component={AA_Closed} />
-            <Route exact path="/AllAssignments-Inprogress" component={AA_Inprogress} />
-            <Route exact path="/AllAssignments-Unassigned" component={AA_Unassigned} />
-            <Route exact path="/ManageUsers-RegisteredUser" component={MU_Registereduser} />
-            <Route exact path="/ManageUsers-Groupmembers" component={MU_Groupmember} />
-            <Route path="/advance-search" component={AdvancedSearch} />
-            <Route path="/announcement_form" component={AnnouncementForm} />
-            <Route path="/edit_announcement_form/:id" component={EditAnnouncementForm} />
-            <Route path="/all_announcements" component={All_Announcement}/>
-            <Route path="/user-profile" component={Userprofile} />
-            <Route path='/edit-profile' component={EditUser} />
-            <Route path="/create-case" component={Createcase} />
-            <Route path='/non-technical-case' component={NonTechnicalCase} />
-            <Route path='/technical-case' component={TechnicalCase} />
-            <Route path='/caution-report' component={CautionReport} />
-            <Route path='/internal-chat/:id' component={InternalChat} />
-            <Route path='/invite-to-group-chat/:id' component={InviteChat} />
-            <Route path='/hero-chat/:id' component={Logger} />
-            <Route path='/action-taken/:id' component={ActionTaken} />
-            <Route path='/assign-to-other/:id' component={AssignToOther} />
-            <Route exact path='/case-detail/:id' component={CaseDetail} />
-            <Route path='/edit-case/:id' component={EditCaseDetail} />
-          </PrivateRoute>
-        </Switch>
-      </Router>
+    // Add navigation route so that it can run properly
+    // Just change the route name to see all the dedicated page
+    <Router>
+      <Switch>
+        {/* For Login page, you need to create a background page Component */}
+        <Route path="/login" component={Loginbox} />
+        <Route path="/forgotpassword" component={Forgot} />
+        <Route path="/signup" component={SignUp} />
+        <Route path="/activate" component={Activate} />
+        <Route path="/chat/1" component={ChatPage} />
+        <Route path="/chat/:id" component={Chat_2} />
+        <Route path='/non-technical-case' component={NonTechnicalCase} />
+        <Route path='/technical-case' component={TechnicalCase} />
+        <Route path='/caution-report' component={CautionReport} />
+        <PrivateRoute>
+          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/MyAssignments-Assigned" component={MA_Assigned} />
+          <Route exact path="/MyAssignments-Inprogress" component={MA_Inprogress} />
+          <Route exact path="/MyAssignments-Closed" component={MA_Closed} />
+          <Route exact path="/MyCollaboration-Assigned" component={MC_Assigned} />
+          <Route exact path="/MyCollaboration-Inprogress" component={MC_Inprogress} />
+          <Route exact path="/GroupAssignments-Assigned" component={GA_Assigned} />
+          <Route exact path="/GroupAssignments-Closed" component={GA_Closed} />
+          <Route exact path="/GroupAssignments-Inprogress" component={GA_Inprogress} />
+          <Route exact path="/GroupAssignments-Unassigned" component={GA_Unassigned} />
+          <Route exact path="/AllAssignments-Assigned" component={AA_Assigned} />
+          <Route exact path="/AllAssignments-Closed" component={AA_Closed} />
+          <Route exact path="/AllAssignments-Inprogress" component={AA_Inprogress} />
+          <Route exact path="/AllAssignments-Unassigned" component={AA_Unassigned} />
+          <Route exact path="/ManageUsers-RegisteredUser" component={MU_Registereduser} />
+          <Route exact path="/ManageUsers-Groupmembers" component={MU_Groupmember} />
+          <Route path="/advance-search" component={AdvancedSearch} />
+          <Route path="/more_announcement/:id" component={AnnouncementInfo} />
+          <Route path="/announcement_form" component={AnnouncementForm} />
+          <Route path="/edit_announcement_form/:id" component={EditAnnouncementForm} />
+          <Route path="/all_announcements" component={All_Announcement} />
+          <Route path="/user-profile" component={Userprofile} />
+          <Route path='/edit-profile' component={EditUser} />
+          <Route path="/create-case" component={Createcase} />
+          <Route path='/internal-chat/:id' component={InternalChat} />
+          <Route path='/invite-to-group-chat/:id' component={InviteChat} />
+          <Route path='/hero-chat/:id' component={Logger} />
+          <Route path='/action-taken/:id' component={ActionTaken} />
+          <Route path='/assign-to-other/:id' component={AssignToOther} />
+          <Route exact path='/case-detail/:id' component={CaseDetail} />
+          <Route path='/edit-case/:id' component={EditCaseDetail} />
+        </PrivateRoute>
+      </Switch>
+    </Router>
   );
 }
 

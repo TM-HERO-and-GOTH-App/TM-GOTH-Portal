@@ -58,10 +58,10 @@ export default function EditAnnouncementForm() {
                                             </div>
 
                                             <div className="profile-info-row">
-                                                <div className="profile-info-name">Announcement body</div>
+                                                <div className="profile-info-name">Announcement content</div>
                                                 <div className="profile-info-value">
                                                     <span className="editable" id="username">
-                                                        <input className="input-sm" value={bodyContent} onChange={(e) => setBodyContent(e.target.value)} style={{ width: '100%' }} type="text" name="announcement_body" placeholder="Insert announcement body here" />
+                                                        <textarea className="input-sm" value={bodyContent} onChange={(e) => setBodyContent(e.target.value)} style={{ width: '100%' }} name="announcement_body" placeholder="Insert announcement body here" />
                                                     </span>
                                                 </div>
                                             </div>

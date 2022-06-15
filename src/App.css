@@ -37,16 +37,22 @@
     height: 100%;
 }
 
-/*#id-date-picker-1 {*/
-/*    min-width: 180px*/
-/*}*/
-
-/*#id-date-picker-2 {*/
-/*    min-width: 180px*/
-/*}*/
-
 .advance-search-select-input {
     min-width: 250px
+}
+
+/* Announcement View */
+.announcementView{
+ display: flex;
+ flex-direction: row;
+}
+
+.card{
+    width: 100vw;
+    margin: 0 5vw;
+    border: 1px solid grey; 
+    padding: 2.5vh 2.5vw; 
+    box-shadow: 10px 10px lightGrey
 }
 
 /* Dropdown List */
