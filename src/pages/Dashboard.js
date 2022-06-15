@@ -30,7 +30,7 @@ function Dashboard() {
       if (stakeholderOption === 0) return;
       if (err) return;
       // console.log(res);
-      setNationCase(res);
+      setNationCase(res.data);
       setFetchingData(false);
     })
 
@@ -38,7 +38,7 @@ function Dashboard() {
       if (res === undefined) return
       if (err) return
       // console.log(res);
-      setTotalCaseResolveNation(parseFloat(res[0].total));
+      setTotalCaseResolveNation(parseFloat(res.data[0].total));
       setFetchingData(false);
 
     })
@@ -49,13 +49,13 @@ function Dashboard() {
       DashboardService.getTotalResolvedByAgent(token).then((res) => {
         if (res === undefined) return
         // console.log(res)
-        setTotalCaseResolveAgent(parseFloat(res[0].total));
+        setTotalCaseResolveAgent(parseFloat(res?.data[0]?.total));
         setFetchingData(false);
       })
 
       DashboardService.getTotalCaseByAgent(token).then(res => {
         // console.log(res)
-        setAgentCase(res);
+        setAgentCase(res?.data);
         setFetchingData(false);
       })
     }
@@ -64,14 +64,14 @@ function Dashboard() {
       DashboardService.getTotalCaseByGroup(token, userData.shID).then(res => {
         if (res === undefined) return
         // console.log(res)
-        setGroupCase(res);
+        setGroupCase(res?.data);
         setFetchingData(false);
       })
 
       DashboardService.getTotalResolvedByGroup(token, userData.shID).then(res => {
         if (res === undefined) return
         // console.log(res)
-        setTotalCaseResolveGroup(res[0].total);
+        setTotalCaseResolveGroup(res?.data[0]?.total);
         setFetchingData(false);
       })
     }
@@ -80,7 +80,7 @@ function Dashboard() {
       DashboardService.getTotalRegisteredUserByState(token).then(res => {
         if (res === undefined) return
         // console.log(res);
-        setRegisterUser(res);
+        setRegisterUser(res.data);
         setFetchingData(false);
       })
     }
@@ -88,7 +88,7 @@ function Dashboard() {
     const getTotalCaseByStateData = () => {
       DashboardService.getTotalCaseByState(token).then(res => {
         // console.log(res)
-        setStateCase(res);
+        setStateCase(res.data);
         setFetchingData(false);
       });
     }
@@ -168,15 +168,14 @@ function Dashboard() {
                   Total Registered User
                 </h4>
                 <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                  {registerUser != null &&
-                    registerUser.map((data, index) => {
+                  {registerUser?.map((data, index) => {
                       return <div className="profile-info-row">
                         <div className="profile-info-name" style={{ width: '70%' }}>
-                          <b>{data?.state ?? 'No data'}</b>
+                          <b>{fetchingData === true ? 'Getting data....' : data?.state}</b>
                         </div>
                         <div className="profile-info-value">
                           <span className="editable" id="username">
-                            {data == undefined || data == null ? 0 : data?.total}
+                            {fetchingData === true ? 'Getting data...' : data?.total}
                           </span>
                         </div>
                       </div>
@@ -189,7 +188,7 @@ function Dashboard() {
 
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        <b>{registerUser != null && registerUser.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
+                        <b>{registerUser?.reduce((total, currentValue) => total = total + currentValue.total, 0)?.toLocaleString()}</b>
                       </span>
                     </div>
                   </div>
@@ -202,16 +201,16 @@ function Dashboard() {
                   Total Created Case (COMPLAINT)
                 </h4>
                 <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
-                  {stateCase != null &&
-                    stateCase.map((data, index) => {
+                  {
+                    stateCase?.map((data, index) => {
                       return fetchingData ? <CircularProgress /> :
                         <div className="profile-info-row" key={index}>
                           <div className="profile-info-name" style={{ width: '70%' }}>
-                            <b>{fetchingData ? "Fetching data" : data.state }</b>
+                            <b>{fetchingData ? "Fetching data" : data?.state }</b>
                           </div>
                           <div className="profile-info-value">
                             <span className="editable" id="username">
-                              {fetchingData ? "Fetching data" : data == null ? 0 : data.total}
+                              {fetchingData ? "Fetching data" : data?.total}
                             </span>
                           </div>
                         </div>
@@ -224,7 +223,7 @@ function Dashboard() {
 
                     <div className="profile-info-value">
                       <span className="editable" id="username">
-                        <b>{fetchingData ? "Calling data" : (stateCase == null || stateCase === undefined) ? '0' : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0).toLocaleString()}</b>
+                        <b>{fetchingData ? "Calling data" : stateCase?.reduce((total, currentValue) => total = total + currentValue.total, 0)?.toLocaleString()}</b>
                       </span>
                     </div>
                   </div>
