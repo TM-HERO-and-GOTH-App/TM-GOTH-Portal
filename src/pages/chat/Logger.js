@@ -33,8 +33,8 @@ function Logger(props) {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
                 // console.log(res)
-                setCaseData(res)
-                setCaseOwner(res.ownerName)
+                setCaseData(res.data)
+                setCaseOwner(res.data.ownerName)
             })
         }
 

@@ -10,7 +10,7 @@ function InternalChat(props) {
 	const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
 	const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
 	const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-	const [caseData, setCaseData] = useState({});
+	const [caseData, setCaseData] = useState([]);
 	const [messageData, setMessageData] = useState([]);
 	const [groupMembers, setGroupMembers] = useState([]);
 	const [alertStatus, setAlertStatus] = useState(false);
@@ -50,9 +50,9 @@ function InternalChat(props) {
 
 		const getCaseDetail = () => {
 			CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-				// console.log(res)
-				setCaseData(res)
-				setCaseOwner(res.ownerName)
+				console.log(res)
+				setCaseData(res.data)
+				setCaseOwner(res.data.ownerName)
 			})
 		}
 
