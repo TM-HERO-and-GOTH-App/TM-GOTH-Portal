@@ -35,7 +35,7 @@ function CaseDetail(props) {
         const getGroupResult = () => {
             setFetchData(true)
             ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
-                console.log(res);
+                // console.log(res);
                 if (res) {
                     setCoordinator(res.filter(filter => filter.positionName === "Coordinator"))
                     setAdmin(res.filter(filter => filter.positionName === "Admin"))
@@ -47,8 +47,8 @@ function CaseDetail(props) {
         const getHeroBuddyData = () => {
             setFetchData(true)
             CaseDetailService.getHeroBuddyInfo(token, caseToken).then(res => {
-                console.log(res.data)
-                if (typeof res.data != 'undefined' || res.data[0].response === 'FAILED') {
+                console.log(res.data, 'HeroBuddy')
+                if (typeof res.data == 'undefined' || res.data[0].response === 'FAILED') {
                     setFetchData(false)
                     setAlertStatus(true);
                     setAlertMessage('"Hero-Buddy data unreachable."')

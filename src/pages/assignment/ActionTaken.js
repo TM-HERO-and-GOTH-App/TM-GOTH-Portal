@@ -46,9 +46,9 @@ function ActionTaken(props) {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
                 // console.log(res)
-                setCaseData(res)
-                setCTID(res.ctID)
-                setCaseOwner(res.ownerName)
+                setCaseData(res.data)
+                setCTID(res.data.ctID)
+                setCaseOwner(res.data.ownerName)
             })
         }
 
@@ -79,7 +79,7 @@ function ActionTaken(props) {
 
 
     return (
-        <Layout 
+        <Layout
         pageTitle={<span>
             CASE DETAIL : <span style={{color: 'green'}}>{caseData.caseNum}</span>
         </span>}

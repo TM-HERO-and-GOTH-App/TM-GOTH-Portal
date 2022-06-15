@@ -14,20 +14,20 @@ function InviteChat(props) {
   const [stakeholderType, setStakeholderType] = useState(0);
   const [alertStatus, setAlertStatus] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  
+
   const getGroupMembers = () => {
     ChatService.getProfilesByGroupChat(token, caseToken).then((res) => {
       // console.log(res)
       setGroupMembers(res);
     });
   };
-  
+
   useEffect(() => {
 
     const getCaseDetail = () => {
       CaseDetailService.getCaseDetail(token, caseToken).then((res) => {
         // console.log(res)
-        setCaseDetailData(res);
+        setCaseDetailData(res.data);
       });
     };
 
