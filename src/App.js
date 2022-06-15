@@ -9,7 +9,7 @@ import AnnouncementInfo from './pages/announcement/AnnouncementInfo';
 import AssignToOther from './pages/assignment/AssignToOthers';
 import CaseDetail from './pages/case_detail/CaseDetail';
 import CautionReport from './pages/hero_cases_functionality/CautionReport';
-import Createcase from './pages/user_profile/Createcase';
+import CreateCase from './pages/user_profile/CreateCase';
 import Dashboard from './pages/Dashboard';
 import EditCaseDetail from './pages/case_detail/EditCaseDetail';
 import EditUser from './pages/user_profile/EditUserProfile';
@@ -82,7 +82,7 @@ function App() {
           <Route path="/all_announcements" component={All_Announcement} />
           <Route path="/user-profile" component={Userprofile} />
           <Route path='/edit-profile' component={EditUser} />
-          <Route path="/create-case" component={Createcase} />
+          <Route path="/create-case" component={CreateCase} />
           <Route path='/internal-chat/:id' component={InternalChat} />
           <Route path='/invite-to-group-chat/:id' component={InviteChat} />
           <Route path='/hero-chat/:id' component={Logger} />
