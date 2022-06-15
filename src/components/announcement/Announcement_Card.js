@@ -22,7 +22,7 @@ export default function AnnouncementCard(props) {
                 </div>
                 <div className='body'>
                     <div style={{border: "1px solid black", height: '25vh', marginTop: '5vh'}}>
-                        <img src={props.src} alt="announcement_picture_here"/>
+                        <img src={props.src} alt="announcement_picture_here" height={'100vh'}/>
                     </div>
                     <div>
                         <div style={{margin: "2.5vh 0"}}>

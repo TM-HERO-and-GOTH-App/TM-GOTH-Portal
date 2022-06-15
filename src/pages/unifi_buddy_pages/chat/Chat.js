@@ -1,17 +1,34 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatContainer, ConversationHeader, MessageList, MessageInput, Message, AttachmentButton, SendButton } from '@chatscope/chat-ui-kit-react';
+import axios from 'axios';
+import { ChatContainer, ConversationHeader, MessageList, MessageSeparator, MessageInput, Message, AttachmentButton, SendButton } from '@chatscope/chat-ui-kit-react';
 
 function ChatPage() {
     const inputRef = useRef();
     const fileRef = useRef(null);
+    const isUnifiBuddy = true;
     const [messageInput, setMessageInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [selectedFile, setSelectedFile] = useState('');
 
+    const sendMessage = (e) => {
+        e.preventDefault();
+        axios.post('http://localhost:3001/chat/push-message/', {
+            authToken: "someAuthTokenHere",
+            cID: "123312",
+            message: messageInput,
+            source: "UNIFIBUDDY",
+            userID: "31",
+            picture: null
+        }).then(res => {
+            console.log(res.data);
+        }).catch(e => console.log(e));
+        setMessageInput('');
+    }
+
     const handleSend = message => {
         setMessages([{
             message,
-            selectedFile,
+            // selectedFile,
             direction: 'outgoing'
         }]);
         setMessageInput("");
@@ -35,11 +52,17 @@ function ChatPage() {
     };
 
     useEffect(() => {
-        const theMessageList = () => {
-            // Execute the API here
+        const getMessageList = () => {
+            axios.post('http://localhost:3001/chat/pull-message', {
+                authToken: 'someAuthTokenHere',
+                cID: '123312'
+            }).then(res => {
+                // console.log(res.data)
+                setMessages(res.data)
+            });
         }
-        theMessageList()
-    }, [messages])
+        getMessageList();
+    }, [])
 
     return (
         <div style={{ height: "100vh" }}>
@@ -48,7 +71,24 @@ function ChatPage() {
                     <ConversationHeader.Content userName="Unifi Buddy User" />
                 </ConversationHeader>
                 <MessageList scrollBehavior="smooth">
-                    {messages.map((m, i) => <Message key={i} model={m} />)}
+                    {messages.map((data, i) => {
+                        const currentDay = new Date().toLocaleString({ year: 'numeric', month: '2-digit', day: '2-digit' });
+                        const dbDate = new Date(data.SENT_TIME).toLocaleString({ year: 'numeric', month: '2-digit', day: '2-digit' })
+                        // console.log(data)
+                        return <>
+                            <MessageSeparator content={new Date(data?.SENT_TIME).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric' })} />
+
+                            <Message key={i} model={{
+                                message: data?.MESSAGE,
+                                sentTime: dbDate,
+                                sender: data?.USERID,
+                                direction: (data?.SOURCE === 'UNIFIBUDDY' ? 'incoming' : 'outgoing'),
+                                position: "normal"
+                            }}
+                            />
+                        </>
+                    }
+                    )}
                 </MessageList>
                 <div as={MessageInput} style={{
                     display: "flex",
@@ -69,7 +109,7 @@ function ChatPage() {
                             paddingBottom: "2.5vh"
                         }}
                     />
-                    <SendButton onClick={() => handleSend(messageInput)} disabled={messageInput.length === 0} style={{
+                    <SendButton onClick={sendMessage} disabled={messageInput.length === 0} style={{
                         fontSize: "2em",
                         marginLeft: 0,
                         paddingLeft: "0.2em",
@@ -81,10 +121,10 @@ function ChatPage() {
                             paddingLeft: "0.2em",
                             paddingRight: "0.2em"
                         }}
-                        onClick={() => fileRef.current.click()} 
+                        onClick={() => fileRef.current.click()}
                         onSend={onFileUpload}
                     />
-                    <input type='file' id='file' ref={fileRef} style={{display: 'none'}}/>
+                    <input type='file' id='file' ref={fileRef} style={{ display: 'none' }} />
                 </div>
             </ChatContainer>
         </div>
