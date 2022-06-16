@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GrMoreVertical } from 'react-icons/gr';
 import { Link } from "react-router-dom";
 
 export default function AnnouncementCard(props) {
+    const [showMoreOption, setShowMoreOption] = useState(false);
     return (
         <>
             <div className='card'>
-                <div className="pull-right navbar-buttons navbar-header collapse navbar-collapse" role="navigation" onClick={props.showMoreButtonOnClick}>
+                <div className="pull-right navbar-buttons navbar-header collapse navbar-collapse" role="navigation" onClick={() => setShowMoreOption(toggleMoreButton => !toggleMoreButton)}>
                     <ul className='nav ace-nav'>
-                        <li className={props.className}>
+                        <li className={`dropdown-modal ${showMoreOption == false ? '' : "open"}`}>
                             <GrMoreVertical />
                             <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                                 <li>

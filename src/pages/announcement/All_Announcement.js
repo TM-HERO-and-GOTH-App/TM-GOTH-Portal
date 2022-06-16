@@ -10,7 +10,7 @@ export default function All_Announcement() {
     const [moreText, setMoreText] = useState(false);
     const [showEditMenu, setShowEditMenu] = useState(null);
     const [allAnnouncements, setAllAnnouncements] = useState([]);
-    const [showMoreOption, setShowMoreOption] = useState(false);
+    const [editIndex, setEditIndex]= useState(null);
 
     useEffect(() => {
         const getAllAnnouncements = () => {
@@ -33,8 +33,6 @@ export default function All_Announcement() {
                     {allAnnouncements.map((data, index) => (
                         <AnnouncementCard
                             key={index}
-                            showMoreButtonOnClick={() => setShowMoreOption(currentShow => !currentShow)}
-                            className={`dropdown-modal ${showMoreOption == false ? '' : "open"}`}
                             to={`/edit_announcement_form/${data.ANNOUNCEMENT_ID}`}
                             src={data?.PICTURE == null ? {defaultUserLogo} : data?.PICTURE}
                             title={data?.TITLE}
