@@ -13,11 +13,12 @@ function AA_Unassigned() {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const allAssignmentData = async () => {
+        const allAssignmentData = () => {
             setIsLoading(true);
-            const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 61)
-            setUnAssignedCase(res)
-            setIsLoading(false);
+            AssignmentService.viewCaseByGroup(token, userData.shID, 61).then(res => {
+                setUnAssignedCase(res.data)
+                setIsLoading(false);
+            })
         }
         allAssignmentData();
 
