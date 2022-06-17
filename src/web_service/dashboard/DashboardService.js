@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = process.env.REACT_APP_TESTING_API_URL;
+const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = {'Content-Type': 'application/json; charset=utf-8'};
 
 const DashboardService = {

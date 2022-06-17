@@ -32,7 +32,7 @@ const ManageUserService = {
     },
 
     async getProfileByKeyword(authToken, keyword){
-        return await fetch( url + '/user/get-profiles-by-keywords/', {
+        return fetch( url + '/user/get-profiles-by-keywords/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -43,7 +43,7 @@ const ManageUserService = {
     },
 
     async getProfileByGroup(authToken, shID){
-        return await fetch( url + '/user/view-all-profile/', {
+        return fetch( url + '/user/view-all-profile/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
