@@ -15,8 +15,8 @@ function AA_Closed() {
     useEffect(() => {
         const allAssignmentData = async () => {
             setIsLoading(true)
-            const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 70)
-            setClosedCase(res)
+            const res = await AssignmentService.viewCaseByGroup(token, userData.hID, userData.shID, 70)
+            setClosedCase(res.data[0])
             setIsLoading(false)
         }
         allAssignmentData()

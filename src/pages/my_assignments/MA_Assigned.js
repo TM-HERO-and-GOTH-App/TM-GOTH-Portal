@@ -4,16 +4,18 @@ import Layout from '../Layout';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService'
 
 function MA_Assigned() {
-    const [alertStatus, setAlertStatus] = useState(false);
+    const userData = JSON.parse(sessionStorage.getItem('UserData'))
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+    const [alertStatus, setAlertStatus] = useState(false);
     const [assignedCase, setAssignedCase] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const loggerCase = async () => {
             setIsLoading(true)
-            const res = await AssignmentService.viewCaseByOwner(token, 64)
-            setAssignedCase(res)
+            const res = await AssignmentService.viewCaseByOwner(token, userData.hID, 64)
+            // console.log(res.data[0])
+            setAssignedCase(res.data[0])
             setIsLoading(false)
         }
         loggerCase();

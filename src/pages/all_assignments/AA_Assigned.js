@@ -15,8 +15,8 @@ function AA_Assigned() {
     useEffect(() => {
         const allAssignmentData = async () => {
             setIsLoading(true);
-            const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 64)
-            setAssignedCase(res)
+            const res = await AssignmentService.viewCaseByGroup(token, userData.hID, userData.shID, 64)
+            setAssignedCase(res.data[0])
             setIsLoading(false);
         }
         allAssignmentData();

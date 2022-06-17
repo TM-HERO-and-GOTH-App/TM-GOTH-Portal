@@ -12,8 +12,9 @@ function GA_Inprogress() {
   useEffect(() => {
     const loggerCase = async () => {
       setIsLoading(true)
-      const res = await AssignmentService.viewCaseByGroup(token, userData.shID, 67)
-      setInProgressCase(res)
+      const res = await AssignmentService.viewCaseByGroup(token, userData.hID, userData.shID, 67)
+      // console.log(res.data[0])
+      setInProgressCase(res.data[0])
       setIsLoading(false)
     }
     loggerCase();

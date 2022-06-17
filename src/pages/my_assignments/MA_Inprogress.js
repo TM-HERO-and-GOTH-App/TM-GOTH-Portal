@@ -4,6 +4,7 @@ import AssignmentService from '../../web_service/assignment_service/MyAssignment
 import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function MA_Inprogress() {
+    const userData = JSON.parse(sessionStorage.getItem('UserData'))
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [inProgressCase, setInProgressCase] = useState([]);
     const [statusLabel, setStatusLabel] = useState();
@@ -13,8 +14,8 @@ function MA_Inprogress() {
     useEffect(() => {
         const loggerCase = async () => {
             setIsLoading(true)
-            const res = await AssignmentService.viewCaseByOwner(token, 67)
-            setInProgressCase(res)
+            const res = await AssignmentService.viewCaseByOwner(token, userData.hID, 67)
+            setInProgressCase(res.data[0])
             setIsLoading(false)
         }
         loggerCase();

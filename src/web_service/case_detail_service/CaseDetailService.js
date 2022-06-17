@@ -1,6 +1,6 @@
 import Axios from 'axios'
 
-const url = process.env.REACT_APP_API_URL;
+const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = {'Content-Type': 'application/json; charset=utf-8'};
 
 const CaseDetailService = {
@@ -29,7 +29,7 @@ const CaseDetailService = {
     },
 
     getHeroBuddyInfo(authToken, cToken) {
-        return Axios.post(url + '/case/get-herobuddy-info/', {
+        return Axios.post(url + '/case/get-herobuddy-info', {
             authToken: authToken,
             cToken: cToken
         }).then(res => {
@@ -63,7 +63,7 @@ const CaseDetailService = {
     },
 
     getCaseDetail(authToken, cToken) {
-        return Axios.post(url + '/case/view-case-detail/', {
+        return Axios.post(url + '/case/get-case-detail', {
             authToken: authToken,
             cToken: cToken
         }).then(res => {

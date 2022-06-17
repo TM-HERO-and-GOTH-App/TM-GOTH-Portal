@@ -27,8 +27,8 @@ function CaseDetail(props) {
         const getCaseDetail = () => {
             setFetchData(true)
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                console.log(res.data)
-                setCaseData(res.data)
+                // console.log(res.data[0][0])
+                setCaseData(res.data[0][0])
                 setFetchData(false)
             })
         }
@@ -60,7 +60,7 @@ function CaseDetail(props) {
                     setAlertMessage('"Hero-Buddy: No Result Found"')
                     setStatusBadge('danger')
                 } else {
-                    setHeroBuddyData(res.data);
+                    setHeroBuddyData(res.data[0]);
                     setFetchData(false);
                 }
             })
@@ -98,7 +98,7 @@ function CaseDetail(props) {
             pageTitle={
                 fetchData === false &&
                 (<span>
-                    Case Detail: <span style={{color: "green"}}>{caseData?.caseNum}</span>
+                    Case Detail: <span style={{color: "green"}}>{caseData?.CASE_NUM}</span>
                 </span>)
             }
             pageContent={
@@ -124,10 +124,10 @@ function CaseDetail(props) {
 
                         <div className="row">
                             {
-                                (caseData?.caseStatus != null && caseData?.caseStatus !== "CLOSED") &&
+                                (caseData?.CASE_STATUS != null && caseData?.CASE_STATUS !== "CLOSED") &&
                                 (<div className="col-sm-7">
                                     {
-                                        caseData?.ownerName == null &&
+                                        caseData?.OWNER_NAME == null &&
                                         <button className="btn btn-primary" onClick={assignCaseToMe}>
                                             Assign To Me
                                         </button>
@@ -140,7 +140,7 @@ function CaseDetail(props) {
                                         </Link>
                                     }
 
-                                    {(caseData?.ownerName == null || caseData?.owner === '' || isCoordinator) &&
+                                    {(caseData?.OWNER_NAME == null || caseData?.OWNER_NAME === '' || isCoordinator) &&
                                         <Link className="btn btn-warning" to={`/edit-case/${caseToken}`}>
                                             <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
                                             Edit Case Detail
@@ -150,7 +150,7 @@ function CaseDetail(props) {
                             }
 
                             <div className="col-sm-5"
-                                 align={caseData?.caseStatus === "CLOSED" || caseData?.caseStatus === "CANCELLED" ? "" : "right"}>
+                                 align={caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED" ? "" : "right"}>
                                 <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
                                     Action Taken
                                     {/* <!--<i className="ace-icon fa fa-arrow-right icon-on-right"></i>--> */}
@@ -159,12 +159,12 @@ function CaseDetail(props) {
                                     HERO Chat
                                 </Link>
                                 {
-                                    (userData?.positionName === 'Admin' && caseData?.caseStatus === 'CLOSED' && (userData?.stakeholderName === 'RRT' || userData.stakeholderName === 'CSM HQ')) &&
+                                    (userData?.positionName === 'Admin' && caseData?.CASE_STATUS === 'CLOSED' && (userData?.stakeholderName === 'RRT' || userData.stakeholderName === 'CSM HQ')) &&
                                     <Link className="btn btn-primary" to={`/internal-chat/${caseToken}`}>
                                         Internal Chat
                                     </Link>
                                 }
-                                {isAdmin && caseData?.caseStatus === 'CLOSED' && (userData?.stakeholderName === 'RRT'
+                                {isAdmin && caseData?.CASE_STATUS === 'CLOSED' && (userData?.stakeholderName === 'RRT'
                                         || userData?.stakeholderName === 'CSM HQ') &&
                                     <button className="btn btn-danger"
                                             onClick={reopenCase}>
@@ -180,14 +180,14 @@ function CaseDetail(props) {
                             <div className="col-sm-6">
                                 <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
                                     {
-                                        caseData?.ownerName ?
+                                        caseData?.OWNER_NAME ?
                                             <div className="profile-info-row">
                                                 <div className="profile-info-name" style={{width: '20%'}}>CASE OWNER
                                                 </div>
                                                 <div className="profile-info-value">
                                                     <span className="editable" id="username">
                                                         <b>
-                                                            {caseData?.ownerName + ' - ' + caseData?.stakeholderName}
+                                                            {caseData?.OWNER_NAME + ' - ' + caseData?.STAKEHOLDER_NAME}
                                                         </b>
                                                     </span>
                                                 </div>
@@ -201,7 +201,7 @@ function CaseDetail(props) {
                                                     <div className="profile-info-value">
                                                         <span className="editable" id="username">
                                                             <b>
-                                                                {caseData?.stakeholderName != null ? caseData?.stakeholderName : ''}
+                                                                {caseData?.STAKEHOLDER_NAME != null ? caseData?.STAKEHOLDER_NAME : ''}
                                                             </b>
                                                         </span>
                                                     </div>
@@ -222,7 +222,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-name" style={{width: "20%"}}>HERO</div>
                                         <div className="profile-info-value">
                                             <span className="editable" id="username">
-                                                {caseData?.fullname}
+                                                {caseData?.FULLNAME}
                                             </span>
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-name">Customer</div>
 
                                         <div className="profile-info-value">
-                                            {caseData?.customerName}
+                                            {caseData?.CUSTOMER_NAME}
                                         </div>
                                     </div>
 
@@ -239,7 +239,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-name">Actual Customer Name</div>
 
                                         <div className="profile-info-value">
-                                            {caseData?.actualCustomerName != '' ? caseData?.actualCustomerName : 'n/a'}
+                                            {caseData?.ACTUAL_CUSTOMER_NAME != '' ? caseData?.ACTUAL_CUSTOMER_NAME : 'n/a'}
                                         </div>
                                     </div>
 
@@ -249,7 +249,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="areaLocation">
                                                 {
-                                                    caseData?.areaLocation != null ? caseData?.areaLocation :
+                                                    caseData?.AREA_LOCATION != null ? caseData?.AREA_LOCATION :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -261,7 +261,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="mobileNumber">
-                                                {caseData?.mobileNum}
+                                                {caseData?.MOBILE_NUM}
                                             </span>
                                         </div>
                                     </div>
@@ -271,7 +271,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="nric">
-                                                {caseData?.nricNum != null ? caseData?.nricNum : 'n/a'}
+                                                {caseData?.NRIC_NUM != null ? caseData?.NRIC_NUM : 'n/a'}
                                             </span>
                                         </div>
                                     </div>
@@ -284,14 +284,14 @@ function CaseDetail(props) {
                                             <i className="fa fa-map-marker light-orange bigger-110"></i>
                                             <span className="editable" id="country">
                                                 {
-                                                    caseData?.longtitude != null ? caseData?.latitude + ' / ' + caseData?.longtitude :
+                                                    caseData?.LONGITUDE != null ? caseData?.LATITUDE + ' / ' + caseData?.LONGITUDE :
                                                         <i>Not provided</i>
                                                 }
                                             </span>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="lon" value={caseData?.longtitude ?? 0}/>
-                                    <input type="hidden" id="lat" value={caseData?.latitude ?? 0}/>
+                                    <input type="hidden" id="lon" value={caseData?.LONGITUDE ?? 0}/>
+                                    <input type="hidden" id="lat" value={caseData?.LATITUDE ?? 0}/>
 
                                     <div className="profile-info-row">
                                         <div className="profile-info-name">Descriptions</div>
@@ -299,7 +299,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="caseDescription">
                                                 <i style={{color: "blue"}}>
-                                                    {caseData?.caseContent}
+                                                    {caseData?.CASE_CONTENT}
                                                 </i>
                                             </span>
                                         </div>
@@ -311,17 +311,17 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="caseStatus">
                                                 {
-                                                    caseData?.caseStatus === 'NEW' ?
+                                                    caseData?.CASE_STATUS === 'NEW' ?
                                                         < span
-                                                            className='label label-danger'>{caseData?.caseStatus}</span> :
-                                                        caseData?.caseStatus === 'IN-PROGRESS' ? < span
-                                                                className='label label-info'>{caseData?.caseStatus}</span> :
-                                                            caseData?.caseStatus === 'ASSIGNED' ? < span
-                                                                    className='label label-info'>{caseData?.caseStatus}</span> :
-                                                                caseData?.caseStatus === 'CLOSED' ? < span
-                                                                        className='label label-success'>{caseData?.caseStatus}</span> :
+                                                            className='label label-danger'>{caseData?.CASE_STATUS}</span> :
+                                                        caseData?.CASE_STATUS === 'IN-PROGRESS' ? < span
+                                                                className='label label-info'>{caseData?.CASE_STATUS}</span> :
+                                                            caseData?.CASE_STATUS === 'ASSIGNED' ? < span
+                                                                    className='label label-info'>{caseData?.CASE_STATUS}</span> :
+                                                                caseData?.CASE_STATUS === 'CLOSED' ? < span
+                                                                        className='label label-success'>{caseData?.CASE_STATUS}</span> :
                                                                     < span className='label label-pink'>
-                                                                        {caseData?.caseStatus}
+                                                                        {caseData?.CASE_STATUS}
                                                                     </span>
 
                                                 }
@@ -334,7 +334,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="createdDate">
-                                                {caseData?.createdDate}
+                                                {caseData?.CREATED_DATE}
                                             </span>
                                         </div>
                                     </div>
@@ -344,7 +344,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="closedDate">
-                                                {caseData?.closedDate != null ? caseData?.closedDate : '-'}
+                                                {caseData?.CLOSED_DATE != null ? caseData?.CLOSED_DATE : '-'}
                                             </span>
                                         </div>
                                     </div>
@@ -370,7 +370,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="caseType">
                                                 {
-                                                    caseData?.caseType != null ? caseData?.caseType :
+                                                    caseData?.CASE_TYPE != null ? caseData?.CASE_TYPE :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -383,7 +383,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="productName">
                                                 {
-                                                    caseData?.productName != null ? caseData?.productName :
+                                                    caseData?.PRODUCT_NAME != null ? caseData?.PRODUCT_NAME :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -396,7 +396,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="segment">
                                                 {
-                                                    caseData?.segmentName != null ? caseData?.segmentName :
+                                                    caseData?.SEGMENT_NAME != null ? caseData?.SEGMENT_NAME :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -409,7 +409,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="package">
                                                 {
-                                                    caseData?.packageName != '' ? caseData?.packageName :
+                                                    caseData?.PACKAGE_NAME != null ? caseData?.PACKAGE_NAME :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -422,7 +422,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="serviceID">
                                                 {
-                                                    caseData?.loginID != null ? caseData?.loginID :
+                                                    caseData?.SERVICE_ID != '' ? caseData?.SERVICE_ID :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -435,7 +435,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="loginID">
                                                 {
-                                                    caseData?.serviceID != '' ? caseData?.serviceID :
+                                                    caseData?.LOGIN_ID != '' ? caseData?.LOGIN_ID :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -448,7 +448,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="serviceAddress">
                                                 {
-                                                    caseData?.serviceAddress != '' ? caseData?.serviceAddress :
+                                                    caseData?.SERVICE_ADDRESS != null ? caseData?.SERVICE_ADDRESS :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -460,7 +460,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="srNumber">
-                                                {caseData?.srNum != null ? caseData?.srNum :
+                                                {caseData?.SR_NUM != null ? caseData?.SR_NUM :
                                                     <span style={{color: "gray"}}>n/a</span>}
                                             </span>
                                         </div>
@@ -471,7 +471,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="cttNumber">
-                                                {caseData?.ttNum != '' ? caseData?.ttNum :
+                                                {caseData?.TT_NUM != null ? caseData?.TT_NUM :
                                                     <span style={{color: "gray"}}>n/a</span>}
                                             </span>
                                         </div>
@@ -483,7 +483,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="sourceName">
                                                 {
-                                                    caseData?.sourceName != null ? caseData?.sourceName :
+                                                    caseData?.SOURCE_NAME != null ? caseData?.SOURCE_NAME :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -496,7 +496,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="subSource">
                                                 {
-                                                    caseData?.subSourceName != null ? caseData?.subSourceName :
+                                                    caseData?.SUB_SOURCE_NAME != null ? caseData?.SUB_SOURCE_NAME :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -509,7 +509,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="area">
                                                 {
-                                                    caseData?.area != null ? caseData?.area :
+                                                    caseData?.AREA != null ? caseData?.AREA :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -522,7 +522,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="subArea">
                                                 {
-                                                    caseData?.subArea != null ? caseData?.subArea :
+                                                    caseData?.SUB_AREA != null ? caseData?.SUB_AREA :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -535,7 +535,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="symptom">
                                                 {
-                                                    caseData?.symptom != null ? caseData?.symptom :
+                                                    caseData?.SYMPTOM != null ? caseData?.SYMPTOM :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -551,14 +551,11 @@ function CaseDetail(props) {
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">HEROBUDDY INFO</h4>
-                                {heroBuddyData === undefined ? 
+                                {heroBuddyData.length === 0 ? 
                                     <i style={{ color: "red" }}>Data not available</i>
                                 :
                                     heroBuddyData.map((data, index) => {
-                                        return <div className="row" key={index}>
-                                            <div className="col-sm-12">
-                                                <h4 className="header green">HEROBUDDY INFO</h4>
-                                            </div>
+                                        return <div key={index}>
                                             <div className="col-sm-12">
                                                 <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
 

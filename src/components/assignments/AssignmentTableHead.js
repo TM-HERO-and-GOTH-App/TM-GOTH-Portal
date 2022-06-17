@@ -57,7 +57,7 @@ const headCells = [
     },
     {
         id: 'productName',
-        center: false,
+        center: true,
         disablePadding: false,
         width: '8%',
         label: 'Product',

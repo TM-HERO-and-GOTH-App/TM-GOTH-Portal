@@ -6,10 +6,10 @@ const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AssignmentService = {
     viewCaseByOwner(authToken, hID, caseStatusID) {
-        return Axios.post(url + '/case/view-cases-by-owner/', {
+        return Axios.post(url + '/case/view-cases-by-owner', {
                 'authToken': authToken,
                 'hID': hID,
-                'caseStatusID': caseStatusID
+                'caseStatus': caseStatusID
         }).then(data => { return data }).catch(err => console.log(err));
     },
 
@@ -36,15 +36,12 @@ const AssignmentService = {
     },
 
 
-    async viewUnassignedCase(authToken, shID) {
-        return fetch(url + '/case/view-unassigned-cases/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
+    viewUnassignedCase(authToken, hID, shID) {
+        return Axios.post(url + '/case/view-unassigned-case', {
                 'authToken': authToken,
+                "hID":hID,
                 'shID': shID
-            })
-        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
+            }).then(data => { return data }).catch(err => console.log(err))
     }
 }
 

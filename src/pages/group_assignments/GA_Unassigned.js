@@ -12,8 +12,9 @@ function GA_Unassigned() {
   useEffect(() => {
     const loggerCase = async() => {
       setIsLoading(true)
-      const res = await AssignmentService.viewUnassignedCase(token, userData.shID)
-      setUnassignedCase(res)
+      const res = await AssignmentService.viewUnassignedCase(token, userData.hID, userData.shID)
+      console.log(res.data[0])
+      setUnassignedCase(res.data[0])
       setIsLoading(false)
     }
     loggerCase();

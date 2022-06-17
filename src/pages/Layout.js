@@ -184,7 +184,7 @@ function Layout(props) {
                                     </ul>
                                 )
                             }
-                            <div className="scroll-track scroll-detached no-track scroll-thin scroll-margin scroll-visible" style={{ display: "none", top: "69px;", left: "183px;" }}>
+                            <div className="scroll-track scroll-detached no-track scroll-thin scroll-margin scroll-visible" style={{ display: "none", top: "69px", left: "183px" }}>
                                 <div className="scroll-bar" style={{ top: 0 }}></div>
                             </div>
                         </li>
