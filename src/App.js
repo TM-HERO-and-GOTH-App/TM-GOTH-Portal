@@ -40,6 +40,7 @@ import ChatPage from './pages/unifi_buddy_pages/chat/Chat';
 import EditAnnouncementForm from './pages/announcement/Edit_Announcement';
 import PrivateRoute from './private-route/PrivateAuthRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+require("dotenv").config();
 
 function App() {
   return (

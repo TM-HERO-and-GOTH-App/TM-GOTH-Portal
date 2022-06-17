@@ -5,7 +5,7 @@ const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AssignmentService = {
     async viewCaseByOwner(authToken, caseStatusID){
-        return await fetch( url + '/case/view-cases-by-owner/', {
+        return fetch( url + '/case/view-cases-by-owner/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -17,7 +17,7 @@ const AssignmentService = {
 
     async viewCaseByGroup(authToken, shID, caseStatusID, caseTypeID = 0){
         const groupCaseAPI =  url + '/case/view-cases-by-group/'
-        return await fetch(groupCaseAPI, {
+        return fetch(groupCaseAPI, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -41,7 +41,7 @@ const AssignmentService = {
     },
 
     async viewUnassignedCase(authToken, shID){
-        return await fetch( url + '/case/view-unassigned-cases/', {
+        return fetch( url + '/case/view-unassigned-cases/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
