@@ -1,11 +1,12 @@
 // import getApiPort from "../PortAPIDetector";
+import Axios from 'axios';
 
-const url = process.env.REACT_APP_API_URL;
+const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AssignmentService = {
-    async viewCaseByOwner(authToken, caseStatusID){
-        return fetch( url + '/case/view-cases-by-owner/', {
+    async viewCaseByOwner(authToken, caseStatusID) {
+        return fetch(url + '/case/view-cases-by-owner/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -15,22 +16,19 @@ const AssignmentService = {
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
     },
 
-    async viewCaseByGroup(authToken, shID, caseStatusID, caseTypeID = 0){
-        const groupCaseAPI =  url + '/case/view-cases-by-group/'
-        return fetch(groupCaseAPI, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
+
+    viewCaseByGroup(authToken, hID, shID, caseStatusID, caseTypeID = 0) {
+        return Axios.post(url + '/case//view-cases-by-group', {
                 'authToken': authToken,
+                'hID': hID,
                 'shID': shID,
                 'caseStatusID': caseStatusID,
                 'caseTypeID': caseTypeID
-            })
-        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
+        }).then(data => { return data }).catch(err => console.log(err));
     },
 
-    viewCaseByCollaborator(authToken, caseStatusID){
-        return fetch( url + '/case/view-cases-by-collaborator/', {
+    viewCaseByCollaborator(authToken, caseStatusID) {
+        return fetch(url + '/case/view-cases-by-collaborator/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -40,8 +38,9 @@ const AssignmentService = {
         }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err))
     },
 
-    async viewUnassignedCase(authToken, shID){
-        return fetch( url + '/case/view-unassigned-cases/', {
+
+    async viewUnassignedCase(authToken, shID) {
+        return fetch(url + '/case/view-unassigned-cases/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
