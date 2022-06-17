@@ -5,20 +5,17 @@ const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AssignmentService = {
-    async viewCaseByOwner(authToken, caseStatusID) {
-        return fetch(url + '/case/view-cases-by-owner/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
+    viewCaseByOwner(authToken, hID, caseStatusID) {
+        return Axios.post(url + '/case/view-cases-by-owner/', {
                 'authToken': authToken,
+                'hID': hID,
                 'caseStatusID': caseStatusID
-            })
-        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
+        }).then(data => { return data }).catch(err => console.log(err));
     },
 
 
     viewCaseByGroup(authToken, hID, shID, caseStatusID, caseTypeID = 0) {
-        return Axios.post(url + '/case//view-cases-by-group', {
+        return Axios.post(url + '/case/view-cases-by-group', {
                 'authToken': authToken,
                 'hID': hID,
                 'shID': shID,
