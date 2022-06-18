@@ -42,8 +42,8 @@ function AA_Unassigned() {
                                     onChange={(e) => setGroupType(e.target.value)}>
                                 <option value="0"> All Group/Stakeholder ...</option>
                                 {
-                                    lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                                        return <option key={key} value={data.lovName}> {data.lovName} </option>
+                                    lovData.filter(filter => filter.L_GROUP === 'STAKEHOLDER' && filter.L_NAME !== 'ADMIN').map((data, key) => {
+                                        return <option key={key} value={data.L_NAME}> {data.L_NAME} </option>
                                     })
                                 }
                             </select>
@@ -55,8 +55,8 @@ function AA_Unassigned() {
                                     onChange={(e) => setCaseType(e.target.value)}>
                                 <option value="0">All Case Type ...</option>
                                 {
-                                    lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                                        return <option key={key} value={data.lovName}>{data.lovName}</option>
+                                    lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
+                                        return <option key={key} value={data.L_NAME}>{data.L_NAME}</option>
                                     })
                                 }
                             </select>
@@ -66,7 +66,7 @@ function AA_Unassigned() {
 
                     <div className="col-xs-12">
                         <div className="clearfix">
-                            <div className="pull-right tableTools-container"></div>
+                            <div className="pull-right tableTools-container"/>
                         </div>
                         <div>
                             <AssignmentTable

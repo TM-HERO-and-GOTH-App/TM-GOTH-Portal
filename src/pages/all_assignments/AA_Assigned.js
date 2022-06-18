@@ -39,9 +39,9 @@ function AA_Assigned() {
                                 <option value='0'>All Group/Stakeholder ...</option>
                                 {
                                     lovData
-                                        .filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN')
+                                        .filter(filter => filter.L_GROUP === 'STAKEHOLDER' && filter.L_NAME !== 'ADMIN')
                                         .map((data, key) => <option key={key}
-                                                                    value={data.lovName}>{data.lovName} </option>)
+                                                                    value={data.L_NAME}>{data.L_NAME} </option>)
                                 }
                             </select>
                         </div>
@@ -52,9 +52,9 @@ function AA_Assigned() {
                                 <option value='0'>All Case Type ...</option>
                                 {
                                     lovData
-                                        .filter(filter => filter.lovGroup === 'CASE-TYPE')
+                                        .filter(filter => filter.L_GROUP === 'CASE-TYPE')
                                         .map((data, key) => <option key={key}
-                                                                    value={data.lovName}>{data.lovName}</option>)
+                                                                    value={data.L_NAME}>{data.L_NAME}</option>)
                                 }
                             </select>
                         </div>

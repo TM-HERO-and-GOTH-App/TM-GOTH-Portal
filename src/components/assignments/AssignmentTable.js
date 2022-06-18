@@ -37,8 +37,8 @@ function escapeRegExp(value) {
 function AssignmentTable(props) {
     let prepData = useMemo(() => props.tableData
         .filter((item) =>
-            (typeof props.CASETYPE !== 'undefined' && typeof props.GROUPTYPE !== 'undefined') ?
-                (item.CASETYPE === props.CASETYPE && item.STAKEHOLDER_NAME === props.GROUPTYPE) || (props.CASETYPE === item.CASETYPE && props.GROUPTYPE === "0") || (props.GROUPTYPE === item.STAKEHOLDER_NAME && props.CASETYPE === "0") || (props.CASETYPE === "0" && props.GROUPTYPE === "0") :
+            (typeof props.caseType != null && typeof props.groupType != null) ?
+                (item.CASE_TYPE === props.caseType && item.STAKEHOLDER_NAME === props.groupType) || (props.caseType === item.CASE_TYPE && props.groupType === "0") || (props.groupType === item.STAKEHOLDER_NAME && props.caseType === "0") || (props.caseType === "0" && props.groupType === "0") :
                 (item)
         )
         .map(({

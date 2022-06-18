@@ -39,8 +39,8 @@ function AA_Closed() {
                                 data-placeholder="Choose a Group..." value={groupType}
                                 onChange={(e) => setGroupType(e.target.value)}>
                                 <option value="0"> All Group/Stakeholder ...</option>
-                                {lovData.filter(filter => filter.lovGroup === 'STAKEHOLDER' && filter.lovName !== 'ADMIN').map((data, key) => {
-                                    return <option key={key} value={data.lovName}> {data.lovName} </option>
+                                {lovData.filter(filter => filter.L_GROUP === 'STAKEHOLDER' && filter.L_NAME !== 'ADMIN').map((data, key) => {
+                                    return <option key={key} value={data.L_NAME}> {data.L_NAME} </option>
                                 })
                                 }
                             </select>
@@ -52,8 +52,8 @@ function AA_Closed() {
                                 onChange={(e) => setCaseType(e.target.value)}>
                                 <option value="0">All Case Type ...</option>
                                 {
-                                    lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                                        return <option key={key} value={data.lovName}>{data.lovName}</option>
+                                    lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
+                                        return <option key={key} value={data.L_NAME}>{data.L_NAME}</option>
                                     })
                                 }
                             </select>
