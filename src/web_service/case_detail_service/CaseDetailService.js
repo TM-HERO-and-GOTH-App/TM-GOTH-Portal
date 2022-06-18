@@ -4,9 +4,11 @@ const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = {'Content-Type': 'application/json; charset=utf-8'};
 
 const CaseDetailService = {
-    assignToMe(authToken, cToken) {
+    assignToMe(authToken, gID, shID, cToken) {
         return Axios.post(url + '/case/assign-to-me/', {
             authToken: authToken,
+            gID: gID,
+            shID: shID,
             cToken: cToken
         }).then(res => {
             return res
@@ -73,20 +75,30 @@ const CaseDetailService = {
         })
     },
 
-    updateCaseInfo(authToken, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID) {
-        return Axios.post(url + '/case/update-case-detail/', {
+    updateCaseInfo(authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID, ckc, ckcNumber, loginID, stakeholderRef, extSysRef, areaCode, subAreaID, symptomID, siebelTargetSystem) {
+        return Axios.post(url + '/case/update-case-info', {
             authToken: authToken,
+            gID: gID,
             cToken: cToken,
             caseTypeID: caseTypeID,
             productNameID: productNameID,
             packageName: packageName,
             serviceID: serviceID,
-            serviceAddress: serviceAddress,
             srNum: srNum,
             ttNum: ttNum,
+            serviceAddress: serviceAddress,
             areaLocationID: areaLocationID,
-            actualCustomerName: actualCustomerName,
-            segmentID: segmentID
+            customerName: actualCustomerName,
+            segmentID: segmentID,
+            ckc:ckc,
+            ckcNumber: ckcNumber,
+            loginID: loginID,
+            stakeholderRef: stakeholderRef,
+            extSysRef: extSysRef,
+            areaCode: areaCode,
+            subAreaID: subAreaID,
+            symptomID: symptomID,
+            siebelTargetSystem: siebelTargetSystem
         }).then(res => {
             return res
         }).catch(err => {

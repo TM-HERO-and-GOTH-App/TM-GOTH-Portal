@@ -48,7 +48,7 @@ function CaseDetail(props) {
         const getHeroBuddyData = () => {
             setFetchData(true)
             CaseDetailService.getHeroBuddyInfo(token, caseToken).then(res => {
-                console.log(res.data, 'HeroBuddy')
+                // console.log(res.data, 'HeroBuddy')
                 if (typeof res == 'undefined') {
                     setFetchData(false)
                     setAlertStatus(true)
@@ -73,8 +73,8 @@ function CaseDetail(props) {
 
 
     const assignCaseToMe = () => {
-        CaseDetailService.assignToMe(token, caseToken).then(res => {
-            // console.log(res);
+        CaseDetailService.assignToMe(token, userData.hID, userData.shID, caseToken).then(res => {
+            // console.log(res.data);
             if (res?.data[0].response === 'FAILED') {
                 setAlertStatus(true);
                 setAlertMessage('The case cannot assign to your pool.')
@@ -239,7 +239,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-name">Actual Customer Name</div>
 
                                         <div className="profile-info-value">
-                                            {caseData?.ACTUAL_CUSTOMER_NAME != '' ? caseData?.ACTUAL_CUSTOMER_NAME : 'n/a'}
+                                            {caseData?.ACTUAL_CUSTOMER_NAME != null ? caseData?.ACTUAL_CUSTOMER_NAME : 'n/a'}
                                         </div>
                                     </div>
 
@@ -354,7 +354,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="siebelTargetSystem">
-                                                {caseData?.siebelTargetSystem}
+                                                {caseData?.siebelTargetSystem == null ? 'n/a' : caseData?.siebelTargetSystem}
                                             </span>
                                         </div>
                                     </div>
@@ -435,7 +435,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="loginID">
                                                 {
-                                                    caseData?.LOGIN_ID != '' ? caseData?.LOGIN_ID :
+                                                    caseData?.LOGIN_ID != null ? caseData?.LOGIN_ID :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>

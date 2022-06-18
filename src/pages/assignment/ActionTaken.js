@@ -28,9 +28,10 @@ function ActionTaken(props) {
 
     useEffect(() => {
         const getActionRemark = () => {
-            ActionTakenService.getActionRemarkLists(token, caseToken).then(res => {
-                // console.log(res)
-                setCaseRemarks(res)
+            ActionTakenService.getActionRemarkLists(token, userData.hID, caseToken).then(res => {
+                // console.log(res.data)
+                setCaseRemarks(res.data[0])
+                // console.log(caseRemarks)
             })
         }
 
@@ -45,8 +46,8 @@ function ActionTaken(props) {
 
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                // console.log(res)
-                setCaseData(res.data)
+                // console.log(res.data[0][0])
+                setCaseData(res.data[0][0])
                 setCTID(res.data.ctID)
                 setCaseOwner(res.data.ownerName)
             })
@@ -62,10 +63,11 @@ function ActionTaken(props) {
 
     const setRemarks = (e) => {
         e.preventDefault();
-        ActionTakenService.setRemark(token, caseToken, remark, caseStatus, ctID)
+        ActionTakenService.setRemark(token, userData.hID, caseToken, caseStatus, ctID, remark)
             .then(res => {
-                // console.log(res);
-                if (res.response === 'FAILED') {
+                console.log(res)
+                console.log(res.data);
+                if (res.statusText === 'Not Found') {
                     setAlertStatus(true)
                     setAlertMessage('Action cannot be implemented')
                     setAlertBadge('danger')
@@ -81,7 +83,7 @@ function ActionTaken(props) {
     return (
         <Layout
         pageTitle={<span>
-            CASE DETAIL : <span style={{color: 'green'}}>{caseData.caseNum}</span>
+            CASE DETAIL : <span style={{color: 'green'}}>{caseData?.CASE_NUM}</span>
         </span>}
         pageContent={
             <>
@@ -119,14 +121,13 @@ function ActionTaken(props) {
                     </div>
                     <div className="pull-right col-sm-6" align="right">
                         <Link className="btn btn-primary" to={`/hero-chat/${caseToken}`}>HERO Chat</Link>
-                        <Link className="btn btn-primary" to={`/internal-chat/${caseToken}`}>Internal Chat</Link>
                     </div>
                 </div>
                 <div className="space-6" />
                 <div className="row">
                     <div className="col-sm-12">
                         {
-                            caseRemarks.length === 1 ? <div style={{ color: "red" }}>Case Updates is empty</div> :
+                            caseRemarks == [] ? <div style={{ color: "red" }}>Case Updates is empty</div> :
                                 caseRemarks.map(data => {
                                     return <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                         <div className="profile-info-row">
@@ -138,21 +139,21 @@ function ActionTaken(props) {
                                         </div>
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">
-                                                {data.loggedDate}
+                                                {data.LOGGED_DATE}
                                             </div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    {data.remark}
+                                                    {data.REMARK}
                                                 </span>
                                             </div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    {data.remarkType === 'NEW' ? 'UN-ASSIGNED' : data.remarkType}
+                                                    {data.REMARK_TYPE === 'NEW' ? 'UN-ASSIGNED' : data.REMARK_TYPE}
                                                 </span>
                                             </div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    {data.updateBy}
+                                                    {data.UPDATED_BY}
                                                 </span>
                                             </div>
                                             <div className="profile-info-value" align="center">
@@ -167,31 +168,25 @@ function ActionTaken(props) {
                 </div>
                 <div className="space-8"></div>
                 {
-                    (caseData.caseStatus === 'NEW' ||
-                        caseData.caseStatus === 'ASSIGNED' ||
-                        caseData.caseStatus === 'IN-PROGRESS' || isAdmin) &&
+                    (caseData.CASE_STATUS === 'NEW' ||
+                        caseData.CASE_STATUS === 'ASSIGNED' ||
+                        caseData.CASE_STATUS === 'IN-PROGRESS' || isAdmin) &&
                     <form name="form" onSubmit={setRemarks}>
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="well" style={{ height: 300 }}>
                                     <h4 className="green smaller lighter">Add New Updates/Remarks</h4>
-                                    <div className="col-sm-4" style={{ padding: '5 0 0 0' }}>
+                                    <div className="col-sm-4">
                                         <div className="form-group">
                                             <select className="chosen-select form-control" id="remarkText" value={remarkType} onChange={(e) => setRemarkType(e.target.value)}>
                                                 <option value="0">Please select Remark Text Helper (if any)...</option>
                                                 {
                                                     (caseRemarks.filter(filter => filter.lovID > 421 && filter.lovID < 236)) &&
-                                                    lovData.filter(filter => filter.lovGroup === 'REMARK-HELPER').map((data, i) => {
-                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                                    lovData.filter(filter => filter.L_GROUP === 'REMARK-HELPER').map((data, i) => {
+                                                        return <option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
                                                     })
                                                 }
                                             </select>
-                                            {/* <!--<option value="Customer Acknowledge">Customer Acknowledge</option>
-                                                <option value="Escalation to Stakeholder">Escalation to Stakeholder</option>
-                                                <option value="Restoration In-Progress (Technical)">Restoration In-Progress (Technical)</option>
-                                                <option value="Rebate In-Progress">Rebate In-Progress</option>
-                                                <option value="Verified & Closed">Verified & Closed</option>
-                                                <option value="Investigation In-Progress">Investigation In-Progress</option>--> */}
                                         </div>
                                     </div>
                                     <div className="col-sm-12" style={{ padding: 0 }}>
@@ -200,7 +195,6 @@ function ActionTaken(props) {
                                             </textarea>
                                         </div>
                                     </div>
-                                    {/* <!--<input type="text" name="remark" placeholder="Text Field" className="form-control" />--> */}
                                     {
                                         (caseOwner || isCoordinator || isAdmin) &&
                                         <div>
@@ -209,19 +203,19 @@ function ActionTaken(props) {
                                                     <select className="chosen-select form-control" name="caseStatusID" id="caseStatusID" value={caseStatus} onChange={(e) => setCaseStatus(e.target.value)}>
                                                         <option value="0">Choose a Case Status...</option>
                                                         {
-                                                            caseRemarks.filter(filter => filter.remarkType !== 'NEW'
-                                                                && filter.remarkType !== 'ASSIGNED' && filter.remarkType !== 'IN-PROGRESSED') &&
-                                                                caseRemarks.filter(filter => filter.remarkType === 'CLOSED') &&
+                                                            caseRemarks.filter(filter => filter.REMARK_TYPE !== 'NEW'
+                                                                && filter.REMARK_TYPE !== 'ASSIGNED' && filter.REMARK_TYPE !== 'IN-PROGRESSED') &&
+                                                                caseRemarks.filter(filter => filter.REMARK_TYPE === 'CLOSED') &&
                                                                 (caseOwner || isAdmin) ?
-                                                                lovData.filter(filter => filter.lovGroup === 'CASE-STATUS').map(data => {
-                                                                    return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                                                lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
+                                                                    return <option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
                                                                 }) :
 
-                                                                (caseRemarks.filter(filter => filter.remarkType === 'TO-BE-DELETED') && isAdmin) ?
-                                                                    lovData.filter(filter => filter.lovGroup === 'CASE-STATUS').map(data => {
-                                                                        return <option key={data.lovID} value={data.lovID} >{data.lovName}</option>
-                                                                    }) : lovData.filter(filter => filter.lovGroup === 'CASE-STATUS').map(data => {
-                                                                        return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                                                (caseRemarks.filter(filter => filter.REMARK_TYPE === 'TO-BE-DELETED') && isAdmin) ?
+                                                                    lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
+                                                                        return <option key={data.L_ID} value={data.L_ID} >{data.L_NAME}</option>
+                                                                    }) : lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
+                                                                        return <option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
                                                                     })
                                                         }
                                                     </select>
@@ -232,9 +226,9 @@ function ActionTaken(props) {
                                                     <select className="chosen-select form-control" name="ctID" value={closureStatus} onChange={(e) => setClosure(e.target.value)}>
                                                         <option value="0">Choose a Closure Type...</option>
                                                         {
-                                                            lovData.filter(filter => filter.lovID > 427 && filter.lovID < 489) &&
-                                                            lovData.filter(filter => filter.lovGroup === 'CLOSURE-TYPE').map(data => {
-                                                                return <option key={data.lovID} value={data.lovID}>{data.lovName}</option>
+                                                            lovData.filter(filter => filter.L_ID > 427 && filter.L_ID < 489) &&
+                                                            lovData.filter(filter => filter.L_GROUP === 'CLOSURE-TYPE').map(data => {
+                                                                return <option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
                                                             })
                                                         }
                                                     </select>
