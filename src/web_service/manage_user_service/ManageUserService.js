@@ -1,130 +1,105 @@
-const url = process.env.REACT_APP_API_URL;
+import axios from 'axios';
+
+const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const ManageUserService = {
 
-    inviteToGroup(authToken, cToken, hToken){
-        return fetch( url + '/chat/invite-user-to-group/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
+    inviteToGroup(authToken, cToken, hToken) {
+        return axios.post(url + '/chat/invite-user-to-group/', {
                 authToken: authToken,
                 cToken: cToken,
                 hToken: hToken,
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
+        }).then(res => {return res}).catch(err => console.log(err));
     },
 
-    getAllUser(authToken, keyword){
-        return fetch( url + '/user/view-all-profile/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                category: 'ALL',
-                shID: 0,
-                activationStatus: keyword
-            })
+    getAllUser(authToken, gID, category, shID, keyword) {
+        return axios.post(url + '/user/view-all-user', {
+            authToken: authToken,
+            gID: gID,
+            category: category,
+            shID: shID,
+            activationStatus: keyword
         }).then(res => {
-            if(res.ok) return res.json();
-            else throw new Error("Status code error :" + res.status)
+            return res
         }).catch(err => console.log(err));
     },
 
-    async getProfileByKeyword(authToken, keyword){
-        return fetch( url + '/user/get-profiles-by-keywords/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                'authToken': authToken,
-                'keywords': keyword
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
+    getProfileByKeyword(authToken, gID, keyword) {
+        return axios.post(url + '/user/get-user-profile-by-keyword', {
+            'authToken': authToken,
+            'gID': gID,
+            'keyword': keyword
+        }).then(res => { return res }).catch(err => console.log(err));
     },
 
-    async getProfileByGroup(authToken, shID){
-        return fetch( url + '/user/view-all-profile/', {
+    setAsStakeholder(authToken, hToken, shID) {
+        return fetch(url + '/user/invite-to-stakeholder/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
                 authToken: authToken,
-                category: 'STAKEHOLDER',
+                hToken: hToken,
+                shID: shID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
+    },
+
+    unsetAsStakeholder(authToken, hToken, shID) {
+        return fetch(url + '/user/remove-from-stakeholder/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                hToken: hToken,
+                shID: shID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
+    },
+
+    setAsAdmin(authToken, hToken, shID) {
+        return fetch(url + '/user/set-stakeholder-admin/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                hToken: hToken,
+                shID: shID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
+    },
+
+    setAsAgent(authToken, hToken, shID) {
+        return fetch(url + '/user/invite-to-stakeholder/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                hToken: hToken,
+                shID: shID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
+    },
+
+    setAsCoordinator(authToken, hToken, shID) {
+        return fetch(url + '/user/set-stakeholder-coordinator/', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                authToken: authToken,
+                hToken: hToken,
+                shID: shID
+            })
+        }).then(res => res.json()).catch(err => console.log(err));
+    },
+
+    removeFromGroup(authToken, gID, gToken, shID) {
+        return axios.post(url + '/user/remove-from-stakeholder-group', {
+                authToken: authToken,
+                gID: gID,
+                cToken: gToken,
                 shID: shID,
-                activationStatus: 'Y'
-            })
-        }).then(res => res.json()).then(data => { return data }).catch(err => console.log(err));
-    },
-
-    setAsStakeholder(authToken, hToken, shID){
-        return fetch( url + '/user/invite-to-stakeholder/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                hToken: hToken,
-                shID: shID
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
-    },
-
-    unsetAsStakeholder(authToken, hToken, shID){
-        return fetch( url + '/user/remove-from-stakeholder/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                hToken: hToken,
-                shID: shID
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
-    },
-
-    setAsAdmin(authToken, hToken, shID){
-        return fetch( url + '/user/set-stakeholder-admin/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                hToken: hToken,
-                shID: shID
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
-    },
-
-    setAsAgent(authToken, hToken, shID){
-        return fetch( url + '/user/invite-to-stakeholder/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                hToken: hToken,
-                shID: shID
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
-    },
-
-    setAsCoordinator(authToken, hToken, shID){
-        return fetch( url + '/user/set-stakeholder-coordinator/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                hToken: hToken,
-                shID: shID
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
-    },
-
-    removeFromGroup(authToken, cToken, hToken){
-        return fetch( url + '/chat/remove-user-from-group/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                authToken: authToken,
-                cToken: cToken,
-                hToken: hToken,
-            })
-        }).then(res => res.json()).catch(err => console.log(err));
+        }).then(res => {return res}).catch(err => console.log(err));
     },
 }
 

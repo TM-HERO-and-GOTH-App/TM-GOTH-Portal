@@ -6,41 +6,40 @@ import DashboardSlider from '../components/slider/Slider';
 import CircularProgress from '@mui/material/CircularProgress';
 
 function Dashboard() {
-  const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-  const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
-  const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
+  const userData = JSON.parse(sessionStorage.getItem('UserData'));
+  const token = JSON.parse(sessionStorage.getItem('userToken'));
+  const lovData = JSON.parse(sessionStorage.getItem('LovData'));
   const [fetchingData, setFetchingData] = useState(true);
   const [showAgentCaseDashboard, setShowAgentCaseDashboard] = useState(true);
   const [showGroupCaseDashboard, setShowGroupCaseDashboard] = useState(true);
   const [showStateCaseDashboard, setShowStateCaseDashboard] = useState(true);
-  const [totalCaseResolveAgent, setTotalCaseResolveAgent] = useState([0]);
-  const [totalCaseResolveGroup, setTotalCaseResolveGroup] = useState([0]);
-  const [totalCaseResolveNation, setTotalCaseResolveNation] = useState([0]);
-  const [agentCase, setAgentCase] = useState([0]);
-  const [groupCase, setGroupCase] = useState([0]);
-  const [nationCase, setNationCase] = useState([0]);
-  const [stateCase, setStateCase] = useState([0]);
-  const [registerUser, setRegisterUser] = useState([0]);
-  const [stakeholderOption, setStakeholderOption] = useState('initialValue');
+  const [totalCaseResolveAgent, setTotalCaseResolveAgent] = useState([]);
+  const [totalCaseResolveGroup, setTotalCaseResolveGroup] = useState([]);
+  const [totalCaseResolveNation, setTotalCaseResolveNation] = useState([]);
+  const [agentCase, setAgentCase] = useState([]);
+  const [groupCase, setGroupCase] = useState([]);
+  const [nationCase, setNationCase] = useState([]);
+  const [stateCase, setStateCase] = useState([]);
+  const [registerUser, setRegisterUser] = useState([]);
+  const [stakeholderOption, setStakeholderOption] = useState('0');
 
   //Below is all the function correspond to it's purpose:
   const getNationWideGroupData = async () => {
     const shID = '0' //All stakeholder
-    await DashboardService.getTotalCaseByGroup(token, shID, userData.hID).then((res, err) => {
-      if (res === undefined) return;
+    await DashboardService.getTotalCaseByGroup(token, userData.H_ID, stakeholderOption).then((res, err) => {
+      if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
-      console.log(res, 'getTotalCaseByGroup');
-      setNationCase(res?.data[0]);
+      console.log(res.data, 'getTotalCaseByGroup');
+      setNationCase(res?.data);
       setFetchingData(false);
     })
 
-    await DashboardService.getTotalResolvedByGroup(token, shID).then((res, err) => {
+    await DashboardService.getTotalResolvedByGroup(token, stakeholderOption).then((res, err) => {
       if (res === undefined) return
       if (err) return
-      // console.log(res, 'getTotalResolvedByGroup');
-      let total = res?.data[0]
-      setTotalCaseResolveNation(total[Object.keys(total)[0]]);
+      // console.log(Object.keys(res.data)[0], 'getTotalResolvedByGroup');
+      setTotalCaseResolveNation(Object.keys(res.data)[0]);
       setFetchingData(false);
 
     })
@@ -48,15 +47,14 @@ function Dashboard() {
 
   useEffect(() => {
     const getAgentCase = () => {
-      DashboardService.getTotalResolvedByAgent(token, userData.hID).then((res) => {
+      DashboardService.getTotalResolvedByAgent(token, userData.H_ID).then((res) => {
         if (res === undefined) return
         // console.log(res, 'getTotalResolvedByAgent')
-        let total = res?.data[0]
-        setTotalCaseResolveAgent(total[Object.keys(total)[0]]);
+        setTotalCaseResolveAgent(Object.keys(res.data)[0]);
         setFetchingData(false);
       })
 
-      DashboardService.getTotalCaseByAgent(token, userData.hID).then(res => {
+      DashboardService.getTotalCaseByAgent(token, userData.H_ID).then(res => {
         if (res === undefined) return
         // console.log(res, 'getTotalCaseByAgent')
         setAgentCase(res?.data[0]);
@@ -66,18 +64,17 @@ function Dashboard() {
 
     const getGroupCase = () => {
       let shID = '0' //change back to 'userData.shID'
-      DashboardService.getTotalCaseByGroup(token, shID, userData.hID).then(res => {
+      DashboardService.getTotalCaseByGroup(token, userData.SH_ID, userData.H_ID).then(res => {
         if (res === undefined) return
         // console.log(res, 'getTotalCaseByGroup')
         setGroupCase(res?.data[0]);
         setFetchingData(false);
       })
 
-      DashboardService.getTotalResolvedByGroup(token, userData.shID).then(res => {
+      DashboardService.getTotalResolvedByGroup(token, userData.SH_ID).then(res => {
         if (res === undefined) return
-        // console.log(res, 'getTotalResolvedByGroup')
-        let total = res?.data[0]
-        setTotalCaseResolveGroup(total[Object.keys(total)[0]]);
+        console.log(Object.keys(res.data)[0], 'getTotalResolvedByGroup')
+        setTotalCaseResolveGroup(Object.keys(res.data)[0]);
         setFetchingData(false);
       })
     }
@@ -120,7 +117,7 @@ function Dashboard() {
               <div className="pull-right col-sm-4">
                 <select className="chosen-select form-control" name="shID" value={stakeholderOption}
                   onChange={(e) => setStakeholderOption(e.currentTarget.value)}>
-                  <option value='initialValue'>Choose a group...</option>
+                  <option value='0'>Choose a group...</option>
                   {
                     lovData.filter(lov => lov.lovGroup === 'STAKEHOLDER' && lov.lovName !== 'ADMIN').map((data) =>
                       <option value={data.lovID} key={data.lovID}>{data.lovName}</option>
