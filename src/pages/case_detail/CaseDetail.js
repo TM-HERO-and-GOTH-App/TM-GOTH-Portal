@@ -354,7 +354,7 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="siebelTargetSystem">
-                                                {caseData?.siebelTargetSystem == null ? 'n/a' : caseData?.siebelTargetSystem}
+                                                {caseData?.SYSTEM_TARGET == null ? 'n/a' : caseData?.SYSTEM_TARGET.toUpperCase()}
                                             </span>
                                         </div>
                                     </div>
@@ -509,7 +509,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="area">
                                                 {
-                                                    caseData?.AREA != null ? caseData?.AREA :
+                                                    caseData?.AREA_CODE != null ? caseData?.AREA_CODE :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -535,7 +535,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="symptom">
                                                 {
-                                                    caseData?.SYMPTOM != null ? caseData?.SYMPTOM :
+                                                    caseData?.SYMPTOM_CODE != null ? caseData?.SYMPTOM_CODE :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -551,7 +551,7 @@ function CaseDetail(props) {
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">HEROBUDDY INFO</h4>
-                                {heroBuddyData.length === 0 ? 
+                                {heroBuddyData.length === 0 ?
                                     <i style={{ color: "red" }}>Data not available</i>
                                 :
                                     heroBuddyData.map((data, index) => {
@@ -1405,12 +1405,12 @@ function CaseDetail(props) {
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">Attachment</h4>
-                                {caseData?.picture != null ? <img src={caseData?.picture} alt='Case'/> :
+                                {caseData?.PICTURE != null ? <img src={caseData?.PICTURE} alt='Case'/> :
                                     <i style={{color: "red"}}>Not provided</i>}
                             </div>
                         </div>
                         {
-                            caseData?.longtitude &&
+                            caseData?.LONGITUDE &&
                             // Map
                             <div>
                                 <div className="space-20"/>

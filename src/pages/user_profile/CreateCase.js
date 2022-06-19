@@ -190,12 +190,12 @@ function CreateCase(props) {
                                             </div>
                                         </div>
 
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> External System Ref.</div>
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name"> External System Ref.</div>
 
-                                            <div class="profile-info-value">
-                                                <span class="editable" id="username">
-                                                    <input class="input-sm" value={externalSystemInput}
+                                            <div className="profile-info-value">
+                                                <span className="editable" id="username">
+                                                    <input className="input-sm" value={externalSystemInput}
                                                            onChange={(e) => setExternalSystemInput(e.target.value)}
                                                            style={{width: "100%"}} type="text" name="extSysRef"
                                                            placeholder="External System Reference"/>
@@ -203,11 +203,10 @@ function CreateCase(props) {
                                             </div>
                                         </div>
 
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> Stakeholder Ref.</div>
-
-                                            <div class="profile-info-value">
-                                                <select class="chosen-select form-control"
+                                        <div className="profile-info-row">
+                                            <div className="profile-info-name"> Stakeholder Ref.</div>
+                                            <div className="profile-info-value">
+                                                <select className="chosen-select form-control"
                                                         value={stakeholderReferenceSelect}
                                                         onChange={(e) => setStakeholderReferenceSelect(e.target.value)}
                                                         name="stakeholderRef"
@@ -226,12 +225,10 @@ function CreateCase(props) {
                                                     <option value="TMPOINT">TM Point</option>
                                                     <option value="NOC">NOC</option>
                                                     <option value="CSM">CSM State</option>
-
                                                     <option value="SFM">SFM</option>
                                                     <option value="LOB/PTT">LOB/PTT</option>
                                                     <option value="Customer">Customer</option>
                                                     <option value="Contact-Centre">Contact Centre</option>
-
                                                 </select>
                                             </div>
                                         </div>
