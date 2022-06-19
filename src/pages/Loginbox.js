@@ -76,8 +76,8 @@ function Loginbox(props) {
 
 	const getLov = (authToken) => {
 		LoginService.getSystemLOV(authToken).then((res) => {
-			console.log(res);
-			sessionStorage.setItem("LovData", JSON.stringify(res));
+			console.log(res.data[0], 'getLov');
+			sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
 			props.history.replace("/");
 			setIsValidating(false);
 		});

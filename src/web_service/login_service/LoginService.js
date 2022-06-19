@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Axios from "axios";
 
 const url = process.env.REACT_APP_API_URL;
 const apiKey = process.env.REACT_APP_API_KEY;
@@ -49,14 +50,10 @@ const LoginService = {
     },
 
     getSystemLOV(authToken) {
-		return fetch(url + '/system/get-lov/', {
-			method: 'POST',
-            headers,
-            body: JSON.stringify({
+		return Axios.post('http://localhost' + '/user/get-lov/', {
                 'authToken': authToken
             })
-		})
-			.then(res => res.json())
+			.then(res => { return res })
 			//.catch((res: any) => Observable.throw(alert('Oops, there\'s a problem connecting'))
 			.catch((err) => console.log(err))
 	}
