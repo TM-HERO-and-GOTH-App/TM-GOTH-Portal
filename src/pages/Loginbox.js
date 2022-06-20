@@ -71,7 +71,7 @@ function Loginbox(props) {
 			// console.log(res.data[0]);
 			// setIsValidating(false);
 			const data = res.data[0]
-			if (data.CATEGORY !== "STAKEHOLDER") {
+			if (data.category !== "STAKEHOLDER") {
 				setAlertStatus(true);
 				setAlertMessage("Your account is not yet registered as Stakeholder");
 				setIsValidating(false);

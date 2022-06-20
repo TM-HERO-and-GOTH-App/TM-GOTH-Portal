@@ -26,7 +26,7 @@ function Dashboard() {
   //Below is all the function correspond to it's purpose:
   const getNationWideGroupData = async () => {
     const shID = '0' //All stakeholder
-    await DashboardService.getTotalCaseByGroup(token, userData.H_ID, stakeholderOption).then((res, err) => {
+    await DashboardService.getTotalCaseByGroup(token, userData.hID, stakeholderOption).then((res, err) => {
       if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
@@ -47,14 +47,14 @@ function Dashboard() {
 
   useEffect(() => {
     const getAgentCase = () => {
-      DashboardService.getTotalResolvedByAgent(token, userData.H_ID).then((res) => {
+      DashboardService.getTotalResolvedByAgent(token, userData.hID).then((res) => {
         if (res === undefined) return
         // console.log(res, 'getTotalResolvedByAgent')
         setTotalCaseResolveAgent(Object.keys(res.data)[0]);
         setFetchingData(false);
       })
 
-      DashboardService.getTotalCaseByAgent(token, userData.H_ID).then(res => {
+      DashboardService.getTotalCaseByAgent(token, userData.hID).then(res => {
         if (res === undefined) return
         // console.log(res, 'getTotalCaseByAgent')
         setAgentCase(res?.data[0]);
@@ -64,14 +64,14 @@ function Dashboard() {
 
     const getGroupCase = () => {
       let shID = '0' //change back to 'userData.shID'
-      DashboardService.getTotalCaseByGroup(token, userData.SH_ID, userData.H_ID).then(res => {
+      DashboardService.getTotalCaseByGroup(token, userData.shID, userData.hID).then(res => {
         if (res === undefined) return
         // console.log(res, 'getTotalCaseByGroup')
-        setGroupCase(res?.data[0]);
+        setGroupCase([res?.data[0]]);
         setFetchingData(false);
       })
 
-      DashboardService.getTotalResolvedByGroup(token, userData.SH_ID).then(res => {
+      DashboardService.getTotalResolvedByGroup(token, userData.shID).then(res => {
         if (res === undefined) return
         console.log(Object.keys(res.data)[0], 'getTotalResolvedByGroup')
         setTotalCaseResolveGroup(Object.keys(res.data)[0]);
