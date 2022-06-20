@@ -36,10 +36,10 @@ function CaseDetail(props) {
         const getGroupResult = () => {
             setFetchData(true)
             ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
-                // console.log(res);
-                if (res) {
-                    setCoordinator(res.filter(filter => filter.positionName === "Coordinator"))
-                    setAdmin(res.filter(filter => filter.positionName === "Admin"))
+                console.log(res.data);
+                if (res.data) {
+                    setCoordinator(res.data.filter(filter => filter.POSITION_NAME === "Coordinator"))
+                    setAdmin(res.data.filter(filter => filter.POSITION_NAME === "Admin"))
                     setFetchData(false)
                 }
             })

@@ -16,7 +16,7 @@ const ActionTakenService = {
     },
 
     setRemark(authToken, cToken, gID, caseStatusID, closureTypeID, remark) {
-        return axios.post(localUrl + '/case/update-case-status', {
+        return axios.post(localUrl + '/case/update-action-remark', {
             'authToken': authToken,
             'cToken': cToken,
             'gID': gID,

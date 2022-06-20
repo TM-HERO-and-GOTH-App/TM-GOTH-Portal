@@ -166,9 +166,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setStateType(parseFloat(e.target.value))}>
                                                     <option value='0' hidden>Choose a State...</option>
                                                     {
-                                                        lovData.filter(filter => filter.lovGroup === 'AREA-LOCATION').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'AREA-LOCATION').map((data, key) => {
                                                             return <option key={key}
-                                                                           value={data.lovID}>{data.lovName}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })}
                                                 </select>
                                             </div>
@@ -181,9 +181,9 @@ function CreateCase(props) {
                                                         value={caseType} onChange={(e) => setCaseType(e.target.value)}>
                                                     <option value='0' hidden>Choose a Case Type</option>
                                                     {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
-                                                                           value={data.lovID}>{data.lovName}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -259,9 +259,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setSourceType(e.target.value)}>
                                                     <option hidden value='0'>Choose a Source...</option>
                                                     {
-                                                        lovData.filter(filter => filter.lovGroup === 'SOURCE').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'SOURCE').map((data, key) => {
                                                             return <option key={key}
-                                                                           value={data.lovID}>{data.lovName}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -276,9 +276,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setProductType(e.target.value)}>
                                                     <option value='0' hidden>Choose a Product Type</option>
                                                     {
-                                                        lovData.filter(filter => filter.lovGroup === 'PRODUCT').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'PRODUCT').map((data, key) => {
                                                             return <option key={key}
-                                                                           value={data.lovID}>{data.lovName}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -293,9 +293,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setAreaType(parseFloat(e.target.value))}>
                                                     <option value='0' disabled>Choose a Area Type</option>
                                                     {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
+                                                                value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     } */}
                                                     <option value='660'>Service Failure</option>
@@ -311,9 +311,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setSubAreaSelect(parseFloat(e.target.value))}>
                                                     <option value='0' disabled>Choose a Sub-area Type</option>
                                                     {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
+                                                                value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     } */}
                                                     <option value='700'>All Services Down</option>
@@ -329,9 +329,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setSymptomSelect(parseFloat(e.target.value))}>
                                                     <option value='0' disabled>Choose a Symptom Type</option>
                                                     {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
+                                                                value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     } */}
                                                     <option value='800'>All Services Down</option>
@@ -347,9 +347,9 @@ function CreateCase(props) {
                                                         onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
                                                     <option value='0' disabled>Choose a Target System</option>
                                                     {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
+                                                        lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
+                                                                value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     } */}
                                                     <option value='icp'>ICP</option>

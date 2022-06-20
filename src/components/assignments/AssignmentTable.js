@@ -48,15 +48,15 @@ function AssignmentTable(props) {
             UNCLOSED_AGING,
             CLOSED_AGING_DH,
             UNCLOSED_AGING_DH,
-            CASETYPE,
+            CASE_TYPE,
             STAKEHOLDER_NAME,
             C_TOKEN,
             CASE_NUM,
             VIP,
             ELIGIBILITY,
-            RODUCT_NAME,
+            PRODUCT_NAME,
             CUSTOMER_NAME,
-            FULLNAME,
+            FULL_NAME,
             OWNER_NAME,
             AREA_LOCATION,
             TOTAL_NEW_ALERT,
@@ -68,15 +68,15 @@ function AssignmentTable(props) {
             UNCLOSED_AGING,
             CLOSED_AGING_DH,
             UNCLOSED_AGING_DH,
-            CASETYPE,
+            CASE_TYPE,
             STAKEHOLDER_NAME,
             C_TOKEN,
             CASE_NUM,
             VIP,
             ELIGIBILITY,
-            RODUCT_NAME,
+            PRODUCT_NAME,
             CUSTOMER_NAME,
-            FULLNAME,
+            FULL_NAME,
             OWNER_NAME,
             AREA_LOCATION,
             TOTAL_NEW_ALERT,
@@ -135,8 +135,8 @@ function AssignmentTable(props) {
     //hidden.
     const handleSelectAllClick = (event) => {
         if (event.target.checked || selected.length === 0) {
-            const newSelecteds = prepData.map((n) => n.CASE_NUM);
-            setSelected(newSelecteds);
+            const newSelected = prepData.map((n) => n.CASE_NUM);
+            setSelected(newSelected);
             return;
         }
         setSelected([]);

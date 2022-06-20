@@ -15,7 +15,7 @@ function AA_Unassigned() {
     useEffect(() => {
         const allAssignmentData = () => {
             setIsLoading(true);
-            AssignmentService.viewCaseByGroup(token, userData.hID, userData.shID, 61).then(res => {
+            AssignmentService.viewCaseByGroup(token, userData.hID, 0, 61).then(res => {
                 // console.log(res.data)
                 setUnAssignedCase(res.data[0])
                 setIsLoading(false);
@@ -35,7 +35,7 @@ function AA_Unassigned() {
             }
             pageContent={
                 <div className="row">
-                    <form name="form">
+                    <form className="form">
                         <div className="col-sm-3">
                             <select className="chosen-select form-control" name="shID"
                                     data-placeholder="Choose a Group..." value={groupType}

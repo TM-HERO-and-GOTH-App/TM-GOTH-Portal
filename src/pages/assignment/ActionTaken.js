@@ -12,7 +12,7 @@ function ActionTaken(props) {
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [caseData, setCaseData] = useState({});
-    const [ctID, setCTID] = useState({});
+    const [ctID, setCTID] = useState('');
     const [caseRemarks, setCaseRemarks] = useState([]);
     const [groupMembers, setGroupMembers] = useState([]);
     const [alertStatus, setAlertStatus] = useState(false);
@@ -23,33 +23,31 @@ function ActionTaken(props) {
     const [isAdmin, setAdmin] = useState('');
     const [remark, setRemark] = useState('');
     const [caseStatus, setCaseStatus] = useState('0');
-    const [closureStatus, setClosure] = useState('0');
     const [remarkType, setRemarkType] = useState('0');
 
     useEffect(() => {
         const getActionRemark = () => {
             ActionTakenService.getActionRemarkLists(token, userData.hID, caseToken).then(res => {
-                // console.log(res.data)
+                // console.log(res, 'getActionRemark')
                 setCaseRemarks(res.data[0])
-                // console.log(caseRemarks)
             })
         }
 
         const getGroupResult = () => {
             ManageUserService.getProfileByGroup(token, userData.shID).then((res) => {
-                // console.log(res);
-                setGroupMembers(res);
-                setCoordinator(res.map(data => data.positionName === "Coordinator"));
-                setAdmin(res.map(data => data.positionName === "Admin"))
+                // console.log(res, 'getGroupResult');
+                setGroupMembers(res.data);
+                setCoordinator(res.data.map(data => data.POSITION_NAME === "Coordinator"));
+                setAdmin(res.data.map(data => data.POSITION_NAME === "Admin"))
             })
         }
 
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                // console.log(res.data[0][0])
+                console.log(res.data[0][0], 'getCaseDetail')
                 setCaseData(res.data[0][0])
-                setCTID(res.data.ctID)
-                setCaseOwner(res.data.ownerName)
+                setCTID(res.data.CT_ID)
+                setCaseOwner(res.data.OWNER_NAME)
             })
         }
 
@@ -63,10 +61,10 @@ function ActionTaken(props) {
 
     const setRemarks = (e) => {
         e.preventDefault();
-        ActionTakenService.setRemark(token, userData.hID, caseToken, caseStatus, ctID, remark)
+        console.log(token, caseToken, userData.hID, caseStatus, ctID, remark)
+        ActionTakenService.setRemark(token, caseToken, userData.hID, caseStatus, ctID, remark)
             .then(res => {
                 console.log(res)
-                console.log(res.data);
                 if (res.statusText === 'Not Found') {
                     setAlertStatus(true)
                     setAlertMessage('Action cannot be implemented')
@@ -78,7 +76,6 @@ function ActionTaken(props) {
                 }
             })
     }
-
 
     return (
         <Layout
@@ -112,7 +109,7 @@ function ActionTaken(props) {
                             Back to Case Detail
                         </Link>
                         {
-                            (caseData.caseStatus !== 'CLOSED' && caseData.caseStatus !== 'CANCELLED') && (caseData.ownerName || isCoordinator) &&
+                            (caseData.CASE_STATUS !== 'CLOSED' && caseData.CASE_STATUS !== 'CANCELLED') && (caseData.OWNER_NAME || isCoordinator) &&
                             <Link className="btn btn-warning" to={`/edit-case/${caseToken}`}>
                                 <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
                                 Edit Case Detail
@@ -127,7 +124,7 @@ function ActionTaken(props) {
                 <div className="row">
                     <div className="col-sm-12">
                         {
-                            caseRemarks == [] ? <div style={{ color: "red" }}>Case Updates is empty</div> :
+                            caseRemarks === [] ? <div style={{ color: "red" }}>Case Updates is empty</div> :
                                 caseRemarks.map(data => {
                                     return <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                         <div className="profile-info-row">
@@ -223,7 +220,7 @@ function ActionTaken(props) {
                                             </div>
                                             <div className="col-sm-4" style={{ paddingLeft: 5 }} id="closureType">
                                                 <div className="form-group">
-                                                    <select className="chosen-select form-control" name="ctID" value={closureStatus} onChange={(e) => setClosure(e.target.value)}>
+                                                    <select className="chosen-select form-control" name="ctID" value={ctID} onChange={(e) => setCTID(e.target.value)}>
                                                         <option value="0">Choose a Closure Type...</option>
                                                         {
                                                             lovData.filter(filter => filter.L_ID > 427 && filter.L_ID < 489) &&

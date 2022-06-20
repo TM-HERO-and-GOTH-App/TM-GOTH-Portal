@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react";
 import Layout from "../Layout";
-import Footer from "../Footer";
+// import Footer from "../Footer";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
 import {Link} from "react-router-dom";
 
 function EditCaseDetail(props) {
     const userData = JSON.parse(sessionStorage.getItem('UserData'))
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem("userToken")));
-    const [lovData, LovData] = useState(JSON.parse(sessionStorage.getItem("LovData")));
-    const [caseToken, setCaseToken] = useState(props.match.params.id);
+    const [token] = useState(JSON.parse(sessionStorage.getItem("userToken")));
+    const [lovData] = useState(JSON.parse(sessionStorage.getItem("LovData")));
+    const [caseToken] = useState(props.match.params.id);
     const [caseDetailData, setCaseDetailData] = useState([]);
     const [alertStatus, setAlertStatus] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
@@ -73,7 +73,7 @@ function EditCaseDetail(props) {
             // ambassador
         ).then((res) => {
             console.log(res);
-            if (res.response === "FAILED") {
+            if (res.status === "FAILED") {
                 setAlertStatus(true);
                 setStatusBadge("danger");
                 setAlertMessage("The case failed to updated.");
