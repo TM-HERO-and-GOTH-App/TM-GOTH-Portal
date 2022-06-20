@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Layout from "../Layout";
 import Footer from "../Footer";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function EditCaseDetail(props) {
     const userData = JSON.parse(sessionStorage.getItem('UserData'))
@@ -23,12 +23,17 @@ function EditCaseDetail(props) {
     const [locationType, setLocationType] = useState("0");
     const [customerNameInput, setCustomerNameInput] = useState("");
     const [segmentType, setSegmentType] = useState("0");
-    const [sourceType, setSourceType] = useState("0"); 
-    const [subSourceType, setSubSourceType] = useState(""); 
+    const [sourceType, setSourceType] = useState("0");
+    // const [subSourceType, setSubSourceType] = useState("");
     const [customerLoginID, setCustomerLoginID] = useState('');
-    const [areaCode, setAreaCode] = useState('initialValue');
-    const [subAreaCode, setSubAreaCode] = useState('initialValue');
-    const [symptomCode, setSymptomCode] = useState('initialValue');
+    const [ckcStatus, setCKCStatus] = useState(false);
+    const [ckcNumberInput, setCKCNumberInput] = useState('')
+    const [externalSystemInput, setExternalSystemInput] = useState('');
+    const [areaCode, setAreaCode] = useState('');
+    const [subAreaCode, setSubAreaCode] = useState('');
+    const [symptomCode, setSymptomCode] = useState('');
+    const [ambassador, setAmbassador] = useState(false);
+    const [stakeHolderRef, setStakeHolderRef] = useState('');
 
     useEffect(() => {
         const getCaseDetail = () => {
@@ -49,19 +54,25 @@ function EditCaseDetail(props) {
             caseType,
             productType,
             packageNameInput,
-            serviceAddressInput,
+            serviceIDInput,
             srNumberInput,
             ttNumberInput,
-            serviceIDInput,
+            serviceAddressInput,
             locationType,
             customerNameInput,
             segmentType,
+            ckcStatus,
+            ckcNumberInput,
             customerLoginID,
+            stakeHolderRef,
+            externalSystemInput,
             areaCode,
             subAreaCode,
-            symptomCode
+            parseFloat(symptomCode),
+            caseDetailData.SYSTEM_TARGET
+            // ambassador
         ).then((res) => {
-            // console.log(res);
+            console.log(res);
             if (res.response === "FAILED") {
                 setAlertStatus(true);
                 setStatusBadge("danger");
@@ -75,23 +86,32 @@ function EditCaseDetail(props) {
     };
 
     const onInitialLoad = () => {
-        setCustomerNameInput(caseDetailData.customerName)
-        setPackageNameInput(caseDetailData.packageName)
-        setServiceAddressInput(caseDetailData.serviceAddress)
-        setServiceIDInput(caseDetailData.serviceID)
-        setSrNumberInput(caseDetailData.srNum)
-        setTtNumberInput(caseDetailData.ttNum)
-        setCaseType(caseDetailData.caseTypeID)
-        setLocationType(caseDetailData.areaLocationID)
-        setProductType(caseDetailData.productNameID)
-        setSegmentType(caseDetailData.segmentID)
-        setSourceType(caseDetailData.sourceID)
-        setSubSourceType(caseDetailData.subSourceID)
+        setCustomerNameInput(caseDetailData.CUSTOMER_NAME)
+        setPackageNameInput(caseDetailData.PACKAGE_NAME)
+        setServiceAddressInput(caseDetailData.SERVICE_ADDRESS)
+        setServiceIDInput(caseDetailData.SERVICE_ID)
+        setSrNumberInput(caseDetailData.SR_NUM)
+        setTtNumberInput(caseDetailData.TT_NUM)
+        setCaseType(caseDetailData.CASE_TYPE_ID)
+        setLocationType(caseDetailData.AREA_LOCATION_ID)
+        setProductType(caseDetailData.PRODUCT_NAME_ID)
+        setSegmentType(caseDetailData.SEGMENT_ID)
+        setSourceType(caseDetailData.SOURCE_ID)
+        setCKCStatus(caseDetailData.CKC)
+        setCKCNumberInput(caseDetailData.CKC_NUM)
+        setStakeHolderRef(caseDetailData.STAKEHOLDER_REF)
+        setExternalSystemInput(caseDetailData.EXT_SYS_REF)
+        setSymptomCode(caseDetailData.SYMPTOM_CODE)
+        setAreaCode(caseDetailData.AREA_CODE)
+        setSubAreaCode(caseDetailData.SUB_AREA)
+        setCustomerLoginID(caseDetailData.LOGIN_ID)
+        setAmbassador(caseDetailData.VIP)
+        // setSubSourceType(caseDetailData.SUB_SOURCE_ID)
     }
 
     useEffect(() => {
-        onInitialLoad();
-    }, [caseDetailData]
+            onInitialLoad();
+        }, [caseDetailData]
     )
 
     const reset = () => {
@@ -105,15 +125,22 @@ function EditCaseDetail(props) {
         setLocationType("0");
         setProductType("0");
         setSegmentType("0");
-        setSourceType("0");
-        setSubSourceType("0");
+        setCKCStatus('')
+        setCKCNumberInput('')
+        setStakeHolderRef('')
+        setExternalSystemInput('')
+        setSymptomCode('0')
+        setAreaCode('0')
+        setSubAreaCode('0')
+        // setSourceType('')
+        // setSubSourceType("0");
     };
 
     return (
         <Layout
             pageTitle={
                 <span>
-                    CASE DETAIL : <span style={{ color: 'green' }}>{caseDetailData.CASE_NUM}</span>
+                    CASE DETAIL : <span style={{color: 'green'}}>{caseDetailData.CASE_NUM}</span>
                 </span>
             }
             pageContent={
@@ -122,30 +149,30 @@ function EditCaseDetail(props) {
                         <div className="col-sm-12">
                             <div className={`alert alert-block alert-${statusBadge}`}>
                                 <button type="button" className="close" data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times" />
+                                    <i className="ace-icon fa fa-times"/>
                                 </button>
                                 {alertMessage}
                             </div>
                         </div>
                     )}
-                    <br />
-                    <div className="space-10" />
+                    <br/>
+                    <div className="space-10"/>
                     <div className="col-sm-4">
                         <Link
                             className="btn btn-primary"
                             to={`/case-detail/${caseToken}`}
                         >
-                            <i className="ace-icon fa fa-arrow-left icon-on-left" />
+                            <i className="ace-icon fa fa-arrow-left icon-on-left"/>
                             Back to Case Detail
                         </Link>
                     </div>
-                    <br />
-                    <div className="space-20" />
+                    <br/>
+                    <div className="space-20"/>
                     <form name="form" onSubmit={editCaseDetail} onReset={reset}>
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{ margin: 0 }}
+                                style={{margin: 0}}
                             >
                                 {caseDetailData ? (
                                     <div className="profile-info-row">
@@ -174,7 +201,7 @@ function EditCaseDetail(props) {
                                             <div className="profile-info-name">CASE OWNER</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <i style={{ color: "red" }}>Unassigned</i>
+                                                    <i style={{color: "red"}}>Unassigned</i>
                                                 </span>
                                             </div>
                                         </div>
@@ -182,7 +209,7 @@ function EditCaseDetail(props) {
                                 )}
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ width: "20%" }}>
+                                    <div className="profile-info-name" style={{width: "20%"}}>
                                         HERO
                                     </div>
 
@@ -195,22 +222,15 @@ function EditCaseDetail(props) {
 
                                 <div className="profile-info-row">
                                     <div className="profile-info-name"> Customer</div>
-                                    <div className="profile-info-value">
-                                        {caseDetailData.CUSTOMER_NAME}
-                                    </div>
-                                </div>
-
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name"> Customer</div>
 
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
-                                                name="actualCustomerName"
-                                                placeholder="Actual Customer Name"
+                                                name="customerName"
+                                                placeholder="Customer Name"
                                                 value={customerNameInput}
                                                 onChange={(e) => setCustomerNameInput(e.target.value)}
                                             />
@@ -219,7 +239,7 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         State{" "}
                                     </div>
 
@@ -268,7 +288,7 @@ function EditCaseDetail(props) {
                                     <div className="profile-info-name">Descriptions</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="login">
-                                            <i style={{ color: "blue" }}>
+                                            <i style={{color: "blue"}}>
                                                 {caseDetailData.CASE_CONTENT}
                                             </i>
                                         </span>
@@ -293,7 +313,7 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
 
-                                {caseDetailData.closedDate ? (
+                                {caseDetailData.CLOSED_DATE ? (
                                     <div className="profile-info-row">
                                         <div className="profile-info-name">Closed Date</div>
                                         <div className="profile-info-value">
@@ -308,12 +328,12 @@ function EditCaseDetail(props) {
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{ margin: 0 }}
+                                style={{margin: 0}}
                             >
                                 <div className="profile-info-row">
                                     <div
                                         className="profile-info-name"
-                                        style={{ color: "red", width: "20%" }}
+                                        style={{color: "red", width: "20%"}}
                                     >
                                         Case Type
                                     </div>
@@ -339,7 +359,7 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         Product Name
                                     </div>
                                     <div className="profile-info-value">
@@ -386,12 +406,20 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
+                                    <div className="profile-info-name">Segment Code</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="login">
+                                            {caseDetailData.SEGMENT_CODE === null ? ' N / A' : caseDetailData.SEGMENT_CODE}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
                                     <div className="profile-info-name">Package Name</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="packageName"
                                                 placeholder="Package Name"
@@ -402,12 +430,28 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
+                                    <div className="profile-info-name">Login ID</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{width: "100%"}}
+                                                type="text"
+                                                name="loginID"
+                                                placeholder="Login ID"
+                                                value={customerLoginID}
+                                                onChange={(e) => setCustomerLoginID(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
                                     <div className="profile-info-name">Service ID</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="serviceID"
                                                 placeholder="Service ID"
@@ -417,14 +461,13 @@ function EditCaseDetail(props) {
                                         </span>
                                     </div>
                                 </div>
-
                                 <div className="profile-info-row">
                                     <div className="profile-info-name">Service Address</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="serviceAddress"
                                                 placeholder="Service Address"
@@ -436,14 +479,14 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         SR Number
                                     </div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="srNum"
                                                 placeholder="SR Number"
@@ -460,7 +503,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="ttNum"
                                                 placeholder="TT Number"
@@ -476,13 +519,13 @@ function EditCaseDetail(props) {
                                 {lovData.filter((filter) => filter.L_ID !== 284) && (
                                     <div className="profile-info-row">
                                         <div className="profile-info-name">Source</div>
-
                                         <div className="profile-info-value">
                                             <select
                                                 className="chosen-select form-control"
                                                 name="sourceID"
                                                 value={sourceType}
                                                 onChange={(e) => setSourceType(e.target.value)}
+                                                disabled
                                             >
                                                 <option value="0">Choose a Source...</option>
                                                 {lovData
@@ -502,46 +545,199 @@ function EditCaseDetail(props) {
                                         </div>
                                     </div>
                                 )}
-
-                                {lovData.filter((filter) => filter.L_ID !== 284) && (
-                                    <div className="profile-info-row">
-                                        <div className="profile-info-name">Sub Source</div>
-                                        <div className="profile-info-value">
-                                            <select
-                                                className="chosen-select form-control"
-                                                name="subSourceID"
-                                                value={subSourceType}
-                                                onChange={(e) => setSubSourceType(e.target.value)}
-                                            >
-                                                <option value="0">Choose a Sub Source...</option>
-                                                {lovData
-                                                    .filter(
-                                                        (filter) => filter.L_GROUP === "SUB-SOURCE"
-                                                    )
-                                                    .map((data, key) => {
-                                                        return (
-                                                            <option key={key} value={data.L_ID}>
-                                                                {data.L_NAME}
-                                                            </option>
-                                                        );
-                                                    })}
-                                            </select>
-                                        </div>
+                                {/*Sub-Source*/}
+                                {/*{lovData.filter((filter) => filter.L_ID !== 284) && (*/}
+                                {/*    <div className="profile-info-row">*/}
+                                {/*        <div className="profile-info-name">Sub Source</div>*/}
+                                {/*        <div className="profile-info-value">*/}
+                                {/*            <select*/}
+                                {/*                className="chosen-select form-control"*/}
+                                {/*                name="subSourceID"*/}
+                                {/*                value={subSourceType}*/}
+                                {/*                onChange={(e) => setSubSourceType(e.target.value)}*/}
+                                {/*            >*/}
+                                {/*                <option value="0">Choose a Sub Source...</option>*/}
+                                {/*                {lovData*/}
+                                {/*                    .filter(*/}
+                                {/*                        (filter) => filter.L_GROUP === "SUB-SOURCE"*/}
+                                {/*                    )*/}
+                                {/*                    .map((data, key) => {*/}
+                                {/*                        return (*/}
+                                {/*                            <option key={key} value={data.L_ID}>*/}
+                                {/*                                {data.L_NAME}*/}
+                                {/*                            </option>*/}
+                                {/*                        );*/}
+                                {/*                    })}*/}
+                                {/*            </select>*/}
+                                {/*        </div>*/}
+                                {/*    </div>*/}
+                                {/*)}*/}
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">CKC Status</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="ckcStatus"
+                                            value={ckcStatus}
+                                            onChange={(e) => setCKCStatus(e.target.value)}
+                                        >
+                                            <option value={null}>Choose a Value...</option>
+                                            <option value="NO">No</option>
+                                            <option value="YES">Yes</option>
+                                        </select>
                                     </div>
-                                )}
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">CKC Number</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{width: "100%"}}
+                                                type="text"
+                                                name="ckcNum"
+                                                placeholder="CKC Number"
+                                                value={ckcNumberInput}
+                                                onChange={(e) => setCKCNumberInput(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Stakeholder Ref.</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="stakeholderRef"
+                                            data-placeholder="Choose a Stakeholder Reference..."
+                                            value={stakeHolderRef}
+                                            onChange={(e) => setStakeHolderRef(e.target.value)}
+                                        >
+                                            <option value="n/a" selected="yes">Choose a Stakeholder Reference...
+                                            </option>
+                                            <option value="NMO">NMO</option>
+                                            <option value="BRD">BRD</option>
+                                            <option value="PRODUCT">Product</option>
+                                            <option value="RRT">RRT</option>
+                                            <option value="RRM">RRM</option>
+                                            <option value="GIT">GIT</option>
+                                            <option value="RESELLER">Reseller</option>
+                                            <option value="CMC">CMC</option>
+                                            <option value="TMPOINT">TM Point</option>
+                                            <option value="NOC">NOC</option>
+                                            <option value="CSM">CSM State</option>
+                                            <option value="SFM">SFM</option>
+                                            <option value="LOB/PTT">LOB/PTT</option>
+                                            <option value="Customer">Customer</option>
+                                            <option value="Contact-Centre">Contact Centre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">External system Ref.</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{width: "100%"}}
+                                                type="text"
+                                                name="extSysRef"
+                                                placeholder="External System Reference"
+                                                value={externalSystemInput}
+                                                onChange={(e) => setExternalSystemInput(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Symptom</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="symptomType"
+                                            value={symptomCode}
+                                            onChange={(e) => setSymptomCode(e.target.value)}
+                                            placeholder='Choose a Symptom Type...'
+                                        >
+                                            <option value='0' disabled>Choose a Symptom Type</option>
+                                            {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                            <option value='800'>All Services Down</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Area (for SR creation)</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="areaCode"
+                                            value={areaCode}
+                                            onChange={(e) => setAreaCode(e.target.value)}
+                                        >
+                                            <option value='0' disabled>Choose a Area Type</option>
+                                            {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                            <option value='660'>Service Failure</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Sub-Area (for SR creation)</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="subAreaCode"
+                                            value={subAreaCode}
+                                            onChange={(e) => setSubAreaCode(e.target.value)}
+                                        >
+                                            <option value='0' disabled>Choose a Sub-area Type</option>
+                                            {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                            <option value='700'>All Services Down</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Ambassador</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="segmentID"
+                                            value={ambassador}
+                                            onChange={(e) => setAmbassador(e.target.value)}
+                                            disabled
+                                        >
+                                            <option value={false}>False</option>
+                                            <option value={true}>True</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div style={{ clear: "both" }} />
-                        <div className="col-sm-6" style={{ paddingTop: "30px" }}>
-                            <p style={{ color: "red" }}>
+                        <div style={{clear: "both"}}/>
+                        <div className="col-sm-6" style={{paddingTop: "30px"}}>
+                            <p style={{color: "red"}}>
                                 <i>*** Inputs with red color are compulsory</i>
                             </p>
                             <button type="reset" className="btn btn-sm btn-inverse">
-                                <i className="ace-icon fa fa-repeat align-top bigger-125" />
+                                <i className="ace-icon fa fa-repeat align-top bigger-125"/>
                                 <span>Reset</span>
                             </button>
                             <button type="submit" className="btn btn-sm btn-success">
-                                <i className="ace-icon fa fa-save align-top bigger-125" />
+                                <i className="ace-icon fa fa-save align-top bigger-125"/>
                                 Update Info
                             </button>
                         </div>
