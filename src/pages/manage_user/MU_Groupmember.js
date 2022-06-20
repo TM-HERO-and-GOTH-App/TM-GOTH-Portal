@@ -18,7 +18,7 @@ function MU_Groupmember() {
   useEffect(() => {
     const getGroupResult = () => {
       ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', userData.shID, 'Y').then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         setGroupResult(res.data)
       })
     }
@@ -38,29 +38,31 @@ function MU_Groupmember() {
     setUserInput('')
   }
 
-  const inviteToGroup = () => {
-    ManageUserService.inviteToGroup(token, '', userData.shID).then(res => {
-      // console.log(res);
+  const inviteToGroup = (hToken) => {
+    ManageUserService.inviteToGroup(token, userData.hID, hToken, userData.shID).then(res => {
+      console.log(res);
+      console.log(hToken)
       if (res === null) {
         setAlertStatus(true)
         setAlertMessage('Only group admin can do the invitation')
-        setAlertBadge('success')
+        setAlertBadge('danger')
       } else {
         setAlertStatus(true)
         setAlertMessage('The user has been successfully added.')
-        setAlertBadge('danger')
+        setAlertBadge('success')
       }
     })
   }
 
-  const removeFromGroup = () => {
-    ManageUserService.removeFromGroup(token, userData.hID, userData.hToken, userData.shID).then(res => {
-      console.log(res.data);
+  const removeFromGroup = (userhToken) => {
+    ManageUserService.removeFromGroup(token, userData.hID, userhToken, userData.shID).then(res => {
+      console.log(res);
       if (res.data === []) {
         setAlertStatus(true)
         alertMessage('Only admin can remove the members')
         setAlertBadge('danger')
       } else {
+        console.log(userhToken)
         setAlertStatus(true)
         setAlertMessage('The user has been remove from the group.')
         setAlertBadge('success')
@@ -194,7 +196,7 @@ function MU_Groupmember() {
                           <td>
                             <div align="center">
                               {(data.CATEGORY === 'PUBLIC' || data.CATEGORY === 'TM') &&
-                                <button className="btn btn-minier btn-success" onClick={inviteToGroup}>Add to Group</button>
+                                <button className="btn btn-minier btn-success" onClick={() => inviteToGroup(data.H_TOKEN)}>Add to Group</button>
                               }
                             </div>
                           </td>
@@ -257,7 +259,7 @@ function MU_Groupmember() {
                             </td>
                             <td><div align="center">
                               {(userData.shID !== data.hId && data.POSITION_NAME !== 'Admin') &&
-                                <button className="btn btn-minier btn-danger" onClick={removeFromGroup}>Remove</button>
+                                <button className="btn btn-minier btn-danger" onClick={() => removeFromGroup(data.H_TOKEN)}>Remove</button>
                               }
                             </div>
                             </td>
