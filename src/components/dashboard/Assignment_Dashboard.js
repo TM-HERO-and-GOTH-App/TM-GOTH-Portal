@@ -34,7 +34,7 @@ function AssignmentDashboard(props) {
                                             <b className="green">
                                                 {
                                                     props.resolvedInFiveDays === 0
-                                                    || !data ? 0 : calculateCaseResolve(data.totalCase, props.resolvedInFiveDays)
+                                                    || data === null ? 0 : calculateCaseResolve(data.totalCase, props.resolvedInFiveDays)
                                                 }%
                                             </b>
                                         </td>
@@ -44,8 +44,7 @@ function AssignmentDashboard(props) {
                                         <td align="right">
                                             <b className="blue">
                                                 {
-                                                    data.CLOSED === null
-                                                    || !data ? 0 : data.CLOSED.toLocaleString()
+                                                    data.CLOSED === null ? 0 : data?.CLOSED?.toLocaleString()
                                                 }
                                             </b>
                                         </td>
@@ -55,8 +54,7 @@ function AssignmentDashboard(props) {
                                         <td align="right">
                                             <b className="blue">
                                                 {
-                                                    data.INPROGRESS === null
-                                                    || !data ? 0 : data.INPROGRESS.toLocaleString()
+                                                    data.INPROGRESS === null ? 0 : data?.INPROGRESS?.toLocaleString()
                                                 }
                                             </b>
                                         </td>
@@ -66,8 +64,7 @@ function AssignmentDashboard(props) {
                                         <td align="right">
                                             <b className="blue">
                                                 {
-                                                    data.ASSIGNED === null
-                                                    || !data ? 0 : data.ASSIGNED.toLocaleString()
+                                                    data.ASSIGNED === null ? 0 : data?.ASSIGNED?.toLocaleString()
                                                 }
                                             </b>
                                         </td>
@@ -77,8 +74,7 @@ function AssignmentDashboard(props) {
                                         <td align="right">
                                             <b className="green">
                                                 {
-                                                    data.GTOTAL === null
-                                                    || !data ? 0 : data.GTOTAL.toLocaleString()
+                                                    data.GTOTAL === null ? 0 : data?.GTOTAL?.toLocaleString()
                                                 }
                                             </b>
                                         </td>
