@@ -8,7 +8,7 @@ const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const LoginService = {
     requestToken(email) {
-        return axios.post(url + '/user//get-auth-token', {
+        return axios.post(url + '/user/get-auth-token', {
             apiKey: apiKey,
             email: email
         })

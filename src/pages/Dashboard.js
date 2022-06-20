@@ -26,11 +26,11 @@ function Dashboard() {
   //Below is all the function correspond to it's purpose:
   const getNationWideGroupData = async () => {
     const shID = '0' //All stakeholder
-    await DashboardService.getTotalCaseByGroup(token, userData.hID, stakeholderOption).then((res, err) => {
+    await DashboardService.getTotalCaseByGroup(token, stakeholderOption, userData.hID).then((res, err) => {
       if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
-      console.log(res.data, 'getTotalCaseByGroup');
+      // console.log(res.data, 'getTotalCaseByOtherStakeholder');
       setNationCase(res?.data);
       setFetchingData(false);
     })
@@ -38,8 +38,8 @@ function Dashboard() {
     await DashboardService.getTotalResolvedByGroup(token, stakeholderOption).then((res, err) => {
       if (res === undefined) return
       if (err) return
-      // console.log(Object.keys(res.data)[0], 'getTotalResolvedByGroup');
-      setTotalCaseResolveNation(Object.keys(res.data)[0]);
+      // console.log(Object.keys(res.data)[0][0], 'getTotalResolvedByStakeholder');
+      setTotalCaseResolveNation(Object.keys(res.data)[0][0]);
       setFetchingData(false);
 
     })
@@ -104,7 +104,7 @@ function Dashboard() {
     getNationWideGroupData();
     return () => { /* During unmount, the DOM wil be empty without any data */
     };
-  }, [])
+  }, [stakeholderOption])
 
   return (
     <Layout
@@ -119,8 +119,8 @@ function Dashboard() {
                   onChange={(e) => setStakeholderOption(e.currentTarget.value)}>
                   <option value='0'>Choose a group...</option>
                   {
-                    lovData.filter(lov => lov.lovGroup === 'STAKEHOLDER' && lov.lovName !== 'ADMIN').map((data) =>
-                      <option value={data.lovID} key={data.lovID}>{data.lovName}</option>
+                    lovData.filter(lov => lov.L_GROUP === 'STAKEHOLDER' && lov.L_NAME !== 'ADMIN').map((data) =>
+                      <option value={data.L_ID} key={data.L_ID}>{data.L_NAME}</option>
                     )
                   }
                 </select>
@@ -131,6 +131,7 @@ function Dashboard() {
             {/* My assignment Table */}
             <AssignmentDashboard
               typesOfAssignment='My Assignment'
+              isFetching={fetchingData}
               assignmentData={agentCase}
               resolvedInFiveDays={totalCaseResolveAgent}
               widgetOnClick={() => setShowAgentCaseDashboard(!showAgentCaseDashboard)}
@@ -142,6 +143,7 @@ function Dashboard() {
             {/*/!* Group assignment Table *!/*/}
             <AssignmentDashboard
               typesOfAssignment='My Group Assignment'
+              isFetching={fetchingData}
               assignmentData={groupCase}
               resolvedInFiveDays={totalCaseResolveGroup}
               widgetOnClick={() => setShowGroupCaseDashboard(!showGroupCaseDashboard)}
@@ -154,6 +156,7 @@ function Dashboard() {
             {/*/!* Average API Call time is 2.6 minutes. Fastest API call time is 1.3 minutes *!/*/}
             <AssignmentDashboard
               typesOfAssignment='Others Group Assignment'
+              isFetching={fetchingData}
               assignmentData={nationCase}
               resolvedInFiveDays={totalCaseResolveNation}
               widgetOnClick={() => setShowStateCaseDashboard(!showStateCaseDashboard)}
