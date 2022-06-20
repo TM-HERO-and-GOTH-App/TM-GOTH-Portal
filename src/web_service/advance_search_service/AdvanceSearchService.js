@@ -1,13 +1,12 @@
-const url = process.env.REACT_APP_API_URL;
+import axios from 'axios';
+
+const url = process.env.REACT_APP_LOCAL_API_URL;
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AdvancedSearchService = {
     advancedSearch(authToken, email, fullName, nricNum, srNum, ttNum, caseNum, vipName, customerName, 
         caseTypeID, startDateInput, endDateInput, heroGroupID) {
-        return fetch(url + '/case/advanced-search/', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
+        return axios.post(url + '/case/advanced-search', {
                 'authToken': authToken,
                 'fullname': fullName,
                 'email': email,
@@ -21,8 +20,7 @@ const AdvancedSearchService = {
                 'startDate': startDateInput,
                 'endDate': endDateInput,
                 'heroGroup': heroGroupID
-            })
-        }).then(res => res.json()).catch(err => console.log(err))
+        }).then(res => {return res}).catch(err => console.log(err))
     }
 }
 

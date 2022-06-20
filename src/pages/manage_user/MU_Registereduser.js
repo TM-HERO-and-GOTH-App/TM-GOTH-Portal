@@ -13,7 +13,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 
 function MU_Registereduser() {
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+    const userData = JSON.parse(sessionStorage.getItem('UserData'));
+    const token = JSON.parse(sessionStorage.getItem('userToken'));
     const [registerUser, setRegisterUser] = useState([]);
     const [selected, setSelected] = useState([]);
     const [isFetchingData, setIsFetchingData] = useState(true);
@@ -35,10 +36,10 @@ function MU_Registereduser() {
 
     useEffect(() => {
         const getUserData = async () => {
-            const res = await ManageUserService.getAllUser(token, '')
-            setRegisterUser(res);
-            setTMUser(res.filter(filter => filter.category === 'TM').length)
-            setTotalStakeholderUser(res.filter(filter => filter.category === 'STAKEHOLDER').length)
+            const res = await ManageUserService.getAllUser(token, userData.hID, 'ALL', 0, '')
+            setRegisterUser(res.data);
+            setTMUser(res.data.filter(filter => filter.CATEGORY === 'TM').length)
+            setTotalStakeholderUser(res.data.filter(filter => filter.CATEGORY === 'STAKEHOLDER').length)
             setIsFetchingData(false);
         }
         getUserData();
@@ -48,20 +49,20 @@ function MU_Registereduser() {
     // To avoid page crash and long fetching data
     let allTMUser = useMemo(() => registerUser
         .map(({
-                  category,
-                  email,
-                  fullName,
-                  hID,
-                  registeredDate,
-                  stakeholderName
+                  CATEGORY,
+                  EMAIL,
+                  FULLNAME,
+                  H_ID,
+                  REGISTERED_DATE,
+                  STAKEHOLDER_NAME
               }, keys) => ({
             keys,
-            category,
-            email,
-            fullName,
-            hID,
-            registeredDate,
-            stakeholderName,
+            CATEGORY,
+            EMAIL,
+            FULLNAME,
+            H_ID,
+            REGISTERED_DATE,
+            STAKEHOLDER_NAME,
         })), [registerUser])
 
     return (
@@ -130,17 +131,17 @@ function MU_Registereduser() {
                                                                     </TableCell>
                                                                     <TableCell sx={{textTransform: 'Capitalize'}}
                                                                                component="th" scope="row">
-                                                                        {data.fullName}
+                                                                        {data.FULLNAME}
                                                                     </TableCell>
-                                                                    <TableCell>{data.email}</TableCell>
-                                                                    <TableCell>{data.category}</TableCell>
+                                                                    <TableCell>{data.EMAIL}</TableCell>
+                                                                    <TableCell>{data.CATEGORY}</TableCell>
                                                                     <TableCell align={'center'}>
                                                                         <div>
-                                                                            {data.stakeholderName ? data.stakeholderName :
+                                                                            {data.STAKEHOLDER_NAME != null ? data.STAKEHOLDER_NAME :
                                                                                 <p style={{color: 'var(--color-danger)'}}>N/A</p>}
                                                                         </div>
                                                                     </TableCell>
-                                                                    <TableCell>{data.registeredDate}</TableCell>
+                                                                    <TableCell>{data.REGISTERED_DATE}</TableCell>
                                                                     <TableCell align={'center'}>
                                                                         <input type="checkbox" disabled/>
                                                                     </TableCell>

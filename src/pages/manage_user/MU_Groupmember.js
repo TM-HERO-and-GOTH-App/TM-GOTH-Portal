@@ -3,8 +3,8 @@ import Layout from '../Layout';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 function MU_Groupmember() {
-  const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-  const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+  const userData = JSON.parse(sessionStorage.getItem('UserData'));
+  const token = JSON.parse(sessionStorage.getItem('userToken'));
   const [userResult, setUserResult] = useState([]);
   const [groupResult, setGroupResult] = useState([]);
   const [alertStatus, setAlertStatus] = useState(false);
@@ -17,9 +17,9 @@ function MU_Groupmember() {
 
   useEffect(() => {
     const getGroupResult = () => {
-      ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
-        // console.log(res);
-        setGroupResult(res)
+      ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', userData.shID, 'Y').then(res => {
+        console.log(res.data);
+        setGroupResult(res.data)
       })
     }
 
@@ -28,9 +28,9 @@ function MU_Groupmember() {
 
   const getSearchUser = (e) => {
     e.preventDefault();
-    ManageUserService.getProfileByKeyword(token, userInput).then(res => {
-      // console.log(res);
-      setUserResult(res)
+    ManageUserService.getProfileByKeyword(token, userData.hID, userInput).then(res => {
+      console.log(res.data);
+      setUserResult(res.data)
     })
   }
 
@@ -54,9 +54,9 @@ function MU_Groupmember() {
   }
 
   const removeFromGroup = () => {
-    ManageUserService.removeFromGroup(token, '', userData.shID).then(res => {
-      // console.log(res);
-      if (res === null) {
+    ManageUserService.removeFromGroup(token, userData.hID, userData.hToken, userData.shID).then(res => {
+      console.log(res.data);
+      if (res.data === []) {
         setAlertStatus(true)
         alertMessage('Only admin can remove the members')
         setAlertBadge('danger')
@@ -187,13 +187,13 @@ function MU_Groupmember() {
                         i += 1;
                         return <tr key={i}>
                           <td><div align="center">{i}</div></td>
-                          <td>{data.fullName}</td>
-                          <td>{data.email}</td>
-                          <td>{data.category}</td>
-                          <td><div align="center">{data.stakeholderName ? data.stakeholderName : 'n/a'}</div></td>
+                          <td>{data.FULLNAME}</td>
+                          <td>{data.EMAIL}</td>
+                          <td>{data.CATEGORY}</td>
+                          <td><div align="center">{data.STAKEHOLDER_NAME ? data.STAKEHOLDER_NAME : 'n/a'}</div></td>
                           <td>
                             <div align="center">
-                              {(data.category === 'PUBLIC' || data.category === 'TM') &&
+                              {(data.CATEGORY === 'PUBLIC' || data.CATEGORY === 'TM') &&
                                 <button className="btn btn-minier btn-success" onClick={inviteToGroup}>Add to Group</button>
                               }
                             </div>
@@ -235,28 +235,28 @@ function MU_Groupmember() {
                           :
                           <tr key={i}>
                             <td><div align="center">{i}</div></td>
-                            <td>{data.fullName}</td>
-                            <td>{data.email}</td>
+                            <td>{data.FULLNAME}</td>
+                            <td>{data.EMAIL}</td>
                             <td>
-                              {data.positionName === 'Admin' ? <span className="label label-warning arrowed-right">{data.positionName}</span> : data.positionName}
+                              {data.POSITION_NAME === 'Admin' ? <span className="label label-warning arrowed-right">{data.POSITION_NAME}</span> : data.POSITION_NAME}
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_agent" type="checkbox" className="lbl" onClick={setAsAgent} checked={data.positionName === 'Agent' ? !agent : false} onChange={() => setAgent(!agent)} />
+                                <input name="set_agent" type="checkbox" className="lbl" onClick={setAsAgent} checked={data.POSITION_NAME === 'Agent' ? !agent : false} onChange={() => setAgent(!agent)} />
                               </div>
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_co" type="checkbox" className="lbl" onClick={setAsCoordinator} checked={data.positionName === 'Coordinator' ? !coordinator : false} onChange={() => setCoordinator(!coordinator)} />
+                                <input name="set_co" type="checkbox" className="lbl" onClick={setAsCoordinator} checked={data.POSITION_NAME === 'Coordinator' ? !coordinator : false} onChange={() => setCoordinator(!coordinator)} />
                               </div>
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_admin" type="checkbox" className="lbl" onClick={setAsAdmin} checked={data.positionName === 'Admin' ? !admin : false} onChange={(e) => setAdmin(e.target.value)} />
+                                <input name="set_admin" type="checkbox" className="lbl" onClick={setAsAdmin} checked={data.POSITION_NAME === 'Admin' ? !admin : false} onChange={(e) => setAdmin(e.target.value)} />
                               </div>
                             </td>
                             <td><div align="center">
-                              {(userData.shID !== data.hId && data.positionName !== 'Admin') &&
+                              {(userData.shID !== data.hId && data.POSITION_NAME !== 'Admin') &&
                                 <button className="btn btn-minier btn-danger" onClick={removeFromGroup}>Remove</button>
                               }
                             </div>
