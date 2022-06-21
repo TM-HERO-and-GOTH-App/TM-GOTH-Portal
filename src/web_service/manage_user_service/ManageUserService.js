@@ -81,7 +81,7 @@ const ManageUserService = {
         return axios.post(url + '/user/remove-from-stakeholder-group', {
                 authToken: authToken,
                 gID: gID,
-                cToken: gToken,
+                gToken: gToken,
                 shID: shID,
                 action: 'unset'
         }).then(res => {return res}).catch(err => console.log(err));

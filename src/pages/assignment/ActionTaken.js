@@ -14,7 +14,7 @@ function ActionTaken(props) {
     const [caseData, setCaseData] = useState({});
     const [ctID, setCTID] = useState('');
     const [caseRemarks, setCaseRemarks] = useState([]);
-    const [groupMembers, setGroupMembers] = useState([]);
+    // const [groupMembers, setGroupMembers] = useState([]);
     const [alertStatus, setAlertStatus] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertBadge, setAlertBadge] = useState('');
@@ -36,7 +36,7 @@ function ActionTaken(props) {
         const getGroupResult = () => {
             ManageUserService.getProfileByGroup(token, userData.shID).then((res) => {
                 // console.log(res, 'getGroupResult');
-                setGroupMembers(res.data);
+                // setGroupMembers(res.data);
                 setCoordinator(res.data.map(data => data.POSITION_NAME === "Coordinator"));
                 setAdmin(res.data.map(data => data.POSITION_NAME === "Admin"))
             })

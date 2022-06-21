@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const url = process.env.REACT_APP_LOCAL_API_URL;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const AdvancedSearchService = {
     advancedSearch(authToken, email, fullName, nricNum, srNum, ttNum, caseNum, vipName, customerName, 

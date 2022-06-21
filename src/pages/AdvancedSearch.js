@@ -36,8 +36,7 @@ function AdvancedSearch(props) {
         AdvancedSearchService.advancedSearch(token, emailInput, fullNameInput, nricInput, srNumberInput,
             ttNumberInput, caseNumberInput, vipNameInput, customerNameInput, caseType, startDateInput, endDateInput, heroGroupType)
             .then(res => {
-                console.log(res.data);
-                console.log(res.data.sqlMessage);
+                console.log(res, 'advancedSearch');
                 // console.log(startDateInput);
                 setSearchResult(res.data)
             })
