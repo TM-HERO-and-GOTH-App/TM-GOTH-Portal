@@ -58,8 +58,6 @@ function EditUser(props) {
 		initialLoad()
 	}, [])
 
-	moment.locale('en')
-
 	return (
 			<Layout pageContent={
 				<>

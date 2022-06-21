@@ -3,6 +3,7 @@ import Layout from '../Layout';
 import defaultUserLogo from '../../images/avatars/default.jpg';
 import UpdateProfileService from '../../web_service/update_profile_service/UpdateProfile';
 import {Link} from 'react-router-dom'
+import moment from "moment";
 
 const Userprofile = (props) => {
 	const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
@@ -181,7 +182,7 @@ const Userprofile = (props) => {
 									<div className="profile-info-row">
 										<div className="profile-info-name"> Joined Date</div>
 										<div className="profile-info-value">
-											<span className="editable" id="signup">{userData.registeredDate}</span>
+											<span className="editable" id="signup">{moment(userData.registeredDate).format('MMMM Do YYYY, h:mm:ss a')}</span>
 										</div>
 									</div>
 									{/* ?php
