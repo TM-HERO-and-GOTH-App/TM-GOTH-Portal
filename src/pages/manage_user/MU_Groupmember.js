@@ -3,8 +3,8 @@ import Layout from '../Layout';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 function MU_Groupmember() {
-  const userData = JSON.parse(sessionStorage.getItem('UserData'));
-  const token = JSON.parse(sessionStorage.getItem('userToken'));
+  const [userData] = JSON.parse(sessionStorage.getItem('UserData'));
+  const [token] = JSON.parse(sessionStorage.getItem('userToken'));
   const [userResult, setUserResult] = useState([]);
   const [groupResult, setGroupResult] = useState([]);
   const [alertStatus, setAlertStatus] = useState(false);
