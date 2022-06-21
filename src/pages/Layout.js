@@ -46,7 +46,7 @@ function Layout(props) {
     }
 
     return (
-        <div class={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
+        <div className={changeNavBarColor === "#222A2D" ? "skin-1" : "no-skin"}>
             <div id="navbar"
                 className={`navbar navbar-default navbar-collapse ace-save-state ${(fixedNavBar === true || fixedSideBar === true) ?
                     "navbar-fixed-top" : ""}`}>
@@ -143,7 +143,7 @@ function Layout(props) {
                                 <span className="nav_menu-item"> Dashboard </span>
                             </a>
 
-                            <b class="arrow" />
+                            <b className="arrow" />
                         </li>
 
                         <li className={window.location.href.indexOf("MyAssignments") > -1 ? 'active open hover' : 'hover'} onMouseOver={() => setMyAssignmentDropDownOpen(true)} onMouseLeave={() => setMyAssignmentDropDownOpen(false)}>
@@ -409,7 +409,7 @@ function Layout(props) {
 
                             </div>{/* /.ace-settings-container */}
 
-                            <div class="page-header">
+                            <div className="page-header">
                                 <h1>{props.pageTitle}</h1>
                             </div>{/* <!-- /.page-header --> */}
 

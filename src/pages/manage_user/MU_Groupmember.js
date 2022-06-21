@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
-function MU_Groupmember() {
-  const [userData] = JSON.parse(sessionStorage.getItem('UserData'));
-  const [token] = JSON.parse(sessionStorage.getItem('userToken'));
+function MU_Groupmember(props) {
+  const userData = JSON.parse(sessionStorage.getItem('UserData'));
+  const token = JSON.parse(sessionStorage.getItem('userToken'));
   const [userResult, setUserResult] = useState([]);
-  const [groupResult, setGroupResult] = useState([]);
+  let [groupResult, setGroupResult] = useState([]);
   const [alertStatus, setAlertStatus] = useState(false);
   const [agent, setAgent] = useState(false);
   const [vip, setVip] = useState(false);
-  const [admin, setAdmin] = useState(false);
+  let [admin, setAdmin] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertBadge, setAlertBadge] = useState('');
   const [userInput, setUserInput] = useState('');
@@ -24,7 +24,8 @@ function MU_Groupmember() {
     }
 
     getGroupResult();
-  }, [])
+    // if(getGroupResult.length) getGroupResult();
+  }, [setGroupResult.length, token, userData.hID, userData.shID])
 
   const getSearchUser = (e) => {
     e.preventDefault();
@@ -40,122 +41,131 @@ function MU_Groupmember() {
 
   const inviteToGroup = (hToken) => {
     ManageUserService.inviteToGroup(token, userData.hID, hToken, userData.shID).then(res => {
-      // console.log(res);
-      if (res === null) {
-        setAlertStatus(true)
-        setAlertMessage('Only group admin can do the invitation')
-        setAlertBadge('danger')
-      } else {
+      // console.log(res.data);
+      if (res.data[0].response === 'OK') {
         setAlertStatus(true)
         setAlertMessage('The user has been successfully added.')
         setAlertBadge('success')
+        window.location.reload(false);
+      }
+      if (res.data[0].response === 'FAILED') {
+        setAlertStatus(true)
+        setAlertMessage('Only group admin can do the invitation')
+        setAlertBadge('danger')
       }
     })
   }
 
-  const removeFromGroup = (hToken) => {
+  const removeFromGroup = (e,hToken) => {
     ManageUserService.removeFromGroup(token, userData.hID, hToken, userData.shID).then(res => {
-      console.log(res);
-      if (res.data === []) {
+      console.log(res.data);
+      if (res.data[0].response === 'OK') {
         setAlertStatus(true)
-        alertMessage('Only admin can remove the members')
-        setAlertBadge('danger')
-      } else {
-        console.log(hToken)
-        setAlertStatus(true)
-        setAlertMessage('The user has been remove from the group.')
+        setAlertMessage('The user has been successfully added.')
         setAlertBadge('success')
+        window.location.reload(false);
+      }
+      if (res.data[0].response === 'FAILED') {
+        setAlertStatus(true)
+        setAlertMessage('Only group admin can do the invitation')
+        setAlertBadge('danger')
       }
     })
   }
 
   const setAsAgent = (hToken) => {
     ManageUserService.setAsAgent(token, userData.hID, hToken, userData.shID).then(res => {
-      console.log(res.data);
-      if (res === null) {
-        setAlertStatus(true)
-        alertMessage('Only admin can remove the members')
-        setAlertBadge('danger')
-      } else {
+      // console.log(res.data);
+      if (res.data[0].response === 'OK') {
         setAlertStatus(true)
         setAlertMessage('The user has been successfully updated as Agent.')
         setAlertBadge('success')
+        window.location.reload(false);
+      }
+      if (res.data[0].response === 'FAILED') {
+        setAlertStatus(true)
+        setAlertMessage('Only group admin can do the invitation')
+        setAlertBadge('danger')
       }
     })
   }
 
   const setAsAdmin = (hToken) => {
     ManageUserService.setAsAdmin(token, userData.hID, hToken, userData.shID).then(res => {
-      console.log(res.data);
-      if (res === null) {
+      // console.log(res.data);
+      if (res.data[0].response === 'OK') {
         setAlertStatus(true)
-        alertMessage('Only group admin can set the role.')
-        setAlertBadge('danger')
-      } else {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully updated as Admin.')
+        setAlertMessage('The user has been successfully updated to Admin.')
         setAlertBadge('success')
+        window.location.reload(false);
+      }
+      if (res.data[0].response === 'FAILED') {
+        setAlertStatus(true)
+        setAlertMessage('Only group admin can do the invitation')
+        setAlertBadge('danger')
       }
     })
   }
 
   const setAsVip = (hToken) => {
     ManageUserService.setAsVip(token, userData.hID, hToken, userData.shID).then(res => {
-      console.log(res.data);
-      if (res === null) {
+      // console.log(res.data);
+      if (res.data[0].response === 'OK') {
         setAlertStatus(true)
-        setAlertMessage('Only group admin can set the role.')
-        setAlertBadge('danger')
-      } else {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully updated as Coordinator.')
+        setAlertMessage('The user has been successfully updated to VIP.')
         setAlertBadge('success')
+        window.location.reload(false);
+      }
+      if (res.data[0].response === 'FAILED') {
+        setAlertStatus(true)
+        setAlertMessage('Only group admin can do the invitation')
+        setAlertBadge('danger')
       }
     })
   }
 
   return (
     <Layout pageContent={
-        <div>
-          <a name="group-members" />
+      <div>
+        <a name="group-members" />
 
-          {alertStatus &&
-            <div className="row">
-              <div className="col-sm-12">
-                <div className={`alert alert-block alert-${alertBadge}`}>
-                  <button type="button" className="close" data-dismiss="alert">
-                    <i className="ace-icon fa fa-times" />
-                  </button>
-                  <p>{alertMessage}</p>
-                </div>
-              </div>
-              <br /><br />
-              <div className="space-10" />
-            </div>
-          }
-
+        {alertStatus &&
           <div className="row">
-            <div className="col-xs-6">
-              <form name="form" onSubmit={getSearchUser}>
-                <div className="input-group">
-                  <span className="input-group-addon">
-                    <i className="ace-icon fa fa-check" />
-                  </span>
-                  <input type="text" className="form-control search-query" name="keyword" placeholder="Search Profile by Name" value={userInput} onChange={(e) => setUserInput(e.target.value)} />
-                  <span className="input-group-btn">
-                    <button type="submit" className="btn btn-inverse btn-white">
-                      <span className="ace-icon fa fa-search icon-on-right bigger-110" />
-                      Search
-                    </button>
-                  </span>
-                </div>
-              </form>
+            <div className="col-sm-12">
+              <div className={`alert alert-block alert-${alertBadge}`}>
+                <button type="button" className="close" data-dismiss="alert">
+                  <i className="ace-icon fa fa-times" />
+                </button>
+                <p>{alertMessage}</p>
+              </div>
             </div>
-            <div className="col-xs-6 pull-right">
-            </div>
+            <br /><br />
+            <div className="space-10" />
           </div>
-          <div className="space-2" />
-          {
+        }
+
+        <div className="row">
+          <div className="col-xs-6">
+            <form name="form" onSubmit={getSearchUser}>
+              <div className="input-group">
+                <span className="input-group-addon">
+                  <i className="ace-icon fa fa-check" />
+                </span>
+                <input type="text" className="form-control search-query" name="keyword" placeholder="Search Profile by Name" value={userInput} onChange={(e) => setUserInput(e.target.value)} />
+                <span className="input-group-btn">
+                  <button type="submit" className="btn btn-inverse btn-white">
+                    <span className="ace-icon fa fa-search icon-on-right bigger-110" />
+                    Search
+                  </button>
+                </span>
+              </div>
+            </form>
+          </div>
+          <div className="col-xs-6 pull-right">
+          </div>
+        </div>
+        <div className="space-2" />
+        {
           userInput !== '' ?
             <div>
               <div>
@@ -184,23 +194,23 @@ function MU_Groupmember() {
                     </thead>
                     <tbody>
                       {
-                      userResult.map((data, i) => {
-                        i += 1;
-                        return <tr key={i}>
-                          <td><div align="center">{i}</div></td>
-                          <td>{data.FULLNAME}</td>
-                          <td>{data.EMAIL}</td>
-                          <td>{data.CATEGORY}</td>
-                          <td><div align="center">{data.STAKEHOLDER_NAME ? data.STAKEHOLDER_NAME : 'n/a'}</div></td>
-                          <td>
-                            <div align="center">
-                              {(data.CATEGORY === 'PUBLIC' || data.CATEGORY === 'TM') &&
-                                <button className="btn btn-minier btn-success" onClick={() => inviteToGroup(data.H_TOKEN)}>Add to Group</button>
-                              }
-                            </div>
-                          </td>
-                        </tr>
-                      })
+                        userResult.map((data, i) => {
+                          i += 1;
+                          return <tr key={i}>
+                            <td><div align="center">{i}</div></td>
+                            <td>{data.FULLNAME}</td>
+                            <td>{data.EMAIL}</td>
+                            <td>{data.CATEGORY}</td>
+                            <td><div align="center">{data.STAKEHOLDER_NAME ? data.STAKEHOLDER_NAME : 'n/a'}</div></td>
+                            <td>
+                              <div align="center">
+                                {(data.CATEGORY === 'PUBLIC' || data.CATEGORY === 'TM') &&
+                                  <button className="btn btn-minier btn-success" onClick={() => inviteToGroup(data.H_TOKEN)}>Add to Group</button>
+                                }
+                              </div>
+                            </td>
+                          </tr>
+                        })
                       }
                     </tbody>
                   </table>
@@ -220,7 +230,7 @@ function MU_Groupmember() {
                       <th width="15%">Email</th>
                       <th width="10%">Position</th>
                       <th width="10%"><div align="center">Agent</div></th>
-                      <th width="10%"><div align="center">Coordinator</div></th>
+                      <th width="10%"><div align="center">VIP</div></th>
                       <th width="10%"><div align="center">Admin</div></th>
                       <th width="10%"><div align="center"><i className="ace-icon fa fa-bookmark" /></div></th>
                     </tr>
@@ -229,10 +239,10 @@ function MU_Groupmember() {
                     {
                       groupResult.map((data, i) => {
                         i += 1;
-                        return data.response === 'FAILED' ? 
-                        <tr>
-                          <td colSpan={4}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td>
-                        </tr>
+                        return data.response === 'FAILED' ?
+                          <tr>
+                            <td colSpan={4}><span style={{ color: 'red' }}>List is Empty. Please select other Group/Stakeholder</span></td>
+                          </tr>
                           :
                           <tr key={i}>
                             <td><div align="center">{i}</div></td>
@@ -243,17 +253,17 @@ function MU_Groupmember() {
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_agent" type="checkbox" className="lbl" value={agent} onClick={() => setAsAgent(data.H_TOKEN)} checked={data.POSITION_NAME === 'Agent' ? !agent : false} onChange={(e) => setAgent(e.currentTarget.value)} />
+                                <input name="set_agent" type="checkbox" className="lbl" value={agent} onClick={() => setAsAgent(data.H_TOKEN)} checked={data.POSITION_NAME === 'Agent' ? !agent : false} onChange={(toggle) => setAgent(!toggle)} />
                               </div>
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_co" type="checkbox" className="lbl" value={vip} onClick={() => setAsVip(data.H_TOKEN)} checked={data.POSITION_NAME === 'Coordinator' ? !vip : false} />
+                                <input name="set_co" type="checkbox" className="lbl" value={vip} onClick={() => setAsVip(data.H_TOKEN)} checked={data.POSITION_NAME === 'Coordinator' ? !vip : false} onChange={(toggle) => setVip(!toggle)} />
                               </div>
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_admin" type="checkbox" className="lbl" value={admin} onClick={() => setAsAdmin(data.H_TOKEN)} checked={data.POSITION_NAME === 'Admin' ? !admin : false} />
+                                <input name="set_admin" type="checkbox" className="lbl" value={admin} onClick={() => setAsAdmin(data.H_TOKEN)} checked={data.POSITION_NAME === 'Admin' ? !admin : false} onChange={(toggle) => setAdmin(!toggle)} />
                               </div>
                             </td>
                             <td><div align="center">
@@ -269,9 +279,9 @@ function MU_Groupmember() {
                 </table>
               </div>{/* /.span */}
             </div>
-          }
-          <br />
-        </div>
+        }
+        <br />
+      </div>
     }
     />
   );

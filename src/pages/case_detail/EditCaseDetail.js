@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
 // import Footer from "../Footer";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function EditCaseDetail(props) {
     const userData = JSON.parse(sessionStorage.getItem('UserData'))
@@ -55,9 +55,9 @@ function EditCaseDetail(props) {
             productType,
             packageNameInput,
             serviceIDInput,
+            serviceAddressInput,
             srNumberInput,
             ttNumberInput,
-            serviceAddressInput,
             locationType,
             customerNameInput,
             segmentType,
@@ -68,19 +68,16 @@ function EditCaseDetail(props) {
             externalSystemInput,
             areaCode,
             subAreaCode,
-            parseFloat(symptomCode),
-            caseDetailData.SYSTEM_TARGET
+            parseFloat(symptomCode)
             // ambassador
         ).then((res) => {
-            console.log(res);
-            if (res.status === "FAILED") {
+            console.log(res.data[0]);
+            if (res.data[0].response === "FAILED") {
                 setAlertStatus(true);
                 setStatusBadge("danger");
                 setAlertMessage("The case failed to updated.");
             } else {
-                setAlertStatus(true);
-                setStatusBadge("success");
-                setAlertMessage("The case has been successfully updated.");
+                props.history.push(`/case-detail/${caseDetailData.C_TOKEN}`, {message: res.data[0].message})
             }
         });
     };
@@ -110,8 +107,8 @@ function EditCaseDetail(props) {
     }
 
     useEffect(() => {
-            onInitialLoad();
-        }, [caseDetailData]
+        onInitialLoad();
+    }, [caseDetailData]
     )
 
     const reset = () => {
@@ -140,7 +137,7 @@ function EditCaseDetail(props) {
         <Layout
             pageTitle={
                 <span>
-                    CASE DETAIL : <span style={{color: 'green'}}>{caseDetailData.CASE_NUM}</span>
+                    CASE DETAIL : <span style={{ color: 'green' }}>{caseDetailData.CASE_NUM}</span>
                 </span>
             }
             pageContent={
@@ -149,30 +146,30 @@ function EditCaseDetail(props) {
                         <div className="col-sm-12">
                             <div className={`alert alert-block alert-${statusBadge}`}>
                                 <button type="button" className="close" data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times"/>
+                                    <i className="ace-icon fa fa-times" />
                                 </button>
                                 {alertMessage}
                             </div>
                         </div>
                     )}
-                    <br/>
-                    <div className="space-10"/>
+                    <br />
+                    <div className="space-10" />
                     <div className="col-sm-4">
                         <Link
                             className="btn btn-primary"
                             to={`/case-detail/${caseToken}`}
                         >
-                            <i className="ace-icon fa fa-arrow-left icon-on-left"/>
+                            <i className="ace-icon fa fa-arrow-left icon-on-left" />
                             Back to Case Detail
                         </Link>
                     </div>
-                    <br/>
-                    <div className="space-20"/>
+                    <br />
+                    <div className="space-20" />
                     <form name="form" onSubmit={editCaseDetail} onReset={reset}>
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{margin: 0}}
+                                style={{ margin: 0 }}
                             >
                                 {caseDetailData ? (
                                     <div className="profile-info-row">
@@ -201,7 +198,7 @@ function EditCaseDetail(props) {
                                             <div className="profile-info-name">CASE OWNER</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <i style={{color: "red"}}>Unassigned</i>
+                                                    <i style={{ color: "red" }}>Unassigned</i>
                                                 </span>
                                             </div>
                                         </div>
@@ -209,7 +206,7 @@ function EditCaseDetail(props) {
                                 )}
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{width: "20%"}}>
+                                    <div className="profile-info-name" style={{ width: "20%" }}>
                                         HERO
                                     </div>
 
@@ -227,7 +224,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{width: "100%"}}
+                                                style={{ width: "100%" }}
                                                 type="text"
                                                 name="customerName"
                                                 placeholder="Customer Name"
@@ -239,7 +236,7 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{color: "red"}}>
+                                    <div className="profile-info-name" style={{ color: "red" }}>
                                         State{" "}
                                     </div>
 
@@ -288,7 +285,7 @@ function EditCaseDetail(props) {
                                     <div className="profile-info-name">Descriptions</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="login">
-                                            <i style={{color: "blue"}}>
+                                            <i style={{ color: "blue" }}>
                                                 {caseDetailData.CASE_CONTENT}
                                             </i>
                                         </span>
@@ -323,17 +320,127 @@ function EditCaseDetail(props) {
                                         </div>
                                     </div>
                                 ) : null}
+
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Login ID</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{ width: "100%" }}
+                                                type="text"
+                                                name="loginID"
+                                                placeholder="Login ID"
+                                                value={customerLoginID}
+                                                onChange={(e) => setCustomerLoginID(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Service ID</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{ width: "100%" }}
+                                                type="text"
+                                                name="serviceID"
+                                                placeholder="Service ID"
+                                                value={serviceIDInput}
+                                                onChange={(e) => setServiceIDInput(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Service Address</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{ width: "100%" }}
+                                                type="text"
+                                                name="serviceAddress"
+                                                placeholder="Service Address"
+                                                value={serviceAddressInput}
+                                                onChange={(e) => setServiceAddressInput(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Ambassador</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="segmentID"
+                                            value={ambassador}
+                                            onChange={(e) => setAmbassador(e.target.value)}
+                                            disabled
+                                        >
+                                            <option value={false}>False</option>
+                                            <option value={true}>True</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">Stakeholder Ref.</div>
+                                    <div className="profile-info-value">
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="stakeholderRef"
+                                            data-placeholder="Choose a Stakeholder Reference..."
+                                            value={stakeHolderRef}
+                                            onChange={(e) => setStakeHolderRef(e.target.value)}
+                                        >
+                                            <option value="n/a" selected="yes">Choose a Stakeholder Reference...
+                                            </option>
+                                            <option value="NMO">NMO</option>
+                                            <option value="BRD">BRD</option>
+                                            <option value="PRODUCT">Product</option>
+                                            <option value="RRT">RRT</option>
+                                            <option value="RRM">RRM</option>
+                                            <option value="GIT">GIT</option>
+                                            <option value="RESELLER">Reseller</option>
+                                            <option value="CMC">CMC</option>
+                                            <option value="TMPOINT">TM Point</option>
+                                            <option value="NOC">NOC</option>
+                                            <option value="CSM">CSM State</option>
+                                            <option value="SFM">SFM</option>
+                                            <option value="LOB/PTT">LOB/PTT</option>
+                                            <option value="Customer">Customer</option>
+                                            <option value="Contact-Centre">Contact Centre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name">External system Ref.</div>
+                                    <div className="profile-info-value">
+                                        <span className="editable" id="signup">
+                                            <input
+                                                className="input-sm"
+                                                style={{ width: "100%" }}
+                                                type="text"
+                                                name="extSysRef"
+                                                placeholder="External System Reference"
+                                                value={externalSystemInput}
+                                                onChange={(e) => setExternalSystemInput(e.target.value)}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{margin: 0}}
+                                style={{ margin: 0 }}
                             >
                                 <div className="profile-info-row">
                                     <div
                                         className="profile-info-name"
-                                        style={{color: "red", width: "20%"}}
+                                        style={{ color: "red", width: "20%" }}
                                     >
                                         Case Type
                                     </div>
@@ -359,7 +466,7 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{color: "red"}}>
+                                    <div className="profile-info-name" style={{ color: "red" }}>
                                         Product Name
                                     </div>
                                     <div className="profile-info-value">
@@ -419,7 +526,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{width: "100%"}}
+                                                style={{ width: "100%" }}
                                                 type="text"
                                                 name="packageName"
                                                 placeholder="Package Name"
@@ -429,64 +536,78 @@ function EditCaseDetail(props) {
                                         </span>
                                     </div>
                                 </div>
+                                
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name">Login ID</div>
+                                    <div className="profile-info-name">Symptom</div>
                                     <div className="profile-info-value">
-                                        <span className="editable" id="signup">
-                                            <input
-                                                className="input-sm"
-                                                style={{width: "100%"}}
-                                                type="text"
-                                                name="loginID"
-                                                placeholder="Login ID"
-                                                value={customerLoginID}
-                                                onChange={(e) => setCustomerLoginID(e.target.value)}
-                                            />
-                                        </span>
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="symptomType"
+                                            value={symptomCode}
+                                            onChange={(e) => setSymptomCode(e.target.value)}
+                                            placeholder='Choose a Symptom Type...'
+                                        >
+                                            <option value='0' disabled>Choose a Symptom Type</option>
+                                            {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                            <option value='800'>All Services Down</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name">Service ID</div>
+                                    <div className="profile-info-name">Area (for SR creation)</div>
                                     <div className="profile-info-value">
-                                        <span className="editable" id="signup">
-                                            <input
-                                                className="input-sm"
-                                                style={{width: "100%"}}
-                                                type="text"
-                                                name="serviceID"
-                                                placeholder="Service ID"
-                                                value={serviceIDInput}
-                                                onChange={(e) => setServiceIDInput(e.target.value)}
-                                            />
-                                        </span>
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="areaCode"
+                                            value={areaCode}
+                                            onChange={(e) => setAreaCode(e.target.value)}
+                                        >
+                                            <option value='0' disabled>Choose a Area Type</option>
+                                            {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                            <option value='660'>Service Failure</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name">Service Address</div>
+                                    <div className="profile-info-name">Sub-Area (for SR creation)</div>
                                     <div className="profile-info-value">
-                                        <span className="editable" id="signup">
-                                            <input
-                                                className="input-sm"
-                                                style={{width: "100%"}}
-                                                type="text"
-                                                name="serviceAddress"
-                                                placeholder="Service Address"
-                                                value={serviceAddressInput}
-                                                onChange={(e) => setServiceAddressInput(e.target.value)}
-                                            />
-                                        </span>
+                                        <select
+                                            className="chosen-select form-control"
+                                            name="subAreaCode"
+                                            value={subAreaCode}
+                                            onChange={(e) => setSubAreaCode(e.target.value)}
+                                        >
+                                            <option value='0' disabled>Choose a Sub-area Type</option>
+                                            {/* {
+                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
+                                                            return <option key={key}
+                                                                value={data.lovID}>{data.lovName}</option>
+                                                        })
+                                                    } */}
+                                            <option value='700'>All Services Down</option>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{color: "red"}}>
+                                    <div className="profile-info-name" style={{ color: "red" }}>
                                         SR Number
                                     </div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{width: "100%"}}
+                                                style={{ width: "100%" }}
                                                 type="text"
                                                 name="srNum"
                                                 placeholder="SR Number"
@@ -503,7 +624,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{width: "100%"}}
+                                                style={{ width: "100%" }}
                                                 type="text"
                                                 name="ttNum"
                                                 placeholder="TT Number"
@@ -593,7 +714,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{width: "100%"}}
+                                                style={{ width: "100%" }}
                                                 type="text"
                                                 name="ckcNum"
                                                 placeholder="CKC Number"
@@ -603,141 +724,19 @@ function EditCaseDetail(props) {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name">Stakeholder Ref.</div>
-                                    <div className="profile-info-value">
-                                        <select
-                                            className="chosen-select form-control"
-                                            name="stakeholderRef"
-                                            data-placeholder="Choose a Stakeholder Reference..."
-                                            value={stakeHolderRef}
-                                            onChange={(e) => setStakeHolderRef(e.target.value)}
-                                        >
-                                            <option value="n/a" selected="yes">Choose a Stakeholder Reference...
-                                            </option>
-                                            <option value="NMO">NMO</option>
-                                            <option value="BRD">BRD</option>
-                                            <option value="PRODUCT">Product</option>
-                                            <option value="RRT">RRT</option>
-                                            <option value="RRM">RRM</option>
-                                            <option value="GIT">GIT</option>
-                                            <option value="RESELLER">Reseller</option>
-                                            <option value="CMC">CMC</option>
-                                            <option value="TMPOINT">TM Point</option>
-                                            <option value="NOC">NOC</option>
-                                            <option value="CSM">CSM State</option>
-                                            <option value="SFM">SFM</option>
-                                            <option value="LOB/PTT">LOB/PTT</option>
-                                            <option value="Customer">Customer</option>
-                                            <option value="Contact-Centre">Contact Centre</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name">External system Ref.</div>
-                                    <div className="profile-info-value">
-                                        <span className="editable" id="signup">
-                                            <input
-                                                className="input-sm"
-                                                style={{width: "100%"}}
-                                                type="text"
-                                                name="extSysRef"
-                                                placeholder="External System Reference"
-                                                value={externalSystemInput}
-                                                onChange={(e) => setExternalSystemInput(e.target.value)}
-                                            />
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name">Symptom</div>
-                                    <div className="profile-info-value">
-                                        <select
-                                            className="chosen-select form-control"
-                                            name="symptomType"
-                                            value={symptomCode}
-                                            onChange={(e) => setSymptomCode(e.target.value)}
-                                            placeholder='Choose a Symptom Type...'
-                                        >
-                                            <option value='0' disabled>Choose a Symptom Type</option>
-                                            {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
-                                                            return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
-                                                        })
-                                                    } */}
-                                            <option value='800'>All Services Down</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name">Area (for SR creation)</div>
-                                    <div className="profile-info-value">
-                                        <select
-                                            className="chosen-select form-control"
-                                            name="areaCode"
-                                            value={areaCode}
-                                            onChange={(e) => setAreaCode(e.target.value)}
-                                        >
-                                            <option value='0' disabled>Choose a Area Type</option>
-                                            {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                                                            return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
-                                                        })
-                                                    } */}
-                                            <option value='660'>Service Failure</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name">Sub-Area (for SR creation)</div>
-                                    <div className="profile-info-value">
-                                        <select
-                                            className="chosen-select form-control"
-                                            name="subAreaCode"
-                                            value={subAreaCode}
-                                            onChange={(e) => setSubAreaCode(e.target.value)}
-                                        >
-                                            <option value='0' disabled>Choose a Sub-area Type</option>
-                                            {/* {
-                                                        lovData.filter(filter => filter.lovGroup === 'CASE-TYPE').map((data, key) => {
-                                                            return <option key={key}
-                                                                value={data.lovID}>{data.lovName}</option>
-                                                        })
-                                                    } */}
-                                            <option value='700'>All Services Down</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="profile-info-row">
-                                    <div className="profile-info-name">Ambassador</div>
-                                    <div className="profile-info-value">
-                                        <select
-                                            className="chosen-select form-control"
-                                            name="segmentID"
-                                            value={ambassador}
-                                            onChange={(e) => setAmbassador(e.target.value)}
-                                            disabled
-                                        >
-                                            <option value={false}>False</option>
-                                            <option value={true}>True</option>
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-                        <div style={{clear: "both"}}/>
-                        <div className="col-sm-6" style={{paddingTop: "30px"}}>
-                            <p style={{color: "red"}}>
+                        <div style={{ clear: "both" }} />
+                        <div className="col-sm-6" style={{ paddingTop: "30px" }}>
+                            <p style={{ color: "red" }}>
                                 <i>*** Inputs with red color are compulsory</i>
                             </p>
                             <button type="reset" className="btn btn-sm btn-inverse">
-                                <i className="ace-icon fa fa-repeat align-top bigger-125"/>
+                                <i className="ace-icon fa fa-repeat align-top bigger-125" />
                                 <span>Reset</span>
                             </button>
                             <button type="submit" className="btn btn-sm btn-success">
-                                <i className="ace-icon fa fa-save align-top bigger-125"/>
+                                <i className="ace-icon fa fa-save align-top bigger-125" />
                                 Update Info
                             </button>
                         </div>

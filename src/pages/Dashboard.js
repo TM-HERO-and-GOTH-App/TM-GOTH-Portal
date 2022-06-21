@@ -9,19 +9,19 @@ function Dashboard() {
   const userData = JSON.parse(sessionStorage.getItem('UserData'));
   const token = JSON.parse(sessionStorage.getItem('userToken'));
   const lovData = JSON.parse(sessionStorage.getItem('LovData'));
-  const [fetchingData, setFetchingData] = useState(true);
-  const [showAgentCaseDashboard, setShowAgentCaseDashboard] = useState(true);
-  const [showGroupCaseDashboard, setShowGroupCaseDashboard] = useState(true);
-  const [showStateCaseDashboard, setShowStateCaseDashboard] = useState(true);
-  const [totalCaseResolveAgent, setTotalCaseResolveAgent] = useState([]);
-  const [totalCaseResolveGroup, setTotalCaseResolveGroup] = useState([]);
-  const [totalCaseResolveNation, setTotalCaseResolveNation] = useState([]);
-  const [agentCase, setAgentCase] = useState([]);
-  const [groupCase, setGroupCase] = useState([]);
-  const [nationCase, setNationCase] = useState([]);
-  const [stateCase, setStateCase] = useState([]);
-  const [registerUser, setRegisterUser] = useState([]);
-  const [stakeholderOption, setStakeholderOption] = useState('0');
+  let [fetchingData, setFetchingData] = useState(true);
+  let [showAgentCaseDashboard, setShowAgentCaseDashboard] = useState(true);
+  let [showGroupCaseDashboard, setShowGroupCaseDashboard] = useState(true);
+  let [showStateCaseDashboard, setShowStateCaseDashboard] = useState(true);
+  let [totalCaseResolveAgent, setTotalCaseResolveAgent] = useState([]);
+  let [totalCaseResolveGroup, setTotalCaseResolveGroup] = useState([0]);
+  let [totalCaseResolveNation, setTotalCaseResolveNation] = useState([0]);
+  let [agentCase, setAgentCase] = useState([]);
+  let [groupCase, setGroupCase] = useState([]);
+  let [nationCase, setNationCase] = useState([0]);
+  let [stateCase, setStateCase] = useState([]);
+  let [registerUser, setRegisterUser] = useState([]);
+  let [stakeholderOption, setStakeholderOption] = useState('0');
 
   //Below is all the function correspond to it's purpose:
   const getNationWideGroupData = async () => {
@@ -30,7 +30,7 @@ function Dashboard() {
       if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
-      // console.log(res.data, 'getTotalCaseByOtherStakeholder');
+      console.log(res.data, 'getTotalCaseByOtherStakeholder');
       setNationCase(res?.data);
       setFetchingData(false);
     })
@@ -38,7 +38,7 @@ function Dashboard() {
     await DashboardService.getTotalResolvedByGroup(token, stakeholderOption).then((res, err) => {
       if (res === undefined) return
       if (err) return
-      // console.log(Object.keys(res.data)[0][0], 'getTotalResolvedByStakeholder');
+      console.log(Object.keys(res.data)[0][0], 'getTotalResolvedByStakeholder');
       setTotalCaseResolveNation(Object.keys(res.data)[0][0]);
       setFetchingData(false);
 
@@ -73,7 +73,7 @@ function Dashboard() {
 
       DashboardService.getTotalResolvedByGroup(token, userData.shID).then(res => {
         if (res === undefined) return
-        console.log(Object.keys(res.data)[0], 'getTotalResolvedByGroup')
+        // console.log(Object.keys(res.data)[0], 'getTotalResolvedByGroup')
         setTotalCaseResolveGroup(Object.keys(res.data)[0]);
         setFetchingData(false);
       })
