@@ -1,9 +1,9 @@
 const url = process.env.REACT_APP_API_URL;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
 
 const CaseService = {
     createSubmit(authToken, customer_name, Mobile_NO, Case_Content, areaLocation, caseTypeID, productID, additionalRemark, herobuddyResponse) {
-		return fetch(url + '/submit', {
+		return fetch(devUrl + '/submit', {
 			method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -25,7 +25,7 @@ const CaseService = {
 	},
 
     createCase(authToken, customer_name, IC_NO, Mobile_NO, Case_Content,areaLocation,flag,sourceID) {
-		return fetch(url + '/create-from-app', {
+		return fetch(devUrl + '/create-from-app', {
 			method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -45,7 +45,7 @@ const CaseService = {
 	},
 
     attachPicture(authToken, cToken, filename, geotag_longitude, geotag_latitude) {
-		return fetch(url + '/attach-picture', {
+		return fetch(devUrl + '/attach-picture', {
 			method: 'POST',
             headers,
             body: JSON.stringify({

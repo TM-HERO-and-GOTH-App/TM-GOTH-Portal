@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 const url = process.env.REACT_APP_LOCAL_API_URL;
-const headers = {'Content-Type': 'application/json; charset=utf-8'};
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
 
 const ManageUserService = {
 
 	inviteToGroup(authToken, gID, hToken, shID) {
-		return axios.post(url + '/user/invite-to-stakeholder-group', {
+		return axios.post(devUrl + '/user/invite-to-stakeholder-group', {
 			authToken: authToken,
 			gID: gID,
 			gToken: hToken,
@@ -17,7 +17,7 @@ const ManageUserService = {
 	},
 
 	getAllUser(authToken, gID, category, shID, keyword) {
-		return axios.post(url + '/user/view-all-user', {
+		return axios.post(devUrl + '/user/view-all-user', {
 			authToken: authToken,
 			gID: gID,
 			category: category,
@@ -29,7 +29,7 @@ const ManageUserService = {
 	},
 
 	getProfileByGroup(authToken, shID) {
-		return axios.post(url + '/user/view-all-user', {
+		return axios.post(devUrl + '/user/view-all-user', {
 			authToken: authToken,
 			category: 'STAKEHOLDER',
 			shID: shID,
@@ -40,7 +40,7 @@ const ManageUserService = {
 	},
 
 	getProfileByKeyword(authToken, gID, keyword) {
-		return axios.post(url + '/user/get-user-profile-by-keyword', {
+		return axios.post(devUrl + '/user/get-user-profile-by-keyword', {
 			'authToken': authToken,
 			'gID': gID,
 			'keyword': keyword
@@ -50,7 +50,7 @@ const ManageUserService = {
 	},
 
 	setAsAdmin(authToken, gID, hToken, shID) {
-		return axios.post(url + '/user/set-as-admin', {
+		return axios.post(devUrl + '/user/set-as-admin', {
 			authToken: authToken,
 			gID: gID,
 			gToken: hToken,
@@ -62,7 +62,7 @@ const ManageUserService = {
 	},
 
 	setAsVip(authToken, gID, hToken, shID) {
-		return axios.post(url + '/user/set-as-vip', {
+		return axios.post(devUrl + '/user/set-as-vip', {
 			authToken: authToken,
 			gID: gID,
 			gToken: hToken,
@@ -74,7 +74,7 @@ const ManageUserService = {
 	},
 
 	setAsAgent(authToken, gID, hToken, shID) {
-		return axios.post(url + '/user/invite-to-stakeholder-group', {
+		return axios.post(devUrl + '/user/invite-to-stakeholder-group', {
 			authToken: authToken,
 			gID: gID,
 			gToken: hToken,
@@ -86,7 +86,7 @@ const ManageUserService = {
 	},
 
 	removeFromGroup(authToken, gID, gToken, shID) {
-		return axios.post(url + '/user/remove-from-stakeholder-group', {
+		return axios.post(devUrl + '/user/remove-from-stakeholder-group', {
 			authToken: authToken,
 			gID: gID,
 			gToken: gToken,

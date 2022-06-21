@@ -1,11 +1,11 @@
 import Axios from 'axios'
 
 const url = process.env.REACT_APP_LOCAL_API_URL;
-const headers = {'Content-Type': 'application/json; charset=utf-8'};
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
 
 const CaseDetailService = {
     assignToMe(authToken, gID, shID, cToken) {
-        return Axios.post(url + '/case/assign-to-me/', {
+        return Axios.post(devUrl + '/case/assign-to-me/', {
             authToken: authToken,
             gID: gID,
             shID: shID,
@@ -18,7 +18,7 @@ const CaseDetailService = {
     },
 
     assignToAgent(authToken, cToken, hID, shID) {
-        return Axios.post(url + '/case/assign-to-support/', {
+        return Axios.post(devUrl + '/case/assign-to-support/', {
             authToken: authToken,
             cToken: cToken,
             ownerIDsupport: hID,
@@ -31,7 +31,7 @@ const CaseDetailService = {
     },
 
     getHeroBuddyInfo(authToken, cToken) {
-        return Axios.post(url + '/case/get-herobuddy-info', {
+        return Axios.post(devUrl + '/case/get-herobuddy-info', {
             authToken: authToken,
             cToken: cToken
         }).then(res => {
@@ -42,7 +42,7 @@ const CaseDetailService = {
     },
 
     transferOwnership(authToken, cToken, shID) {
-        return Axios.post(url + '/case/transfer-ownership/', {
+        return Axios.post(devUrl + '/case/transfer-ownership/', {
             authToken: authToken,
             cToken: cToken,
             shID: shID
@@ -54,7 +54,7 @@ const CaseDetailService = {
     },
 
     reopenCase(authToken, gID, cToken) {
-        return Axios.post(url + '/case/reopen-case/', {
+        return Axios.post(devUrl + '/case/reopen-case/', {
             authToken: authToken,
             gID: gID,
             cToken: cToken
@@ -66,7 +66,7 @@ const CaseDetailService = {
     },
 
     getCaseDetail(authToken, cToken) {
-        return Axios.post(url + '/case/get-case-detail', {
+        return Axios.post(devUrl + '/case/get-case-detail', {
             authToken: authToken,
             cToken: cToken
         }).then(res => {
@@ -77,7 +77,7 @@ const CaseDetailService = {
     },
 
     updateCaseInfo(authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID, ckc, ckcNumber, loginID, stakeholderRef, extSysRef, areaCode, subAreaID, symptomID) {
-        return Axios.post(url + '/case/update-case-info', {
+        return Axios.post(devUrl + '/case/update-case-info', {
             authToken: authToken,
             gID: gID,
             cToken: cToken,

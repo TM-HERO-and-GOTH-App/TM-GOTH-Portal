@@ -4,11 +4,11 @@ import axios from 'axios';
 
 const prodUrl = process.env.REACT_APP_API_URL;
 const localUrl = process.env.REACT_APP_LOCAL_API_URL;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
+const devUrl = process.env.REACT_APP_DEV_API_URL;
 
 const ActionTakenService = {
     getActionRemarkLists(authToken, gID, cToken) {
-        return axios.post(localUrl + '/case/get-action-remark-list', {
+        return axios.post(devUrl + '/case/get-action-remark-list', {
             'authToken': authToken,
             'gID': gID,
             'cToken': cToken
@@ -16,7 +16,7 @@ const ActionTakenService = {
     },
 
     setRemark(authToken, cToken, gID, caseStatusID, closureTypeID, remark) {
-        return axios.post(localUrl + '/case/update-action-remark', {
+        return axios.post(devUrl + '/case/update-action-remark', {
             'authToken': authToken,
             'cToken': cToken,
             'gID': gID,

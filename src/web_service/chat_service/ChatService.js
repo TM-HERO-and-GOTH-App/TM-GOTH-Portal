@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 const url = process.env.REACT_APP_API_URL;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
 
 const ChatService = {
     getProfilesByGroupChat(authToken, cToken){
-        return fetch( url + '/chat/view-users-by-group/', {
+        return fetch( devUrl + '/chat/view-users-by-group/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -16,7 +16,7 @@ const ChatService = {
     },
 
     pullChatMessage(authToken, cToken, flag){
-        return fetch( url + '/chat/pull-message/', {
+        return fetch( devUrl + '/chat/pull-message/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -28,7 +28,7 @@ const ChatService = {
     },
 
     pushChatMessage(authToken, cToken, message, flag, fileName){
-        return fetch( url + '/chat/push-message/', {
+        return fetch( devUrl + '/chat/push-message/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({

@@ -2,11 +2,11 @@
 import Axios from 'axios';
 
 const url = process.env.REACT_APP_LOCAL_API_URL;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
 
 const AssignmentService = {
     viewCaseByOwner(authToken, hID, caseStatusID) {
-        return Axios.post(url + '/case/view-cases-by-owner', {
+        return Axios.post(devUrl + '/case/view-cases-by-owner', {
                 'authToken': authToken,
                 'hID': hID,
                 'caseStatus': caseStatusID
@@ -15,7 +15,7 @@ const AssignmentService = {
 
 
     viewCaseByGroup(authToken, hID, shID, caseStatusID, caseTypeID = 0) {
-        return Axios.post(url + '/case/view-cases-by-group', {
+        return Axios.post(devUrl + '/case/view-cases-by-group', {
                 'authToken': authToken,
                 'hID': hID,
                 'shID': shID,
@@ -25,7 +25,7 @@ const AssignmentService = {
     },
 
     viewCaseByCollaborator(authToken, caseStatusID) {
-        return fetch(url + '/case/view-cases-by-collaborator/', {
+        return fetch(devUrl + '/case/view-cases-by-collaborator/', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -37,7 +37,7 @@ const AssignmentService = {
 
 
     viewUnassignedCase(authToken, hID, shID) {
-        return Axios.post(url + '/case/view-unassigned-case', {
+        return Axios.post(devUrl + '/case/view-unassigned-case', {
                 'authToken': authToken,
                 "hID":hID,
                 'shID': shID

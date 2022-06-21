@@ -1,14 +1,14 @@
 import axios from 'axios';
 import Axios from "axios";
 
-const prodUrl = process.env.REACT_APP_API_URL
 const url = process.env.REACT_APP_LOCAL_API_URL;
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
+const prodUrl = process.env.REACT_APP_API_URL
 const apiKey = process.env.REACT_APP_API_KEY;
-const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const LoginService = {
     requestToken(email) {
-        return axios.post(url + '/user/get-auth-token', {
+        return axios.post(devUrl + '/user/get-auth-token', {
             apiKey: apiKey,
             email: email
         })
@@ -17,7 +17,7 @@ const LoginService = {
     },
 
     signIn(authToken, email, password) {
-        return axios.post(url + '/login/sign-in', {
+        return axios.post(devUrl + '/login/sign-in', {
             'authToken': authToken,
             'email': email,
             'password': password
@@ -28,7 +28,7 @@ const LoginService = {
     },
 
     getUserProfile(authToken) {
-        return axios.post(url + '/user/view-profile', {
+        return axios.post(devUrl + '/user/view-profile', {
             'authToken': authToken
         })
             .then(res => { return res })
@@ -37,7 +37,7 @@ const LoginService = {
     },
 
     getSystemLOV(authToken) {
-        return axios.post(url + '/user/get-lov', {
+        return axios.post(devUrl + '/user/get-lov', {
             'authToken': authToken
         })
             .then(res => { return res })

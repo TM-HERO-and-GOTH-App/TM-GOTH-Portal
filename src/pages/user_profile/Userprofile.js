@@ -15,7 +15,7 @@ const Userprofile = (props) => {
 		// Uncomment below to see the picture data when an image is upload.
 		console.log(imageFile);
 		UpdateProfileService.uploadAvatar(token, imageFile.name).then(res => {
-			console.log(res);
+			// console.log(res);
 			props.history.push('/user-profile');
 		})
 	}
@@ -29,7 +29,7 @@ const Userprofile = (props) => {
 		if (e.target.files && e.target.files[0]) {
 			// setImageFile(URL.createObjectURL(e.target.files[0]));
 			setImageFile(e.target.files[0].name)
-			console.log(imageFile, 'image file')
+			// console.log(imageFile, 'image file')
 		}
 	}
 
@@ -49,11 +49,6 @@ const Userprofile = (props) => {
                   }
                 </span>
 									<div className="space-4"/>
-									{/*<div class="width-95 label label-info label-lg arrowed-in arrowed-in-right">
-			<div class="inline position-relative">
-				<span class="white"><?php //echo $fullName; ?></span>
-			</div>
-		</div> */}
 									<div>
 										<form onSubmit={handleImage}>
 											<input type="file" accept="image/png, image/jpeg" id="id-input-file-avatar" name="avatar"
@@ -68,23 +63,7 @@ const Userprofile = (props) => {
 									</div>
 								</div>
 								<div className="space-6"/>
-								{/*<div class="hr hr12 dotted"></div>
-	<div class="clearfix">
-		<div class="grid2">
-			<span class="bigger-175 blue">25</span>
 
-			<br />
-			Followers
-		</div>
-
-		<div class="grid2">
-			<span class="bigger-175 blue">12</span>
-
-			<br />
-			Following
-		</div>
-	</div>
-	<div class="hr hr16 dotted"></div>*/}
 							</div>
 							<div className="col-xs-12 col-sm-5">
 								<div className="left">
@@ -98,49 +77,6 @@ const Userprofile = (props) => {
 									{/*</button>*/}
 								</div>
 								<div className="space-6"/>
-								{/*<div class="left">
-		<span class="btn btn-app btn-sm btn-light no-hover">
-			<span class="line-height-1 bigger-170 blue"> 1,411 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Views </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-yellow no-hover">
-			<span class="line-height-1 bigger-170"> 32 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Followers </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-pink no-hover">
-			<span class="line-height-1 bigger-170"> 4 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Projects </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-grey no-hover">
-			<span class="line-height-1 bigger-170"> 23 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Reviews </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-success no-hover">
-			<span class="line-height-1 bigger-170"> 7 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Albums </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-primary no-hover">
-			<span class="line-height-1 bigger-170"> 55 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Contacts </span>
-		</span>
-	</div> */}
 								<div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
 									<div className="profile-info-row">
 										<div className="profile-info-name" style={{width: '25%'}}> Fullname</div>
@@ -182,13 +118,10 @@ const Userprofile = (props) => {
 									<div className="profile-info-row">
 										<div className="profile-info-name"> Joined Date</div>
 										<div className="profile-info-value">
-											<span className="editable" id="signup">{moment(userData.registeredDate).format('MMMM Do YYYY, h:mm:ss a')}</span>
+											<span className="editable"
+											      id="signup">{moment(userData.registeredDate).format('MMMM Do YYYY, h:mm:ss a')}</span>
 										</div>
 									</div>
-									{/* ?php
-		            if( $days 0 ) $hours = $hours - ($days*24);
-              //if( $minutes &gt; 60 ) $minutes = $minutes - ($row['hours']*60);							
-              ?&gt; */}
 									<div className="profile-info-row">
 										<div className="profile-info-name"> Last Logged In</div>
 										<div className="profile-info-value">
@@ -196,13 +129,6 @@ const Userprofile = (props) => {
 											      id="login">{userData.lastLoggedIn === 'null' ? 'n/a' : userData.lastLoggedIn}</span>
 										</div>
 									</div>
-									{/* <div class="profile-info-row">
-			<div class="profile-info-name"> About Me </div>
-
-			<div class="profile-info-value">
-				<span class="editable" id="about">Editable as WYSIWYG</span>
-			</div>
-		</div> */}
 								</div>
 								<div className="space-20"/>
 							</div>
@@ -210,49 +136,6 @@ const Userprofile = (props) => {
 								<div className="left" style={{height: 35}}>
 								</div>
 								<div className="space-6"/>
-								{/*<div class="left">
-		<span class="btn btn-app btn-sm btn-light no-hover">
-			<span class="line-height-1 bigger-170 blue"> 1,411 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Views </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-yellow no-hover">
-			<span class="line-height-1 bigger-170"> 32 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Followers </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-pink no-hover">
-			<span class="line-height-1 bigger-170"> 4 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Projects </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-grey no-hover">
-			<span class="line-height-1 bigger-170"> 23 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Reviews </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-success no-hover">
-			<span class="line-height-1 bigger-170"> 7 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Albums </span>
-		</span>
-
-		<span class="btn btn-app btn-sm btn-primary no-hover">
-			<span class="line-height-1 bigger-170"> 55 </span>
-
-			<br />
-			<span class="line-height-1 smaller-90"> Contacts </span>
-		</span>
-	</div> */}
 								<div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
 									<div className="profile-info-row">
 										<div className="profile-info-name" style={{width: '25%'}}> Level</div>

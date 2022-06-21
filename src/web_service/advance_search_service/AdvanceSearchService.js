@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const url = process.env.REACT_APP_LOCAL_API_URL;
+const devUrl = process.env.REACT_APP_DEV_API_KEY;
 
 const AdvancedSearchService = {
     advancedSearch(authToken, email, fullName, nricNum, srNum, ttNum, caseNum, vipName, customerName, 
         caseTypeID, startDateInput, endDateInput, heroGroupID) {
-        return axios.post(url + '/case/advanced-search', {
+        return axios.post(devUrl + '/case/advanced-search', {
                 'authToken': authToken,
                 'fullname': fullName,
                 'email': email,
