@@ -53,9 +53,10 @@ const CaseDetailService = {
         })
     },
 
-    reopenCase(authToken, cToken) {
+    reopenCase(authToken, gID, cToken) {
         return Axios.post(url + '/case/reopen-case/', {
             authToken: authToken,
+            gID: gID,
             cToken: cToken
         }).then(res => {
             return res
@@ -75,7 +76,7 @@ const CaseDetailService = {
         })
     },
 
-    updateCaseInfo(authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID, ckc, ckcNumber, loginID, stakeholderRef, extSysRef, areaCode, subAreaID, symptomID, siebelTargetSystem) {
+    updateCaseInfo(authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID, ckc, ckcNumber, loginID, stakeholderRef, extSysRef, areaCode, subAreaID, symptomID) {
         return Axios.post(url + '/case/update-case-info', {
             authToken: authToken,
             gID: gID,
@@ -84,9 +85,9 @@ const CaseDetailService = {
             productNameID: productNameID,
             packageName: packageName,
             serviceID: serviceID,
+            serviceAddress: serviceAddress,
             srNum: srNum,
             ttNum: ttNum,
-            serviceAddress: serviceAddress,
             areaLocationID: areaLocationID,
             customerName: actualCustomerName,
             segmentID: segmentID,
@@ -97,8 +98,7 @@ const CaseDetailService = {
             extSysRef: extSysRef,
             areaCode: areaCode,
             subAreaID: subAreaID,
-            symptomID: symptomID,
-            siebelTargetSystem: siebelTargetSystem
+            symptomID: symptomID
         }).then(res => {
             return res
         }).catch(err => {

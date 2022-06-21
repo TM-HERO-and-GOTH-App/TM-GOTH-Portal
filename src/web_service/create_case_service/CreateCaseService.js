@@ -4,7 +4,7 @@ const url = process.env.REACT_APP_LOCAL_API_URL;
 
 const CreateCaseService = {
     createCase(token, hID, customerNameInput, nricInput, mobileNumberInput, stateType, externalSystemInput, stakeholderReferenceSelect, sourceType, subSourceType, caseDescriptionInput, caseType, areaType, subAreaSelect, symptomSelect, customerServiceIDInput, siebelTargetSystemSelect) {
-        return Axios.post(url + '/case/create-new-case', {
+        return Axios.post('http://localhost:3001/case/create-new-case', {
             authToken: token,
             gID: hID,
             caseContent: caseDescriptionInput,

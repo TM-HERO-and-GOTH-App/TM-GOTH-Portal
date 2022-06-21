@@ -10,6 +10,7 @@ import CaseDetailService from '../../web_service/case_detail_service/CaseDetailS
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 function CaseDetail(props) {
+    const alertMessageFromEditDetailPage = props.history.location.state?.message
     const [caseToken, setCaseToken] = useState(props.match.params.id);
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
@@ -36,7 +37,7 @@ function CaseDetail(props) {
         const getGroupResult = () => {
             setFetchData(true)
             ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data) {
                     setCoordinator(res.data.filter(filter => filter.POSITION_NAME === "Coordinator"))
                     setAdmin(res.data.filter(filter => filter.POSITION_NAME === "Admin"))
@@ -66,9 +67,18 @@ function CaseDetail(props) {
             })
         }
 
+        const getMessageFromEditDetail = () => {
+            if(alertMessageFromEditDetailPage !== undefined){
+                setAlertStatus(true);
+                setAlertMessage(alertMessageFromEditDetailPage)
+                setStatusBadge('success')
+            }
+        }
+
         getCaseDetail();
         getGroupResult();
         getHeroBuddyData();
+        getMessageFromEditDetail();
     }, [caseToken, token, userData.shID])
 
 
@@ -88,8 +98,14 @@ function CaseDetail(props) {
     }
 
     const reopenCase = () => {
-        CaseDetailService.reopenCase(token, caseToken).then(res => {
-            if (res.response === 'OK') return setAlertMessage('The case has been reverted to IN-PROGRESS')
+        CaseDetailService.reopenCase(token, userData.hID, caseToken).then(res => {
+            console.log(res)
+            if (res.data[0].response === 'Success') {
+                setAlertStatus(true);
+                setAlertMessage('The case has been reverted to IN-PROGRESS');
+                statusBadge('success');
+                props.windows.location.reload(false);
+            }
         })
     }
 
@@ -142,7 +158,7 @@ function CaseDetail(props) {
 
                                     {(caseData?.OWNER_NAME == null || caseData?.OWNER_NAME === '' || isCoordinator) &&
                                         <Link className="btn btn-warning" to={`/edit-case/${caseToken}`}>
-                                            <i className="ace-icon fa fa-pencil align-top bigger-125"></i>
+                                            <i className="ace-icon fa fa-pencil align-top bigger-125"/>
                                             Edit Case Detail
                                         </Link>
                                     }
@@ -153,17 +169,11 @@ function CaseDetail(props) {
                                  align={caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED" ? "" : "right"}>
                                 <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
                                     Action Taken
-                                    {/* <!--<i className="ace-icon fa fa-arrow-right icon-on-right"></i>--> */}
+                                    <i className="ace-icon fa fa-arrow-right icon-on-right"/>
                                 </Link>
                                 <Link className="btn btn-primary" to={`/hero-chat/${caseToken}`}>
                                     HERO Chat
                                 </Link>
-                                {
-                                    (userData?.positionName === 'Admin' && caseData?.CASE_STATUS === 'CLOSED' && (userData?.stakeholderName === 'RRT' || userData.stakeholderName === 'CSM HQ')) &&
-                                    <Link className="btn btn-primary" to={`/internal-chat/${caseToken}`}>
-                                        Internal Chat
-                                    </Link>
-                                }
                                 {isAdmin && caseData?.CASE_STATUS === 'CLOSED' && (userData?.stakeholderName === 'RRT'
                                         || userData?.stakeholderName === 'CSM HQ') &&
                                     <button className="btn btn-danger"

@@ -16,7 +16,7 @@ class LoginTheme extends React.Component {
 
     render() {
         return (
-            <div class="login-layout">
+            <div className="login-layout">
                 <div className="main-container">
                     <div className="main-content">
                         <div className="row">
