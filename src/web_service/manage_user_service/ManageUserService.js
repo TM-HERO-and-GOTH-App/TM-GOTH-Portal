@@ -45,60 +45,37 @@ const ManageUserService = {
 		}).then(res => {
 			return res
 		}).catch(err => console.log(err));
-	}
-	,
+	},
 
-	setAsStakeholder(authToken, hToken, shID) {
-		return fetch(url + '/user/invite-to-stakeholder/', {
-			method: 'POST',
-			headers: headers,
-			body: JSON.stringify({
+	setAsAdmin(authToken, gID, hToken, shID) {
+		return axios.post(url + '/user/set-as-admin', {
 				authToken: authToken,
-				hToken: hToken,
-				shID: shID
-			})
-		}).then(res => res.json()).catch(err => console.log(err));
-	}
-	,
+                gID: gID,
+				gToken: hToken,
+				shID: shID,
+                action: 'admin'
+		}).then(res => {return res}).catch(err => console.log(err));
+	},
 
-	unsetAsStakeholder(authToken, hToken, shID) {
-		return fetch(url + '/user/remove-from-stakeholder/', {
-			method: 'POST',
-			headers: headers,
-			body: JSON.stringify({
+	setAsVip(authToken, gID, hToken, shID) {
+		return axios.post(url + '/user/set-as-vip', {
 				authToken: authToken,
-				hToken: hToken,
-				shID: shID
-			})
-		}).then(res => res.json()).catch(err => console.log(err));
-	}
-	,
+                gID: gID,
+				gToken: hToken,
+				shID: shID,
+                action: 'vip'
+		}).then(res => {return res}).catch(err => console.log(err));
+	},
 
-	setAsAdmin(authToken, hToken, shID) {
-		return fetch(url + '/user/set-stakeholder-admin/', {
-			method: 'POST',
-			headers: headers,
-			body: JSON.stringify({
+	setAsAgent(authToken, gID, hToken, shID) {
+		return axios.post(url + '/user/invite-to-stakeholder-group', {
 				authToken: authToken,
-				hToken: hToken,
-				shID: shID
-			})
-		}).then(res => res.json()).catch(err => console.log(err));
-	}
-	,
-
-	setAsAgent(authToken, hToken, shID) {
-		return fetch(url + '/user/invite-to-stakeholder/', {
-			method: 'POST',
-			headers: headers,
-			body: JSON.stringify({
-				authToken: authToken,
-				hToken: hToken,
-				shID: shID
-			})
-		}).then(res => res.json()).catch(err => console.log(err));
-	}
-	,
+				gID: gID,
+				gToken: hToken,
+				shID: shID,
+                action: 'set'
+		}).then(res => {return res}).catch(err => console.log(err));
+	},
 
     removeFromGroup(authToken, gID, gToken, shID) {
         return axios.post(url + '/user/remove-from-stakeholder-group', {
@@ -106,7 +83,7 @@ const ManageUserService = {
                 gID: gID,
                 cToken: gToken,
                 shID: shID,
-                action: 'UNSET'
+                action: 'unset'
         }).then(res => {return res}).catch(err => console.log(err));
     },
 }

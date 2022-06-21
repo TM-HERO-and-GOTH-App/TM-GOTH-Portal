@@ -9,7 +9,7 @@ function MU_Groupmember() {
   const [groupResult, setGroupResult] = useState([]);
   const [alertStatus, setAlertStatus] = useState(false);
   const [agent, setAgent] = useState(false);
-  const [coordinator, setCoordinator] = useState(false);
+  const [vip, setVip] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertBadge, setAlertBadge] = useState('');
@@ -18,7 +18,7 @@ function MU_Groupmember() {
   useEffect(() => {
     const getGroupResult = () => {
       ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', userData.shID, 'Y').then(res => {
-        // console.log(res.data);
+        console.log(res.data);
         setGroupResult(res.data)
       })
     }
@@ -40,8 +40,7 @@ function MU_Groupmember() {
 
   const inviteToGroup = (hToken) => {
     ManageUserService.inviteToGroup(token, userData.hID, hToken, userData.shID).then(res => {
-      console.log(res);
-      console.log(hToken)
+      // console.log(res);
       if (res === null) {
         setAlertStatus(true)
         setAlertMessage('Only group admin can do the invitation')
@@ -54,15 +53,15 @@ function MU_Groupmember() {
     })
   }
 
-  const removeFromGroup = (userhToken) => {
-    ManageUserService.removeFromGroup(token, userData.hID, userhToken, userData.shID).then(res => {
+  const removeFromGroup = (hToken) => {
+    ManageUserService.removeFromGroup(token, userData.hID, hToken, userData.shID).then(res => {
       console.log(res);
       if (res.data === []) {
         setAlertStatus(true)
         alertMessage('Only admin can remove the members')
         setAlertBadge('danger')
       } else {
-        console.log(userhToken)
+        console.log(hToken)
         setAlertStatus(true)
         setAlertMessage('The user has been remove from the group.')
         setAlertBadge('success')
@@ -70,39 +69,39 @@ function MU_Groupmember() {
     })
   }
 
-  const setAsAgent = () => {
-    ManageUserService.setAsAgent(token, '', userData.shID).then(res => {
-      // console.log(res);
+  const setAsAgent = (hToken) => {
+    ManageUserService.setAsAgent(token, userData.hID, hToken, userData.shID).then(res => {
+      console.log(res.data);
       if (res === null) {
         setAlertStatus(true)
         alertMessage('Only admin can remove the members')
         setAlertBadge('danger')
       } else {
         setAlertStatus(true)
-        alertMessage('The user has been successfully updated as Agent.')
+        setAlertMessage('The user has been successfully updated as Agent.')
         setAlertBadge('success')
       }
     })
   }
 
-  const setAsAdmin = () => {
-    ManageUserService.setAsAdmin(token, '', userData.shID).then(res => {
-      // console.log(res);
+  const setAsAdmin = (hToken) => {
+    ManageUserService.setAsAdmin(token, userData.hID, hToken, userData.shID).then(res => {
+      console.log(res.data);
       if (res === null) {
         setAlertStatus(true)
         alertMessage('Only group admin can set the role.')
         setAlertBadge('danger')
       } else {
         setAlertStatus(true)
-        alertMessage('The user has been successfully updated as Admin.')
+        setAlertMessage('The user has been successfully updated as Admin.')
         setAlertBadge('success')
       }
     })
   }
 
-  const setAsCoordinator = () => {
-    ManageUserService.setAsCoordinator(token, '', userData.shID).then(res => {
-      // console.log(res);
+  const setAsVip = (hToken) => {
+    ManageUserService.setAsVip(token, userData.hID, hToken, userData.shID).then(res => {
+      console.log(res.data);
       if (res === null) {
         setAlertStatus(true)
         setAlertMessage('Only group admin can set the role.')
@@ -244,17 +243,17 @@ function MU_Groupmember() {
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_agent" type="checkbox" className="lbl" onClick={setAsAgent} checked={data.POSITION_NAME === 'Agent' ? !agent : false} onChange={() => setAgent(!agent)} />
+                                <input name="set_agent" type="checkbox" className="lbl" value={agent} onClick={() => setAsAgent(data.H_TOKEN)} checked={data.POSITION_NAME === 'Agent' ? !agent : false} onChange={(e) => setAgent(e.currentTarget.value)} />
                               </div>
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_co" type="checkbox" className="lbl" onClick={setAsCoordinator} checked={data.POSITION_NAME === 'Coordinator' ? !coordinator : false} onChange={() => setCoordinator(!coordinator)} />
+                                <input name="set_co" type="checkbox" className="lbl" value={vip} onClick={() => setAsVip(data.H_TOKEN)} checked={data.POSITION_NAME === 'Coordinator' ? !vip : false} />
                               </div>
                             </td>
                             <td>
                               <div align="center">
-                                <input name="set_admin" type="checkbox" className="lbl" onClick={setAsAdmin} checked={data.POSITION_NAME === 'Admin' ? !admin : false} onChange={(e) => setAdmin(e.target.value)} />
+                                <input name="set_admin" type="checkbox" className="lbl" value={admin} onClick={() => setAsAdmin(data.H_TOKEN)} checked={data.POSITION_NAME === 'Admin' ? !admin : false} />
                               </div>
                             </td>
                             <td><div align="center">
