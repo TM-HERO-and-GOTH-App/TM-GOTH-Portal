@@ -1,11 +1,11 @@
 import axios from 'axios';
+import config from '../config'
 
-const url = process.env.REACT_APP_LOCAL_API_URL;
-const devUrl = process.env.REACT_APP_DEV_API_KEY;
+const url = config
 
 const DashboardService = {
     async getTotalResolvedByAgent(authToken, gID) {
-        return axios.post(devUrl + '/dashboard/get-total-case-resolved-by-owner', {
+        return axios.post(url + '/dashboard/get-total-case-resolved-by-owner', {
             'authToken': authToken,
             'gID': gID,
             'days': 5
@@ -15,7 +15,7 @@ const DashboardService = {
     },
 
     async getTotalResolvedByGroup(authToken, shID) {
-        return axios.post(devUrl + '/dashboard/get-total-case-resolved-by-group', {
+        return axios.post(url + '/dashboard/get-total-case-resolved-by-group', {
             'authToken': authToken,
             'shID': shID,
             'days': 5
@@ -25,7 +25,7 @@ const DashboardService = {
     },
 
     async getTotalCaseByAgent(authToken, gID) {
-        return axios.post(devUrl + '/dashboard/get-total-case-by-owner', {
+        return axios.post(url + '/dashboard/get-total-case-by-owner', {
             'authToken': authToken,
             "gID": gID
         }).then(resData => {
@@ -34,7 +34,7 @@ const DashboardService = {
     },
 
     async getTotalCaseByGroup(authToken, shID, gID) {
-        return axios.post(devUrl + '/dashboard/get-total-case-by-stakeholder', {
+        return axios.post(url + '/dashboard/get-total-case-by-stakeholder', {
             'authToken': authToken,
             'gID': gID,
             'shID': shID
@@ -44,7 +44,7 @@ const DashboardService = {
     },
 
     async getTotalRegisteredUserByState(authToken) {
-        return axios.post(devUrl + '/dashboard/total-user-by-state', {
+        return axios.post(url + '/dashboard/total-user-by-state', {
             'authToken': authToken,
             'startDate': '2018-01-01',
             'endDate': '2018-12-31'
@@ -54,7 +54,7 @@ const DashboardService = {
     },
 
     async getTotalCaseByState(authToken) {
-        return axios.post(devUrl + '/dashboard/total-case-by-state', {
+        return axios.post(url + '/dashboard/total-case-by-state', {
             'authToken': authToken,
             'startDate': '2018-01-01',
             'endDate': '2018-12-31',

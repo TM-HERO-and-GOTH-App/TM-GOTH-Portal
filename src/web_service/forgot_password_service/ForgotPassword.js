@@ -1,4 +1,6 @@
-const url = process.env.REACT_APP_API_URL;
+import config from '../config'
+
+const url = config
 const headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
 const ForgotPasswordService = {

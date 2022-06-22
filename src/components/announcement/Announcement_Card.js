@@ -9,7 +9,7 @@ export default function AnnouncementCard(props) {
             <div className='card'>
                 <div className="pull-right navbar-buttons navbar-header collapse navbar-collapse" role="navigation" onClick={() => setShowMoreOption(toggleMoreButton => !toggleMoreButton)}>
                     <ul className='nav ace-nav'>
-                        <li className={`dropdown-modal ${showMoreOption == false ? '' : "open"}`}>
+                        <li className={`dropdown-modal ${showMoreOption === false ? '' : "open"}`}>
                             <GrMoreVertical />
                             <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                                 <li>

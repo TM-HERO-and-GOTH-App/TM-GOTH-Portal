@@ -1,14 +1,12 @@
-import axios from 'axios';
-import Axios from "axios";
+import Axios from 'axios';
+import config from '../config'
 
-const url = process.env.REACT_APP_LOCAL_API_URL;
-const devUrl = process.env.REACT_APP_DEV_API_KEY;
-const prodUrl = process.env.REACT_APP_API_URL
+const url = config
 const apiKey = process.env.REACT_APP_API_KEY;
 
 const LoginService = {
     requestToken(email) {
-        return axios.post(devUrl + '/user/get-auth-token', {
+        return Axios.post(url + '/user/get-auth-token', {
             apiKey: apiKey,
             email: email
         })
@@ -17,7 +15,7 @@ const LoginService = {
     },
 
     signIn(authToken, email, password) {
-        return axios.post(devUrl + '/login/sign-in', {
+        return Axios.post(url + '/login/sign-in', {
             'authToken': authToken,
             'email': email,
             'password': password
@@ -28,7 +26,7 @@ const LoginService = {
     },
 
     getUserProfile(authToken) {
-        return axios.post(devUrl + '/user/view-profile', {
+        return Axios.post(url + '/user/view-profile', {
             'authToken': authToken
         })
             .then(res => { return res })
@@ -37,7 +35,7 @@ const LoginService = {
     },
 
     getSystemLOV(authToken) {
-        return axios.post(devUrl + '/user/get-lov', {
+        return Axios.post(url + '/user/get-lov', {
             'authToken': authToken
         })
             .then(res => { return res })

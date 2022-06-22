@@ -1,9 +1,10 @@
-const url = process.env.REACT_APP_API_URL;
-const devUrl = process.env.REACT_APP_DEV_API_KEY;
+import config from '../config'
+
+const url = config
 
 const CaseService = {
     createSubmit(authToken, customer_name, Mobile_NO, Case_Content, areaLocation, caseTypeID, productID, additionalRemark, herobuddyResponse) {
-		return fetch(devUrl + '/submit', {
+		return fetch(url + '/submit', {
 			method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -25,7 +26,7 @@ const CaseService = {
 	},
 
     createCase(authToken, customer_name, IC_NO, Mobile_NO, Case_Content,areaLocation,flag,sourceID) {
-		return fetch(devUrl + '/create-from-app', {
+		return fetch(url + '/create-from-app', {
 			method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -45,7 +46,7 @@ const CaseService = {
 	},
 
     attachPicture(authToken, cToken, filename, geotag_longitude, geotag_latitude) {
-		return fetch(devUrl + '/attach-picture', {
+		return fetch(url + '/attach-picture', {
 			method: 'POST',
             headers,
             body: JSON.stringify({

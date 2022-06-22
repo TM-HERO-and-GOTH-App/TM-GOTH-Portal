@@ -1,11 +1,11 @@
 import Axios from "axios";
+import config from '../config'
 
-const url = process.env.REACT_APP_LOCAL_API_URL;
-const devUrl = process.env.REACT_APP_DEV_API_KEY;
+const url = config
 
 const CreateCaseService = {
 	createCase(token, hID, customerNameInput, nricInput, mobileNumberInput, stateType, externalSystemInput, stakeholderReferenceSelect, sourceType, subSourceType, caseDescriptionInput, caseType, areaType, subAreaSelect, symptomSelect, customerServiceIDInput, siebelTargetSystemSelect) {
-		return Axios.post(devUrl + '/case/create-new-case', {
+		return Axios.post(url + '/case/create-new-case', {
 			authToken: token,
 			gID: hID,
 			caseContent: caseDescriptionInput,

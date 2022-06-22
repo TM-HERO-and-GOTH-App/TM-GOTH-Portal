@@ -1,10 +1,11 @@
-const url = process.env.REACT_APP_API_URL;
+import config from '../config'
+
+const url = config
 const apiKey = '32c70cb3-7381-e2ef-ad1f-b5a61964d408-cxt';
 
 const SignupService = {
     signup(email, fullName, password, password2, mobileNum){
         let headers = { 'Content-Type': 'application/json; charset=utf-8' };
-
         return fetch(url + '/user/sign-up/', {
             method: 'POST',
             headers,
