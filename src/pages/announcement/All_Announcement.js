@@ -10,7 +10,7 @@ export default function All_Announcement() {
     const [moreText, setMoreText] = useState(false);
     const [showEditMenu, setShowEditMenu] = useState(null);
     const [allAnnouncements, setAllAnnouncements] = useState([]);
-    const [editIndex, setEditIndex]= useState(null);
+    const [editIndex, setEditIndex] = useState(null);
 
     useEffect(() => {
         const getAllAnnouncements = () => {
@@ -30,19 +30,22 @@ export default function All_Announcement() {
             pageTitle="All Announcements"
             pageContent={
                 <div className="announcementView">
-                    {allAnnouncements.map((data, index) => (
-                        <AnnouncementCard
-                            key={index}
-                            to={`/edit_announcement_form/${data.ANNOUNCEMENT_ID}`}
-                            src={data?.PICTURE == null ? {defaultUserLogo} : data?.PICTURE}
-                            title={data?.TITLE}
-                            body={data.BODY.length > 100 ? data?.BODY.substring(0, 100) + '...' : data?.BODY}
-                            showMoreButton={
-                                data.BODY.length > 100 &&
-                                <Link to={`/more_announcement/${data.ANNOUNCEMENT_ID}`}>show more</Link>
-                            }
-                        />
-                    ))
+                    {allAnnouncements === [] ?
+                        <h3 style={{ color: 'red' }}>Announcement is empty</h3>
+                        :
+                        allAnnouncements.map((data, index) => (
+                            <AnnouncementCard
+                                key={index}
+                                to={`/edit_announcement_form/${data.ANNOUNCEMENT_ID}`}
+                                src={data?.PICTURE == null ? { defaultUserLogo } : data?.PICTURE}
+                                title={data?.TITLE}
+                                body={data.BODY.length > 100 ? data?.BODY.substring(0, 100) + '...' : data?.BODY}
+                                showMoreButton={
+                                    data.BODY.length > 100 &&
+                                    <Link to={`/more_announcement/${data.ANNOUNCEMENT_ID}`}>show more</Link>
+                                }
+                            />
+                        ))
                     }
                 </div>
             }

@@ -34,10 +34,12 @@ function Loginbox(props) {
 	};
 
 	const auth = (email, password) => {
-		LoginService.requestToken(email).then((res) => {
-			// console.log(Object.values(res.data[0])[0]);
+		LoginService.requestToken(email).then((res, err) => {
+			console.log(Object.values(res.data[0])[0]);
+			
 			// setIsValidating(false);
-			if (res.statusText === "FAILED") {
+			if (err) {
+				console.log(err);
 				setIsValidating(false);
 				setAlertStatus(true);
 			} else {
@@ -45,10 +47,11 @@ function Loginbox(props) {
 				sessionStorage.setItem("userToken", JSON.stringify(authToken));
 				signIn(authToken, email, password);
 			}
-		}).catch(e => {
-			setIsValidating(false);
-			console.log(e);
 		})
+		// .catch(e => {
+		// 	setIsValidating(false);
+		// 	console.log(e);
+		// })
 	};
 
 	const signIn = (authToken, email, password) => {
