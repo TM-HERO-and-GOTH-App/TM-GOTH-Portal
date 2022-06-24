@@ -70,7 +70,7 @@ function Loginbox(props) {
 
 	const getLoggerProfile = (authToken) => {
 		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
-		LoginService.getUserProfile(userToken).then((res) => {
+		LoginService.getUserProfile(authToken).then((res) => {
 			// console.log(res.data[0]);
 			// setIsValidating(false);
 			const data = res.data[0]

@@ -13,23 +13,23 @@ const ChatService = {
 		}).catch(err => console.log(err));
 	},
 
-	pullChatMessage(authToken, cToken, flag) {
-		return Axios.post(url + '/chat/pull-message/', {
+	pullChatMessage(authToken, cID) {
+		return Axios.post(url + '/chat/pull-message', {
 			'authToken': authToken,
-			'cToken': cToken,
-			'flag': flag
+			'cID': cID
 		}).then(res => {
 			return res
 		}).catch(err => console.log(err));
 	},
 
-	pushChatMessage(authToken, cToken, message, flag, fileName) {
-		return Axios.post(url + '/chat/push-message/', {
+	pushChatMessage(authToken, cID, message, gID) {
+		return Axios.post(url + '/chat/push-message', {
 				authToken: authToken,
-				cToken: cToken,
+				cID: cID,
 				message: message,
-				flag: flag,
-				fileName: fileName
+				source: 'GOTH',
+				userID: gID,
+				fileName: null
 		}).then(res => {return res}).catch(err => console.log(err));
 	},
 

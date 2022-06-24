@@ -16,13 +16,13 @@ const AssignmentService = {
 	},
 
 
-	viewCaseByGroup(authToken, hID, shID, caseStatusID, caseTypeID = 0) {
+	viewCaseByGroup(authToken, hID, shID, caseStatusID) {
 		return Axios.post(url + '/case/view-cases-by-group', {
 			'authToken': authToken,
 			'hID': hID,
 			'shID': shID,
 			'caseStatusID': caseStatusID,
-			'caseTypeID': caseTypeID
+			'caseTypeID': 0
 		}).then(data => {
 			return data
 		}).catch(err => console.log(err));

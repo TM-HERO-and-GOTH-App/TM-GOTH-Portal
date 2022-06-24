@@ -29,14 +29,14 @@ function CaseDetail(props) {
             setFetchData(true)
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
                 // console.log(res.data[0][0])
-                setCaseData(res.data[0][0])
+                setCaseData(res.data)
                 setFetchData(false)
             })
         }
 
         const getGroupResult = () => {
             setFetchData(true)
-            ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
+            ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', userData.shID, 'Yes').then(res => {
                 // console.log(res.data);
                 if (res.data) {
                     setCoordinator(res.data.filter(filter => filter.POSITION_NAME === "Coordinator"))

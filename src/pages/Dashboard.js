@@ -30,7 +30,7 @@ function Dashboard() {
       if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
-      console.log(res.data, 'getTotalCaseByOtherStakeholder');
+      // console.log(res.data, 'getTotalCaseByOtherStakeholder');
       setNationCase(res?.data);
       setFetchingData(false);
     })
@@ -38,7 +38,7 @@ function Dashboard() {
     await DashboardService.getTotalResolvedByGroup(token, stakeholderOption).then((res, err) => {
       if (res === undefined) return
       if (err) return
-      console.log(Object.keys(res.data)[0][0], 'getTotalResolvedByStakeholder');
+      // console.log(Object.keys(res.data)[0], 'getTotalResolvedByStakeholder');
       setTotalCaseResolveNation(Object.keys(res.data)[0][0]);
       setFetchingData(false);
 

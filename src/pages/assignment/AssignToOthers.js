@@ -21,13 +21,13 @@ function AssignToOther(props) {
 
   useEffect(() => {
     const getGroupResult = () => {
-      ManageUserService.getProfileByGroup(token, userData.shID).then((res) => {
-        // console.log(res);
-        setGroupMember(res);
+      ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', stakeholderGroup, 'Y').then((res) => {
+        // console.log(res.data);
+        setGroupMember(res.data);
         setIsCoordinator(
-          res.filter((filter) => filter.positionName === "Coordinator")
+          res.data.filter((filter) => filter.POSITION_NAME === "Coordinator")
         );
-        setIsAdmin(res.filter((filter) => filter.positionName === "Admin"));
+        setIsAdmin(res.data.filter((filter) => filter.POSITION_NAME === "Admin"));
       });
     };
 
@@ -35,22 +35,20 @@ function AssignToOther(props) {
       CaseDetailService.getCaseDetail(token, caseToken).then((res) => {
         setCaseDetailData(res.data);
         setCaseOwner(res.data.ownerName);
-        console.log(res.data.ownerName)
+        // console.log(res.data)
       });
     };
 
     getGroupResult();
     getCaseDetail();
-  }, []);
+  }, [stakeholderGroup]);
 
-  const assignCaseToAgent = (e) => {
+  const assignCaseToAgent = (hID, shID) => e => {
     e.preventDefault();
-    const hID = groupMember.map((data) => data.hID);
-    const shID = groupMember.map((data) => data.shID);
-
-    CaseDetailService.assignToAgent(token, caseToken, hID, shID).then((res) => {
-      // console.log(res)
-      if (res.response === "FAILED") {
+    CaseDetailService.assignToAgent(token, caseToken, userData.hID, hID, shID).then((res, err) => {
+      // console.log(Object.values(res.data)[0])
+      // console.log(res.data)
+      if (err) {
         setAlertStatus(true);
         setAlertMessage(
           "Only case owner or group coordinator can do the case assignment"
@@ -66,12 +64,12 @@ function AssignToOther(props) {
     });
   };
 
-  const assignToPool = (e) => {
+  const assignToPool = e => {
     e.preventDefault();
-    CaseDetailService.transferOwnership(token, caseToken, userData.shID).then(
-      (res) => {
+    CaseDetailService.transferOwnership(token, caseToken, userData.hID, stakeholderGroup).then(
+      (res, err) => {
         // console.log(res);
-        if (res.response === "FAILED") {
+        if (err) {
           setAlertStatus(true);
           setAlertMessage(
             "Only case owner or group coordinator can do the case assignment"
@@ -136,13 +134,13 @@ function AssignToOther(props) {
                   {lovData
                     .filter(
                       (filter) =>
-                        filter.lovGroup === "STAKEHOLDER" &&
-                        filter.lovName !== "ADMIN"
+                        filter.L_GROUP === "STAKEHOLDER" &&
+                        filter.L_NAME !== "ADMIN"
                     )
                     .map((data) => {
                       return (
-                        <option key={data.lovID} value={data.lovID}>
-                          {data.lovName}
+                        <option key={data.L_ID} value={data.L_ID}>
+                          {data.L_NAME}
                         </option>
                       );
                     })}
@@ -183,7 +181,7 @@ function AssignToOther(props) {
                 </thead>
 
                 <tbody>
-                  {groupMember.length === 1 ? (
+                  {groupMember.length === 0 ? (
                     <tr>
                       <td colSpan="4">
                         <span style={{ color: "red" }}>
@@ -200,33 +198,33 @@ function AssignToOther(props) {
                           <td>
                             <div align="center">{i}</div>
                           </td>
-                          <td>{data.fullName}</td>
-                          <td>{data.email}</td>
+                          <td>{data.FULLNAME}</td>
+                          <td>{data.EMAIL}</td>
                           <td>
-                            {data.positionName === "Admin" ? (
+                            {data.POSITION_NAME === "Admin" ? (
                               <span class="label label-warning arrowed-right">
-                                {data.positionName}
+                                {data.POSITION_NAME}
                               </span>
                             ) : (
-                              data.positionName
+                              data.POSITION_NAME
                             )}
                           </td>
                           <td>
-                            <div align="center">{data.stakeholderName}</div>
+                            <div align="center">{data.STAKEHOLDER_NAME}</div>
                           </td>
                           <td>
                             <div align="center">
-                              {(data.positionName === "Admin" ||
-                                data.positionName === "Coordinator") &&
-                                caseOwner !== data.fullName && (
+                              {(data.POSITION_NAME === "Admin" ||
+                                data.POSITION_NAME === "Coordinator") &&
+                                caseOwner !== data.FULLNAME && (
                                   <button
                                     class="btn btn-minier btn-yellow"
-                                    onClick={assignCaseToAgent}
+                                    onClick={assignCaseToAgent(data.H_ID, data.SH_ID)}
                                   >
                                     Assign
                                   </button>
                                 )}
-                              {caseOwner === data.fullName && (
+                              {caseOwner === data.FULLNAME && (
                                 <span class="badge badge-info">Owner</span>
                               )}
                             </div>

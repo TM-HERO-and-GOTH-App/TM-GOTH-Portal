@@ -17,12 +17,14 @@ const CaseDetailService = {
         })
     },
 
-    assignToAgent(authToken, cToken, hID, shID) {
-        return Axios.post(url + '/case/assign-to-support/', {
+    assignToAgent(authToken, cToken, gID, gIDSupport, shID) {
+        return Axios.post(url + '/case/assign-to-support', {
             authToken: authToken,
             cToken: cToken,
-            ownerIDsupport: hID,
-            shID: shID
+            gID: gID,
+            gIDSupport: gIDSupport,
+            shID: shID,
+            type: 'SUPPORT'
         }).then(res => {
             return res
         }).catch(err => {
@@ -41,11 +43,12 @@ const CaseDetailService = {
         })
     },
 
-    transferOwnership(authToken, cToken, shID) {
-        return Axios.post(url + '/case/transfer-ownership/', {
+    transferOwnership(authToken, cToken, shID, gID) {
+        return Axios.post(url + '/case/transfer-ownership', {
             authToken: authToken,
             cToken: cToken,
-            shID: shID
+            shID: shID,
+            gID: gID
         }).then(res => {
             return res
         }).catch(err => {

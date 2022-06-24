@@ -28,17 +28,6 @@ const ManageUserService = {
 		}).catch(err => console.log(err));
 	},
 
-	getProfileByGroup(authToken, shID) {
-		return axios.post(url + '/user/view-all-user', {
-			authToken: authToken,
-			category: 'STAKEHOLDER',
-			shID: shID,
-			activationStatus: 'Y'
-		}).then(res => {
-			return res
-		}).catch(err => console.log(err));
-	},
-
 	getProfileByKeyword(authToken, gID, keyword) {
 		return axios.post(url + '/user/get-user-profile-by-keyword', {
 			'authToken': authToken,
