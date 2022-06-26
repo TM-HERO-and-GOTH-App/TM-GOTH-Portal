@@ -5,8 +5,8 @@ import AssignmentService from '../../web_service/assignment_service/MyAssignment
 
 function MA_Assigned() {
     const userData = JSON.parse(sessionStorage.getItem('UserData'))
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
-    const [alertStatus, setAlertStatus] = useState(false);
+    const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+    const [alertStatus] = useState(false);
     const [assignedCase, setAssignedCase] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 

@@ -41,7 +41,7 @@ const AssignmentService = {
 	viewUnassignedCase(authToken, hID, shID) {
 		return Axios.post(url + '/case/view-unassigned-case', {
 			'authToken': authToken,
-			"hID": hID,
+			'hID': hID,
 			'shID': shID
 		}).then(data => {
 			return data

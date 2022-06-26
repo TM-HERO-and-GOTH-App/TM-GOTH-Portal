@@ -4,8 +4,8 @@ import AssignmentTable from '../../components/assignments/AssignmentTable';
 import AssignmentService from '../../web_service/assignment_service/MyAssignmentService';
 
 function GA_Unassigned() {
-  const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')))
-  const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')))
+  const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')))
+  const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')))
   const [unassignedCase, setUnassignedCase] = useState([])
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,7 +18,7 @@ function GA_Unassigned() {
       setIsLoading(false)
     }
     loggerCase();
-
+    console.log(unassignedCase)
     return () => {};
   }, [token, userData.shID])
 

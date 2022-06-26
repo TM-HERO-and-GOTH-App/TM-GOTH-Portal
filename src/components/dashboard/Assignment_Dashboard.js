@@ -1,4 +1,5 @@
 import React from "react";
+import {array} from "prop-types";
 
 function calculateCaseResolve(totalCase, caseResolveInFiveDays) {
     let divideNumber = caseResolveInFiveDays / totalCase;
@@ -26,7 +27,7 @@ function AssignmentDashboard(props) {
                     <div className="widget-main no-padding">
                         <table className="table table-bordered table-striped">
                             <tbody>
-                                {props.assignmentData.length === 0 ?
+                                {(props.assignmentData.length === 0 || props.assignmentData[0] === undefined ) ?
                                     <>
                                         <tr>
                                             <td>Resolved In 5 Days</td>
@@ -87,7 +88,7 @@ function AssignmentDashboard(props) {
                                                 <td align="right">
                                                     <b className="blue">
                                                         {
-                                                            props.isFetching === true ? 0 : (data.CLOSED !== null || data === null || data === undefined) ? data?.CLOSED?.toLocaleString() : 0
+                                                            props.isFetching === true ? 0 : (data?.CLOSED !== null || data === null || data === undefined) ? data?.CLOSED?.toLocaleString() : 0
                                                         }
                                                     </b>
                                                 </td>
@@ -97,7 +98,7 @@ function AssignmentDashboard(props) {
                                                 <td align="right">
                                                     <b className="blue">
                                                         {
-                                                            props.isFetching === true ? 0 : (data.INPROGRESS !== null || data === null || data === undefined) ? data?.INPROGRESS?.toLocaleString() : 0
+                                                            props.isFetching === true ? 0 : (data?.INPROGRESS !== null || data === null || data === undefined) ? data?.INPROGRESS?.toLocaleString() : 0
                                                         }
                                                     </b>
                                                 </td>
@@ -107,7 +108,7 @@ function AssignmentDashboard(props) {
                                                 <td align="right">
                                                     <b className="blue">
                                                         {
-                                                            props.isFetching === true ? 0 : (data.ASSIGNED !== null || data === null || data === undefined) ? data?.ASSIGNED?.toLocaleString() : 0
+                                                            props.isFetching === true ? 0 : (data?.ASSIGNED !== null || data === null || data === undefined) ? data?.ASSIGNED?.toLocaleString() : 0
                                                         }
                                                     </b>
                                                 </td>
@@ -117,7 +118,7 @@ function AssignmentDashboard(props) {
                                                 <td align="right">
                                                     <b className="green">
                                                         {
-                                                            props.isFetching === true ? 0 : (data.GTOTAL !== null || data === null || data === undefined) ? data?.GTOTAL?.toLocaleString() : 0
+                                                            props.isFetching === true ? 0 : (data?.GTOTAL !== null || data === null || data === undefined) ? data?.GTOTAL?.toLocaleString() : 0
                                                         }
                                                     </b>
                                                 </td>

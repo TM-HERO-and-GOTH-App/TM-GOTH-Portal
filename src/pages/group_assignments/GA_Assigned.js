@@ -4,8 +4,8 @@ import AssignmentService from '../../web_service/assignment_service/MyAssignment
 import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function GA_Assigned() {
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')))
-    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
+    const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')))
+    const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [assignedCase, setAssignedCase] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -17,7 +17,6 @@ function GA_Assigned() {
             setIsLoading(false)
         }
         loggerCase()
-
         return () => {};
     }, [token, userData.shID])
 
