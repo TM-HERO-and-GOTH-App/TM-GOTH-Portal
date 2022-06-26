@@ -310,7 +310,7 @@ function AssignmentTable(props) {
                                                                         className={`badge badge-sm badge-${data?.UNCLOSED_AGING > 30 ? 'danger' : 'warning'}`}>{agingKey}
                                                                     </span>}
                                                             </TableCell>
-                                                            <TableCell padding="none">{data?.CASETYPE == null ? 'n/a' : data?.CASETYPE}</TableCell>
+                                                            <TableCell padding="none">{data?.CASE_TYPE == null ? 'n/a' : data?.CASE_TYPE}</TableCell>
                                                             <TableCell align="center">{data?.VIP ?
                                                                 <i className="menu-icon glyphicon glyphicon-ok"></i> : '-'}</TableCell>
                                                             <TableCell align="center">{data?.ELIGIBILITY}</TableCell>

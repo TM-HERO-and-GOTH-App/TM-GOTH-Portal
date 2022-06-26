@@ -4,7 +4,6 @@ import config from '../config'
 const url = config
 
 const ManageUserService = {
-
 	inviteToGroup(authToken, gID, hToken, shID) {
 		return axios.post(url + '/user/invite-to-stakeholder-group', {
 			authToken: authToken,
@@ -44,7 +43,7 @@ const ManageUserService = {
 			gID: gID,
 			gToken: hToken,
 			shID: shID,
-			action: 'admin'
+			action: 'ADMIN'
 		}).then(res => {
 			return res
 		}).catch(err => console.log(err));
@@ -56,7 +55,7 @@ const ManageUserService = {
 			gID: gID,
 			gToken: hToken,
 			shID: shID,
-			action: 'vip'
+			action: 'VIP'
 		}).then(res => {
 			return res
 		}).catch(err => console.log(err));
