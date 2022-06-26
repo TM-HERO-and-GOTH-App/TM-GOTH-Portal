@@ -23,10 +23,10 @@ function InternalChat(props) {
 
 	const sendMessage = (e) => {
 		e.preventDefault();
-		ChatService.pushChatMessage(token, caseToken, messageInput, 'BE', '')
+		ChatService.pushChatMessage(token, caseToken, messageInput)
 			.then(res => {
 				// console.log(res);
-				if (res[0].response === 'FAILED') {
+				if (res.statusText === 'FAILED' || res.statusText === 'NOT ALLOWED') {
 					setAlertStatus(true)
 					setAlertMessage('Opss, chat message failed to send')
 					setAlertBadge('danger')
@@ -43,8 +43,8 @@ function InternalChat(props) {
 			ManageUserService.getProfileByGroup(token, userData.shID).then(res => {
 				// console.log(res);
 				// setGroupMembers(res);
-				setCoordinator(res.map(map => map.positionName === "Coordinator"))
-				setAdmin(res.map(map => map.positionName === "Admin"))
+				setCoordinator(res.data.map(map => map.positionName === "Coordinator"))
+				setAdmin(res.data.map(map => map.positionName === "Admin"))
 			})
 		}
 
@@ -57,16 +57,16 @@ function InternalChat(props) {
 		}
 
 		const getMessage = () => {
-			ChatService.pullChatMessage(token, caseToken, 'BE').then(res => {
+			ChatService.pullChatMessage(token, caseToken).then(res => {
 				// console.log(res)
-				setMessageData(res)
+				setMessageData(res.data)
 			})
 		}
 
 		getCaseDetail();
 		getGroupResult();
 		getMessage();
-	}, [])
+	}, [messageData])
 
 	return (
 		<Layout

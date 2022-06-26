@@ -44,8 +44,9 @@ function TechnicalCase() {
 		e.preventDefault();
 		CreateCaseService.createCase(token, userData.hID, customerNameInput, null, customerMobileNumberInput,
 			locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
-			symptomSelect, searchBarInput, null).then(res => {
-				console.log(res)
+			symptomSelect, searchBarInput, null).then((res, err) => {
+				// console.log(res)
+				if(res) return alert('Case has been created successfully');
 			})
 	}
 
@@ -73,7 +74,7 @@ function TechnicalCase() {
 							/>
 						</div>
 						<div className="hb-input-group-append" style={{ display: `${searchBarType === "service" ? "" : "none"}` }}>
-							<button className="btn btn-secondary" type="button"><LocationSearchingIcon fontSize="large" /></button>
+							<button className="btn btn-secondary" type="button" onClick={checkNetwork}><LocationSearchingIcon fontSize="large" /></button>
 						</div>
 						<div className="hb-input-group-append">
 							<button className="btn" type="button"><SearchIcon fontSize="large" /></button>

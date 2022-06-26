@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
-import ChatService from "../../web_service/chat_service/ChatService";
 import ManageUserService from "../../web_service/manage_user_service/ManageUserService";
 
 function InviteChat(props) {
+  const userData = JSON.parse(sessionStorage.getItem('UserData'));
   const token = useState(JSON.parse(sessionStorage.getItem("userToken")));
   const lovData = useState(JSON.parse(sessionStorage.getItem("LovData")));
   const caseToken = useState(props.match.params.id);
@@ -16,17 +16,17 @@ function InviteChat(props) {
   const [alertMessage, setAlertMessage] = useState("");
 
   const getGroupMembers = () => {
-    ChatService.getProfilesByGroupChat(token, caseToken).then((res) => {
-      // console.log(res)
-      setGroupMembers(res);
-    });
+    ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', userData.shID, 'Y').then(res => {
+      console.log(res.data);
+      setGroupMembers(res.data)
+    })
   };
 
   useEffect(() => {
 
     const getCaseDetail = () => {
       CaseDetailService.getCaseDetail(token, caseToken).then((res) => {
-        // console.log(res)
+        console.log(res)
         setCaseDetailData(res.data);
       });
     };
@@ -35,15 +35,15 @@ function InviteChat(props) {
     getCaseDetail();
   }, []);
 
-  const inviteToGroup = () => {
-    const shID = shID.shID;
-    ManageUserService.inviteToGroup(token, "", shID).then((res) => {
-      if (res === null) {
+  const inviteToGroup = (hToken) => {
+    ManageUserService.inviteToGroup(token, userData.hID, hToken, userData.shID).then((res) => {
+      if (res.data[0].response === 'FAILED') {
         setAlertStatus(true);
         setAlertMessage(
           "Only case owner or group coordinator can do the invitation."
         );
-      } else {
+      }
+      if(res.data[0].response === 'OK') {
         setAlertStatus(true);
         setAlertMessage("The user has been successfully invited.");
       }
@@ -344,7 +344,7 @@ function InviteChat(props) {
                                   caseDetailData.oID !== data.hID && (
                                     <button
                                       className="btn btn-minier btn-yellow"
-                                      onClick={inviteToGroup}
+                                      onClick={inviteToGroup(data.H_TOKEN)}
                                     >
                                       Invite
                                     </button>

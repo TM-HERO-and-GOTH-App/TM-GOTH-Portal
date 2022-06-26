@@ -23,9 +23,16 @@ function MU_Groupmember(props) {
       })
     }
 
+    const showMessageEvent = () => {
+      setAlertStatus(JSON.parse(sessionStorage.getItem('alertStatus')))
+      setAlertMessage(sessionStorage.getItem('alertMessage'))
+      setAlertBadge(sessionStorage.getItem('alertbadge'))
+    }
+
     getGroupResult();
+    showMessageEvent()
     // if(getGroupResult.length) getGroupResult();
-  }, [setGroupResult.length, token, userData.hID, userData.shID])
+  }, [token, userData.hID, userData.shID])
 
   const getSearchUser = (e) => {
     e.preventDefault();
@@ -41,11 +48,12 @@ function MU_Groupmember(props) {
 
   const inviteToGroup = (hToken) => {
     ManageUserService.inviteToGroup(token, userData.hID, hToken, userData.shID).then(res => {
-      // console.log(res.data);
+      console.log(res.data);
+      // console.log(hToken)
       if (res.data[0].response === 'OK') {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully added.')
-        setAlertBadge('success')
+        sessionStorage.setItem('alertStatus', true);
+        sessionStorage.setItem('alertMessage', res.data[0].message);
+        sessionStorage.setItem('alertbadge', 'success');
         window.location.reload(false);
       }
       if (res.data[0].response === 'FAILED') {
@@ -56,13 +64,14 @@ function MU_Groupmember(props) {
     })
   }
 
-  const removeFromGroup = (e,hToken) => {
+  const removeFromGroup = (hToken) => {
     ManageUserService.removeFromGroup(token, userData.hID, hToken, userData.shID).then(res => {
-      console.log(res.data);
+      // console.log(res.data);
+      // console.log(hToken);
       if (res.data[0].response === 'OK') {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully added.')
-        setAlertBadge('success')
+        sessionStorage.setItem('alertStatus', true);
+        sessionStorage.setItem('alertMessage', res.data[0].message);
+        sessionStorage.setItem('alertbadge', 'success');
         window.location.reload(false);
       }
       if (res.data[0].response === 'FAILED') {
@@ -75,11 +84,12 @@ function MU_Groupmember(props) {
 
   const setAsAgent = (hToken) => {
     ManageUserService.setAsAgent(token, userData.hID, hToken, userData.shID).then(res => {
+      console.log(hToken)
       // console.log(res.data);
       if (res.data[0].response === 'OK') {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully updated as Agent.')
-        setAlertBadge('success')
+        sessionStorage.setItem('alertStatus', true);
+        sessionStorage.setItem('alertMessage', 'The User has been successfully set as Agent!');
+        sessionStorage.setItem('alertbadge', 'success');
         window.location.reload(false);
       }
       if (res.data[0].response === 'FAILED') {
@@ -94,9 +104,9 @@ function MU_Groupmember(props) {
     ManageUserService.setAsAdmin(token, userData.hID, hToken, userData.shID).then(res => {
       // console.log(res.data);
       if (res.data[0].response === 'OK') {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully updated to Admin.')
-        setAlertBadge('success')
+        sessionStorage.setItem('alertStatus', true);
+        sessionStorage.setItem('alertMessage', res.data[0].message);
+        sessionStorage.setItem('alertbadge', 'success');
         window.location.reload(false);
       }
       if (res.data[0].response === 'FAILED') {
@@ -111,9 +121,9 @@ function MU_Groupmember(props) {
     ManageUserService.setAsVip(token, userData.hID, hToken, userData.shID).then(res => {
       // console.log(res.data);
       if (res.data[0].response === 'OK') {
-        setAlertStatus(true)
-        setAlertMessage('The user has been successfully updated to VIP.')
-        setAlertBadge('success')
+        sessionStorage.setItem('alertStatus', true);
+        sessionStorage.setItem('alertMessage', res.data[0].message);
+        sessionStorage.setItem('alertbadge', 'success');
         window.location.reload(false);
       }
       if (res.data[0].response === 'FAILED') {
@@ -122,6 +132,12 @@ function MU_Groupmember(props) {
         setAlertBadge('danger')
       }
     })
+  }
+
+  const removeAlertSessionStorage = () => {
+    sessionStorage.removeItem('alertStatus')
+    sessionStorage.removeItem('alertMessage')
+    sessionStorage.removeItem('alertbadge')
   }
 
   return (
@@ -133,7 +149,7 @@ function MU_Groupmember(props) {
           <div className="row">
             <div className="col-sm-12">
               <div className={`alert alert-block alert-${alertBadge}`}>
-                <button type="button" className="close" data-dismiss="alert">
+                <button type="button" className="close" data-dismiss="alert" onClick={removeAlertSessionStorage}>
                   <i className="ace-icon fa fa-times" />
                 </button>
                 <p>{alertMessage}</p>
