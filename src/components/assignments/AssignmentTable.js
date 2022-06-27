@@ -35,9 +35,10 @@ function escapeRegExp(value) {
 }
 
 function AssignmentTable(props) {
+    console.log(props, 'AssignmentTable');
     let prepData = useMemo(() => props.tableData
         .filter((item) =>
-            (typeof props.caseType != null && typeof props.groupType != null) ?
+            (typeof props.caseType !== 'undefined' && typeof props.groupType !== 'undefined') ?
                 (item.CASE_TYPE === props.caseType && item.STAKEHOLDER_NAME === props.groupType) || (props.caseType === item.CASE_TYPE && props.groupType === "0") || (props.groupType === item.STAKEHOLDER_NAME && props.caseType === "0") || (props.caseType === "0" && props.groupType === "0") :
                 (item)
         )
@@ -172,7 +173,7 @@ function AssignmentTable(props) {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    // RegExp is include in the requestSearch function to ensure consisten
+    // RegExp is included in the requestSearch function to ensure consistent
     const requestSearch = (searchValue) => {
         setSearchText(searchValue)
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
@@ -230,7 +231,7 @@ function AssignmentTable(props) {
                                     </TableRow>
                                 ) :
                                     (
-                                        // depending on which data the table handling, return the correspond
+                                        // depending on which data the table handling, will return related
                                         // data and check if the data is not empty. Else return empty row.
                                         (searchText.length >= 1 ? (filteredData.length !== 0) : (prepData.length !== 0)) ?
                                             (searchText.length >= 1 ? filteredData : prepData)

@@ -4,13 +4,14 @@ import AssignmentService from '../../web_service/assignment_service/MyAssignment
 import AssignmentTable from '../../components/assignments/AssignmentTable';
 
 function AA_Unassigned() {
-    const [lovData, setLovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
-    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
+    const [lovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
+    const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+    const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [unAssignedCase, setUnAssignedCase] = useState([]);
     const [caseType, setCaseType] = useState('0');
     const [groupType, setGroupType] = useState('0');
     const [isLoading, setIsLoading] = useState(false);
+    console.log(unAssignedCase, 'AA_Unassigned')
 
     useEffect(() => {
         const allAssignmentData = () => {
