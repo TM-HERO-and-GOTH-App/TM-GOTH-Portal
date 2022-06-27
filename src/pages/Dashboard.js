@@ -57,7 +57,7 @@ function Dashboard() {
       DashboardService.getTotalCaseByAgent(token, userData.hID).then(res => {
         if (res === undefined) return
         // console.log(res, 'getTotalCaseByAgent')
-        setAgentCase(res?.data[0]);
+        setAgentCase([res?.data[0]]);
         setFetchingData(false);
       })
     }

@@ -27,7 +27,7 @@ function AssignmentDashboard(props) {
                     <div className="widget-main no-padding">
                         <table className="table table-bordered table-striped">
                             <tbody>
-                                {(props.assignmentData.length === 0 || props.assignmentData[0] === undefined ) ?
+                                {(props.assignmentData?.length === 0 || props.assignmentData[0] === undefined ) ?
                                     <>
                                         <tr>
                                             <td>Resolved In 5 Days</td>
