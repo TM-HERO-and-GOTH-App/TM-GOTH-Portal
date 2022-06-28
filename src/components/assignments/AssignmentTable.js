@@ -254,14 +254,7 @@ function AssignmentTable(props) {
                                                     })
                                                     const agingDay = (data?.CASE_STATUS === 'CLOSED') ? data?.CLOSED_AGING : data?.UNCLOSED_AGING;
                                                     const agingKey = (data?.CASE_STATUS === 'CLOSED') ? data?.CLOSED_AGING_DH : data?.UNCLOSED_AGING_DH;
-                                                    return (data?.response === "FAILED") ?
-                                                        (<TableRow>
-                                                            <TableCell colSpan={12} align="center"
-                                                                style={{ color: 'red' }}>
-                                                                List is empty
-                                                            </TableCell>
-                                                        </TableRow>) :
-                                                        (<TableRow
+                                                    return <TableRow
                                                             className="table-row"
                                                             hover
                                                             onClick={(event) => handleClick(event, data?.CASE_NUM)}
@@ -335,7 +328,6 @@ function AssignmentTable(props) {
                                                                 </span> : '-'}
                                                             </TableCell>
                                                         </TableRow>
-                                                        );
                                                 }) :
                                             <TableRow>
                                                 <TableCell colSpan={12} align="center">

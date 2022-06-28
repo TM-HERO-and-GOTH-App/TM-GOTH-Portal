@@ -26,6 +26,9 @@ function NonTechnicalCase() {
 		axios.post('http://10.54.1.21:8001/NEXT/OVAL_NEXT/Proxy_Services/PS_RetrieveLRInfo', {
 			"RequestID": "HERO-20220425-0001",
 			"ServiceNo": searchBarInput
+		}).then((res, err) => {
+			if(err) return console.log(err);
+			return console.log(res);
 		})
 	}
 
@@ -33,8 +36,12 @@ function NonTechnicalCase() {
 		e.preventDefault();
 		CreateCaseService.createCase(token, userData.hID, customerNameInput, null, customerMobileNumberInput,
 			locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
-			null, searchBarInput, null).then(res => {
-				console.log(res)
+			null, searchBarInput, null).then((res, err) => {
+				if(err) {
+					console.log(err);
+					return alert('Case creation Failed!!');
+				} 
+				return alert('Case has been created successfully');
 			})
 	}
 
@@ -75,7 +82,7 @@ function NonTechnicalCase() {
 						<div className="hb-input-group-append" style={{ display: `${searchBarType === "service" ? "" : "none"}` }}>
 							<button className="btn btn-secondary" type="button"><LocationSearchingIcon fontSize="large" /></button>
 						</div>
-						<div className="hb-input-group-append">
+						<div className="hb-input-group-append" onClick={checkNetwork}>
 							<button className="btn" type="button"><SearchIcon fontSize="large" /></button>
 						</div>
 					</div>
