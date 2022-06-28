@@ -37,6 +37,9 @@ function TechnicalCase() {
 		axios.post('http://10.54.1.21:8001/NEXT/OVAL_NEXT/Proxy_Services/PS_RetrieveLRInfo', {
 			"RequestID": "HERO-20220425-0001",
 			"ServiceNo": searchBarInput
+		}).then((res, err) => {
+			if(err) return console.log(err);
+			return console.log(res);
 		})
 	}
 
@@ -46,7 +49,11 @@ function TechnicalCase() {
 			locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
 			symptomSelect, searchBarInput, null).then((res, err) => {
 				// console.log(res)
-				if(res) return alert('Case has been created successfully');
+				if(err) {
+					console.log(err);
+					return alert('Case creation Failed!!');
+				} 
+				return alert('Case has been created successfully');
 			})
 	}
 

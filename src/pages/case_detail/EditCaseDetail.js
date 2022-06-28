@@ -38,8 +38,8 @@ function EditCaseDetail(props) {
     useEffect(() => {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                console.log(res.data[0])
-                setCaseDetailData(res.data[0][0])
+                // console.log(res.data)
+                setCaseDetailData(res.data)
             })
         }
         getCaseDetail();
@@ -646,7 +646,6 @@ function EditCaseDetail(props) {
                                                 name="sourceID"
                                                 value={sourceType}
                                                 onChange={(e) => setSourceType(e.target.value)}
-                                                disabled
                                             >
                                                 <option value="0">Choose a Source...</option>
                                                 {lovData
