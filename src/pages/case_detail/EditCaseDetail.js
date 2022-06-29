@@ -23,10 +23,9 @@ function EditCaseDetail(props) {
     const [locationType, setLocationType] = useState("0");
     const [customerNameInput, setCustomerNameInput] = useState("");
     const [segmentType, setSegmentType] = useState("0");
-    const [sourceType, setSourceType] = useState("0");
-    // const [subSourceType, setSubSourceType] = useState("");
+    const [sourceType, setSourceType] = useState('0');
     const [customerLoginID, setCustomerLoginID] = useState('');
-    const [ckcStatus, setCKCStatus] = useState(false);
+    const [ckcStatus, setCKCStatus] = useState('');
     const [ckcNumberInput, setCKCNumberInput] = useState('')
     const [externalSystemInput, setExternalSystemInput] = useState('');
     const [areaCode, setAreaCode] = useState('');
@@ -38,7 +37,7 @@ function EditCaseDetail(props) {
     useEffect(() => {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                // console.log(res.data)
+                console.log(res.data, 'getCaseDetail')
                 setCaseDetailData(res.data)
             })
         }
@@ -48,30 +47,12 @@ function EditCaseDetail(props) {
     const editCaseDetail = (e) => {
         e.preventDefault();
         CaseDetailService.updateCaseInfo(
-            token,
-            userData.hID,
-            caseToken,
-            caseType,
-            productType,
-            packageNameInput,
-            serviceIDInput,
-            serviceAddressInput,
-            srNumberInput,
-            ttNumberInput,
-            locationType,
-            customerNameInput,
-            segmentType,
-            ckcStatus,
-            ckcNumberInput,
-            customerLoginID,
-            stakeHolderRef,
-            externalSystemInput,
-            areaCode,
-            subAreaCode,
-            parseFloat(symptomCode)
-            // ambassador
+            token, userData.hID, caseToken, caseType, productType, packageNameInput,
+            serviceIDInput, serviceAddressInput, srNumberInput, ttNumberInput, locationType,
+            customerNameInput, segmentType, sourceType, ckcStatus, ckcNumberInput, customerLoginID,
+            stakeHolderRef, externalSystemInput, areaCode, subAreaCode, parseFloat(symptomCode)
         ).then((res) => {
-            console.log(res.data[0]);
+            console.log(res.data);
             if (res.data[0].response === "FAILED") {
                 setAlertStatus(true);
                 setStatusBadge("danger");
@@ -103,7 +84,6 @@ function EditCaseDetail(props) {
         setSubAreaCode(caseDetailData.SUB_AREA)
         setCustomerLoginID(caseDetailData.LOGIN_ID)
         setAmbassador(caseDetailData.VIP)
-        // setSubSourceType(caseDetailData.SUB_SOURCE_ID)
     }
 
     useEffect(() => {
@@ -536,7 +516,7 @@ function EditCaseDetail(props) {
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 <div className="profile-info-row">
                                     <div className="profile-info-name">Symptom</div>
                                     <div className="profile-info-value">
@@ -647,7 +627,7 @@ function EditCaseDetail(props) {
                                                 value={sourceType}
                                                 onChange={(e) => setSourceType(e.target.value)}
                                             >
-                                                <option value="0">Choose a Source...</option>
+                                                <option value='0'>Choose a Source...</option>
                                                 {lovData
                                                     .filter(
                                                         (filter) =>
@@ -701,9 +681,9 @@ function EditCaseDetail(props) {
                                             value={ckcStatus}
                                             onChange={(e) => setCKCStatus(e.target.value)}
                                         >
-                                            <option value={null}>Choose a Value...</option>
-                                            <option value="NO">No</option>
-                                            <option value="YES">Yes</option>
+                                            <option value=''>Choose a Value...</option>
+                                            <option value="N">No</option>
+                                            <option value="Y">Yes</option>
                                         </select>
                                     </div>
                                 </div>

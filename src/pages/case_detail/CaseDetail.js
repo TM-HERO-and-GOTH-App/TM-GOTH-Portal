@@ -11,9 +11,9 @@ import ManageUserService from '../../web_service/manage_user_service/ManageUserS
 
 function CaseDetail(props) {
     const alertMessageFromEditDetailPage = props.history.location.state?.message
-    const [caseToken, setCaseToken] = useState(props.match.params.id);
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
-    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
+    const [caseToken] = useState(props.match.params.id);
+    const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+    const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [caseData, setCaseData] = useState([]);
     const [alertStatus, setAlertStatus] = useState(false);
     const [fetchData, setFetchData] = useState(false);
@@ -28,7 +28,7 @@ function CaseDetail(props) {
         const getCaseDetail = () => {
             setFetchData(true)
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                // console.log(res.data[0][0])
+                // console.log(res.data, 'getCaseDetail')
                 setCaseData(res.data)
                 setFetchData(false)
             })
@@ -99,7 +99,7 @@ function CaseDetail(props) {
 
     const reopenCase = () => {
         CaseDetailService.reopenCase(token, userData.hID, caseToken).then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.data[0].response === 'Success') {
                 setAlertStatus(true);
                 setAlertMessage('The case has been reverted to IN-PROGRESS');

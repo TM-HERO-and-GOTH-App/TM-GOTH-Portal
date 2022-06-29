@@ -79,7 +79,11 @@ const CaseDetailService = {
         })
     },
 
-    updateCaseInfo(authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress, srNum, ttNum, areaLocationID, actualCustomerName, segmentID, ckc, ckcNumber, loginID, stakeholderRef, extSysRef, areaCode, subAreaID, symptomID) {
+    updateCaseInfo(
+        authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress,
+        srNum, ttNum, areaLocationID, customerName, segmentID, sourceID, ckc, ckcNumber, loginID,
+        stakeholderRef, extSysRef, areaCode, subAreaID, symptomID
+    ) {
         return Axios.post(url + '/case/update-case-info', {
             authToken: authToken,
             gID: gID,
@@ -92,9 +96,10 @@ const CaseDetailService = {
             srNum: srNum,
             ttNum: ttNum,
             areaLocationID: areaLocationID,
-            customerName: actualCustomerName,
+            customerName: customerName,
             segmentID: segmentID,
-            ckc:ckc,
+            sourceID: sourceID,
+            ckc: ckc,
             ckcNumber: ckcNumber,
             loginID: loginID,
             stakeholderRef: stakeholderRef,

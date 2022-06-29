@@ -5,4 +5,4 @@ const configData = {
 }
 
 // Change the exported url to correspond with the environment
-module.exports = configData.devUrl
+module.exports = configData.localUrl

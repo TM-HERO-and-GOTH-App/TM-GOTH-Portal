@@ -2,22 +2,21 @@ import React, {useState} from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 
-function CreateCase(props) {
-    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-    const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
-    const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
+function CreateCase() {
+    const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
+    const [lovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
+    const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [alertStatus, setAlertStatus] = useState(false);
     const [successCreateCase, setSuccessCreateCase] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [caseDescriptionInput, setCaseDescriptionInput] = useState('');
     const [customerNameInput, setCustomerNameInput] = useState('');
-    const [customerServiceIDInput, setCustomerServiceIDInput] = useState('');
+    const [serviceID, setServiceID] = useState('');
     const [nricInput, setNRICInput] = useState('');
     const [mobileNumberInput, setMobileNumberInput] = useState('');
     const [caseType, setCaseType] = useState('0');
     const [stateType, setStateType] = useState('0');
     const [sourceType, setSourceType] = useState('0');
-    const [subSourceType, setSubSourceType] = useState('0');
     const [productType, setProductType] = useState('0');
     const [areaType, setAreaType] = useState('0');
     const [subAreaSelect, setSubAreaSelect] = useState('0');
@@ -28,9 +27,13 @@ function CreateCase(props) {
 
     const createCase = (e) => {
         e.preventDefault();
-        CreateCaseService.createCase(token, userData.hID, customerNameInput, nricInput, mobileNumberInput, stateType, externalSystemInput, stakeholderReferenceSelect, sourceType, subSourceType, caseDescriptionInput, caseType, areaType, subAreaSelect, symptomSelect, customerServiceIDInput, siebelTargetSystemSelect)
+        CreateCaseService.createCase(
+            token, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
+            externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
+            caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
+        )
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 if (res.data === 'Case successfully created.') {
                     setAlertStatus(true);
                     setSuccessCreateCase(true)
@@ -39,7 +42,7 @@ function CreateCase(props) {
                 } else {
                     setAlertStatus(true)
                     if (res.status === 200) {
-                        setAlertMessage(res.data);
+                        setAlertMessage(res.data.code);
                     } else {
                         setAlertMessage(res.message);
                     }
@@ -48,22 +51,21 @@ function CreateCase(props) {
     }
 
     const resetForm = () => {
-        setCaseDescriptionInput('')
         setCustomerNameInput('')
         setNRICInput('')
         setMobileNumberInput('')
-        setCaseType('0')
+        setServiceID('')
+        setCaseDescriptionInput('')
         setStateType('0')
+        setCaseType('0')
+        setExternalSystemInput('')
+        setStakeholderReferenceSelect('0')
         setSourceType('0')
+        setProductType('0')
         setAreaType('0');
         setSubAreaSelect('0');
         setSymptomSelect('0');
-        setCustomerNameInput('');
         setSiebelTargetSystemSelect('0');
-        setSubSourceType('')
-        setCustomerServiceIDInput('')
-        setExternalSystemInput('')
-        setStakeholderReferenceSelect('0')
     }
 
     return (
@@ -146,20 +148,20 @@ function CreateCase(props) {
                                         </div>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name">Customer Service ID / Login ID</div>
+                                            <div className="profile-info-name">Customer Service ID</div>
                                             <div className="profile-info-value">
-                                                <span className="editable" id="username">
+                                                <span className="editable" id="serviceID">
                                                     <input className="input-sm" style={{width: '100%'}} type="text"
                                                            name="customerServiceID"
-                                                           placeholder="Customer Service ID / Login ID"
-                                                           value={customerServiceIDInput}
-                                                           onChange={(e) => setCustomerServiceIDInput(e.target.value)}/>
+                                                           placeholder="Customer Service ID"
+                                                           value={serviceID}
+                                                           onChange={(e) => setServiceID(e.target.value)}/>
                                                 </span>
                                             </div>
                                         </div>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name"> State</div>
+                                            <div className="profile-info-name">State</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='areaLocationID'
                                                         value={stateType}

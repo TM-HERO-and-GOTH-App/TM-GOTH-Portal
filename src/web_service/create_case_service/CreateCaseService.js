@@ -4,25 +4,27 @@ import config from '../config'
 const url = config
 
 const CreateCaseService = {
-	createCase(token, hID, customerNameInput, nricInput, mobileNumberInput, stateType, externalSystemInput, stakeholderReferenceSelect, sourceType, subSourceType, caseDescriptionInput, caseType, areaType, subAreaSelect, symptomSelect, customerServiceIDInput, siebelTargetSystemSelect) {
+	createCase(
+		token, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
+		externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
+		caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
+	) {
 		return Axios.post(url + '/case/create-new-case', {
 			authToken: token,
-			gID: hID,
-			caseContent: caseDescriptionInput,
 			customerName: customerNameInput,
 			nricNumber: nricInput,
 			customerMobileNumber: mobileNumberInput,
+			serviceID: serviceID,
 			stateID: stateType,
 			flag: 'COMPLAINT',
 			externalSystem: externalSystemInput,
 			stakeholderReference: stakeholderReferenceSelect,
 			sourceID: sourceType,
-			subSourceID: subSourceType,
+			caseContent: caseDescriptionInput,
 			caseType: caseType,
 			areaID: areaType,
 			subAreaID: subAreaSelect,
 			symptomID: symptomSelect,
-			customerServiceID: customerServiceIDInput,
 			siebelTargetSystem: siebelTargetSystemSelect
 		}).then(res => {
 			return res
