@@ -21,13 +21,17 @@ function NonTechnicalCase() {
 	const [pictureInput, setPicture] = useState('');
 	const [searchBarType, setSearchBarType] = useState('service');
 	const [searchBarInput, setSearchBarInput] = useState('');
+	let [customerICInput, setCustomerICInput] = useState('');
+	// let [serviceIDInput, setServiceIDInput] = useState('');
+	// let [loginIDInput, setLoginIDInput] = useState('');
+
 
 	const checkNetwork = () => {
 		axios.post('http://10.54.1.21:8001/NEXT/OVAL_NEXT/Proxy_Services/PS_RetrieveLRInfo', {
 			"RequestID": "HERO-20220425-0001",
 			"ServiceNo": searchBarInput
 		}).then((res, err) => {
-			if(err) return console.log(err);
+			if (err) return console.log(err);
 			return console.log(res);
 		})
 	}
@@ -37,12 +41,22 @@ function NonTechnicalCase() {
 		CreateCaseService.createCase(token, userData.hID, customerNameInput, null, customerMobileNumberInput,
 			locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
 			null, searchBarInput, null).then((res, err) => {
-				if(err) {
+				if (err) {
 					console.log(err);
 					return alert('Case creation Failed!!');
-				} 
+				}
 				return alert('Case has been created successfully');
 			})
+	}
+
+	const getCustomerProfile = (e) => {
+		e.preventDefault();
+		CreateCaseService.getCustomerProfileFromICP(searchBarInput, customerICInput).then(res => {
+			// console.log(res.data);
+			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
+			setCustomerMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)
+			setLocation(lovData.filter(data => data.L_NAME.toUpperCase() == res.data.STTRetrieveServiceAcctResponse.Response[0].ServiceInfo[0].ServiceAddress[0].State).map(data => data.L_ID))
+		})
 	}
 
 	let styles = {
@@ -78,11 +92,21 @@ function NonTechnicalCase() {
 								value={searchBarInput}
 								onChange={(e) => setSearchBarInput(e.target.value)}
 							/>
+							{searchBarType === 'service' &&
+								<input
+									type='text'
+									id='customerIC'
+									name='customerIC'
+									placeholder='Please insert customer IC'
+									value={customerICInput}
+									onChange={(e) => setCustomerICInput(e.target.value)}
+								/>
+							}
 						</div>
-						<div className="hb-input-group-append" style={{ display: `${searchBarType === "service" ? "" : "none"}` }}>
+						<div className="hb-input-group-append" onClick={checkNetwork} style={{ display: `${searchBarType === "service" ? "" : "none"}` }}>
 							<button className="btn btn-secondary" type="button"><LocationSearchingIcon fontSize="large" /></button>
 						</div>
-						<div className="hb-input-group-append" onClick={checkNetwork}>
+						<div className="hb-input-group-append" onClick={getCustomerProfile}>
 							<button className="btn" type="button"><SearchIcon fontSize="large" /></button>
 						</div>
 					</div>

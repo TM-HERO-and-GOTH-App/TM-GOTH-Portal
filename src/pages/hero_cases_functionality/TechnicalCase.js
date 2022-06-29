@@ -19,6 +19,7 @@ function TechnicalCase() {
 	const userData = JSON.parse(sessionStorage.getItem('UserData'));
 	const token = JSON.parse(sessionStorage.getItem('userToken'))
 	const lovData = JSON.parse(sessionStorage.getItem('LovData'));
+	let [customerSIEBELInfo, setCustomerSIEBELInfo] = useState({});
 	let [customerNameInput, setCustomerNameInput] = useState('');
 	let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
@@ -32,14 +33,27 @@ function TechnicalCase() {
 	let [pictureInput, setPicture] = useState('');
 	let [searchBarType, setSearchBarType] = useState('service');
 	let [searchBarInput, setSearchBarInput] = useState('');
+	let [customerICInput, setCustomerICInput] = useState('');
+	// let [serviceIDInput, setServiceIDInput] = useState('');
+	// let [loginIDInput, setLoginIDInput] = useState('');
 
 	const checkNetwork = () => {
 		axios.post('http://10.54.1.21:8001/NEXT/OVAL_NEXT/Proxy_Services/PS_RetrieveLRInfo', {
 			"RequestID": "HERO-20220425-0001",
 			"ServiceNo": searchBarInput
 		}).then((res, err) => {
-			if(err) return console.log(err);
+			if (err) return console.log(err);
 			return console.log(res);
+		})
+	}
+
+	const getCustomerProfile = (e) => {
+		e.preventDefault();
+		CreateCaseService.getCustomerProfileFromICP(searchBarInput, customerICInput).then(res => {
+			// console.log(res.data);
+			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
+			setCustomerMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)
+			setLocation(lovData.filter(data => data.L_NAME.toUpperCase() == res.data.STTRetrieveServiceAcctResponse.Response[0].ServiceInfo[0].ServiceAddress[0].State).map(data => data.L_ID))
 		})
 	}
 
@@ -49,10 +63,10 @@ function TechnicalCase() {
 			locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
 			symptomSelect, searchBarInput, null).then((res, err) => {
 				// console.log(res)
-				if(err) {
+				if (err) {
 					console.log(err);
 					return alert('Case creation Failed!!');
-				} 
+				}
 				return alert('Case has been created successfully');
 			})
 	}
@@ -71,19 +85,29 @@ function TechnicalCase() {
 							</select>
 						</div>
 						<div className="hb-input-box hb-input-group-area">
-							<input
-								type="text"
-								id="search-detail"
-								name="search-detail"
-								placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
-								value={searchBarInput}
-								onChange={(e) => setSearchBarInput(e.target.value)}
-							/>
+								<input
+									type="text"
+									id="search-detail"
+									name="search-detail"
+									placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
+									value={searchBarInput}
+									onChange={(e) => setSearchBarInput(e.target.value)}
+								/>
+								{searchBarType === 'service' &&
+									<input
+										type='text'
+										id='customerIC'
+										name='customerIC'
+										placeholder='Please insert customer IC'
+										value={customerICInput}
+										onChange={(e) => setCustomerICInput(e.target.value)}
+									/>
+								}
 						</div>
 						<div className="hb-input-group-append" style={{ display: `${searchBarType === "service" ? "" : "none"}` }}>
 							<button className="btn btn-secondary" type="button" onClick={checkNetwork}><LocationSearchingIcon fontSize="large" /></button>
 						</div>
-						<div className="hb-input-group-append">
+						<div className="hb-input-group-append" onClick={getCustomerProfile}>
 							<button className="btn" type="button"><SearchIcon fontSize="large" /></button>
 						</div>
 					</div>

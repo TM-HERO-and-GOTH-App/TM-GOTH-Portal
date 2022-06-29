@@ -29,6 +29,13 @@ const CreateCaseService = {
 		}).catch(err => {
 			return err
 		})
+	},
+
+	getCustomerProfileFromICP(serviceID, customerID) {
+		return Axios.post(url + '/siebel_eai/nova/query-account',{
+			"serviceID": serviceID,
+			"customerID": customerID
+		}).then(res => {return res}).catch(err => {return err});
 	}
 }
 
