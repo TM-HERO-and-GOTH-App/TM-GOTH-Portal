@@ -67,8 +67,15 @@ function TechnicalCase() {
 					console.log(err);
 					return alert('Case creation Failed!!');
 				}
+				createCTT(searchBarInput, symptomSelect, customerMobileNumberInput);
 				return alert('Case has been created successfully');
 			})
+	}
+
+	const createCTT = (serviceID, symptomCode, mobileNumber) => {
+		CreateCaseService.autoCreateCTT(serviceID, symptomCode, mobileNumber).then(res => {
+			console.log(res)
+		});
 	}
 
 	return (

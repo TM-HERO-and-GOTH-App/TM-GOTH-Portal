@@ -36,6 +36,14 @@ const CreateCaseService = {
 			"serviceID": serviceID,
 			"customerID": customerID
 		}).then(res => {return res}).catch(err => {return err});
+	},
+
+	autoCreateCTT(serviceNumber, faultCode, mobileNumber) {
+		return Axios.post(url + '/icp/auto-create-ctt-DEL', {
+			"serviceNumber": serviceNumber,
+			"faultCode": faultCode,
+			"customerMobileNumber": mobileNumber
+		}).then(res => {return res}).catch(err => {return err});
 	}
 }
 
