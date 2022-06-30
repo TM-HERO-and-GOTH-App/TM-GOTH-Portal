@@ -13,6 +13,7 @@ function NonTechnicalCase() {
 	const [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	const [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
 	const [descriptionInput, setDescription] = useState('');
+	let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
 	const [typeSelect, setTypeSelect] = useState(37);
 	const [productSelect, setProduct] = useState('default');
 	const [areaSelect, setArea] = useState('default');
@@ -45,6 +46,7 @@ function NonTechnicalCase() {
 					console.log(err);
 					return alert('Case creation Failed!!');
 				}
+				createSR();
 				return alert('Case has been created successfully');
 			})
 	}
@@ -53,10 +55,28 @@ function NonTechnicalCase() {
 		e.preventDefault();
 		CreateCaseService.getCustomerProfileFromICP(searchBarInput, customerICInput).then(res => {
 			// console.log(res.data);
+			setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
 			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
 			setCustomerMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)
 			setLocation(lovData.filter(data => data.L_NAME.toUpperCase() == res.data.STTRetrieveServiceAcctResponse.Response[0].ServiceInfo[0].ServiceAddress[0].State).map(data => data.L_ID))
 		})
+	}
+
+	const createSR = (e) => {
+		CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID, null, areaSelect, subAreaSelect, null, null, null, 
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null, null, descriptionInput, null, null, null, null, null, null, null,null,
+			null, null, userData.fullName, null, null).then(res => {
+				console.log(res);
+				createTT();
+			})
+	}
+
+	const createTT = () => {
+		CreateCaseService.createNovaTT(customerProfileFromNova.CustInfo[0].CustomerRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo, customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+			null, productSelect, null, null, userData.fullName, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, 'New', null, null, null,
+			descriptionInput, null, null, null, null, null, null, null, null, null, userData.fullName, null, null).then(res => {
+				console.log(res);
+			})
 	}
 
 	let styles = {

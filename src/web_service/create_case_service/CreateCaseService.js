@@ -34,10 +34,10 @@ const CreateCaseService = {
 	},
 
 	getCustomerProfileFromICP(serviceID, customerID) {
-		return Axios.post(url + '/siebel_eai/nova/query-account',{
+		return Axios.post(url + '/siebel_eai/nova/query-account', {
 			"serviceID": serviceID,
 			"customerID": customerID
-		}).then(res => {return res}).catch(err => {return err});
+		}).then(res => { return res }).catch(err => { return err });
 	},
 
 	autoCreateCTT(serviceNumber, faultCode, mobileNumber) {
@@ -45,6 +45,80 @@ const CreateCaseService = {
 			"serviceNumber": serviceNumber,
 			"faultCode": faultCode,
 			"customerMobileNumber": mobileNumber
+		}).then(res => { return res }).catch(err => { return err });
+	},
+
+	createNovaSR(customerRowID, type, area, subArea, caseCategory,
+		dateCreated, source, serviceRowID, contactDetailRowID, contactDetailReportedID, bilingAccountRowID,
+		bilingAccountNumber, detailDataDescription, group, owner, closureCategory,
+		closureReason, closureRemark, callBack, callBackTime, srNumber, cttNumber, noteID,
+		noteCreatedBy, noteDescription, createdByPosition) {
+		return Axios.post(url + '/nova/create-sr', {
+			customerRowID,
+			type,
+			"status": "In Progress",
+			area,
+			subArea,
+			caseCategory,
+			dateCreated,
+			source,
+			serviceRowID,
+			contactDetailRowID,
+			contactDetailReportedID,
+			bilingAccountRowID,
+			bilingAccountNumber,
+			detailDataDescription,
+			group,
+			owner,
+			closureCategory,
+			closureReason,
+			closureRemark,
+			callBack,
+			callBackTime,
+			srNumber,
+			cttNumber,
+			noteID,
+			noteCreatedBy,
+			"noteType": 'Note',
+			noteDescription,
+			createdByPosition
+		}).then(res => { return res }).catch(err => { return err })
+	},
+
+	createNovaTT(customerRowID, bilingAccountNumber, bilingAccountRowID,
+		severity, product, symptomCode, category, owner, serviceRowID, preferredAcknowledgement,
+		relatedSRRowID, status, ccpChargingMethod, contactDetailRowID, contactDetailReportedID,
+		description, ownerCctActivity, activityID, activityType, activityStatus, activityCreated,
+		activityPlannedStart, activityPlannedEnd, activityDescription, notedID, createdBy, noteDescription, createdByPosition) {
+		return Axios.post(url + '/nova/create-TT', {
+			customerRowID, 
+			bilingAccountNumber, 
+			bilingAccountRowID, 
+			severity, 
+			product, 
+			symptomCode, 
+			category, 
+			owner, 
+			serviceRowID, 
+			preferredAcknowledgement,
+			relatedSRRowID, 
+			status, 
+			ccpChargingMethod, 
+			contactDetailRowID, 
+			contactDetailReportedID,
+			description, 
+			ownerCctActivity, 
+			activityID, 
+			activityType, 
+			activityStatus, 
+			activityCreated,
+			activityPlannedStart, 
+			activityPlannedEnd, 
+			activityDescription, 
+			notedID, 
+			createdBy, 
+			noteDescription, 
+			createdByPosition
 		}).then(res => {return res}).catch(err => {return err});
 	}
 }
