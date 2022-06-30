@@ -72,7 +72,7 @@ function CreateCase() {
 
     const createICPSR = () => {
         CreateCaseService.createICPSR(customerProfileFromNova.CustInfo[0].CustomerRowID, 'New', 'New', userData.fullName, areaType,
-            subAreaSelect, null, createdDate, null, null, null, null, null, customerProfileFromNova.BillInfo[0].BillingAccountRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo,
+            subAreaSelect, null, createdDate, null, null, null, null, customerProfileFromNova.BillInfo[0].BillingAccountRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo,
             caseDescriptionInput, productType, null, null, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null).then(res => {
                 console.log(res)
             })
@@ -80,7 +80,7 @@ function CreateCase() {
 
     const createICPTT = () => {
         CreateCaseService.createICPTT(customerProfileFromNova.CustInfo[0].CustomerRowID, null, 'Streamyx', productType, caseDescriptionInput, symptomSelect,
-        customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, userData.fullName, null, null, null, null, null, null, null, null, null, contactDetailRowID,
+        customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, userData.fullName, null, null, null, null, null, null, null, null, null, contactDetailRowID,
         contactDetailReportedID, customerProfileFromNova.BillInfo[0].BillingAccountRowID).then(res => {
             console.log(res);
         })

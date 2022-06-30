@@ -125,7 +125,7 @@ const CreateCaseService = {
 	createICPSR(customerRowID, status, createdBy, area, subArea,
 		caseCategory, dateCreated, priority, severity, group, contactDetailRowID, contactDetailReportedID,
 		bilingAccountRowID, bilingAccountNumber, detailDataDescription, productCategory,
-		productStreamyxProduct, productType, serviceRowID, serviceType, preferredAcknowledgement,
+		productStreamyxProduct, productType, serviceRowID, serviceType,
 		callBack) {
 		return Axios.post(url + '/icp/create-SR', {
 			customerRowID,
@@ -148,13 +148,12 @@ const CreateCaseService = {
 			productType,
 			serviceRowID,
 			serviceType,
-			preferredAcknowledgement,
 			callBack
 		}).then(res => { return res }).catch(err => { return err });
 	},
 
 	createICPTT(customerRowID, severity, product, productCategory,
-		description, symptomCode, serviceRowID, preferredAcknowledgement,
+		description, symptomCode, serviceRowID,
 		relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
 		serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
 		contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
@@ -166,7 +165,6 @@ const CreateCaseService = {
 			description, 
 			symptomCode, 
 			serviceRowID, 
-			preferredAcknowledgement,
 			relatedSRRowID, 
 			createdBy, 
 			endDate, 
