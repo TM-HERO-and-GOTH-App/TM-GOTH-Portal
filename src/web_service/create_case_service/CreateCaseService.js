@@ -33,7 +33,7 @@ const CreateCaseService = {
 		})
 	},
 
-	getCustomerProfileFromICP(serviceID, customerID) {
+	getCustomerProfileFromNova(serviceID, customerID) {
 		return Axios.post(url + '/siebel_eai/nova/query-account', {
 			"serviceID": serviceID,
 			"customerID": customerID
@@ -91,34 +91,97 @@ const CreateCaseService = {
 		description, ownerCctActivity, activityID, activityType, activityStatus, activityCreated,
 		activityPlannedStart, activityPlannedEnd, activityDescription, notedID, createdBy, noteDescription, createdByPosition) {
 		return Axios.post(url + '/nova/create-TT', {
+			customerRowID,
+			bilingAccountNumber,
+			bilingAccountRowID,
+			severity,
+			product,
+			symptomCode,
+			category,
+			owner,
+			serviceRowID,
+			preferredAcknowledgement,
+			relatedSRRowID,
+			status,
+			ccpChargingMethod,
+			contactDetailRowID,
+			contactDetailReportedID,
+			description,
+			ownerCctActivity,
+			activityID,
+			activityType,
+			activityStatus,
+			activityCreated,
+			activityPlannedStart,
+			activityPlannedEnd,
+			activityDescription,
+			notedID,
+			createdBy,
+			noteDescription,
+			createdByPosition
+		}).then(res => { return res }).catch(err => { return err });
+	},
+
+	createICPSR(customerRowID, status, createdBy, area, subArea,
+		caseCategory, dateCreated, priority, severity, group, contactDetailRowID, contactDetailReportedID,
+		bilingAccountRowID, bilingAccountNumber, detailDataDescription, productCategory,
+		productStreamyxProduct, productType, serviceRowID, serviceType, preferredAcknowledgement,
+		callBack) {
+		return Axios.post(url + '/icp/create-SR', {
+			customerRowID,
+			status,
+			createdBy,
+			area,
+			subArea,
+			caseCategory,
+			dateCreated,
+			priority,
+			severity,
+			group,
+			contactDetailRowID,
+			contactDetailReportedID,
+			bilingAccountRowID,
+			bilingAccountNumber,
+			detailDataDescription,
+			productCategory,
+			productStreamyxProduct,
+			productType,
+			serviceRowID,
+			serviceType,
+			preferredAcknowledgement,
+			callBack
+		}).then(res => { return res }).catch(err => { return err });
+	},
+
+	createICPTT(customerRowID, severity, product, productCategory,
+		description, symptomCode, serviceRowID, preferredAcknowledgement,
+		relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
+		serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
+		contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
+		return Axios.post(url + '/icp/create-TT', {
 			customerRowID, 
-			bilingAccountNumber, 
-			bilingAccountRowID, 
 			severity, 
 			product, 
+			productCategory,
+			description, 
 			symptomCode, 
-			category, 
-			owner, 
 			serviceRowID, 
 			preferredAcknowledgement,
 			relatedSRRowID, 
-			status, 
-			ccpChargingMethod, 
-			contactDetailRowID, 
-			contactDetailReportedID,
-			description, 
-			ownerCctActivity, 
-			activityID, 
-			activityType, 
-			activityStatus, 
-			activityCreated,
-			activityPlannedStart, 
-			activityPlannedEnd, 
-			activityDescription, 
-			notedID, 
 			createdBy, 
-			noteDescription, 
-			createdByPosition
+			endDate, 
+			dueDate, 
+			migrationFlag, 
+			migrationNotes,
+			serviceNumber, 
+			srNumber, 
+			'status': 'Pending Assign', 
+			bilingAccountNumber, 
+			ccpChargingMethod, 
+			category,
+			contactDetailRowID, 
+			contactDetailReportedID, 
+			bilingAccountRowID
 		}).then(res => {return res}).catch(err => {return err});
 	}
 }

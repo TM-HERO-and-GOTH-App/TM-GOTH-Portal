@@ -53,7 +53,7 @@ function NonTechnicalCase() {
 
 	const getCustomerProfile = (e) => {
 		e.preventDefault();
-		CreateCaseService.getCustomerProfileFromICP(searchBarInput, customerICInput).then(res => {
+		CreateCaseService.getCustomerProfileFromNova(searchBarInput, customerICInput).then(res => {
 			// console.log(res.data);
 			setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
 			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
