@@ -23,6 +23,7 @@ function NonTechnicalCase() {
 	const [searchBarType, setSearchBarType] = useState('service');
 	const [searchBarInput, setSearchBarInput] = useState('');
 	let [customerICInput, setCustomerICInput] = useState('');
+	let createdDate = new Date();
 	// let [serviceIDInput, setServiceIDInput] = useState('');
 	// let [loginIDInput, setLoginIDInput] = useState('');
 
@@ -63,9 +64,12 @@ function NonTechnicalCase() {
 	}
 
 	const createSR = (e) => {
-		CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID, null, areaSelect, subAreaSelect, null, null, null, 
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null, null, descriptionInput, null, null, null, null, null, null, null,null,
-			null, null, userData.fullName, null, null).then(res => {
+		CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID, null, areaSelect, subAreaSelect, null, createdDate, null, 
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID, 
+			customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, 
+			customerProfileFromNova.BillInfo[0].BillingAccountRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo, 
+			descriptionInput, userData.stakeholderName, userData.fullName, null, null, null, null,
+			null, null, null, '1', userData.fullName, 'note', null).then(res => {
 				console.log(res);
 				createTT();
 			})
@@ -73,8 +77,10 @@ function NonTechnicalCase() {
 
 	const createTT = () => {
 		CreateCaseService.createNovaTT(customerProfileFromNova.CustInfo[0].CustomerRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo, customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			null, productSelect, null, null, userData.fullName, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, 'New', null, null, null,
-			descriptionInput, null, null, null, null, null, null, null, null, null, userData.fullName, null, null).then(res => {
+			null, productSelect, null, null, userData.fullName, customerProfileFromNova.ServiceInfo[0].ServiceRowID, 
+			null, 'Open', null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
+			descriptionInput, null, null, null, null, null, null, null, 
+			null, '1', userData.fullName, 'note', null).then(res => {
 				console.log(res);
 			})
 	}

@@ -86,7 +86,7 @@ const CreateCaseService = {
 	},
 
 	createNovaTT(customerRowID, bilingAccountNumber, bilingAccountRowID,
-		severity, product, symptomCode, category, owner, serviceRowID, preferredAcknowledgement,
+		severity, product, symptomCode, category, owner, serviceRowID,
 		relatedSRRowID, status, ccpChargingMethod, contactDetailRowID, contactDetailReportedID,
 		description, ownerCctActivity, activityID, activityType, activityStatus, activityCreated,
 		activityPlannedStart, activityPlannedEnd, activityDescription, notedID, createdBy, noteDescription, createdByPosition) {
@@ -100,8 +100,6 @@ const CreateCaseService = {
 			category,
 			owner,
 			serviceRowID,
-			preferredAcknowledgement,
-			relatedSRRowID,
 			status,
 			ccpChargingMethod,
 			contactDetailRowID,
