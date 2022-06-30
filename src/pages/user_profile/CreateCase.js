@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
+import SearchIcon from '@mui/icons-material/Search';
 
 function CreateCase() {
     const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
@@ -24,8 +25,20 @@ function CreateCase() {
     const [siebelTargetSystemSelect, setSiebelTargetSystemSelect] = useState('0');
     const [externalSystemInput, setExternalSystemInput] = useState('');
     const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
+    let [searchServiceID, setSearchServiceID] = useState('')
     let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
     let createdDate = new Date();
+
+    const getCustomerProfile = (event) => {
+		event.preventDefault();
+		CreateCaseService.getCustomerProfileFromNova(searchServiceID, nricInput).then(res => {
+			// console.log(res.data);
+			setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
+			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
+			setMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)
+			setStateType(lovData.filter(data => data.L_NAME.toUpperCase() == res.data.STTRetrieveServiceAcctResponse.Response[0].ServiceInfo[0].ServiceAddress[0].State).map(data => data.L_ID))
+		})
+	}
 
     const createCase = (e) => {
         e.preventDefault();
@@ -72,7 +85,7 @@ function CreateCase() {
 
     const createICPSR = () => {
         CreateCaseService.createICPSR(customerProfileFromNova.CustInfo[0].CustomerRowID, 'New', 'New', userData.fullName, areaType,
-            subAreaSelect, null, createdDate, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, 
+            subAreaSelect, null, createdDate, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
             customerProfileFromNova.BillInfo[0].BillingAccountRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo,
             caseDescriptionInput, productType, null, null, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null).then(res => {
                 console.log(res)
@@ -81,28 +94,28 @@ function CreateCase() {
 
     const createICPTT = () => {
         CreateCaseService.createICPTT(customerProfileFromNova.CustInfo[0].CustomerRowID, null, 'Streamyx', productType, caseDescriptionInput, symptomSelect,
-        customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, userData.fullName, null, null, null, null, null, null, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
-        customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.BillInfo[0].BillingAccountRowID).then(res => {
-            console.log(res);
-        })
+            customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, userData.fullName, null, null, null, null, null, null, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
+            customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.BillInfo[0].BillingAccountRowID).then(res => {
+                console.log(res);
+            })
     }
 
     const createSR = () => {
-		CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID, null, areaType, subAreaSelect, null, null, null, 
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null, null, caseDescriptionInput, null, null, null, null, null, null, null,null,
-			null, null, userData.fullName, null, null).then(res => {
-				console.log(res);
-				createTT();
-			})
-	}
+        CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID, null, areaType, subAreaSelect, null, null, null,
+            customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null, null, caseDescriptionInput, null, null, null, null, null, null, null, null,
+            null, null, userData.fullName, null, null).then(res => {
+                console.log(res);
+                createTT();
+            })
+    }
 
-	const createTT = () => {
-		CreateCaseService.createNovaTT(customerProfileFromNova.CustInfo[0].CustomerRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo, customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			null, productType, null, null, userData.fullName, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, 'New', null, null, null,
-			caseDescriptionInput, null, null, null, null, null, null, null, null, null, userData.fullName, null, null).then(res => {
-				console.log(res);
-			})
-	}
+    const createTT = () => {
+        CreateCaseService.createNovaTT(customerProfileFromNova.CustInfo[0].CustomerRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo, customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+            null, productType, null, null, userData.fullName, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, 'New', null, null, null,
+            caseDescriptionInput, null, null, null, null, null, null, null, null, null, userData.fullName, null, null).then(res => {
+                console.log(res);
+            })
+    }
 
     return (
         <Layout
@@ -135,6 +148,15 @@ function CreateCase() {
                                 <i className="ace-icon fa fa-save align-top bigger-125" />
                                 Save New Case
                             </button>
+
+                        </div>
+                        <div align='right'>
+                            <form name='form' onSubmit={getCustomerProfile}>
+                                <input className="input-sm" style={{padding: '2.5vh 2vw', margin: '1vh 0'}} type='text' placeholder='00XXXXXX' value={searchServiceID} onChange={(e) => setSearchServiceID(e.target.value)} />
+                                <button type='submit' className='btn btn-sm'>
+                                    <SearchIcon />
+                                </button>
+                            </form>
                         </div>
 
                         <div className="space-6" />
