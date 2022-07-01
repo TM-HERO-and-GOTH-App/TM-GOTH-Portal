@@ -25,13 +25,14 @@ function CreateCase() {
     const [siebelTargetSystemSelect, setSiebelTargetSystemSelect] = useState('0');
     const [externalSystemInput, setExternalSystemInput] = useState('');
     const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
+    let [searchNRIC, setSearchNRIC] = useState('');
     let [searchServiceID, setSearchServiceID] = useState('')
     let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
     let createdDate = new Date();
 
     const getCustomerProfile = (e) => {
         e.preventDefault();
-        CreateCaseService.getCustomerProfileFromNova(searchServiceID, nricInput).then(res => {
+        CreateCaseService.getCustomerProfileFromNova(searchServiceID, searchNRIC).then(res => {
             // console.log(res.data);
             setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
             setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
@@ -151,10 +152,13 @@ function CreateCase() {
                         </div>
 
                         <div align="right" className='row-cols-auto'>
-                            <input className="hb-input-group" style={{padding: '4px 50px 4px 8px', margin: '1vh 0'}} type='text'
-                                   placeholder='00XXXXXX' value={searchServiceID}
+                            <input className="input-medium" style={{height: '100%', padding: '4px 8px 4px 8px', margin: '1vh 0'}} type='text'
+                                   placeholder='ServiceID' value={searchServiceID}
                                    onChange={(e) => setSearchServiceID(e.target.value)}/>
-                            <button className='btn btn-sm' style={{height: '30.67px', margin: '1vh 35px 1vh -35px'}} onClick={getCustomerProfile}>
+                            <input className="input-medium" style={{padding: '4px 8px 4px 8px', margin: '1vh 0'}} type='text'
+                                   placeholder='NRIC' value={searchNRIC}
+                                   onChange={(e) => setSearchNRIC(e.target.value)}/>
+                            <button className='btn btn-sm' style={{height: '30px', margin: '1vh 35px 1vh 0'}} onClick={getCustomerProfile}>
                                 <i className="ace-icon fa fa-search align-top bigger-110"></i>
                             </button>
                         </div>
