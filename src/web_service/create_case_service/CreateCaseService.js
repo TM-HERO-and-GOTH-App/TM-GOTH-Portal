@@ -41,7 +41,7 @@ const CreateCaseService = {
 	},
 
 	autoCreateCTT(serviceNumber, faultCode, mobileNumber) {
-		return Axios.post(url + '/icp/auto-create-ctt-DEL', {
+		return Axios.post(url + '/siebel_eai/icp/auto-create-ctt-DEL', {
 			"serviceNumber": serviceNumber,
 			"faultCode": faultCode,
 			"customerMobileNumber": mobileNumber
@@ -53,7 +53,7 @@ const CreateCaseService = {
 		bilingAccountNumber, detailDataDescription, group, owner, closureCategory,
 		closureReason, closureRemark, callBack, callBackTime, srNumber, cttNumber, noteID,
 		noteCreatedBy, noteDescription, createdByPosition) {
-		return Axios.post(url + '/nova/create-sr', {
+		return Axios.post(url + '/siebel_eai/nova/create-sr', {
 			customerRowID,
 			type,
 			"status": "In Progress",
@@ -90,7 +90,7 @@ const CreateCaseService = {
 		relatedSRRowID, status, ccpChargingMethod, contactDetailRowID, contactDetailReportedID,
 		description, ownerCctActivity, activityID, activityType, activityStatus, activityCreated,
 		activityPlannedStart, activityPlannedEnd, activityDescription, notedID, createdBy, noteDescription, createdByPosition) {
-		return Axios.post(url + '/nova/create-TT', {
+		return Axios.post(url + '/siebel_eai/nova/create-TT', {
 			customerRowID,
 			bilingAccountNumber,
 			bilingAccountRowID,
@@ -125,7 +125,7 @@ const CreateCaseService = {
 		billingAccountRowID, billingAccountNumber, detailDataDescription, productCategory,
 		productStreamyxProduct, productType, serviceRowID, serviceType,
 		callBack) {
-		return Axios.post(url + '/icp/create-SR', {
+		return Axios.post(url + '/siebel_eai/icp/create-SR', {
 			customerRowID,
 			status,
 			createdBy,
@@ -155,7 +155,7 @@ const CreateCaseService = {
 		relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
 		serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
 		contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
-		return Axios.post(url + '/icp/create-TT', {
+		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			severity,
 			product,
