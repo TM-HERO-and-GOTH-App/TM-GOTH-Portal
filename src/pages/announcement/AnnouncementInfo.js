@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import AnnouncementService from '../../web_service/announcement_service/AnnouncementService';
 
 function AnnouncementInfo(props) {
     const announcementID = useState(props.match.params.id);
@@ -10,15 +10,16 @@ function AnnouncementInfo(props) {
     const [fetchingAPI, setFetchingAPI] = useState(true);
 
     useEffect(() => {
-        axios.post('http://localhost:3001/announcement/get-announcement',{
-            authToken: token,
-            caseID: announcementID[0]
-        }).then(res => {
-            console.log(announcementID)
-            console.log(res.data)
-            setAnnouncement(res.data)
-            setFetchingAPI(false);
-        })
+        const getAnnouncementInfo = () => {
+            AnnouncementService.getAnnouncementInfo(token, announcementID[0]).then(res => {
+                // console.log(announcementID)
+                // console.log(res.data)
+                setAnnouncement(res.data)
+                setFetchingAPI(false);
+            })
+        }
+
+        getAnnouncementInfo();
     }, [])
     return (
         <Layout

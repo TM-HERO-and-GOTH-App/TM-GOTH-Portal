@@ -2,6 +2,7 @@ import React from "react";
 import Slider from "react-slick";
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 // import Typography from '@mui/material/Typography';
 // import CardActions from '@mui/material/CardActions';
 // import Button from '@mui/material/Button';
@@ -11,7 +12,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function DashboardSlider(props) {
-    const {announcementData} = props;
     const slides = [
         {
             title: 'Paris',
@@ -50,39 +50,43 @@ function DashboardSlider(props) {
 
     return (
         <div className="slider-container">
-            <Box sx={{maxWidth: '100%', flexGrow: 1}}>
+            <Box sx={{ maxWidth: '100%', flexGrow: 1 }}>
                 <Slider {...settings}>
                     {
-                        slides.map((data, index) => {
+                        props.slides.map((data, index) => {
                             return (
                                 <div className="exterior-slider" key={index}>
                                     <div className="grid-view">
-                                        <Box className="layer-1"/>
+                                        <Box className="layer-1" />
                                         <Box className="layer-2" href="/">
                                             <div className="slider-des">
                                                 <div id="title">
-                                                    {data.title}
+                                                    {data?.TITLE}
                                                 </div>
                                                 <div id="description">
-                                                    {data.body}
+                                                    {data.BODY.length > 100 ?
+                                                        data?.BODY.substring(0, 100) + '...' :
+                                                        data?.BODY
+                                                    }
                                                 </div>
+                                                <Link to={`/more_announcement/${data.ANNOUNCEMENT_ID}`}>show more</Link>
                                             </div>
                                             {/*<Button className="slider-info-button" variant="contained" href="#contained-buttons">*/}
                                             {/*    Read More*/}
                                             {/*</Button>*/}
                                         </Box>
                                         <Box className="layer-3"
-                                             component="img"
-                                             sx={{
-                                                 height: 'var(--space-slider-height)',
-                                                 display: 'block',
-                                                 maxWidth: '1200px',
-                                                 overflow: 'hidden',
-                                                 width: '100%',
-                                                 objectFit: 'cover'
-                                             }}
-                                             src={data.img}
-                                             alt={data.title}
+                                            component="img"
+                                            sx={{
+                                                height: 'var(--space-slider-height)',
+                                                display: 'block',
+                                                maxWidth: '1200px',
+                                                overflow: 'hidden',
+                                                width: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                            src={data?.PICTURE}
+                                            alt={data?.TITLE}
                                         />
                                     </div>
                                 </div>

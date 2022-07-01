@@ -85,12 +85,12 @@ function CreateCase() {
     }
 
     const createICPSR = () => {
-        CreateCaseService.createICPSR(customerProfileFromNova.CustInfo[0].CustomerRowID, 'New', 'New', userData.fullName, areaType,
-            subAreaSelect, null, createdDate, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
+        CreateCaseService.createICPSR(customerProfileFromNova.CustInfo[0].CustomerRowID, 'New', userData.fullName, areaType,
+            subAreaSelect, null, createdDate, null, null, userData.stakeholderName, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
             customerProfileFromNova.BillInfo[0].BillingAccountRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo,
-            caseDescriptionInput, productType, null, null, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null).then(res => {
-            console.log(res)
-        })
+            caseDescriptionInput, null, null, productType, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null).then(res => {
+                console.log(res)
+            })
     }
 
     const createICPTT = () => {

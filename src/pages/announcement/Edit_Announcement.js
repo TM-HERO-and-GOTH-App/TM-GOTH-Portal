@@ -1,14 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import { Link } from 'react-router-dom';
+import AnnouncementService from '../../web_service/announcement_service/AnnouncementService';
 
-export default function EditAnnouncementForm() {
-    const lovData = sessionStorage.getItem('LovData')
-    const [title, setTitle] = useState("");
-    const [bodyContent, setBodyContent] = useState("");
-    const [picture, setPicture] = useState("");
-    const [announcementTag, setAnnouncementTag] = useState("first_value");
+export default function EditAnnouncementForm(props) {
+    const lovData = sessionStorage.getItem('LovData');
+    const token = JSON.parse(sessionStorage.getItem('userToken'));
+    const userData = JSON.parse(sessionStorage.getItem('UserData'));
+    const announcementID = useState(props.match.params.id);
+    let [title, setTitle] = useState("");
+    let [bodyContent, setBodyContent] = useState("");
+    let [picture, setPicture] = useState("");
+    let [announcementTag, setAnnouncementTag] = useState("1");
+    let [announcement, setAnnouncement] = useState([]);
 
+    useEffect(() => {
+        const getAnnouncementInfo = () => {
+            AnnouncementService.getAnnouncementInfo(token, announcementID[0]).then(res => {
+                // console.log(announcementID)
+                console.log(res.data[0])
+                setTitle(res.data[0].TITLE);
+                setBodyContent(res.data[0].BODY)
+                setAnnouncement(res.data[0].TAG)
+            })
+        }
+
+        getAnnouncementInfo();
+    },[])
+    
     const onFileUpload = () => {
 
         // Create an object of formData
@@ -29,9 +48,21 @@ export default function EditAnnouncementForm() {
         // axios.post("api/uploadfile", formData);
     };
 
+    const editAnnouncement = (e) => {
+        e.preventDefault();
+        if (window.confirm('Are you sure you have finished edit?')) {
+            AnnouncementService.editAnnouncement(token, announcementID[0], userData.hID, title, bodyContent, announcementTag, null)
+                .then(res => {
+                    console.log(res.data)
+                    if(res.status === 200) return window.location = '/all_announcements'
+                    if (res.status === 400) return alert('Error during edit announcement process!!');
+                })
+        }
+    }
+
     return (
         <Layout
-            pageTitle='Add New Announcement'
+            pageTitle='Edit Announcement'
             pageContent={
                 <>
                     <div>
@@ -42,7 +73,7 @@ export default function EditAnnouncementForm() {
                     </div>
                     <div className="space-6" />
                     <div>
-                        <form name="form">
+                        <form name="form" onSubmit={editAnnouncement}>
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="form-group">
@@ -78,10 +109,10 @@ export default function EditAnnouncementForm() {
                                             <div className="profile-info-row">
                                                 <div className="profile-info-name">Tag</div>
                                                 <div className="profile-info-value">
-                                                    <select className="chosen-select form-control" value={announcementTag} onChange={(e) => announcementTag(e.target.value)}>
-                                                        <option value="first_option">First option</option>
-                                                        <option value="second_option">Second option</option>
-                                                        <option value="third_option">Third option</option>
+                                                    <select className="chosen-select form-control" value={announcementTag} onChange={(e) => setAnnouncementTag(e.target.value)}>
+                                                        <option value="1">First option</option>
+                                                        <option value="2">Second option</option>
+                                                        <option value="3">Third option</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -89,6 +120,7 @@ export default function EditAnnouncementForm() {
                                     </div>
                                 </div>
                             </div>
+                            <button type='submit' className='btn btn-success'>Edit Case</button>
                         </form>
                     </div>
                 </>

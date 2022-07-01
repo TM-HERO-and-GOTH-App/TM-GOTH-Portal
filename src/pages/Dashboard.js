@@ -4,6 +4,7 @@ import AssignmentDashboard from '../components/dashboard/Assignment_Dashboard';
 import DashboardService from '../web_service/dashboard/DashboardService';
 import DashboardSlider from '../components/slider/Slider';
 import CircularProgress from '@mui/material/CircularProgress';
+import AnnouncementService from '../web_service/announcement_service/AnnouncementService';
 
 function Dashboard() {
   const userData = JSON.parse(sessionStorage.getItem('UserData'));
@@ -22,6 +23,7 @@ function Dashboard() {
   let [stateCase, setStateCase] = useState([]);
   let [registerUser, setRegisterUser] = useState([]);
   let [stakeholderOption, setStakeholderOption] = useState('0');
+  let [announcementList, setAnnouncementList] = useState([])
 
   //Below is all the function correspond to it's purpose:
   const getNationWideGroupData = async () => {
@@ -97,6 +99,13 @@ function Dashboard() {
       });
     }
 
+    const getAllAnnouncements = () => {
+      AnnouncementService.getAllAnnouncement(token).then(res => {
+        setAnnouncementList(res.data);
+      })
+  }
+
+    getAllAnnouncements();
     getAgentCase();
     getGroupCase();
     getRegisterUserData();
@@ -112,7 +121,9 @@ function Dashboard() {
       pageContent={
         <>
           <div className="row">
-            <DashboardSlider />
+            {announcementList === [] ? null :
+              <DashboardSlider slides={announcementList}/>
+            }
             <form>
               <div className="pull-right col-sm-4">
                 <select className="chosen-select form-control" name="shID" value={stakeholderOption}

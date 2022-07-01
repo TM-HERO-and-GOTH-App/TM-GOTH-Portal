@@ -4,6 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 import axios from 'axios';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
+import NextService from "../../web_service/next_service/NextService";
 
 function TechnicalCase() {
 	let styles = {
@@ -38,10 +39,7 @@ function TechnicalCase() {
 	// let [loginIDInput, setLoginIDInput] = useState('');
 
 	const checkNetwork = () => {
-		axios.post('http://10.54.1.21:8001/NEXT/OVAL_NEXT/Proxy_Services/PS_RetrieveLRInfo', {
-			"RequestID": "HERO-20220425-0001",
-			"ServiceNo": searchBarInput
-		}).then((res, err) => {
+		NextService.checkNetworkOutage('HERO-20220425-0001', searchBarInput).then((res, err) => {
 			if (err) return console.log(err);
 			return console.log(res);
 		})

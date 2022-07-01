@@ -84,7 +84,7 @@ function MU_Groupmember() {
 
     const setAsAgent = (hToken) => {
         ManageUserService.setAsAgent(token, userData.hID, hToken, userData.shID).then(res => {
-            console.log(hToken)
+            // console.log(hToken)
             // console.log(res.data);
             if (res.data[0].response === 'OK') {
                 sessionStorage.setItem('alertStatus', true);

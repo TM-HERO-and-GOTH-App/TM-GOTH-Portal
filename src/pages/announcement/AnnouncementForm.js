@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../Layout';
-import { Link } from 'react-router-dom';
-import Axios from 'axios';
+import AnnouncementService from '../../web_service/announcement_service/AnnouncementService';
 
 function AnnouncementForm() {
     const lovData = JSON.parse(sessionStorage.getItem('LovData'));
@@ -34,13 +33,8 @@ function AnnouncementForm() {
 
     const createAnnouncement = (e) => {
         e.preventDefault();
-        Axios.post('http://localhost:3001/announcement/create-announcement', {
-            authToken: token,
-            gID: userData.hID,
-            title: title,
-            bodyContent: bodyContent,
-            tag: announcementTag
-        }).then(res => console.log(res));
+        AnnouncementService.createNewAnnouncement(token, userData.hID, title, bodyContent, announcementTag)
+        .then(res => console.log(res));
     }
 
     return (
