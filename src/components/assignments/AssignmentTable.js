@@ -35,7 +35,7 @@ function escapeRegExp(value) {
 }
 
 function AssignmentTable(props) {
-    console.log(props, 'AssignmentTable');
+    console.log(props.tableData, 'AssignmentTable');
     let prepData = useMemo(() => props.tableData
         .filter((item) =>
             (typeof props.caseType !== 'undefined' && typeof props.groupType !== 'undefined') ?
@@ -83,7 +83,7 @@ function AssignmentTable(props) {
             TOTAL_NEW_ALERT,
             response
         })), [props]);
-    // const prepData = []
+
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('case_id');
     const [selected, setSelected] = useState([]);
@@ -93,7 +93,7 @@ function AssignmentTable(props) {
     const [searchText, setSearchText] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
-    const csvheaders = [
+    const csvHeaders = [
         { label: "Case ID", key: "case_id" },
         { label: "Status", key: "status" },
         { label: "Aging", key: "aging" },
@@ -364,7 +364,7 @@ function AssignmentTable(props) {
                         className="hidden"
                         data={csvData}
                         filename={"HERO Portal Back-End Control System.csv"}
-                        headers={csvheaders}
+                        headers={csvHeaders}
                         ref={csvLink}
                         target='_blank'
                     />

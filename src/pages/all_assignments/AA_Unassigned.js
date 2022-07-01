@@ -11,7 +11,7 @@ function AA_Unassigned() {
     const [caseType, setCaseType] = useState('0');
     const [groupType, setGroupType] = useState('0');
     const [isLoading, setIsLoading] = useState(false);
-    console.log(unAssignedCase, 'AA_Unassigned')
+    // console.log(unAssignedCase, 'AA_Unassigned')
 
     useEffect(() => {
         const allAssignmentData = () => {
