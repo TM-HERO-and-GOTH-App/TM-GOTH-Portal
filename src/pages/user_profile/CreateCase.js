@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,16 +29,16 @@ function CreateCase() {
     let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
     let createdDate = new Date();
 
-    const getCustomerProfile = (event) => {
-		event.preventDefault();
-		CreateCaseService.getCustomerProfileFromNova(searchServiceID, nricInput).then(res => {
-			// console.log(res.data);
-			setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
-			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
-			setMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)
-			setStateType(lovData.filter(data => data.L_NAME.toUpperCase() == res.data.STTRetrieveServiceAcctResponse.Response[0].ServiceInfo[0].ServiceAddress[0].State).map(data => data.L_ID))
-		})
-	}
+    const getCustomerProfile = (e) => {
+        e.preventDefault();
+        CreateCaseService.getCustomerProfileFromNova(searchServiceID, nricInput).then(res => {
+            // console.log(res.data);
+            setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
+            setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
+            setMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)
+            setStateType(lovData.filter(data => data.L_NAME.toUpperCase() == res.data.STTRetrieveServiceAcctResponse.Response[0].ServiceInfo[0].ServiceAddress[0].State).map(data => data.L_ID))
+        })
+    }
 
     const createCase = (e) => {
         e.preventDefault();
@@ -88,33 +88,33 @@ function CreateCase() {
             subAreaSelect, null, createdDate, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
             customerProfileFromNova.BillInfo[0].BillingAccountRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo,
             caseDescriptionInput, productType, null, null, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null).then(res => {
-                console.log(res)
-            })
+            console.log(res)
+        })
     }
 
     const createICPTT = () => {
         CreateCaseService.createICPTT(customerProfileFromNova.CustInfo[0].CustomerRowID, null, 'Streamyx', productType, caseDescriptionInput, symptomSelect,
             customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, userData.fullName, null, null, null, null, null, null, null, null, null, customerProfileFromNova.CustInfo[0].PrimaryContactRowID,
             customerProfileFromNova.CustInfo[0].PrimaryContactRowID, customerProfileFromNova.BillInfo[0].BillingAccountRowID).then(res => {
-                console.log(res);
-            })
+            console.log(res);
+        })
     }
 
     const createSR = () => {
         CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID, null, areaType, subAreaSelect, null, null, null,
             customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, null, null, caseDescriptionInput, null, null, null, null, null, null, null, null,
             null, null, userData.fullName, null, null).then(res => {
-                console.log(res);
-                createTT();
-            })
+            console.log(res);
+            createTT();
+        })
     }
 
     const createTT = () => {
         CreateCaseService.createNovaTT(customerProfileFromNova.CustInfo[0].CustomerRowID, customerProfileFromNova.BillInfo[0].BillingAccountNo, customerProfileFromNova.BillInfo[0].BillingAccountRowID,
             null, productType, null, null, userData.fullName, customerProfileFromNova.ServiceInfo[0].ServiceRowID, null, null, 'New', null, null, null,
             caseDescriptionInput, null, null, null, null, null, null, null, null, null, userData.fullName, null, null).then(res => {
-                console.log(res);
-            })
+            console.log(res);
+        })
     }
 
     return (
@@ -130,8 +130,8 @@ function CreateCase() {
                                     <div
                                         className={`alert alert-block ${successCreateCase === true ? 'alert-success' : 'alert-danger'}`}>
                                         <button type="button" onClick={() => setAlertStatus(false)} className="close"
-                                            data-dismiss="alert">
-                                            <i className="ace-icon fa fa-times" />
+                                                data-dismiss="alert">
+                                            <i className="ace-icon fa fa-times"/>
                                         </button>
                                         <p>{alertMessage}</p>
                                     </div>
@@ -141,39 +141,40 @@ function CreateCase() {
 
                         <div className="left">
                             <button className="btn btn-sm btn-inverse" type="reset">
-                                <i className="ace-icon fa fa-repeat align-top bigger-125" />
+                                <i className="ace-icon fa fa-repeat align-top bigger-125"/>
                                 Reset
                             </button>
                             <button className="btn btn-sm btn-success" type="submit">
-                                <i className="ace-icon fa fa-save align-top bigger-125" />
+                                <i className="ace-icon fa fa-save align-top bigger-125"/>
                                 Save New Case
                             </button>
-
-                        </div>
-                        <div align='right'>
-                            <form name='form' onSubmit={getCustomerProfile}>
-                                <input className="input-sm" style={{padding: '2.5vh 2vw', margin: '1vh 0'}} type='text' placeholder='00XXXXXX' value={searchServiceID} onChange={(e) => setSearchServiceID(e.target.value)} />
-                                <button type='submit' className='btn btn-sm'>
-                                    <SearchIcon />
-                                </button>
-                            </form>
                         </div>
 
-                        <div className="space-6" />
+                        <div align="right" className='row-cols-auto'>
+                            <input className="hb-input-group" style={{padding: '4px 50px 4px 8px', margin: '1vh 0'}} type='text'
+                                   placeholder='00XXXXXX' value={searchServiceID}
+                                   onChange={(e) => setSearchServiceID(e.target.value)}/>
+                            <button className='btn btn-sm' style={{height: '30.67px', margin: '1vh 35px 1vh -35px'}} onClick={getCustomerProfile}>
+                                <i className="ace-icon fa fa-search align-top bigger-110"></i>
+                            </button>
+                        </div>
+
+                        <div className="space-6"/>
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                                    <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name" style={{ width: '25%' }}>Customer Name</div>
+                                            <div className="profile-info-name" style={{width: '25%'}}>Customer Name
+                                            </div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <input className="input-sm" style={{ width: '100%' }} type="text"
-                                                        name="customerName"
-                                                        placeholder="Customer Name"
-                                                        defaultValue={customerNameInput ? customerNameInput : ''}
-                                                        onChange={(e) => setCustomerNameInput(e.target.value)} />
+                                                    <input className="input-sm" style={{width: '100%'}} type="text"
+                                                           name="customerName"
+                                                           placeholder="Customer Name"
+                                                           defaultValue={customerNameInput ? customerNameInput : ''}
+                                                           onChange={(e) => setCustomerNameInput(e.target.value)}/>
                                                 </span>
                                             </div>
                                         </div>
@@ -182,11 +183,11 @@ function CreateCase() {
                                             <div className="profile-info-name">NRIC No</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <input className="input-sm" style={{ width: '100%' }} type="text"
-                                                        name="nricNum"
-                                                        placeholder="NRIC Number"
-                                                        defaultValue={nricInput ? nricInput : ''}
-                                                        onChange={(e) => setNRICInput(e.target.value)} />
+                                                    <input className="input-sm" style={{width: '100%'}} type="text"
+                                                           name="nricNum"
+                                                           placeholder="NRIC Number"
+                                                           defaultValue={nricInput ? nricInput : ''}
+                                                           onChange={(e) => setNRICInput(e.target.value)}/>
                                                 </span>
                                             </div>
                                         </div>
@@ -195,11 +196,11 @@ function CreateCase() {
                                             <div className="profile-info-name">Mobile No</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <input className="input-sm" style={{ width: '100%' }} type="text"
-                                                        name="mobileNum"
-                                                        placeholder="Mobile Number"
-                                                        defaultValue={mobileNumberInput ? mobileNumberInput : ''}
-                                                        onChange={(e) => setMobileNumberInput(e.target.value)} />
+                                                    <input className="input-sm" style={{width: '100%'}} type="text"
+                                                           name="mobileNum"
+                                                           placeholder="Mobile Number"
+                                                           defaultValue={mobileNumberInput ? mobileNumberInput : ''}
+                                                           onChange={(e) => setMobileNumberInput(e.target.value)}/>
                                                 </span>
                                             </div>
                                         </div>
@@ -208,11 +209,11 @@ function CreateCase() {
                                             <div className="profile-info-name">Customer Service ID</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="serviceID">
-                                                    <input className="input-sm" style={{ width: '100%' }} type="text"
-                                                        name="customerServiceID"
-                                                        placeholder="Customer Service ID"
-                                                        value={serviceID}
-                                                        onChange={(e) => setServiceID(e.target.value)} />
+                                                    <input className="input-sm" style={{width: '100%'}} type="text"
+                                                           name="customerServiceID"
+                                                           placeholder="Customer Service ID"
+                                                           value={serviceID}
+                                                           onChange={(e) => setServiceID(e.target.value)}/>
                                                 </span>
                                             </div>
                                         </div>
@@ -221,13 +222,13 @@ function CreateCase() {
                                             <div className="profile-info-name">State</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='areaLocationID'
-                                                    value={stateType}
-                                                    onChange={(e) => setStateType(parseFloat(e.target.value))}>
+                                                        value={stateType}
+                                                        onChange={(e) => setStateType(parseFloat(e.target.value))}>
                                                     <option value='0' hidden>Choose a State...</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'AREA-LOCATION').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })}
                                                 </select>
                                             </div>
@@ -237,12 +238,12 @@ function CreateCase() {
                                             <div className="profile-info-name">Case Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={caseType} onChange={(e) => setCaseType(e.target.value)}>
+                                                        value={caseType} onChange={(e) => setCaseType(e.target.value)}>
                                                     <option value='0' hidden>Choose a Case Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -255,9 +256,9 @@ function CreateCase() {
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
                                                     <input className="input-sm" value={externalSystemInput}
-                                                        onChange={(e) => setExternalSystemInput(e.target.value)}
-                                                        style={{ width: "100%" }} type="text" name="extSysRef"
-                                                        placeholder="External System Reference" />
+                                                           onChange={(e) => setExternalSystemInput(e.target.value)}
+                                                           style={{width: "100%"}} type="text" name="extSysRef"
+                                                           placeholder="External System Reference"/>
                                                 </span>
                                             </div>
                                         </div>
@@ -266,10 +267,10 @@ function CreateCase() {
                                             <div className="profile-info-name">Stakeholder Ref.</div>
                                             <div className="profile-info-value">
                                                 <select className="chosen-select form-control"
-                                                    value={stakeholderReferenceSelect}
-                                                    onChange={(e) => setStakeholderReferenceSelect(e.target.value)}
-                                                    name="stakeholderRef"
-                                                    data-placeholder="Choose a Stakeholder Reference...">
+                                                        value={stakeholderReferenceSelect}
+                                                        onChange={(e) => setStakeholderReferenceSelect(e.target.value)}
+                                                        name="stakeholderRef"
+                                                        data-placeholder="Choose a Stakeholder Reference...">
                                                     <option value="n/a" selected="yes">Choose a Stakeholder
                                                         Reference...
                                                     </option>
@@ -293,12 +294,13 @@ function CreateCase() {
                                         </div>
 
                                         <div className="profile-info-row">
-                                            <div className="profile-info-name" style={{ width: '25%' }}>Case Description</div>
+                                            <div className="profile-info-name" style={{width: '25%'}}>Case Description
+                                            </div>
                                             <div className="profile-info-value">
                                                 <textarea className="form-control limited" rows={10} name="caseContent"
-                                                    maxLength={9999}
-                                                    value={caseDescriptionInput}
-                                                    onChange={(e) => setCaseDescriptionInput(e.target.value)} />
+                                                          maxLength={9999}
+                                                          value={caseDescriptionInput}
+                                                          onChange={(e) => setCaseDescriptionInput(e.target.value)}/>
                                             </div>
                                         </div>
                                     </div>
@@ -307,18 +309,18 @@ function CreateCase() {
 
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
+                                    <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
                                         <div className="profile-info-row">
                                             <div className="profile-info-name">Source</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='sourceID'
-                                                    value={sourceType}
-                                                    onChange={(e) => setSourceType(e.target.value)}>
+                                                        value={sourceType}
+                                                        onChange={(e) => setSourceType(e.target.value)}>
                                                     <option hidden value='0'>Choose a Source...</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'SOURCE').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -329,13 +331,13 @@ function CreateCase() {
                                             <div className="profile-info-name">Product Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='productType'
-                                                    value={productType}
-                                                    onChange={(e) => setProductType(e.target.value)}>
+                                                        value={productType}
+                                                        onChange={(e) => setProductType(e.target.value)}>
                                                     <option value='0' hidden>Choose a Product Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'PRODUCT').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -346,13 +348,13 @@ function CreateCase() {
                                             <div className="profile-info-name">Area Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={areaType}
-                                                    onChange={(e) => setAreaType(parseFloat(e.target.value))}>
+                                                        value={areaType}
+                                                        onChange={(e) => setAreaType(parseFloat(e.target.value))}>
                                                     <option value='0' disabled>Choose a Area Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'AREA').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -363,13 +365,13 @@ function CreateCase() {
                                             <div className="profile-info-name">Sub-Area Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
-                                                    value={subAreaSelect}
-                                                    onChange={(e) => setSubAreaSelect(parseFloat(e.target.value))}>
+                                                        value={subAreaSelect}
+                                                        onChange={(e) => setSubAreaSelect(parseFloat(e.target.value))}>
                                                     <option value='0' disabled>Choose a Sub-area Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'SUB-AREA').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -380,13 +382,13 @@ function CreateCase() {
                                             <div className="profile-info-name">Symptom Type</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='symptomType'
-                                                    value={symptomSelect}
-                                                    onChange={(e) => setSymptomSelect(parseFloat(e.target.value))}>
+                                                        value={symptomSelect}
+                                                        onChange={(e) => setSymptomSelect(parseFloat(e.target.value))}>
                                                     <option value='0' disabled>Choose a Symptom Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                             return <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
+                                                                           value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
                                                 </select>
@@ -397,8 +399,8 @@ function CreateCase() {
                                             <div className="profile-info-name">Siebel Target System</div>
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='siebelSystem'
-                                                    value={siebelTargetSystemSelect}
-                                                    onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
+                                                        value={siebelTargetSystemSelect}
+                                                        onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
                                                     <option value='0' disabled>Choose a Target System</option>
                                                     <option value='icp'>ICP</option>
                                                     <option value='nova'>NOVA</option>
