@@ -80,6 +80,10 @@ function TechnicalCase() {
 		<body style={styles.body}>
 			<div className="hb-container">
 				<div className="hb-title">Technical Case</div>
+
+				{/* Temporary workaround*/}
+				<button className="btn btn-primary" onClick={createCTT(searchBarInput, symptomSelect, customerMobileNumberInput)}>CreateCTT</button>
+
 				<form onSubmit={createTechnicalCase}>
 					<div className="hb-input-group w-100" id="searchbar">
 						<div className="hb-input-group-prepend">
