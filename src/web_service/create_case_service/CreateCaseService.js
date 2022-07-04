@@ -49,8 +49,8 @@ const CreateCaseService = {
 	},
 
 	createNovaSR(customerRowID, type, area, subArea, caseCategory,
-		dateCreated, source, serviceRowID, contactDetailRowID, contactDetailReportedID, billingAccountRowID,
-		billingAccountNumber, detailDataDescription, group, owner, closureCategory,
+		dateCreated, source, serviceRowID, contactDetailRowID, contactDetailReportedID, bilingAccountRowID,
+		bilingAccountNumber, detailDataDescription, group, owner, closureCategory,
 		closureReason, closureRemark, callBack, callBackTime, srNumber, cttNumber, noteID,
 		noteCreatedBy, noteDescription, createdByPosition) {
 		return Axios.post(url + '/siebel_eai/nova/create-sr', {
@@ -65,8 +65,8 @@ const CreateCaseService = {
 			serviceRowID,
 			contactDetailRowID,
 			contactDetailReportedID,
-			billingAccountRowID,
-			billingAccountNumber,
+			bilingAccountRowID,
+			bilingAccountNumber,
 			detailDataDescription,
 			group,
 			owner,
@@ -80,31 +80,30 @@ const CreateCaseService = {
 			noteID,
 			noteCreatedBy,
 			"noteType": 'Note',
-			"noteDescription": 'Case created from GOTH Portal.',
+			noteDescription,
 			createdByPosition
 		}).then(res => { return res }).catch(err => { return err })
 	},
 
-	createNovaTT(customerRowID, bilLingAccountNumber, bilLingAccountRowID,
+	createNovaTT(customerRowID, bilingAccountNumber, bilingAccountRowID,
 		severity, product, symptomCode, category, owner, serviceRowID,
-		relatedSRRowID, status, ccpChargingMethod, contactDetailRowID, contactDetailReported,
+		relatedSRRowID, status, ccpChargingMethod, contactDetailRowID, contactDetailReportedID,
 		description, ownerCctActivity, activityID, activityType, activityStatus, activityCreated,
 		activityPlannedStart, activityPlannedEnd, activityDescription, notedID, createdBy, noteDescription, createdByPosition) {
 		return Axios.post(url + '/siebel_eai/nova/create-TT', {
 			customerRowID,
-			bilLingAccountNumber,
-			bilLingAccountRowID,
+			bilingAccountNumber,
+			bilingAccountRowID,
 			severity,
 			product,
 			symptomCode,
 			category,
 			owner,
 			serviceRowID,
-			relatedSRRowID,
 			status,
 			ccpChargingMethod,
 			contactDetailRowID,
-			contactDetailReported,
+			contactDetailReportedID,
 			description,
 			ownerCctActivity,
 			activityID,
@@ -154,8 +153,8 @@ const CreateCaseService = {
 	createICPTT(customerRowID, severity, product, productCategory,
 		description, symptomCode, serviceRowID,
 		relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
-		serviceNumber, srNumber, billingAccountNumber, ccpChargingMethod, category,
-		contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
+		serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
+		contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			severity,
@@ -173,12 +172,12 @@ const CreateCaseService = {
 			serviceNumber,
 			srNumber,
 			'status': 'Pending Assign',
-			billingAccountNumber,
+			bilingAccountNumber,
 			ccpChargingMethod,
 			category,
 			contactDetailRowID,
 			contactDetailReportedID,
-			billingAccountRowID
+			bilingAccountRowID
 		}).then(res => {return res}).catch(err => {return err});
 	}
 }

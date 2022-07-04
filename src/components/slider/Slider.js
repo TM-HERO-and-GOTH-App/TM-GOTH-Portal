@@ -69,7 +69,7 @@ function DashboardSlider(props) {
                                                         data?.BODY
                                                     }
                                                 </div>
-                                                <Link to={`/more_announcement/${data.ANNOUNCEMENT_ID}`}>show more</Link>
+                                                <Link to={`/more_announcement/${data.ANNOUNCEMENT_ID}`} style={{marginLeft: '30vw'}}>show more</Link>
                                             </div>
                                             {/*<Button className="slider-info-button" variant="contained" href="#contained-buttons">*/}
                                             {/*    Read More*/}

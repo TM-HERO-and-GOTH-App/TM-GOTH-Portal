@@ -18,7 +18,6 @@ function CautionReport() {
 	let styles = {
 		body: {
 			display: "flex",
-			height: "100vh",
 			justifyContent: "center",
 			alignItems: "center",
 			padding: "10px",
@@ -36,7 +35,7 @@ function CautionReport() {
 	}
 
 	return (
-		<body style={styles.body}>
+		<div style={styles.body}>
 			<div className="hb-container">
 				<div className="hb-title">Caution Report</div>
 				<form onSubmit={createCautionCase}>
@@ -129,7 +128,7 @@ function CautionReport() {
 					</div>
 				</form>
 			</div>
-		</body>
+		</div>
 	);
 }
 
