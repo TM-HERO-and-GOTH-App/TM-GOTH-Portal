@@ -10,7 +10,6 @@ function TechnicalCase() {
 	let styles = {
 		body: {
 			display: "flex",
-			height: "100vh",
 			justifyContent: "center",
 			alignItems: "center",
 			padding: "10px",
@@ -57,6 +56,7 @@ function TechnicalCase() {
 
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
+		createCTT(searchBarInput, symptomSelect, customerMobileNumberInput);
 		CreateCaseService.createCase(token, userData.hID, customerNameInput, null, customerMobileNumberInput,
 			locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
 			symptomSelect, searchBarInput, null).then((res, err) => {
@@ -65,24 +65,25 @@ function TechnicalCase() {
 					console.log(err);
 					return alert('Case creation Failed!!');
 				}
-				createCTT(searchBarInput, symptomSelect, customerMobileNumberInput);
 				return alert('Case has been created successfully');
 			})
 	}
 
 	const createCTT = (serviceID, symptomCode, mobileNumber) => {
-		CreateCaseService.autoCreateCTT(serviceID, symptomCode, mobileNumber).then(res => {
+		CreateCaseService.autoCreateCTT(serviceID, symptomCode, mobileNumber).then((err, res) => {
+			if (err) return alert('Something went wrong during SR and TT Creation');
 			console.log(res)
+			return alert('SR and TT number has been successfully created!!');
 		});
 	}
 
 	return (
-		<body style={styles.body}>
+		<div style={styles.body}>
 			<div className="hb-container">
 				<div className="hb-title">Technical Case</div>
 
 				{/* Temporary workaround*/}
-				<button className="btn btn-primary" onClick={createCTT(searchBarInput, symptomSelect, customerMobileNumberInput)}>CreateCTT</button>
+				{/* <button className="btn btn-primary" onClick={createCTT(searchBarInput, symptomSelect, customerMobileNumberInput)}>CreateCTT</button> */}
 
 				<form onSubmit={createTechnicalCase}>
 					<div className="hb-input-group w-100" id="searchbar">
@@ -94,24 +95,24 @@ function TechnicalCase() {
 							</select>
 						</div>
 						<div className="hb-input-box hb-input-group-area">
+							<input
+								type="text"
+								id="search-detail"
+								name="search-detail"
+								placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
+								value={searchBarInput}
+								onChange={(e) => setSearchBarInput(e.target.value)}
+							/>
+							{searchBarType === 'service' &&
 								<input
-									type="text"
-									id="search-detail"
-									name="search-detail"
-									placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
-									value={searchBarInput}
-									onChange={(e) => setSearchBarInput(e.target.value)}
+									type='text'
+									id='customerIC'
+									name='customerIC'
+									placeholder='Please insert customer IC'
+									value={customerICInput}
+									onChange={(e) => setCustomerICInput(e.target.value)}
 								/>
-								{searchBarType === 'service' &&
-									<input
-										type='text'
-										id='customerIC'
-										name='customerIC'
-										placeholder='Please insert customer IC'
-										value={customerICInput}
-										onChange={(e) => setCustomerICInput(e.target.value)}
-									/>
-								}
+							}
 						</div>
 						<div className="hb-input-group-append" style={{ display: `${searchBarType === "service" ? "" : "none"}` }}>
 							<button className="btn btn-secondary" type="button" onClick={checkNetwork}><LocationSearchingIcon fontSize="large" /></button>
@@ -122,7 +123,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="customerName">Customer Name*</label>
+						<label className="hb-detail" htmlFor="customerName">Customer Name*</label>
 						<div className="hb-input-box">
 							<input
 								type="text"
@@ -136,7 +137,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="customerNumber">Customer Mobile Number*</label>
+						<label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number*</label>
 						<div className="hb-input-box">
 							<input
 								type="tel"
@@ -151,7 +152,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="loggerNumber">Logger Mobile Number*</label>
+						<label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number*</label>
 						<div className="hb-input-box">
 							<input
 								type="tel"
@@ -166,7 +167,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="description">Description*</label>
+						<label className="hb-detail" htmlFor="description">Description*</label>
 						<div className="hb-input-box">
 							<textarea
 								type="text"
@@ -181,16 +182,16 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="type">Type*</label>
+						<label className="hb-detail" htmlFor="type">Type*</label>
 						<div className="hb-input-box" id="type" name="assurance">
-							<select id='type' name='type' value={typeSelect}>
+							<select id='type' name='type' value={typeSelect} readOnly disabled>
 								<option key={28} value={28} disabled>Assurance</option>
 							</select>
 						</div>
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="area">Area*</label>
+						<label className="hb-detail" htmlFor="area">Area*</label>
 						<div className="hb-input-box">
 							<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
 								<option disabled value='0'>Select One</option>
@@ -204,7 +205,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="subarea">Sub-Area*</label>
+						<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
 						<div className="hb-input-box">
 							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
 								<option disabled value='0'>Select One</option>
@@ -218,7 +219,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="product">Product*</label>
+						<label className="hb-detail" htmlFor="product">Product*</label>
 						<div className="hb-input-box">
 							<select id="product" name="product" value={productSelect} onChange={(e) => setProduct(e.target.value)}>
 								<option disabled value='0'>Select One</option>
@@ -232,11 +233,15 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="symptom">Symptom*</label>
+						<label className="hb-detail" htmlFor="symptom">Symptom*</label>
 						<div className="hb-input-box">
 							<select id="symptom" name="symptom" value={symptomSelect} onChange={(e) => setSymptom(e.target.value)}>
 								<option disabled value='0'>Select One</option>
 								{
+									searchBarInput.endsWith('@streamyx') === true ? lovData.filter(data => data.L_GROUP === 'SYMPTOM' && data.L_ID === 658).map((data, key) => (
+										<option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
+									))
+									: 
 									lovData.filter(data => data.L_GROUP === 'SYMPTOM').map((data, key) => (
 										<option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
 									))
@@ -246,7 +251,7 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="location">Location*</label>
+						<label className="hb-detail" htmlFor="location">Location*</label>
 						<div className="hb-input-box">
 							<select id="location" name="location" value={locationSelect} onChange={e => setLocation(e.target.value)}>
 								<option disabled value='0'>Select One</option>
@@ -271,7 +276,7 @@ function TechnicalCase() {
 					</div>
 				</form>
 			</div>
-		</body>
+		</div>
 	);
 }
 

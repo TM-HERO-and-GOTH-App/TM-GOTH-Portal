@@ -475,7 +475,8 @@ function CreateCase() {
                                                     <option value='0' disabled>Choose a Symptom Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
-                                                            return <option key={key}
+                                                            // console.log(data)
+                                                            return data.PARENT_ID == siebelTargetSystemSelect && <option key={key}
                                                                 value={data.L_ID}>{data.L_NAME}</option>
                                                         })
                                                     }
@@ -490,8 +491,10 @@ function CreateCase() {
                                                     value={siebelTargetSystemSelect}
                                                     onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
                                                     <option value='0' disabled>Choose a Target System</option>
-                                                    <option value='icp'>ICP</option>
-                                                    <option value='nova'>NOVA</option>
+                                                    { lovData.filter(filter => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
+                                                        return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                    })
+                                                    }
                                                 </select>
                                             </div>
                                         </div>

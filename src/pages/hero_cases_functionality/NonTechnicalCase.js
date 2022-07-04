@@ -90,7 +90,6 @@ function NonTechnicalCase() {
     let styles = {
         body: {
             display: 'flex',
-            height: '100vh',
             justifyContent: 'center',
             alignItems: 'center',
             padding: '10px',
@@ -99,7 +98,7 @@ function NonTechnicalCase() {
     }
 
     return (
-        <body style={styles.body}>
+        <div style={styles.body}>
         <div className="hb-container">
             <div className="hb-title">Non-Technical Case</div>
             <form onSubmit={createNonTechnicalCase}>
@@ -285,7 +284,7 @@ function NonTechnicalCase() {
                 </div>
             </form>
         </div>
-        </body>
+        </div>
     )
 }
 
