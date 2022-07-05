@@ -167,21 +167,6 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="description">Description*</label>
-						<div className="hb-input-box">
-							<textarea
-								type="text"
-								id="description"
-								name="userDescription"
-								cols={50}
-								placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
-								value={descriptionInput}
-								onChange={(e) => setDescription(e.target.value)}
-							/>
-						</div>
-					</div>
-
-					<div className="hb-input-group">
 						<label className="hb-detail" htmlFor="type">Type*</label>
 						<div className="hb-input-box" id="type" name="assurance">
 							<select id='type' name='type' value={typeSelect} readOnly disabled>
@@ -261,6 +246,21 @@ function TechnicalCase() {
 									))
 								}
 							</select>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="description">Description*</label>
+						<div className="hb-input-box">
+							<textarea
+								type="text"
+								id="description"
+								name="userDescription"
+								cols={40}
+								placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
+								value={descriptionInput}
+								onChange={(e) => setDescription(e.target.value)}
+							/>
 						</div>
 					</div>
 
