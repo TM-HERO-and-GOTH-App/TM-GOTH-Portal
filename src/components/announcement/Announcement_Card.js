@@ -1,150 +1,50 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Grid from '@mui/material/Grid';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React, { useState } from 'react';
+import { GrMoreVertical } from 'react-icons/gr';
+import { Link } from "react-router-dom";
 
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
-
-export default function AnnouncementCard() {
-    const [expanded, setExpanded] = React.useState({});
-    const [moreText, setMoreText] = React.useState(false)
-
-    const slides = [
-        {
-            id: 0,
-            city: 'Paris',
-            country: 'France',
-            img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/paris.jpg',
-            name: "Signe Mclean"
-        },
-        {
-            id: 1,
-            city: 'Singapore',
-            img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/singapore.jpg',
-            name: "Priscilla Hoffman"
-        },
-        {
-            id: 2,
-            city: 'Prague',
-            country: 'Czech Republic',
-            img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/prague.jpg',
-            name: "Hamilton Horne"
-        },
-        {
-            id: 3,
-            city: 'Amsterdam',
-            country: 'Netherlands',
-            img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/amsterdam.jpg',
-            name: "Callie Knowles"
-        },
-        {
-            id: 4,
-            city: 'Moscow',
-            country: 'Russia',
-            img: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/moscow.jpg',
-            name: "Carlos Dejesus"
-        },
-    ];
-
-    const handleExpandClick = (id) => {
-        setExpanded((expanded) => ({
-            ...expanded,
-            [id]: !expanded[id]
-        }));
-        setMoreText(!moreText)
-    };
-
+export default function AnnouncementCard(props) {
+    const [showMoreOption, setShowMoreOption] = useState(false);
     return (
-        <Grid container spacing={2}>
-            {slides.map((data, index) => {
-                let date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-                // let fullDate = date.getFullYear() + '-' +  date.getMonth() + '-' +  date.getDay();
-                return <Card sx={{ width: '45%', margin: '10px 20px', height: '100%' }} md={6} className="row">
-                    <CardHeader
-                        action={
-                            <IconButton aria-label="settings">
-                                <MoreVertIcon />
-                            </IconButton>
-                        }
-                    />
-                    <CardMedia
-                        component="img"
-                        height="194"
-                        image={data.img}
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            Title Here
-                        </Typography>
-                        <Typography sx={{overflow: "hidden", textOverflow: "ellipsis"}} variant="body2" color="text.secondary">
-                            This impressive paella is a perfect party dish and a fun meal to cook
-                            together with your guests. Add 1 cup of frozen peas along with the mussels,
-                            if you like.
-                        </Typography>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                        <ExpandMore
-                            expand={expanded}
-                            onClick={(id) => handleExpandClick(data.id)}
-                            aria-expanded={expanded}
-                            aria-label="show more"
-                        >
-                            <ExpandMoreIcon />
-                        </ExpandMore>
-                    </CardActions>
-                    <Collapse in={expanded[data.id]} timeout="auto" unmountOnExit>
-                        <CardContent>
-                            <Typography paragraph>Method:</Typography>
-                            <Typography paragraph>
-                                Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                                aside for 10 minutes.
-                            </Typography>
-                            <Typography paragraph>
-                                Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                                medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                                occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                                large plate and set aside, leaving chicken and chorizo in the pan. Add
-                                pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                                stirring often until thickened and fragrant, about 10 minutes. Add
-                                saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                            </Typography>
-                            <Typography paragraph>
-                                Add rice and stir very gently to distribute. Top with artichokes and
-                                peppers, and cook without stirring, until most of the liquid is absorbed,
-                                15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                                mussels, tucking them down into the rice, and cook again without
-                                stirring, until mussels have opened and rice is just tender, 5 to 7
-                                minutes more. (Discard any mussels that don&apos;t open.)
-                            </Typography>
-                            <Typography>
-                                Set aside off of the heat to let rest for 10 minutes, and then serve.
-                            </Typography>
-                        </CardContent>
-                    </Collapse>
-                </Card>
-            })}
-        </Grid>
+        <>
+            <div className='card'>
+                <div className="pull-right navbar-buttons navbar-header collapse navbar-collapse" role="navigation" onClick={() => setShowMoreOption(toggleMoreButton => !toggleMoreButton)}>
+                    <ul className='nav ace-nav'>
+                        <li className={`dropdown-modal ${showMoreOption === false ? '' : "open"}`}>
+                            <GrMoreVertical />
+                            <ul id="user-dropdown-menu" className="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                                <li>
+                                    <Link to={props.to}>
+                                        Edit Announcement
+                                    </Link>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div style={{border: "1px solid black", height: '25vh', marginTop: '5vh'}}>
+                        <img src={props.src} alt="announcement_picture_here" height={'100%'}/>
+                    </div>
+                    <div>
+                        <div style={{margin: "2.5vh 0"}}>
+                            <h3>{props.title}</h3>
+                        </div>
+                        <div className='announcementBody'>
+                            <div>
+                                <p>{props.body}</p>
+                            </div>
+                            <div style={{ marginTop: "2.5%", display: "flex", flexDirection: "row-reverse" }}>
+                                <h6>Publish by Editor's Name here</h6>
+                            </div>
+                            <div>
+                                {
+                                    props.showMoreButton
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

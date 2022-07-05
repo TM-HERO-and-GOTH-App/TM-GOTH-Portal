@@ -14,11 +14,11 @@ COPY ./package.json /app/
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
 # install dependencies
-RUN yarn
+RUN npm install
 # copy everything to /app directory
 COPY . /app
 # build the app 
-RUN yarn build
+RUN npm run build
 # STAGE 2 - build the final image using a nginx web server 
 # distribution and copy the react build files
 FROM nginx:alpine
