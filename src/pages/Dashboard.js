@@ -26,9 +26,10 @@ function Dashboard() {
   let [announcementList, setAnnouncementList] = useState([])
 
   //Below is all the function correspond to it's purpose:
+  //Other Group Assignment
   const getNationWideGroupData = async () => {
     const shID = '0' //All stakeholder
-    await DashboardService.getTotalCaseByGroup(token, stakeholderOption, userData.hID).then((res, err) => {
+    await DashboardService.getTotalCaseByGroup(token, shID, userData.hID).then((res, err) => {
       if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
@@ -43,11 +44,11 @@ function Dashboard() {
       // console.log(Object.keys(res.data)[0], 'getTotalResolvedByStakeholder');
       setTotalCaseResolveNation(Object.keys(res.data)[0][0]);
       setFetchingData(false);
-
     })
   }
 
   useEffect(() => {
+    // My Assignment
     const getAgentCase = () => {
       DashboardService.getTotalResolvedByAgent(token, userData.hID).then((res) => {
         if (res === undefined) return
@@ -64,6 +65,7 @@ function Dashboard() {
       })
     }
 
+    // Group Assignment
     const getGroupCase = () => {
       let shID = '0' //change back to 'userData.shID'
       DashboardService.getTotalCaseByGroup(token, userData.shID, userData.hID).then(res => {

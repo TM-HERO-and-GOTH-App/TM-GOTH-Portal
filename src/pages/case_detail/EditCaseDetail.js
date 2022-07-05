@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Layout from "../Layout";
 // import Footer from "../Footer";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function EditCaseDetail(props) {
     const userData = JSON.parse(sessionStorage.getItem('UserData'))
@@ -41,6 +41,7 @@ function EditCaseDetail(props) {
                 setCaseDetailData(res.data)
             })
         }
+
         getCaseDetail();
     }, []);
 
@@ -52,8 +53,8 @@ function EditCaseDetail(props) {
             customerNameInput, segmentType, sourceType, ckcStatus, ckcNumberInput, customerLoginID,
             stakeHolderRef, externalSystemInput, areaCode, subAreaCode, parseFloat(symptomCode)
         ).then((res) => {
-            console.log(res.data);
-            if (res.data[0].response === "FAILED") {
+            console.log(res, 'editCaseDetail');
+            if (res.response === "FAILED") {
                 setAlertStatus(true);
                 setStatusBadge("danger");
                 setAlertMessage("The case failed to updated.");
@@ -87,8 +88,8 @@ function EditCaseDetail(props) {
     }
 
     useEffect(() => {
-        onInitialLoad();
-    }, [caseDetailData]
+            onInitialLoad();
+        }, [caseDetailData]
     )
 
     const reset = () => {
@@ -117,8 +118,8 @@ function EditCaseDetail(props) {
         <Layout
             pageTitle={
                 <span>
-                    CASE DETAIL : <span style={{ color: 'green' }}>{caseDetailData.CASE_NUM}</span>
-                </span>
+          CASE DETAIL : <span style={{color: 'green'}}>{caseDetailData.CASE_NUM}</span>
+        </span>
             }
             pageContent={
                 <div className="row">
@@ -126,30 +127,30 @@ function EditCaseDetail(props) {
                         <div className="col-sm-12">
                             <div className={`alert alert-block alert-${statusBadge}`}>
                                 <button type="button" className="close" data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times" />
+                                    <i className="ace-icon fa fa-times"/>
                                 </button>
                                 {alertMessage}
                             </div>
                         </div>
                     )}
-                    <br />
-                    <div className="space-10" />
+                    <br/>
+                    <div className="space-10"/>
                     <div className="col-sm-4">
                         <Link
                             className="btn btn-primary"
                             to={`/case-detail/${caseToken}`}
                         >
-                            <i className="ace-icon fa fa-arrow-left icon-on-left" />
+                            <i className="ace-icon fa fa-arrow-left icon-on-left"/>
                             Back to Case Detail
                         </Link>
                     </div>
-                    <br />
-                    <div className="space-20" />
+                    <br/>
+                    <div className="space-20"/>
                     <form name="form" onSubmit={editCaseDetail} onReset={reset}>
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{ margin: 0 }}
+                                style={{margin: 0}}
                             >
                                 {caseDetailData ? (
                                     <div className="profile-info-row">
@@ -178,7 +179,7 @@ function EditCaseDetail(props) {
                                             <div className="profile-info-name">CASE OWNER</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <i style={{ color: "red" }}>Unassigned</i>
+                                                    <i style={{color: "red"}}>Unassigned</i>
                                                 </span>
                                             </div>
                                         </div>
@@ -186,25 +187,30 @@ function EditCaseDetail(props) {
                                 )}
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ width: "20%" }}>
+                                    <div className="profile-info-name" style={{width: "20%"}}>
                                         HERO
                                     </div>
-
                                     <div className="profile-info-value">
                                         <span className="editable" id="username">
-                                            {caseDetailData.FULLNAME}
+                                          {caseDetailData.FULLNAME}
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className="profile-info-row">
                                     <div className="profile-info-name"> Customer</div>
+                                    <div className="profile-info-value">
+                                        {caseDetailData.CUSTOMER_NAME}
+                                    </div>
+                                </div>
 
+                                <div className="profile-info-row">
+                                    <div className="profile-info-name"> Customer</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="customerName"
                                                 placeholder="Customer Name"
@@ -216,7 +222,7 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         State{" "}
                                     </div>
 
@@ -260,18 +266,16 @@ function EditCaseDetail(props) {
                                         </span>
                                     </div>
                                 </div>
-
                                 <div className="profile-info-row">
                                     <div className="profile-info-name">Descriptions</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="login">
-                                            <i style={{ color: "blue" }}>
+                                            <i style={{color: "blue"}}>
                                                 {caseDetailData.CASE_CONTENT}
                                             </i>
                                         </span>
                                     </div>
                                 </div>
-
                                 <div className="profile-info-row">
                                     <div className="profile-info-name">Case Status</div>
                                     <div className="profile-info-value">
@@ -307,7 +311,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="loginID"
                                                 placeholder="Login ID"
@@ -323,7 +327,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="serviceID"
                                                 placeholder="Service ID"
@@ -339,7 +343,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="serviceAddress"
                                                 placeholder="Service Address"
@@ -400,7 +404,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="extSysRef"
                                                 placeholder="External System Reference"
@@ -415,12 +419,12 @@ function EditCaseDetail(props) {
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{ margin: 0 }}
+                                style={{margin: 0}}
                             >
                                 <div className="profile-info-row">
                                     <div
                                         className="profile-info-name"
-                                        style={{ color: "red", width: "20%" }}
+                                        style={{color: "red", width: "20%"}}
                                     >
                                         Case Type
                                     </div>
@@ -446,7 +450,7 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         Product Name
                                     </div>
                                     <div className="profile-info-value">
@@ -506,7 +510,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="packageName"
                                                 placeholder="Package Name"
@@ -580,14 +584,14 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         SR Number
                                     </div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="srNum"
                                                 placeholder="SR Number"
@@ -604,7 +608,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="ttNum"
                                                 placeholder="TT Number"
@@ -693,7 +697,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="ckcNum"
                                                 placeholder="CKC Number"
@@ -705,17 +709,17 @@ function EditCaseDetail(props) {
                                 </div>
                             </div>
                         </div>
-                        <div style={{ clear: "both" }} />
-                        <div className="col-sm-6" style={{ paddingTop: "30px" }}>
-                            <p style={{ color: "red" }}>
+                        <div style={{clear: "both"}}/>
+                        <div className="col-sm-6" style={{paddingTop: "30px"}}>
+                            <p style={{color: "red"}}>
                                 <i>*** Inputs with red color are compulsory</i>
                             </p>
                             <button type="reset" className="btn btn-sm btn-inverse">
-                                <i className="ace-icon fa fa-repeat align-top bigger-125" />
+                                <i className="ace-icon fa fa-repeat align-top bigger-125"/>
                                 <span>Reset</span>
                             </button>
                             <button type="submit" className="btn btn-sm btn-success">
-                                <i className="ace-icon fa fa-save align-top bigger-125" />
+                                <i className="ace-icon fa fa-save align-top bigger-125"/>
                                 Update Info
                             </button>
                         </div>

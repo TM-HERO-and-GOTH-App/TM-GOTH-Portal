@@ -36,6 +36,7 @@ function escapeRegExp(value) {
 
 function AssignmentTable(props) {
     console.log(props.tableData, 'AssignmentTable');
+
     let prepData = useMemo(() => props.tableData
         .filter((item) =>
             (typeof props.caseType !== 'undefined' && typeof props.groupType !== 'undefined') ?
