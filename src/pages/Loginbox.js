@@ -25,46 +25,57 @@ function Loginbox(props) {
 
 	// Make a base logic and then pass the data down through parameters
 	// The logic is identical to HERO login logic
-	const handleSubmit = (e, email, password) => {
+	const handleSubmit = (email, password) => e => {
 		setIsValidating(true);
 		e.preventDefault();
-		email = userEmail;
-		password = userPassword;
 		auth(email, password);
 	};
 
 	const auth = (email, password) => {
 		LoginService.requestToken(email).then((res, err) => {
-			console.log(Object.values(res.data[0])[0]);
-			
-			// setIsValidating(false);
+			// console.log(Object.values(res.data[0])[0]);
+			// console.log(res.data)
 			if (err) {
 				console.log(err);
 				setIsValidating(false);
 				setAlertStatus(true);
-			} else {
-				const authToken = Object.values(res.data[0])[0];
-				sessionStorage.setItem("userToken", JSON.stringify(authToken));
-				signIn(authToken, email, password);
+				return;
 			}
+			if (Object.values(res.data[0])[0] === '') {
+				console.log(err);
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage('Authentication token creation failed!!')
+				return;
+			}
+			const authToken = Object.values(res.data[0])[0];
+			sessionStorage.setItem("userToken", JSON.stringify(authToken));
+			return signIn(authToken, email, password);
 		})
-		// .catch(e => {
-		// 	setIsValidating(false);
-		// 	console.log(e);
-		// })
+		.catch(e => {
+			setIsValidating(false);
+			console.log(e);
+		})
 	};
 
 	const signIn = (authToken, email, password) => {
-		LoginService.signIn(authToken, email, password).then((res) => {
-			// console.log(res.data);
+		LoginService.signIn(authToken, email, password).then((res, err) => {
+			console.log(res.data);
+			// console.log(Object.values(res.data[0])[0])
 			// setIsValidating(false);
-			if (res.statusText === "FAILED") {
+			if(err) {
+				setAlertStatus(true);
+				setAlertMessage("An error has occured");
+				setIsValidating(false);
+				return;
+			}
+			if (res.data === undefined || Object.values(res.data[0])[0] === 0) {
 				setAlertStatus(true);
 				setAlertMessage("Email or Password does not match.");
 				setIsValidating(false);
-			} else {
-				getLoggerProfile(authToken);
-			}
+				return;
+			} 
+			return getLoggerProfile(authToken);
 		});
 	};
 
@@ -103,7 +114,7 @@ function Loginbox(props) {
 							<i className="ace-icon fa fa-coffee green" /> Sign In
 						</h4>
 						<div className="space-6" />
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmit(userEmail, userPassword)}>
 							<fieldset>
 								{alertStatus && (
 									<div className="alert alert-danger">
@@ -127,6 +138,7 @@ function Loginbox(props) {
 											placeholder="Username"
 											value={userEmail}
 											onChange={handleEmail}
+											required
 										/>
 										<i className="ace-icon fa fa-envelope" />
 									</span>
@@ -141,6 +153,7 @@ function Loginbox(props) {
 											placeholder="Password"
 											value={userPassword}
 											onChange={handlePassword}
+											required
 										/>
 										<i className="ace-icon fa fa-lock" />
 									</span>
@@ -162,36 +175,7 @@ function Loginbox(props) {
 					</div>
 					{/* /.widget-main */}
 
-					<div className="toolbar clearfix">
-						<div>
-							<a
-								href="/forgotpassword"
-								data-target="#forgot-box"
-								className="forgot-password-link"
-							>
-								<i className="ace-icon fa fa-arrow-left" />
-								<span> I forgot my Password</span>
-							</a>
-						</div>
-						<div>
-							<a
-								href="/activate"
-								data-target="#activate-box"
-								className="user-activate-link"
-							>
-								<i className="ace-icon fa fa-unlock" />
-								<span> Activate Account</span>
-							</a>
-							<a
-								href="/signup"
-								data-target="#signup-box"
-								className="user-signup-link"
-							>
-								<span>Sign Up </span>
-								<i className="ace-icon fa fa-arrow-right" />
-							</a>
-						</div>
-					</div>
+					<div className="toolbar clearfix" />
 				</div>
 			</div>
 		</LoginTheme>

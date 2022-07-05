@@ -29,7 +29,7 @@ function Dashboard() {
   //Other Group Assignment
   const getNationWideGroupData = async () => {
     const shID = '0' //All stakeholder
-    await DashboardService.getTotalCaseByGroup(token, shID, userData.hID).then((res, err) => {
+    await DashboardService.getTotalCaseByGroup(token, stakeholderOption, userData.hID).then((res, err) => {
       if (res.data === undefined) return;
       if (stakeholderOption === 0) return;
       if (err) return;
