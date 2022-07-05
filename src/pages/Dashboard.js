@@ -59,7 +59,7 @@ function Dashboard() {
       DashboardService.getTotalCaseByAgent(token, userData.hID).then(res => {
         if (res === undefined) return
         // console.log(res, 'getTotalCaseByAgent')
-        setAgentCase([res?.data[0]]);
+        setAgentCase(res?.data[0]);
         setFetchingData(false);
       })
     }
@@ -121,7 +121,7 @@ function Dashboard() {
       pageContent={
         <>
           <div className="row">
-            {announcementList === [] ? null :
+            {(announcementList === [] || announcementList === null || announcementList === undefined)? null :
               <DashboardSlider slides={announcementList}/>
             }
             <form>

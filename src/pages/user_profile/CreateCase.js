@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress'
 import moment from "moment";
 
 function CreateCase() {
@@ -458,8 +458,10 @@ function CreateCase() {
 													{
 														lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
 															// console.log(data)
-															return data.PARENT_ID == siebelTargetSystemSelect && <option key={key}
+															return siebelTargetSystemSelect == data.PARENT_ID ? <option key={key}
 																value={data.L_ID}>{data.L_NAME}</option>
+																: siebelTargetSystemSelect === '0' &&
+																<option key={key} value={data.L_ID}>{data.L_NAME}</option>
 														})
 													}
 												</select>
@@ -472,7 +474,7 @@ function CreateCase() {
 												<select className='chosen-select form-control' name='siebelSystem'
 													value={siebelTargetSystemSelect}
 													onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
-													<option value='0' disabled>Choose a Target System</option>
+													<option value='0'>Choose a Target System</option>
 													{lovData.filter(filter => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
 														return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
 													})
