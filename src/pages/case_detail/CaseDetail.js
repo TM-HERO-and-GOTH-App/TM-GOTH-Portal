@@ -10,7 +10,11 @@ import CaseDetailService from '../../web_service/case_detail_service/CaseDetailS
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 function CaseDetail(props) {
+    // const
+
     const alertMessageFromEditDetailPage = props.history.location.state?.message
+
+
     const [caseToken] = useState(props.match.params.id);
     const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));

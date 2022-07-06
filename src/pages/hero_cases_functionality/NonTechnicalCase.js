@@ -140,14 +140,14 @@ function NonTechnicalCase() {
 							</div>
 						</div>
 
-						<div className="hb-input-group">
-							<button className='btn btn-sm' onClick={createSR}>
-								createSR
-							</button>
-							<button className='btn btn-sm' onClick={createTT}>
-								createTT
-							</button>
-						</div>
+						{/*<div className="hb-input-group">*/}
+						{/*	<button className='btn btn-sm' onClick={createSR}>*/}
+						{/*		createSR*/}
+						{/*	</button>*/}
+						{/*	<button className='btn btn-sm' onClick={createTT}>*/}
+						{/*		createTT*/}
+						{/*	</button>*/}
+						{/*</div>*/}
 
 						<div className="hb-input-group">
 							<label className="hb-detail" for="customerName">Customer Name*</label>

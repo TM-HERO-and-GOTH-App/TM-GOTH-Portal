@@ -37,7 +37,22 @@ const CreateCaseService = {
 		return Axios.post(url + '/siebel_eai/nova/query-account', {
 			"serviceID": serviceID,
 			"customerID": customerID
-		}).then(res => { return res }).catch(err => { return err });
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
+	},
+
+	getCustomerProfileFromICP(serviceID, customerID) {
+		return Axios.post(url + '/siebel_eai/icp/check-account-DEL', {
+			"serviceID": serviceID,
+			"customerID": customerID
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		})
 	},
 
 	autoCreateCTT(serviceNumber, faultCode, mobileNumber) {
@@ -45,7 +60,11 @@ const CreateCaseService = {
 			"serviceNumber": serviceNumber,
 			"faultCode": faultCode,
 			"customerMobileNumber": mobileNumber
-		}).then(res => { return res }).catch(err => { return err });
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
 	},
 
 	createNovaSR(customerRowID, type, area, subArea, caseCategory,
@@ -82,7 +101,11 @@ const CreateCaseService = {
 			"noteType": 'Note',
 			noteDescription,
 			createdByPosition
-		}).then(res => { return res }).catch(err => { return err })
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		})
 	},
 
 	createNovaTT(customerRowID, bilingAccountNumber, bilingAccountRowID,
@@ -117,7 +140,11 @@ const CreateCaseService = {
 			createdBy,
 			noteDescription,
 			createdByPosition
-		}).then(res => { return res }).catch(err => { return err });
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
 	},
 
 	createICPSR(customerRowID, status, createdBy, area, subArea,
@@ -147,7 +174,11 @@ const CreateCaseService = {
 			serviceRowID,
 			serviceType,
 			callBack
-		}).then(res => { return res }).catch(err => { return err });
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
 	},
 
 	createICPTT(customerRowID, severity, product, productCategory,
@@ -178,7 +209,11 @@ const CreateCaseService = {
 			contactDetailRowID,
 			contactDetailReportedID,
 			bilingAccountRowID
-		}).then(res => {return res}).catch(err => {return err});
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
 	}
 }
 

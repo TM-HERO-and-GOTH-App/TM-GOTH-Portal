@@ -97,11 +97,11 @@ function CautionReport() {
 							<div className="hb-input-box">
 								<select id="location" name="location" value={locationSelect} onChange={e => setLocation(e.target.value)}>
 									<option disabled value='default'>Select One</option>
-									{
-										lovData.filter(data => data.L_GROUP === 'STATE').map((data, key) => (
-												<option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
-										))
-									}
+									{/*{*/}
+									{/*	lovData.filter(data => data.L_GROUP === 'STATE').map((data, key) => (*/}
+									{/*			<option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>*/}
+									{/*	))*/}
+									{/*}*/}
 								</select>
 							</div>
 						</div>
