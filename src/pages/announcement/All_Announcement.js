@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import AnnouncementCard from "../../components/announcement/Announcement_Card";
 import Layout from "../Layout";
-import Axios from 'axios';
 import defaultUserLogo from '../../images/avatars/default.jpg';
 import { Link } from "react-router-dom";
+import AnnouncementService from "../../web_service/announcement_service/AnnouncementService";
 
 export default function All_Announcement() {
     const token = JSON.parse(sessionStorage.getItem('userToken'));
@@ -14,9 +14,7 @@ export default function All_Announcement() {
 
     useEffect(() => {
         const getAllAnnouncements = () => {
-            Axios.post('http://localhost:3001/announcement/get-all-announcements', {
-                authToken: token
-            }).then(res => {
+            AnnouncementService.getAllAnnouncement(token).then(res => {
                 if (res.statusText === 'OK') {
                     console.log(res)
                     setAllAnnouncements(res.data);

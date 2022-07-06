@@ -89,20 +89,6 @@ function Layout(props) {
                                             My Profile
                                         </a>
                                     </li>
-
-                                    {(userData.stakeholderName === 'RRT'
-                                        || userData.stakeholderName === 'CSM'
-                                        || userData.stakeholderName === 'Dr UNIFI') &&
-                                        (
-                                            <li>
-                                                <a href="/create-case">
-                                                    <i className="ace-icon fa fa-pencil" />
-                                                    Create New Case
-                                                </a>
-                                            </li>
-                                        )
-                                    }
-
                                     <li className="divider" />
                                     <li>
                                         <a href="/login" onClick={clearsessionStorage}>
@@ -326,7 +312,7 @@ function Layout(props) {
 
                         <li className={window.location.pathname === '/all_announcements' ? 'active open hover' : 'hover'} onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
                             <a href="#">
-                                <i className="menu-icon fa fa-users" />
+                                <i className="menu-icon fa fa-solid fa-bullhorn" />
                                 <span className="menu-text">Announcement</span>
                                 {/* Add open function for mobile view */}
                                 <b className="arrow fa fa-angle-down" onClick={() => setShowAnnouncementDropDown(!showAnnouncementDropDown)} />
@@ -352,6 +338,15 @@ function Layout(props) {
                                     <b className="arrow" />
                                 </li>
                             </ul>}
+                        </li>
+                        
+                        <li className={window.location.pathname === '/create-case' ? 'active open hover' : 'hover'} onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
+                            <a href="/create-case">
+                                <i className="menu-icon fa fa-pencil " />
+                                <span className="menu-text">Create Case</span>
+                                {/* Add open function for mobile view */}
+                                <b className="arrow fa fa-angle-down" onClick={() => setShowAnnouncementDropDown(!showAnnouncementDropDown)} />
+                            </a>
                         </li>
                     </ul>{/* /.nav-list */}
                 </div>
