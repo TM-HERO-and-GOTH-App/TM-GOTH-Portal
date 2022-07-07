@@ -20,6 +20,8 @@ function NonTechnicalCase() {
 	const [subAreaSelect, setSubArea] = useState('default');
 	const [locationSelect, setLocation] = useState('default');
 	const [pictureInput, setPicture] = useState('');
+
+
 	const [searchBarType, setSearchBarType] = useState('service');
 	const [searchBarInput, setSearchBarInput] = useState('');
 	let [customerICInput, setCustomerICInput] = useState('');
@@ -40,8 +42,10 @@ function NonTechnicalCase() {
 
 	const createNonTechnicalCase = (e) => {
 		e.preventDefault();
-		CreateCaseService.createCase(token, userData.hID, customerNameInput, null, customerMobileNumberInput,
-				locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
+		CreateCaseService.createCase(
+				token, userData.hID, customerNameInput, null, customerMobileNumberInput,
+				locationSelect, null, null, null, null,
+				descriptionInput, typeSelect, areaSelect, subAreaSelect,
 				null, searchBarInput, null).then((res, err) => {
 			if (err) {
 				console.log(err);
@@ -55,7 +59,7 @@ function NonTechnicalCase() {
 	const getCustomerProfile = (e) => {
 		e.preventDefault();
 		CreateCaseService.getCustomerProfileFromNova(searchBarInput, customerICInput).then(res => {
-			// console.log(res.data);
+			console.log(res.data, 'getCustomerProfileFromNova');
 			setCustomerProfileFromNova(res.data.STTRetrieveServiceAcctResponse.Response[0])
 			setCustomerNameInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].AccountName)
 			setCustomerMobileNumberInput(res.data.STTRetrieveServiceAcctResponse.Response[0].CustInfo[0].MobileNo)

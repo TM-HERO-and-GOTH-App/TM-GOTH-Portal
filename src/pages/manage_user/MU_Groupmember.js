@@ -266,9 +266,9 @@ function MU_Groupmember() {
                                         <th width="10%">
                                             <div align="center">Agent</div>
                                         </th>
-                                        <th width="10%">
-                                            <div align="center">VIP</div>
-                                        </th>
+                                        {/*<th width="10%">*/}
+                                        {/*    <div align="center">VIP</div>*/}
+                                        {/*</th>*/}
                                         <th width="10%">
                                             <div align="center">Admin</div>
                                         </th>
@@ -308,16 +308,16 @@ function MU_Groupmember() {
                                                             />
                                                         </div>
                                                     </td>
-                                                    <td>
-                                                        <div align="center">
-                                                            <input name="set_co" type="checkbox" className="lbl"
-                                                                   value={vip} onClick={() => setAsVip(data.H_TOKEN)}
-                                                                   checked={data.POSITION_NAME === 'VIP' ? !vip : false}
-                                                                   onChange={(toggle) => setVip(!toggle)}
-                                                                   disabled={data.POSITION_NAME === 'VIP' ? !agent : false}
-                                                            />
-                                                        </div>
-                                                    </td>
+                                                    {/*<td>*/}
+                                                    {/*    <div align="center">*/}
+                                                    {/*        <input name="set_co" type="checkbox" className="lbl"*/}
+                                                    {/*               value={vip} onClick={() => setAsVip(data.H_TOKEN)}*/}
+                                                    {/*               checked={data.POSITION_NAME === 'VIP' ? !vip : false}*/}
+                                                    {/*               onChange={(toggle) => setVip(!toggle)}*/}
+                                                    {/*               disabled={data.POSITION_NAME === 'VIP' ? !agent : false}*/}
+                                                    {/*        />*/}
+                                                    {/*    </div>*/}
+                                                    {/*</td>*/}
                                                     <td>
                                                         <div align="center">
                                                             <input name="set_admin" type="checkbox" className="lbl"

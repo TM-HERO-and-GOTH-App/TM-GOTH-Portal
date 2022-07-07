@@ -6,8 +6,8 @@ const url = config;
 const NextService = {
     checkNetworkOutage(requestID, serviceNumber){
         return axios.post(url + '/next/get-service-id', {
-            requestID: requestID,
-            serviceNumber: serviceNumber
+            RequestID: requestID,
+            ServiceNo: serviceNumber
         }).then(data => {return data}).catch(err => {return err});
     }
 }

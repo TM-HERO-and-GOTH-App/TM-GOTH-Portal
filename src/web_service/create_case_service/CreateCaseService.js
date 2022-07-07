@@ -55,6 +55,16 @@ const CreateCaseService = {
 		})
 	},
 
+	getCustomerProfileFromHeroBuddy(loginID) {
+		return Axios.post(url + '/herobuddy/queryCustomerHB', {
+			"loginID": loginID
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		})
+	},
+
 	autoCreateCTT(serviceNumber, faultCode, mobileNumber) {
 		return Axios.post(url + '/siebel_eai/icp/auto-create-ctt-DEL', {
 			"serviceNumber": serviceNumber,
