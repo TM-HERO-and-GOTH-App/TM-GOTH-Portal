@@ -49,17 +49,18 @@ const ManageUserService = {
 		}).catch(err => console.log(err));
 	},
 
-	setAsVip(authToken, gID, hToken, shID) {
-		return axios.post(url + '/user/set-as-vip', {
-			authToken: authToken,
-			gID: gID,
-			gToken: hToken,
-			shID: shID,
-			action: 'VIP'
-		}).then(res => {
-			return res
-		}).catch(err => console.log(err));
-	},
+	// To be removed from future versions
+	// setAsVip(authToken, gID, hToken, shID) {
+	// 	return axios.post(url + '/user/set-as-vip', {
+	// 		authToken: authToken,
+	// 		gID: gID,
+	// 		gToken: hToken,
+	// 		shID: shID,
+	// 		action: 'VIP'
+	// 	}).then(res => {
+	// 		return res
+	// 	}).catch(err => console.log(err));
+	// },
 
 	setAsAgent(authToken, gID, hToken, shID) {
 		return axios.post(url + '/user/invite-to-stakeholder-group', {

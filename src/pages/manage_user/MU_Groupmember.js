@@ -9,7 +9,7 @@ function MU_Groupmember() {
     let [groupResult, setGroupResult] = useState([]);
     const [alertStatus, setAlertStatus] = useState(false);
     const [agent, setAgent] = useState(false);
-    const [vip, setVip] = useState(false);
+    // const [vip, setVip] = useState(false);
     const [admin, setAdmin] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertBadge, setAlertBadge] = useState('');
@@ -117,22 +117,23 @@ function MU_Groupmember() {
         })
     }
 
-    const setAsVip = (hToken) => {
-        ManageUserService.setAsVip(token, userData.hID, hToken, userData.shID).then(res => {
-            // console.log(res.data);
-            if (res.data[0].response === 'OK') {
-                sessionStorage.setItem('alertStatus', true);
-                sessionStorage.setItem('alertMessage', res.data[0].message);
-                sessionStorage.setItem('alertbadge', 'success');
-                window.location.reload(false);
-            }
-            if (res.data[0].response === 'FAILED') {
-                setAlertStatus(true)
-                setAlertMessage('Only group admin can do the invitation')
-                setAlertBadge('danger')
-            }
-        })
-    }
+    // to be removed in future versions
+    // const setAsVip = (hToken) => {
+    //     ManageUserService.setAsVip(token, userData.hID, hToken, userData.shID).then(res => {
+    //         // console.log(res.data);
+    //         if (res.data[0].response === 'OK') {
+    //             sessionStorage.setItem('alertStatus', true);
+    //             sessionStorage.setItem('alertMessage', res.data[0].message);
+    //             sessionStorage.setItem('alertbadge', 'success');
+    //             window.location.reload(false);
+    //         }
+    //         if (res.data[0].response === 'FAILED') {
+    //             setAlertStatus(true)
+    //             setAlertMessage('Only group admin can do the invitation')
+    //             setAlertBadge('danger')
+    //         }
+    //     })
+    // }
 
     const removeAlertSessionStorage = () => {
         sessionStorage.removeItem('alertStatus')
