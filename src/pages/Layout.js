@@ -301,15 +301,6 @@ function Layout(props) {
                             </li>
                         }
 
-                        <li className={window.location.pathname === '/advance-search' ? 'active open hover' : 'hover'}>
-                            <a href="/advance-search">
-                                <i className="menu-icon glyphicon glyphicon-search" />
-                                {/* You have to click the text to navigate to new page */}
-                                <span className="menu-text"> Advanced Search </span>
-                                <b className="arrow fa fa-angle-down" />
-                            </a>
-                        </li>
-
                         <li className={window.location.pathname === '/all_announcements' ? 'active open hover' : 'hover'} onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
                             <a href="#">
                                 <i className="menu-icon fa fa-solid fa-bullhorn" />
@@ -339,7 +330,16 @@ function Layout(props) {
                                 </li>
                             </ul>}
                         </li>
-                        
+
+                        <li className={window.location.pathname === '/advance-search' ? 'active open hover' : 'hover'}>
+                            <a href="/advance-search">
+                                <i className="menu-icon glyphicon glyphicon-search" />
+                                {/* You have to click the text to navigate to new page */}
+                                <span className="menu-text"> Advanced Search </span>
+                                <b className="arrow fa fa-angle-down" />
+                            </a>
+                        </li>
+
                         <li className={window.location.pathname === '/create-case' ? 'active open hover' : 'hover'} onMouseOver={() => setShowAnnouncementDropDown(true)} onMouseLeave={() => setShowAnnouncementDropDown(false)}>
                             <a href="/create-case">
                                 <i className="menu-icon fa fa-pencil " />
