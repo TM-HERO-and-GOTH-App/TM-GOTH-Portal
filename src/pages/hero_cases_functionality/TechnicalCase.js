@@ -28,9 +28,36 @@ function TechnicalCase() {
 			padding: 2,
 		}
 	};
+
+	let area = [
+		{id: '124', city: 'Johor'},
+		{id: '127', city: 'Kedah'},
+		{id: '127', city: 'Perlis'},
+		{id: '133', city: 'Kelantan'},
+		{id: '136', city: 'Terengganu'},
+		{id: '139', city: 'Kuala Lumpur', state: 'WILAYAH PERSEKUTUAN'},
+		{id: '142', city: 'Melaka'},
+		{id: '145', city: 'MSC'},
+		{id: '148', city: 'Negeri Sembilan'},
+		{id: '151', city: 'Pahang'},
+		{id: '154', city: 'Pulau Pinang'},
+		{id: '157', city: 'Perak'},
+		{id: '160', city: 'Selangor'},
+		{id: '163', city: 'Petaling Jaya'},
+		{id: '166', city: 'Sabah'},
+		{id: '169', city: 'Sarawak'},
+		{id: '641', city: 'RRT'}
+	]
+	let type = [{id: '28', caseType: 'Assurance'}, {id: '37', caseType:'Billing'}]
+
+	const findCityID = (name) => {
+		for (let i = 0; i < area.length; i++) {
+			if (area[i].city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (area[i].hasOwnProperty('state') ? area[i].state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return area[i].id;
+		}
+	}
+
 	const userData = JSON.parse(sessionStorage.getItem('UserData'));
 	const token = JSON.parse(sessionStorage.getItem('userToken'))
-
 	let [customerInfo, setCustomerInfo] = useState({});
 
 	// Alert
@@ -77,7 +104,6 @@ function TechnicalCase() {
 	const getCustomerProfile = (e) => {
 		e.preventDefault();
 		setIsLoading(true);
-		console.log(isLoading)
 		if (searchBarType === 'icp' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
 			alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
 			setIsLoading(false);
@@ -98,6 +124,8 @@ function TechnicalCase() {
 				}
 				alertPopUp(true, true, 'Query user info success.')
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
+				setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
+				setLocation(findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State))
 				setIsLoading(false);
 			})
 		} else {
@@ -165,8 +193,6 @@ function TechnicalCase() {
 				<div className="hb-container">
 					<div className="hb-title">Technical Case</div>
 
-					{/* Temporary workaround*/}
-					{/* <button className="btn btn-primary" onClick={createCTT(searchBarInput, symptomSelect, customerMobileNumberInput)}>CreateCTT</button> */}
 					{
 							showAlert &&
 							<div className="row">
@@ -296,6 +322,9 @@ function TechnicalCase() {
 							<div className="hb-input-box">
 								<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
 									<option disabled value='0'>Select One</option>
+									{
+										typeSelect === '28'
+									}
 									<option value='79'>Service Failure</option>
 									<option value='82'>Complaint/Enquiries</option>
 								</select>
@@ -326,19 +355,10 @@ function TechnicalCase() {
 								<select id="product" name="product" value={productSelect}
 								        onChange={(e) => setProduct(e.target.value)}>
 									<option disabled value='0'>Select One</option>
-									<option value='640'>YEP 2019 (Sales Leads Only)</option>
 									<option value='590'>UniFi Mobile</option>
 									<option value='587'>UniFi TV</option>
 									<option value='584'>Broadband</option>
 									<option value='581'>Telephony</option>
-									<option value='563'>ZERO</option>
-									<option value='530'>TMGo</option>
-									<option value='527'>Public Wifi</option>
-									<option value='230'>Pre-UniFi</option>
-									<option value='58'>Others</option>
-									<option value='55'>Mobile</option>
-									<option value='52'>Fixed</option>
-									<option value='49'>UniFi</option>
 								</select>
 							</div>
 						</div>
@@ -380,22 +400,7 @@ function TechnicalCase() {
 								<select id="location" name="location" value={locationSelect}
 								        onChange={e => setLocation(e.target.value)}>
 									<option disabled value='0'>Select One</option>
-									<option value='124'>Johor</option>
-									<option value='169'>Sarawak</option>
-									<option value='166'>Sabah</option>
-									<option value='163'>Petaling Jaya</option>
-									<option value='160'>Selangor</option>
-									<option value='157'>Perak</option>
-									<option value='154'>Pulau Pinang</option>
-									<option value='151'>Pahang</option>
-									<option value='148'>Negeri Sembilan</option>
-									<option value='145'>MSC</option>
-									<option value='142'>Melaka</option>
-									<option value='139'>Kuala Lumpur</option>
-									<option value='136'>Terengganu</option>
-									<option value='133'>Kelantan</option>
-									<option value='127'>Kedah/Perlis</option>
-									<option value='641'>RRT</option>
+									{area.map((c, i) => <option value={c.id}>{c.city}</option>)}
 								</select>
 							</div>
 						</div>
@@ -405,6 +410,7 @@ function TechnicalCase() {
 							<div className="hb-input-box">
 							<textarea
 									id="description"
+									className="hb-border"
 									name="userDescription"
 									cols={40}
 									placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
@@ -428,7 +434,8 @@ function TechnicalCase() {
 					</form>
 				</div>
 			</div>
-	);
+	)
+			;
 }
 
 export default TechnicalCase;
