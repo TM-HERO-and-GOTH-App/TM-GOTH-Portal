@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 // Thanks to the creator who continue to maintain Google API for react.
 // --> https://www.npmjs.com/package/@react-google-maps/api
 // For documentation: https://react-google-maps-api-docs.netlify.app/#marker
-import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Layout from '../Layout';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
+import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 
 function CaseDetail(props) {
     // const
@@ -27,12 +28,15 @@ function CaseDetail(props) {
     const [isCoordinator, setCoordinator] = useState('');
     const [isAdmin, setAdmin] = useState('');
     const [heroBuddyData, setHeroBuddyData] = useState([]);
+    let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
+    let [customerProfileFromICP, setCustomerProfileFromICP] = useState({});
+    let [searchingCustomer, setSearchingCustomer] = useState(false);
 
     useEffect(() => {
         const getCaseDetail = () => {
             setFetchData(true)
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                // console.log(res.data, 'getCaseDetail')
+                console.log(res.data, 'getCaseDetail')
                 setCaseData(res.data)
                 setFetchData(false)
             })
@@ -72,7 +76,7 @@ function CaseDetail(props) {
         }
 
         const getMessageFromEditDetail = () => {
-            if(alertMessageFromEditDetailPage !== undefined){
+            if (alertMessageFromEditDetailPage !== undefined) {
                 setAlertStatus(true);
                 setAlertMessage(alertMessageFromEditDetailPage)
                 setStatusBadge('success')
@@ -113,16 +117,131 @@ function CaseDetail(props) {
         })
     }
 
+    // const getCustomerProfile = (e) => {
+    // 	e.preventDefault();
+    // 	setSearchingCustomer(true);
+    // 	if (siebelTargetSystemSelect === '660') {
+    // 		CreateCaseService.getCustomerProfileFromNova(serviceID, customerID).then((res, err) => {
+    // 			console.log(res, 'getCustomerProfileFromNova');
+    // 			if (err || typeof res.data === 'undefined') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(res.message);
+    // 				setSearchingCustomer(false);
+    // 			}
+    // 			if (res.data.message !== 'Success') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(`Error during searching customer.. (${res.data.message})`);
+    // 				setSearchingCustomer(false);
+    // 				return;
+    // 			}
+    // 			setAlertStatus(true);
+    // 			setAlertMessage('Query user info success.');
+    // 			setCustomerProfileFromNova(res.data.result)
+    // 			return setSearchingCustomer(false);
+    // 		})
+    // 	} else {
+    // 		CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
+    // 			console.log(res, 'getCustomerProfileFromICP');
+    // 			if (err || typeof res.data === 'undefined') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(res.message);
+    // 				setSearchingCustomer(false);
+    // 			}
+    // 			if (res.data.message !== 'Success') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(`Error during searching customer.. (${res?.data.message})`);
+    // 				setSearchingCustomer(false);
+    // 				return;
+    // 			}
+    // 			setAlertStatus(true);
+    // 			setAlertMessage('Query user info success.');
+    // 			setCustomerProfileFromICP(res.response)
+    // 			return setSearchingCustomer(false);
+    // 		})
+    // 	}
+    // }
+
+    // const createICPSR = () => {
+    // 	CreateCaseService.createICPSR(
+    // 		customerProfileFromNova.CustInfo.CustomerRowID,
+    // 		'Open', userData.fullName, areaType, subAreaSelect,
+    // 		caseType, moment.now().toString(), null, null, userData.stakholderName,
+    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+    // 		customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+    // 		customerProfileFromNova.BillInfo[0].BillingAccountNo,
+    // 		caseDescriptionInput, null, null,
+    // 		productType, customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+    // 		null, null
+    // 	).then(res => {
+    // 		console.log(res, 'createICPSR')
+    // 		setAlertStatus(true);
+    // 		setAlertMessage(res.data)
+    // 	})
+    // }
+
+    // const createICPTT = () => {
+    // 	CreateCaseService.createICPTT(
+    // 		customerProfileFromNova.CustInfo.CustomerRowID, null, 'Streamyx',
+    // 		productType, caseDescriptionInput, symptomSelect,
+    // 		customerProfileFromNova.ServiceInfo[0].ServiceRowID, null,
+    // 		userData.fullName, null, null, null, null,
+    // 		null, null, customerProfileFromNova.BillInfo[0].BillingAccountNo,
+    // 		null, null,
+    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+    // 		customerProfileFromNova.BillInfo[0].BillingAccountRowID
+    // 	).then(res => {
+    // 		console.log(res, 'createICPTT');
+    // 		setAlertStatus(true);
+    // 		setAlertMessage(res.data)
+    // 	})
+    // }
+
+    // const createSR = () => {
+    // 	CreateCaseService.createNovaSR(
+    // 		customerProfileFromNova.CustInfo.CustomerRowID, null,
+    // 		areaType, subAreaSelect, null, null, null,
+    // 		customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+    // 		null, null, null, null,
+    // 		caseDescriptionInput, null, null, null, null,
+    // 		null, null, null, null,
+    // 		null, null, userData.fullName, null, null
+    // 	).then(res => {
+    // 		console.log(res, 'createSR');
+    // 		setAlertStatus(true);
+    // 		setAlertMessage(res.data)
+    // 	})
+    // }
+
+    // const createTT = () => {
+    // 	CreateCaseService.createNovaTT(
+    // 		customerProfileFromNova.CustInfo.CustomerRowID,
+    // 		customerProfileFromNova.BillInfo[0].BillingAccountNo,
+    // 		customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+    // 		null, productType, null, null, userData.fullName,
+    // 		customerProfileFromNova.ServiceInfo[0].ServiceRowID, null,
+    // 		null, 'New', null, null, null,
+    // 		caseDescriptionInput, null, null, null,
+    // 		null, null, null, null,
+    // 		null, null, userData.fullName, null, null
+    // 	).then(res => {
+    // 		console.log(res, 'createTT');
+    // 		setAlertStatus(true);
+    // 		setAlertMessage(res.data)
+    // 	})
+    // }
+
     return (
         <Layout
             pageTitle={
                 fetchData === false &&
                 (<span>
-                    Case Detail: <span style={{color: "green"}}>{caseData?.CASE_NUM}</span>
+                    Case Detail: <span style={{ color: "green" }}>{caseData?.CASE_NUM}</span>
                 </span>)
             }
             pageContent={
-                fetchData === true ? <CircularProgress size={20}/> :
+                fetchData === true ? <CircularProgress size={20} /> :
                     (<>
                         {
                             alertStatus &&
@@ -137,8 +256,8 @@ function CaseDetail(props) {
                                         </p>
                                     </div>
                                 </div>
-                                <br/>
-                                <div className="space-10"/>
+                                <br />
+                                <div className="space-10" />
                             </div>
                         }
 
@@ -162,41 +281,60 @@ function CaseDetail(props) {
 
                                     {(caseData?.OWNER_NAME == null || caseData?.OWNER_NAME === '' || isCoordinator) &&
                                         <Link className="btn btn-warning" to={`/edit-case/${caseToken}`}>
-                                            <i className="ace-icon fa fa-pencil align-top bigger-125"/>
+                                            <i className="ace-icon fa fa-pencil align-top bigger-125" />
                                             Edit Case Detail
                                         </Link>
                                     }
                                 </div>)
                             }
 
+                            <div>
+                                {
+                                    caseData?.SYSTEM_TARGET === 'ICP' ?
+                                        caseData?.SR_NUM === null ?
+                                            (<button>Create SR for ICP</button>)
+                                            :
+                                            caseData?.TT_NUM === null &&
+                                            (<button>Create TT for ICP</button>)
+                                        :
+                                        caseData?.SYSTEM_TARGET === 'NOVA' ?
+                                            caseData?.SR_NUM === null ?
+                                                (<button>Create SR for NOVA</button>)
+                                                :
+                                                (caseData?.TT_NUM === null &&
+                                                    <button>Create TT for NOVA</button>)
+                                            : null
+                                }
+                            </div>
+
                             <div className="col-sm-5"
-                                 align={caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED" ? "" : "right"}>
+                                align={caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED" ? "" : "right"}>
                                 <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
                                     Action Taken
-                                    <i className="ace-icon fa fa-arrow-right icon-on-right"/>
+                                    <i className="ace-icon fa fa-arrow-right icon-on-right" />
                                 </Link>
                                 <Link className="btn btn-primary" to={`/hero-chat/${caseToken}`}>
                                     HERO Chat
                                 </Link>
                                 {isAdmin && caseData?.CASE_STATUS === 'CLOSED' && (userData?.stakeholderName === 'RRT'
-                                        || userData?.stakeholderName === 'CSM HQ') &&
+                                    || userData?.stakeholderName === 'CSM HQ') &&
                                     <button className="btn btn-danger"
-                                            onClick={reopenCase}>
+                                        onClick={reopenCase}>
                                         Re-Open Case
                                     </button>
                                 }
                             </div>
-                            <br/>
-                            <div className="space-20"/>
+                            <br />
+                            <div className="space-20" />
                         </div>
 
                         <div className="row">
                             <div className="col-sm-6">
-                                <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
+                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                     {
                                         caseData?.OWNER_NAME ?
                                             <div className="profile-info-row">
-                                                <div className="profile-info-name" style={{width: '20%'}}>CASE OWNER
+                                                <div className="profile-info-name" style={{ width: '20%' }}>CASE OWNER
                                                 </div>
                                                 <div className="profile-info-value">
                                                     <span className="editable" id="username">
@@ -209,7 +347,7 @@ function CaseDetail(props) {
                                             :
                                             <>
                                                 <div className="profile-info-row">
-                                                    <div className="profile-info-name" style={{width: '20%'}}>
+                                                    <div className="profile-info-name" style={{ width: '20%' }}>
                                                         GROUP POOL
                                                     </div>
                                                     <div className="profile-info-value">
@@ -221,19 +359,19 @@ function CaseDetail(props) {
                                                     </div>
                                                 </div>
                                                 <div className="profile-info-row">
-                                                    <div className="profile-info-name" style={{width: '20%'}}>
+                                                    <div className="profile-info-name" style={{ width: '20%' }}>
                                                         CASE OWNER
                                                     </div>
                                                     <div className="profile-info-value">
                                                         <span className="editable" id="username">
-                                                            <i style={{color: 'red'}}>Un-Assigned</i>
+                                                            <i style={{ color: 'red' }}>Un-Assigned</i>
                                                         </span>
                                                     </div>
                                                 </div>
                                             </>
                                     }
                                     <div className="profile-info-row">
-                                        <div className="profile-info-name" style={{width: "20%"}}>HERO</div>
+                                        <div className="profile-info-name" style={{ width: "20%" }}>HERO</div>
                                         <div className="profile-info-value">
                                             <span className="editable" id="username">
                                                 {caseData?.FULLNAME}
@@ -264,7 +402,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="areaLocation">
                                                 {
                                                     caseData?.AREA_LOCATION != null ? caseData?.AREA_LOCATION :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -304,15 +442,15 @@ function CaseDetail(props) {
                                             </span>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="lon" value={caseData?.LONGITUDE ?? 0}/>
-                                    <input type="hidden" id="lat" value={caseData?.LATITUDE ?? 0}/>
+                                    <input type="hidden" id="lon" value={caseData?.LONGITUDE ?? 0} />
+                                    <input type="hidden" id="lat" value={caseData?.LATITUDE ?? 0} />
 
                                     <div className="profile-info-row">
                                         <div className="profile-info-name">Descriptions</div>
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="caseDescription">
-                                                <i style={{color: "blue"}}>
+                                                <i style={{ color: "blue" }}>
                                                     {caseData?.CASE_CONTENT}
                                                 </i>
                                             </span>
@@ -329,11 +467,11 @@ function CaseDetail(props) {
                                                         < span
                                                             className='label label-danger'>{caseData?.CASE_STATUS}</span> :
                                                         caseData?.CASE_STATUS === 'IN-PROGRESS' ? < span
-                                                                className='label label-info'>{caseData?.CASE_STATUS}</span> :
+                                                            className='label label-info'>{caseData?.CASE_STATUS}</span> :
                                                             caseData?.CASE_STATUS === 'ASSIGNED' ? < span
-                                                                    className='label label-info'>{caseData?.CASE_STATUS}</span> :
+                                                                className='label label-info'>{caseData?.CASE_STATUS}</span> :
                                                                 caseData?.CASE_STATUS === 'CLOSED' ? < span
-                                                                        className='label label-success'>{caseData?.CASE_STATUS}</span> :
+                                                                    className='label label-success'>{caseData?.CASE_STATUS}</span> :
                                                                     < span className='label label-pink'>
                                                                         {caseData?.CASE_STATUS}
                                                                     </span>
@@ -376,16 +514,16 @@ function CaseDetail(props) {
                                 </div>
                             </div>
                             <div className="col-sm-6">
-                                <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
+                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
                                     <div className="profile-info-row">
-                                        <div className="profile-info-name" style={{width: "25%"}}>Case Type</div>
+                                        <div className="profile-info-name" style={{ width: "25%" }}>Case Type</div>
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="caseType">
                                                 {
                                                     caseData?.CASE_TYPE != null ? caseData?.CASE_TYPE :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -398,7 +536,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="productName">
                                                 {
                                                     caseData?.PRODUCT_NAME != null ? caseData?.PRODUCT_NAME :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -411,7 +549,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="segment">
                                                 {
                                                     caseData?.SEGMENT_NAME != null ? caseData?.SEGMENT_NAME :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -424,7 +562,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="package">
                                                 {
                                                     caseData?.PACKAGE_NAME != null ? caseData?.PACKAGE_NAME :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -437,7 +575,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="serviceID">
                                                 {
                                                     caseData?.SERVICE_ID != '' ? caseData?.SERVICE_ID :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -450,7 +588,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="loginID">
                                                 {
                                                     caseData?.LOGIN_ID != null ? caseData?.LOGIN_ID :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -463,7 +601,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="serviceAddress">
                                                 {
                                                     caseData?.SERVICE_ADDRESS != null ? caseData?.SERVICE_ADDRESS :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -475,7 +613,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="srNumber">
                                                 {caseData?.SR_NUM != null ? caseData?.SR_NUM :
-                                                    <span style={{color: "gray"}}>n/a</span>}
+                                                    <span style={{ color: "gray" }}>n/a</span>}
                                             </span>
                                         </div>
                                     </div>
@@ -486,7 +624,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="cttNumber">
                                                 {caseData?.TT_NUM != null ? caseData?.TT_NUM :
-                                                    <span style={{color: "gray"}}>n/a</span>}
+                                                    <span style={{ color: "gray" }}>n/a</span>}
                                             </span>
                                         </div>
                                     </div>
@@ -498,7 +636,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="sourceName">
                                                 {
                                                     caseData?.SOURCE_NAME != null ? caseData?.SOURCE_NAME :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -511,7 +649,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="subSource">
                                                 {
                                                     caseData?.SUB_SOURCE_NAME != null ? caseData?.SUB_SOURCE_NAME :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -524,7 +662,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="area">
                                                 {
                                                     caseData?.AREA_CODE != null ? caseData?.AREA_CODE :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -537,7 +675,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="subArea">
                                                 {
                                                     caseData?.SUB_AREA != null ? caseData?.SUB_AREA :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -550,7 +688,7 @@ function CaseDetail(props) {
                                             <span className="editable" id="symptom">
                                                 {
                                                     caseData?.SYMPTOM_CODE != null ? caseData?.SYMPTOM_CODE :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                        <span style={{ color: "gray" }}>n/a</span>
                                                 }
                                             </span>
                                         </div>
@@ -560,7 +698,7 @@ function CaseDetail(props) {
                             </div>
                         </div>
                         {/* <!-- /.row --> */}
-                        <div className="space-20"/>
+                        <div className="space-20" />
                         {/* Hero Buddy Info */}
                         <div className="row">
                             <div className="col-sm-12">
@@ -571,10 +709,10 @@ function CaseDetail(props) {
                                     heroBuddyData.map((data, index) => {
                                         return <div key={index}>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width: "20%"}}>status</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>status</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data.status}</span>
@@ -583,12 +721,12 @@ function CaseDetail(props) {
 
                                                 </div>
                                             </div>
-                                            <div style={{clear: "both"}}/>
+                                            <div style={{ clear: "both" }} />
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width: "20%"}}>Login_Type</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>Login_Type</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Login_Type}</span>
@@ -597,12 +735,12 @@ function CaseDetail(props) {
 
                                                 </div>
                                             </div>
-                                            <div style={{clear: "both"}}/>
+                                            <div style={{ clear: "both" }} />
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin: 0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width: "20%"}}>Login_Id</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>Login_Id</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Login_Id}</span>
@@ -611,12 +749,12 @@ function CaseDetail(props) {
 
                                                 </div>
                                             </div>
-                                            <div style={{clear: "both"}}/>
+                                            <div style={{ clear: "both" }} />
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>Login_Id_IPTV</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>Login_Id_IPTV</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Login_Id_IPTV !== '' ? data.Login_Id_IPTV : 'n/a'}</span>
@@ -625,12 +763,12 @@ function CaseDetail(props) {
 
                                                 </div>
                                             </div>
-                                            <div style={{clear:"both"}}/>
+                                            <div style={{ clear: "both" }} />
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>Service_Number</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>Service_Number</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Number}</span>
@@ -639,152 +777,152 @@ function CaseDetail(props) {
 
                                                 </div>
                                             </div>
-                                            <div style={{clear:"both"}}/>
+                                            <div style={{ clear: "both" }} />
                                             <div className="col-sm-12"><h5>Customer_Data</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>service_point</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>service_point</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.service_point}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>customer_id_type</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>customer_id_type</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.customer_id_type}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>customer_id_number</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>customer_id_number</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.customer_id_number}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>segment_code</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>segment_code</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.segment_code}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_status</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_status</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_status}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_update_date</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_update_date</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_update_date}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>granite_update_date</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>granite_update_date</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.granite_update_date}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>customer_name</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>customer_name</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.customer_name}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_package_name</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_package_name</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_package_name}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_house_unit_lot</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_house_unit_lot</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_hous_unit_lot}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_floor</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_floor</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_floor}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_building_name</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_building_name</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_building_name}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_street_type</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_street_type</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_street_type}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_street_name</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_street_name</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_street_name}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_section</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_section</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_section}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_postcode</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_postcode</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_postcode}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_city</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_city</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_city}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_state</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_state</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_state}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>siebel_zone</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>siebel_zone</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Customer_Data?.siebel_zone}</span>
@@ -794,37 +932,37 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>Normalized_Volume_Usage</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Normalized_Volume_Usage?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Normalized_Volume_Usage?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Normalized_Volume_Usage?.additionalRemark}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>avgDownloadVolume</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>avgDownloadVolume</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Normalized_Volume_Usage?.avgDownloadVolume}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>avgUploadVolume</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>avgUploadVolume</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Normalized_Volume_Usage?.avgUploadVolume}</span>
@@ -834,58 +972,58 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>Service_Information</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.additionalRemark}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>serviceStatus</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>serviceStatus</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.serviceStatus}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>uploadProfile</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>uploadProfile</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.uploadProfile}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>downloadProfile</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>downloadProfile</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.downloadProfile}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>Turbo_Status</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>Turbo_Status</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.Turbo_Status}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>Turbo_Remark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>Turbo_Remark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Service_Information?.Turbo_Remark}</span>
@@ -895,37 +1033,37 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>Speedometer_Results</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>total_tests</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>total_tests</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Speedometer_Results?.total_tests}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>bad_results</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>bad_results</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Speedometer_Results?.bad_results}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Speedometer_Results?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Speedometer_Results?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Speedometer_Results?.additionalRemark}</span>
@@ -935,79 +1073,79 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>Session_Status</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>sessionStatus</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>sessionStatus</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.sessionStatus}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>weeklySessionCount</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>weeklySessionCount</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.weeklySessionCount}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>accessNode</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>accessNode</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.accessNode}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>accessType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>accessType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.accessType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>brasID</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>brasID</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.brasID}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>lastSessionStart</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>lastSessionStart</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.lastSessionStart}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>lastSessionStop</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>lastSessionStop</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.lastSessionStop}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>speedProfile</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>speedProfile</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.speedProfile}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Session_Status?.additionalRemark}</span>
@@ -1017,37 +1155,37 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>RG_Status</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.RG_Status?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.RG_Status?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.RG_Status?.additionalRemark}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>rgType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>rgType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.RG_Status?.rgType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>rgTurboCompliance</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>rgTurboCompliance</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.RG_Status?.rgTurboCompliance}</span>
@@ -1057,37 +1195,37 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>ONU_Status</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.ONU_Status?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.ONU_Status?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.ONU_Status?.additionalRemark}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>onuType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>onuType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.ONU_Status?.onuType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>onuTurboCompliance</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>onuTurboCompliance</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.ONU_Status?.onuTurboCompliance}</span>
@@ -1097,30 +1235,30 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>CTT_Status</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.CTT_Status?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.CTT_Status?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>totalCTT</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>totalCTT</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.CTT_Status?.totalCTT}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.CTT_Status?.additionalRemark}</span>
@@ -1130,79 +1268,79 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>Neighbourhood_Status</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.additionalRemark}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>dp</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>dp</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.dp}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>dpActiveUserCount</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>dpActiveUserCount</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.dpActiveUserCount}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>dpOnlineUserCount</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>dpOnlineUserCount</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.dpOnlineUserCount}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>dpConcurrency</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>dpConcurrency</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.dpConcurrency}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>fdc</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>fdc</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.fdc}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>fdcActiveUserCount</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>fdcActiveUserCount</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.fdcActivateUserCount}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>fdcOnlineUserCount</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>fdcOnlineUserCount</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">1{data?.Neighbourhood_Status?.fdcOnlineUserCount}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>fdcConcurrency</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>fdcConcurrency</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Neighbourhood_Status?.fdcConcurrency}</span>
@@ -1212,23 +1350,23 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>Major_Outage</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Major_Outage?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Major_Outage?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Major_Outage?.additionalRemark}</span>
@@ -1238,30 +1376,30 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>FTTH_Physical_Parameters</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_Physical_Parameters?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_Physical_Parameters?.pointScore}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_Physical_Parameters?.additionalRemark}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>lastSampleDate</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>lastSampleDate</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_Physical_Parameters?.lastSampleDate}</span>
@@ -1271,16 +1409,16 @@ function CaseDetail(props) {
                                             </div>
                                             <div className="col-sm-12"><h5>FTTH_ONU_Temperature</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.pointScore}</span>
@@ -1288,7 +1426,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.additionalRemark}</span>
@@ -1296,7 +1434,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>maxTemperature</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>maxTemperature</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.maxTemperature}</span>
@@ -1304,7 +1442,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>avgTemperature</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>avgTemperature</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.avgTemperature}</span>
@@ -1312,7 +1450,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>lastTemp</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>lastTemp</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.lastTemp}</span>
@@ -1320,7 +1458,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>warnThreshold</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>warnThreshold</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.warnThreshold}</span>
@@ -1328,7 +1466,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>criticalThreshold</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>criticalThreshold</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_ONU_Temperature?.criticalThreshold}</span>
@@ -1339,9 +1477,9 @@ function CaseDetail(props) {
 
                                             <div className="col-sm-12"><h5>FTTH_BER_Counter</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_BER_Counter?.pointType}</span>
@@ -1349,7 +1487,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointScore</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointScore</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_BER_Counter?.pointScore}</span>
@@ -1357,7 +1495,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>additionalRemark</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>additionalRemark</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_BER_Counter?.additionalRemark}</span>
@@ -1365,7 +1503,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>maxBER</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>maxBER</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_BER_Counter?.maxBER}</span>
@@ -1373,7 +1511,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>avgBER</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>avgBER</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_BER_Counter?.avgBER}</span>
@@ -1381,7 +1519,7 @@ function CaseDetail(props) {
                                                     </div>
 
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>lastBER</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>lastBER</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.FTTH_BER_Counter?.lastBER}</span>
@@ -1392,16 +1530,16 @@ function CaseDetail(props) {
 
                                             <div className="col-sm-12"><h5>Response_Time</h5></div>
                                             <div className="col-sm-12">
-                                                <div className="profile-user-info profile-user-info-striped" style={{margin:0}}>
+                                                <div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>pointType</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>pointType</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Response_Time?.pointType}</span>
                                                         </div>
                                                     </div>
                                                     <div className="profile-info-row">
-                                                        <div className="profile-info-name" style={{width:"20%"}}>time</div>
+                                                        <div className="profile-info-name" style={{ width: "20%" }}>time</div>
 
                                                         <div className="profile-info-value">
                                                             <span className="editable" id="signup">{data?.Response_Time?.time}</span>
@@ -1414,20 +1552,20 @@ function CaseDetail(props) {
                                 }
                             </div>
                         </div>
-                        <div className="space-20"/>
+                        <div className="space-20" />
                         {/* Attachment */}
                         <div className="row">
                             <div className="col-sm-12">
                                 <h4 className="header green">Attachment</h4>
-                                {caseData?.PICTURE != null ? <img src={caseData?.PICTURE} alt='Case'/> :
-                                    <i style={{color: "red"}}>Not provided</i>}
+                                {caseData?.PICTURE != null ? <img src={caseData?.PICTURE} alt='Case' /> :
+                                    <i style={{ color: "red" }}>Not provided</i>}
                             </div>
                         </div>
                         {
                             caseData?.LONGITUDE &&
                             // Map
                             <div>
-                                <div className="space-20"/>
+                                <div className="space-20" />
                                 <div className="row">
                                     <div className="col-sm-12">
                                         <h4 className="header green">
@@ -1437,10 +1575,10 @@ function CaseDetail(props) {
                                             googleMapsApiKey="AIzaSyC3j_ZmhRgR8eT9zYp1swE7VxsXhYP6ZoI"
                                         >
                                             <GoogleMap
-                                                mapContainerStyle={{width: "100%", height: 400}}
+                                                mapContainerStyle={{ width: "100%", height: 400 }}
                                                 // Uncomment below to testing
                                                 // center={{lat: 37.772, lng: -122.214}}
-                                                center={{lat: caseData.latitude, lng: caseData.longtitude}}
+                                                center={{ lat: caseData.latitude, lng: caseData.longtitude }}
                                                 zoom={15}
                                             >
                                                 { /* Child components, such as markers, info windows, etc. */}

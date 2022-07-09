@@ -20,6 +20,7 @@ const CreateCaseService = {
 			externalSystem: externalSystemInput,
 			stakeholderReference: stakeholderReferenceSelect,
 			sourceID: sourceType,
+			subSource: 0,
 			caseContent: caseDescriptionInput,
 			caseType: caseType,
 			areaID: areaType,
@@ -157,19 +158,15 @@ const CreateCaseService = {
 		});
 	},
 
-	createICPSR(customerRowID, status, createdBy, area, subArea,
-	            caseCategory, dateCreated, priority, severity, group, contactDetailRowID, contactDetailReportedID,
-	            billingAccountRowID, billingAccountNumber, detailDataDescription, productCategory,
-	            productStreamyxProduct, productType, serviceRowID, serviceType,
-	            callBack) {
+	createICPSR(customerRowID, createdBy, area, subArea,
+	            caseCategory, priority, severity, group, contactDetailRowID, contactDetailReportedID,
+	            billingAccountRowID, billingAccountNumber, detailDataDescription, productType, serviceRowID, serviceType,) {
 		return Axios.post(url + '/siebel_eai/icp/create-SR', {
 			customerRowID,
-			status,
 			createdBy,
 			area,
 			subArea,
 			caseCategory,
-			dateCreated,
 			priority,
 			severity,
 			group,
@@ -178,12 +175,9 @@ const CreateCaseService = {
 			billingAccountRowID,
 			billingAccountNumber,
 			detailDataDescription,
-			productCategory,
-			productStreamyxProduct,
 			productType,
 			serviceRowID,
-			serviceType,
-			callBack
+			serviceType
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -212,7 +206,6 @@ const CreateCaseService = {
 			migrationNotes,
 			serviceNumber,
 			srNumber,
-			'status': 'Pending Assign',
 			bilingAccountNumber,
 			ccpChargingMethod,
 			category,
