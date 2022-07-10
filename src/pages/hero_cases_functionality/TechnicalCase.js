@@ -28,6 +28,34 @@ function TechnicalCase() {
 			padding: 2,
 		}
 	};
+
+	let area = [
+		{id: '124', city: 'Johor'},
+		{id: '127', city: 'Kedah'},
+		{id: '127', city: 'Perlis'},
+		{id: '133', city: 'Kelantan'},
+		{id: '136', city: 'Terengganu'},
+		{id: '139', city: 'Kuala Lumpur', state: 'WILAYAH PERSEKUTUAN'},
+		{id: '142', city: 'Melaka'},
+		{id: '145', city: 'MSC'},
+		{id: '148', city: 'Negeri Sembilan'},
+		{id: '151', city: 'Pahang'},
+		{id: '154', city: 'Pulau Pinang'},
+		{id: '157', city: 'Perak'},
+		{id: '160', city: 'Selangor'},
+		{id: '163', city: 'Petaling Jaya'},
+		{id: '166', city: 'Sabah'},
+		{id: '169', city: 'Sarawak'},
+		{id: '641', city: 'RRT'}
+	]
+	let type = [{id: '28', caseType: 'Assurance'}]
+
+	const findCityID = (name) => {
+		for (let i = 0; i < area.length; i++) {
+			if (area[i].city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (area[i].hasOwnProperty('state') ? area[i].state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return area[i].id;
+		}
+	}
+
 	const userData = JSON.parse(sessionStorage.getItem('UserData'));
 	const token = JSON.parse(sessionStorage.getItem('userToken'))
 
@@ -297,7 +325,6 @@ function TechnicalCase() {
 								<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
 									<option disabled value='0'>Select One</option>
 									<option value='79'>Service Failure</option>
-									<option value='82'>Complaint/Enquiries</option>
 								</select>
 							</div>
 						</div>
@@ -307,15 +334,7 @@ function TechnicalCase() {
 							<div className="hb-input-box">
 								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
 									<option disabled value='0'>Select One</option>
-									<option value='85'>Services Down</option>
-									<option value='88'>Report Progress</option>
-									<option value='91'>Payment</option>
-									<option value='94'>Charges</option>
-									<option value='97'>Bill Details</option>
-									<option value='100'>TOS/RTN</option>
-									<option value='103'>Dispute-Invalid Charges</option>
-									<option value='106'>Complaint Handling & Resolution</option>
-									<option value='109'>Payment Not Updated</option>
+									<option value='85'>All Services Down</option>
 								</select>
 							</div>
 						</div>

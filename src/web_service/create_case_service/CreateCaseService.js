@@ -157,33 +157,22 @@ const CreateCaseService = {
 		});
 	},
 
-	createICPSR(customerRowID, status, createdBy, area, subArea,
-	            caseCategory, dateCreated, priority, severity, group, contactDetailRowID, contactDetailReportedID,
-	            billingAccountRowID, billingAccountNumber, detailDataDescription, productCategory,
-	            productStreamyxProduct, productType, serviceRowID, serviceType,
-	            callBack) {
+	createICPSR(customerRowID, createdBy, area, subArea,
+	            group, contactDetailRowID, contactDetailReportedID,
+	            billingAccountRowID, billingAccountNumber, 
+				detailDataDescription,serviceRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-SR', {
 			customerRowID,
-			status,
 			createdBy,
 			area,
 			subArea,
-			caseCategory,
-			dateCreated,
-			priority,
-			severity,
 			group,
 			contactDetailRowID,
 			contactDetailReportedID,
 			billingAccountRowID,
 			billingAccountNumber,
 			detailDataDescription,
-			productCategory,
-			productStreamyxProduct,
-			productType,
 			serviceRowID,
-			serviceType,
-			callBack
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -191,31 +180,23 @@ const CreateCaseService = {
 		});
 	},
 
-	createICPTT(customerRowID, severity, product, productCategory,
+	createICPTT(customerRowID, severity,
 	            description, symptomCode, serviceRowID,
-	            relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
-	            serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
+	            relatedSRRowID, createdBy,
+	            serviceNumber, srNumber, bilingAccountNumber,
 	            contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			severity,
-			product,
-			productCategory,
 			description,
 			symptomCode,
 			serviceRowID,
 			relatedSRRowID,
 			createdBy,
-			endDate,
-			dueDate,
-			migrationFlag,
-			migrationNotes,
 			serviceNumber,
 			srNumber,
 			'status': 'Pending Assign',
 			bilingAccountNumber,
-			ccpChargingMethod,
-			category,
 			contactDetailRowID,
 			contactDetailReportedID,
 			bilingAccountRowID

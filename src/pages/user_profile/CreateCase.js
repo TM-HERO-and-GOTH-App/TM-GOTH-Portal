@@ -136,17 +136,27 @@ function CreateCase() {
 	const createICPSR = () => {
 		CreateCaseService.createICPSR(
 			customerProfileFromNova.CustInfo.CustomerRowID,
-			'Open', userData.fullName, areaType, subAreaSelect,
-			caseType, moment.now().toString(), null, null, userData.stakholderName,
+			userData.fullName.toUpperCase(), 
+			lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0], 
+			lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
+			'TM CCR Technical CPC Follow Up',
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			caseDescriptionInput, null, null,
-			productType, customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-			null, null
+			customerProfileFromNova.BillInfo.BillingAccountRowID,
+			customerProfileFromNova.BillInfo.BillingAccountNo,
+			caseDescriptionInput,
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
 		).then(res => {
-			console.log(res, 'createICPSR')
+			setIsCreateCase(true);
+			console.log(res.data, 'createICPSR')
+			console.log(lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0], 'createICPSR')
+			console.log(lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0], 'createICPSR')
+			if (res === undefined || res?.data?.message !== 'Success') {
+				setIsCreateCase(false);
+				setAlertStatus(true);
+				setAlertMessage('SR creation failed!!');
+				return;
+			}
 			setAlertStatus(true);
 			setAlertMessage(res.data)
 		})
@@ -154,12 +164,12 @@ function CreateCase() {
 
 	const createICPTT = () => {
 		CreateCaseService.createICPTT(
-			customerProfileFromNova.CustInfo.CustomerRowID, null, 'Streamyx',
-			productType, caseDescriptionInput, symptomSelect,
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID, null,
-			userData.fullName, null, null, null, null,
-			null, null, customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			null, null,
+			customerProfileFromNova.CustInfo.CustomerRowID, 
+			'3 - Medium', 'Streamyx',
+			'Internet', caseDescriptionInput, symptomSelect,
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID, 
+			null, userData.fullName.toUpperCase(), serviceID, 
+			'3-864682433', customerProfileFromNova.BillInfo[0].BillingAccountNo,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo[0].BillingAccountRowID
@@ -232,10 +242,10 @@ function CreateCase() {
 						<button className='btn btn-sm' onClick={createICPTT}>
 							createICPTT
 						</button>
-						<button className='btn btn-sm' onClick={createSR}>
+						<button className='btn btn-sm' onClick={createNovaSR}>
 							createSR
 						</button>
-						<button className='btn btn-sm' onClick={createTT}>
+						<button className='btn btn-sm' onClick={createNovaTT}>
 							createTT
 						</button>
 					</div>
@@ -245,37 +255,35 @@ function CreateCase() {
 								<i className="ace-icon fa fa-repeat align-top bigger-125" />
 								Reset
 							</button>
-							<button className="btn btn-sm btn-success" type="submit">
+							<button className="btn btn-sm btn-success" type="submit" disabled={isCreateCase}>
 								<i className="ace-icon fa fa-save align-top bigger-125" />
 								Save New Case
 							</button>
 						</div>
-
 						<div align="right" className="row row-cols-auto">
-							<div align="center" className='cc-search-container'>
-								<div align="left" className="cc-search-container-title">Query Customer Information</div>
-								<select className="input-medium" id="search-system" name="search-system"
-									value={siebelTargetSystemSelect}
-									onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
-									<option value='0'>Choose a Target System</option>
-									{lovData.filter(filter => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
-										return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
-									})
-									}
-								</select>
-								<input className="input-medium" type='text' placeholder='ServiceID' value={serviceID}
-									onChange={(e) => setServiceID(e.target.value)} />
-								<input className="input-medium" type='text' placeholder='NRIC' value={customerID}
-									onChange={(e) => setCustomerID(e.target.value)} />
-								<button className='btn btn-sm' onClick={getCustomerProfile}>
-									{
-										searchingCustomer === true ? <CircularProgress disabled /> :
-											<i className="ace-icon fa fa-search align-top bigger-110" />
-									}
-								</button>
-							</div>
+						<div align="center" className='cc-search-container'>
+							<div align="left" className="cc-search-container-title">Query Customer Information</div>
+							<select className="input-medium" id="search-system" name="search-system"
+								value={siebelTargetSystemSelect}
+								onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
+								<option value='0'>Choose a Target System</option>
+								{lovData.filter(filter => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
+									return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+								})
+								}
+							</select>
+							<input className="input-medium" type='text' placeholder='ServiceID' value={serviceID}
+								onChange={(e) => setServiceID(e.target.value)} />
+							<input className="input-medium" type='text' placeholder='NRIC' value={customerID}
+								onChange={(e) => setCustomerID(e.target.value)} />
+							<button type='button' className='btn btn-sm' onClick={getCustomerProfile}>
+								{
+									searchingCustomer === true ? <CircularProgress disabled /> :
+										<i className="ace-icon fa fa-search align-top bigger-110" />
+								}
+							</button>
 						</div>
-
+					</div>
 						<div className="space-6" />
 						<div className="row">
 							<div className="col-sm-6">
