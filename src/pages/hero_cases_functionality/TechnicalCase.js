@@ -8,7 +8,7 @@ import CreateCaseService from "../../web_service/create_case_service/CreateCaseS
 import NextService from "../../web_service/next_service/NextService";
 
 function TechnicalCase() {
-	let styles = {
+    let styles = {
 		body: {
 			display: "flex",
 			justifyContent: "center",
@@ -69,8 +69,8 @@ function TechnicalCase() {
 	]
 
 	const findCityID = (name) => {
-		for (let i = 0; i < areaLocation.length; i++) {
-			if (areaLocation[i].city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (areaLocation[i].hasOwnProperty('state') ? areaLocation[i].state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return areaLocation[i].id;
+		for (const element of areaLocation) {
+			if (element.city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (element.hasOwnProperty('state') ? element.state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return element.id;
 		}
 	}
 
@@ -82,10 +82,10 @@ function TechnicalCase() {
 	const [alertIsSuccess, setAlertIsSuccess] = useState(false);
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState('');
-	const alertPopUp = (success, showAlert, alertMessage) => {
+	const alertPopUp = (success, alert, message) => {
 		setAlertIsSuccess(success);
-		setAlertMessage(alertMessage);
-		setShowAlert(showAlert);
+		setAlertMessage(message);
+		setShowAlert(alert);
 	}
 
 	let [customerNameInput, setCustomerNameInput] = useState('');

@@ -5,12 +5,22 @@ import CircularProgress from '@mui/material/CircularProgress'
 import moment from "moment";
 
 function CreateCase() {
+    // Session Data
 	const userData = JSON.parse(sessionStorage.getItem('UserData'));
 	const lovData = JSON.parse(sessionStorage.getItem('LovData'));
 	const token = JSON.parse(sessionStorage.getItem('userToken'));
+
+	// Alert
 	const [alertStatus, setAlertStatus] = useState(false);
-	const [isCreateCase, setIsCreateCase] = useState(false);
+	const [alertSuccess, setAlertSuccess] = useState(false);
 	const [alertMessage, setAlertMessage] = useState('');
+	const setAlert = (status, success, message) => {
+		setAlertStatus(status);
+		setAlertSuccess(success);
+		setAlertMessage(message);
+	};
+
+	// Variables
 	const [caseDescriptionInput, setCaseDescriptionInput] = useState('');
 	const [customerNameInput, setCustomerNameInput] = useState('');
 	const [serviceID, setServiceID] = useState('');
@@ -26,44 +36,39 @@ function CreateCase() {
 	const [siebelTargetSystemSelect, setSiebelTargetSystemSelect] = useState('0');
 	const [externalSystemInput, setExternalSystemInput] = useState('');
 	const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
-	let [customerID, setCustomerID] = useState('');
-	let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
+	const [customerID, setCustomerID] = useState('');
+	const [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
 
-	// spinner
-	let [searchingCustomer, setSearchingCustomer] = useState(false);
+	// Spinner
+	const [searchingCustomer, setSearchingCustomer] = useState(false);
 
 	const getCustomerProfile = (e) => {
 		e.preventDefault();
 		setSearchingCustomer(true);
 		if (siebelTargetSystemSelect === '0') {
-			setAlertStatus(true);
-			setAlertMessage('Please select a target system...');
+			setAlert(true, false, 'Please select a target system...')
 			setSearchingCustomer(false);
 			return;
 		}
 		if (serviceID === '' || customerID === '') {
-			setAlertStatus(true);
-			setAlertMessage('Please fill in your Service ID/ NRIC...');
+			setAlert(true, false, 'Please fill in your Service ID/ NRIC...')
 			setSearchingCustomer(false);
 			return;
 		}
 		if (siebelTargetSystemSelect === '662') {
 			CreateCaseService.getCustomerProfileFromNova(serviceID, customerID).then((res, err) => {
-				console.log(res, 'getCustomerProfileFromNova');
+				// console.log(res, 'getCustomerProfileFromNova');
 				if (err || typeof res.data === 'undefined') {
-					setAlertStatus(true);
-					setAlertMessage(res.message);
-					setSearchingCustomer(false);
-				}
-				if (res.data.message !== 'Success') {
-					setAlertStatus(true);
-					setAlertMessage(`Error during searching customer.. (${res.data.message})`);
+					setAlert(true, false, res.message);
 					setSearchingCustomer(false);
 					return;
 				}
-				setIsCreateCase(true);
-				setAlertStatus(true);
-				setAlertMessage('Query user info success.');
+				if (res.data.message !== 'Success') {
+					setAlert(true, false, `Error during searching customer.. (${res.data.message})`);
+					setSearchingCustomer(false);
+					return;
+				}
+				setAlert(true, true, 'Query user info success.');
 				setCustomerProfileFromNova(res.data.result)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setMobileNumberInput(res.data.result.CustInfo.MobileNo)
@@ -74,26 +79,21 @@ function CreateCase() {
 			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromICP');
 				if (err || typeof res.data === 'undefined') {
-					setAlertStatus(true);
-					setAlertMessage(res.message);
+					setAlert(true, false, res.message);
 					setSearchingCustomer(false);
 					return;
 				}
 				if (res.data.message !== 'Success') {
-					setAlertStatus(true);
-					setAlertMessage(`Error during searching customer.. (${res?.data.message})`);
+					setAlert(true, false, `Error during searching customer.. (${res.data.message})`);
 					setSearchingCustomer(false);
 					return;
 				}
-				setIsCreateCase(true);
-				setAlertStatus(true);
-				setAlertMessage('Query user info success.');
+				setAlert(true, true, 'Query user info success.');
 				setCustomerProfileFromNova(res.data.result)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setMobileNumberInput(res.data.result.CustInfo.MobileNo)
 				setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === res.data.result.ServiceInfo[0].ServiceAddress.State).map(data => data.L_ID))
 				setSearchingCustomer(false);
-				return
 			})
 		}
 	}
@@ -108,13 +108,11 @@ function CreateCase() {
 			.then(res => {
 				console.log(res.data);
 				if(res.message !== null){
-					setIsCreateCase(true)
-					setAlertStatus(true);
-					setAlertMessage(res.message);
+					setAlert(true, true, res.message);
 					if (siebelTargetSystemSelect === '660') return createICPSR();
 					if (siebelTargetSystemSelect === '662') return createNovaSR();
 				}
-				return setIsCreateCase(false);
+				return setAlertSuccess(false);
 			})
 	}
 
@@ -149,16 +147,12 @@ function CreateCase() {
 			productType, customerProfileFromNova.ServiceInfo[0].ServiceRowID,
 			null, null
 		).then(res => {
-			setIsCreateCase(true);
 			console.log(res.data, 'createICPSR')
 			if (res.data.message !== 'Success' || res === undefined) {
-				setIsCreateCase(false);
-				setAlertStatus(true);
-				setAlertMessage('SR creation failed!!');
+				setAlert(true, false, 'SR creation failed!!');
 				return;
 			}
-			setAlertStatus(true);
-			setAlertMessage('Successfully create SR for ICP!!');
+			setAlert(true, true, 'Successfully create SR for ICP!!');
 			return createICPTT();
 		})
 	}
@@ -177,13 +171,9 @@ function CreateCase() {
 		).then(res => {
 			console.log(res.data, 'createICPTT');
 			if (res.data.message !== 'Success') {
-				setIsCreateCase(false);
-				setAlertStatus(true);
-				return setAlertMessage(`TT Creation for NOVA failed!! [${res.data.message}]`)
+				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.message}]`);
 			}
-			setIsCreateCase(false);
-			setAlertStatus(true);
-			return setAlertMessage('TT creation has been successful!!');
+			return setAlert(true, true, 'TT creation has been successful!!');
 		})
 	}
 
@@ -198,14 +188,10 @@ function CreateCase() {
 			null, null, userData.fullName, null, null
 		).then(res => {
 			console.log(res, 'createSR');
-			setIsCreateCase(true);
 			if (res.data.message !== 'Success') {
-				setIsCreateCase(false);
-				setAlertStatus(true);
-				return setAlertMessage('SR Creation for NOVA failed!!');
+				return setAlert(true, false, 'SR Creation for NOVA failed!!');
 			}
-			setAlertStatus(true);
-			setAlertMessage(`${res.data.message} create SR for NOVA!!`);
+			setAlert(true, true, '${res.data.message} Create SR for NOVA!!');
 			return createNovaTT();
 		})
 	}
@@ -223,16 +209,10 @@ function CreateCase() {
 			null, null, userData.fullName, null, null
 		).then(res => {
 			console.log(res.data, 'createTT');
-			setIsCreateCase(true);
 			if (res.data.message !== 'Success') {
-				setIsCreateCase(false);
-				setAlertStatus(true);
-				return setAlertMessage('TT Creation for NOVA failed!!');
+				return setAlert(true, false, 'TT Creation for NOVA failed!!');
 			}
-			setIsCreateCase(false);
-			setAlertStatus(true);
-			setAlertMessage(`${res.data.message} create TT for NOVA!!`);
-			return;
+			return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
 		})
 	}
 
@@ -246,7 +226,7 @@ function CreateCase() {
 						<div className="row">
 							<div className="col-xs-12">
 								<div
-									className={`alert alert-block ${isCreateCase === true ? 'alert-success' : 'alert-danger'}`}>
+									className={`alert alert-block ${alertSuccess === true ? 'alert-success' : 'alert-danger'}`}>
 									<button type="button" onClick={() => setAlertStatus(false)} className="close"
 										data-dismiss="alert">
 										<i className="ace-icon fa fa-times" />
