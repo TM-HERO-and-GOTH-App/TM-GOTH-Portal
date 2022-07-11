@@ -9,6 +9,7 @@ import Layout from '../Layout';
 import CaseDetailService from '../../web_service/case_detail_service/CaseDetailService';
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
+import ModalComponent from '../../components/modal/Modal';
 
 function CaseDetail(props) {
     // const
@@ -28,9 +29,11 @@ function CaseDetail(props) {
     const [isCoordinator, setCoordinator] = useState('');
     const [isAdmin, setAdmin] = useState('');
     const [heroBuddyData, setHeroBuddyData] = useState([]);
+    let [srAndTTStatus, setSrAndTtStatus] = useState([])
     let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
     let [customerProfileFromICP, setCustomerProfileFromICP] = useState({});
     let [searchingCustomer, setSearchingCustomer] = useState(false);
+    let [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         const getCaseDetail = () => {
@@ -114,6 +117,21 @@ function CaseDetail(props) {
                 statusBadge('success');
                 props.windows.location.reload(false);
             }
+        })
+    }
+
+    function checkSRAndTTStatusForICP() {
+        CreateCaseService.checkSRAndTTForICP('00326919370', '', 'Y', 'N', '').then(res => {
+            console.log(res.data.SRInfo);
+            setOpenModal(true);
+            setSrAndTtStatus(res.data.SRInfo);
+        })
+    }
+
+    function checkSRAndTTStatusForNova() {
+        CreateCaseService.checkSRAndTTForNova('1-6133114884', '', 'Y', 'N').then(res => {
+            // console.log(res.data);
+            setOpenModal(true);
         })
     }
 
@@ -243,6 +261,32 @@ function CaseDetail(props) {
             pageContent={
                 fetchData === true ? <CircularProgress size={20} /> :
                     (<>
+
+                        <ModalComponent
+                            open={openModal}
+                            onClose={() => setOpenModal(false)}
+                        >
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <h3>SR and TT status for {' '}
+                                    <b>
+                                        {caseData?.CASE_NUM}
+                                    </b>
+                                </h3>
+                            </div>
+                            <div style={{display: 'flex', paddingLeft: '10%' }}>
+                                {srAndTTStatus.map(data => {
+                                    return <ul>
+                                        <li>SR Number: {data.SRNumber}</li>
+                                        <li>Ticket ID: {data.TicketID}</li>
+                                        <li>SR And CTT Status: {data.SRCTTStatus}</li>
+                                        <li>Created Date: {data.CreatedDate}</li>
+                                        <li>Related SR And CTT: {data.RelatedInfo.RelatedSRCTT}</li>
+                                        <li>Related SR And CTT Status: {data.RelatedInfo.Status}</li>
+                                    </ul>
+                                })}
+                            </div>
+                        </ModalComponent>
+
                         {
                             alertStatus &&
                             <div className="row">
@@ -285,30 +329,30 @@ function CaseDetail(props) {
                                             Edit Case Detail
                                         </Link>
                                     }
+
+                                    {
+                                        caseData?.SYSTEM_TARGET === 'ICP' ?
+                                            caseData?.SR_NUM === null ?
+                                                (<button className='btn btn-danger' type='button'>Create SR for ICP</button>)
+                                                :
+                                                caseData?.TT_NUM === null &&
+                                                (<button className='btn btn-danger' type='button'>Create TT for ICP</button>)
+                                            :
+                                            caseData?.SYSTEM_TARGET === 'NOVA' ?
+                                                caseData?.SR_NUM === null ?
+                                                    (<button className='btn btn-danger' type='button'>Create SR for NOVA</button>)
+                                                    :
+                                                    (caseData?.TT_NUM === null &&
+                                                        <button className='btn btn-danger' type='button'>Create TT for NOVA</button>)
+                                                : null
+                                    }
                                 </div>)
                             }
 
-                            <div>
-                                {
-                                    caseData?.SYSTEM_TARGET === 'ICP' ?
-                                        caseData?.SR_NUM === null ?
-                                            (<button>Create SR for ICP</button>)
-                                            :
-                                            caseData?.TT_NUM === null &&
-                                            (<button>Create TT for ICP</button>)
-                                        :
-                                        caseData?.SYSTEM_TARGET === 'NOVA' ?
-                                            caseData?.SR_NUM === null ?
-                                                (<button>Create SR for NOVA</button>)
-                                                :
-                                                (caseData?.TT_NUM === null &&
-                                                    <button>Create TT for NOVA</button>)
-                                            : null
-                                }
-                            </div>
-
                             <div className="col-sm-5"
                                 align={caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED" ? "" : "right"}>
+                                <button className='btn btn-warning' type='button' onClick={checkSRAndTTStatusForICP}>Check Sr and Tt status for ICP</button>
+                                <button className='btn btn-warning' type='button' onClick={checkSRAndTTStatusForNova}>Check Sr and Tt status for NOVA</button>
                                 <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
                                     Action Taken
                                     <i className="ace-icon fa fa-arrow-right icon-on-right" />

@@ -158,26 +158,30 @@ const CreateCaseService = {
 		});
 	},
 
+	checkSRAndTTForNova(serviceID, srNumber, srFaultFlag, srComplaintFlag){
+		return Axios.post(url + '/siebel_eai/nova/check-sr-and-tt-status',{
+			serviceID, 
+			srNumber, 
+			srFaultFlag, 
+			srComplaintFlag
+		}).then(responseData => {return responseData}).catch(err => {return err});
+	},
+
 	createICPSR(customerRowID, createdBy, area, subArea,
-	            caseCategory, priority, severity, group, contactDetailRowID, contactDetailReportedID,
-	            billingAccountRowID, billingAccountNumber, detailDataDescription, productType, serviceRowID, serviceType,) {
+	            group, contactDetailRowID, contactDetailReportedID,
+	            billingAccountRowID, billingAccountNumber, detailDataDescription, serviceRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-SR', {
 			customerRowID,
 			createdBy,
 			area,
 			subArea,
-			caseCategory,
-			priority,
-			severity,
 			group,
 			contactDetailRowID,
 			contactDetailReportedID,
 			billingAccountRowID,
 			billingAccountNumber,
 			detailDataDescription,
-			productType,
-			serviceRowID,
-			serviceType
+			serviceRowID
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -217,6 +221,16 @@ const CreateCaseService = {
 		}).catch(err => {
 			return err
 		});
+	},
+
+	checkSRAndTTForICP(serviceID, srNumber, srFaultFlag, srComplaintFlag, ticketID){
+		return Axios.post(url + '/siebel_eai/icp/check-SR-and-TT-status',{
+			serviceID, 
+			srNumber, 
+			srFaultFlag, 
+			srComplaintFlag, 
+			ticketID
+		}).then(responseData => {return responseData}).catch(err => {return err});
 	}
 }
 
