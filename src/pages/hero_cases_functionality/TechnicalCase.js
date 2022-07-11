@@ -29,7 +29,7 @@ function TechnicalCase() {
 		}
 	};
 
-	let area = [
+	let areaLocation = [
 		{id: '124', city: 'Johor'},
 		{id: '127', city: 'Kedah'},
 		{id: '127', city: 'Perlis'},
@@ -48,11 +48,29 @@ function TechnicalCase() {
 		{id: '169', city: 'Sarawak'},
 		{id: '641', city: 'RRT'}
 	]
-	let type = [{id: '28', caseType: 'Assurance'}, {id: '37', caseType:'Billing'}]
+	let type = [{id: '28', caseType: 'Assurance'}, {id: '37', caseType: 'Billing'}]
+	let area = [{id: '79', area: 'Service Failure'}, {id: '82', area: 'Complaint/Enquiries'}]
+	let subArea = [
+		{id: '85', subArea: 'Services Down'},
+		{id: '88', subArea: 'Report Progress'},
+		{id: '91', subArea: 'Payment'},
+		{id: '94', subArea: 'Charges'},
+		{id: '97', subArea: 'Bill Details'},
+		{id: '100', subArea: 'TOS/RTN'},
+		{id: '103', subArea: 'Dispute-Invalid Charges'},
+		{id: '106', subArea: 'Complaint Handling & Resolution'},
+		{id: '109', subArea: 'Payment Not Updated'}
+	]
+	let product = [
+		{id: '590', product: 'UniFi Mobile'},
+		{id: '587', product: 'UniFi TV'},
+		{id: '584', product: 'Broadband'},
+		{id: '581', product: 'Telephony'}
+	]
 
 	const findCityID = (name) => {
-		for (let i = 0; i < area.length; i++) {
-			if (area[i].city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (area[i].hasOwnProperty('state') ? area[i].state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return area[i].id;
+		for (let i = 0; i < areaLocation.length; i++) {
+			if (areaLocation[i].city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (areaLocation[i].hasOwnProperty('state') ? areaLocation[i].state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return areaLocation[i].id;
 		}
 	}
 
@@ -74,7 +92,7 @@ function TechnicalCase() {
 	let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
 	let [descriptionInput, setDescription] = useState('');
-	let [typeSelect, setTypeSelect] = useState(28);
+	let [typeSelect, setTypeSelect] = useState('28');
 	let [productSelect, setProduct] = useState('0');
 	let [areaSelect, setArea] = useState('0');
 	let [subAreaSelect, setSubArea] = useState('0');
@@ -310,9 +328,9 @@ function TechnicalCase() {
 
 						<div className="hb-input-group">
 							<label className="hb-detail" htmlFor="type">Type*</label>
-							<div className="hb-input-box" id="type" name="assurance">
-								<select id='type' name='type' value={typeSelect} readOnly disabled>
-									<option key={28} value={28} disabled>Assurance</option>
+							<div className="hb-input-box" id="type">
+								<select id='type' name='type' value={typeSelect} disabled>
+									{type.map((value) => <option value={value.id} key={value.id}>{value.caseType}</option>)}
 								</select>
 							</div>
 						</div>
@@ -321,12 +339,14 @@ function TechnicalCase() {
 							<label className="hb-detail" htmlFor="area">Area*</label>
 							<div className="hb-input-box">
 								<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
-									<option disabled value='0'>Select One</option>
+									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
 									{
-										typeSelect === '28'
+										typeSelect === '28' ?
+												area.filter(filter => filter.id === '79').map((value, i) => <option value={value.id}
+												                                                                    key={i}>{value.area}</option>) :
+												area.filter(filter => filter.id === '82').map((value, i) => <option value={value.id}
+												                                                                    key={i}>{value.area}</option>)
 									}
-									<option value='79'>Service Failure</option>
-									<option value='82'>Complaint/Enquiries</option>
 								</select>
 							</div>
 						</div>
@@ -335,16 +355,16 @@ function TechnicalCase() {
 							<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
 							<div className="hb-input-box">
 								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
-									<option disabled value='0'>Select One</option>
-									<option value='85'>Services Down</option>
-									<option value='88'>Report Progress</option>
-									<option value='91'>Payment</option>
-									<option value='94'>Charges</option>
-									<option value='97'>Bill Details</option>
-									<option value='100'>TOS/RTN</option>
-									<option value='103'>Dispute-Invalid Charges</option>
-									<option value='106'>Complaint Handling & Resolution</option>
-									<option value='109'>Payment Not Updated</option>
+									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+									{
+										areaSelect === '0' ?
+												<option style={{color: 'var(--color-danger)'}} disabled>Please select an Area Type</option>
+												: areaSelect === '79' ?
+														subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
+														                                                                       key={value.id}>{value.subArea}</option>) :
+														subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
+														                                                                       key={value.id}>{value.subArea}</option>)
+									}
 								</select>
 							</div>
 						</div>
@@ -354,11 +374,8 @@ function TechnicalCase() {
 							<div className="hb-input-box">
 								<select id="product" name="product" value={productSelect}
 								        onChange={(e) => setProduct(e.target.value)}>
-									<option disabled value='0'>Select One</option>
-									<option value='590'>UniFi Mobile</option>
-									<option value='587'>UniFi TV</option>
-									<option value='584'>Broadband</option>
-									<option value='581'>Telephony</option>
+									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+									{product.map((value) => <option value={value.id} key={value.id}>{value.product}</option>)}
 								</select>
 							</div>
 						</div>
@@ -368,7 +385,7 @@ function TechnicalCase() {
 							<div className="hb-input-box">
 								<select id="symptom" name="symptom" value={symptomSelect}
 								        onChange={(e) => setSymptom(e.target.value)}>
-									<option disabled value='0'>Select One</option>
+									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
 									{
 										serviceID.endsWith('@streamyx') === true ?
 												<option value='658'>Voice Down</option>
@@ -399,8 +416,8 @@ function TechnicalCase() {
 							<div className="hb-input-box">
 								<select id="location" name="location" value={locationSelect}
 								        onChange={e => setLocation(e.target.value)}>
-									<option disabled value='0'>Select One</option>
-									{area.map((c, i) => <option value={c.id}>{c.city}</option>)}
+									<option style={{color: 'var(--color-gray-800)'}} disabled value='0'>Select One</option>
+									{areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
 								</select>
 							</div>
 						</div>
@@ -408,15 +425,15 @@ function TechnicalCase() {
 						<div className="hb-input-group">
 							<label className="hb-detail" htmlFor="description">Description*</label>
 							<div className="hb-input-box">
-							<textarea
-									id="description"
-									className="hb-border"
-									name="userDescription"
-									cols={40}
-									placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
-									value={descriptionInput}
-									onChange={(e) => setDescription(e.target.value)}
-							/>
+										<textarea
+												id="description"
+												className="hb-border"
+												name="userDescription"
+												cols={40}
+												placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
+												value={descriptionInput}
+												onChange={(e) => setDescription(e.target.value)}
+										/>
 							</div>
 						</div>
 
