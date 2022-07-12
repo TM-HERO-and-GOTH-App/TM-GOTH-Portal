@@ -167,19 +167,19 @@ const CreateCaseService = {
 
 	createICPSR(customerRowID, createdBy, area, subArea,
 	            group, contactDetailRowID, contactDetailReportedID,
-	            billingAccountRowID, billingAccountNumber, detailDataDescription, serviceRowID) {
+	            billingAccountRowID, billingAccountNumber, dataDescription, serviceRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-SR', {
-			customerRowID,
-			createdBy,
-			area,
-			subArea,
-			group,
-			contactDetailRowID,
-			contactDetailReportedID,
-			billingAccountRowID,
-			billingAccountNumber,
-			detailDataDescription,
-			serviceRowID
+			'customerRowID':customerRowID,
+			'createdBy':createdBy,
+			'area':area,
+			'subArea':subArea,
+			'group':group,
+			'contactDetailRowID':contactDetailRowID,
+			'contactDetailReportedID':contactDetailReportedID,
+			'billingAccountRowID':billingAccountRowID,
+			'billingAccountNumber':billingAccountNumber,
+			'dataDescription':dataDescription,
+			'serviceRowID':serviceRowID
 		}).then(res => {
 			return res
 		}).catch(err => {
