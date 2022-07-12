@@ -156,13 +156,17 @@ const CreateCaseService = {
 		});
 	},
 
-	checkSRAndTTForNova(serviceID, srNumber, srFaultFlag, srComplaintFlag){
-		return Axios.post(url + '/siebel_eai/nova/check-sr-and-tt-status',{
-			serviceID, 
-			srNumber, 
-			srFaultFlag, 
+	checkSRAndTTForNova(serviceID, srNumber, srFaultFlag, srComplaintFlag) {
+		return Axios.post(url + '/siebel_eai/nova/check-sr-and-tt-status', {
+			serviceID,
+			srNumber,
+			srFaultFlag,
 			srComplaintFlag
-		}).then(responseData => {return responseData}).catch(err => {return err});
+		}).then(responseData => {
+			return responseData
+		}).catch(err => {
+			return err
+		});
 	},
 
 	createICPSR(customerRowID, createdBy, area, subArea,
@@ -190,8 +194,8 @@ const CreateCaseService = {
 	createICPTT(customerRowID, severity, product, productCategory,
 	            description, symptomCode, serviceRowID,
 	            relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
-	            serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
-	            contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
+	            serviceNumber, srNumber, billingAccountNumber, ccpChargingMethod, category,
+	            contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			severity,
@@ -208,12 +212,12 @@ const CreateCaseService = {
 			migrationNotes,
 			serviceNumber,
 			srNumber,
-			bilingAccountNumber,
+			billingAccountNumber,
 			ccpChargingMethod,
 			category,
 			contactDetailRowID,
 			contactDetailReportedID,
-			bilingAccountRowID
+			billingAccountRowID
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -221,14 +225,38 @@ const CreateCaseService = {
 		});
 	},
 
-	checkSRAndTTForICP(serviceID, srNumber, srFaultFlag, srComplaintFlag, ticketID){
-		return Axios.post(url + '/siebel_eai/icp/check-SR-and-TT-status',{
-			serviceID, 
-			srNumber, 
-			srFaultFlag, 
-			srComplaintFlag, 
+	checkSRAndTTForICP(serviceID, srNumber, srFaultFlag, srComplaintFlag, ticketID) {
+		return Axios.post(url + '/siebel_eai/icp/check-SR-and-TT-status', {
+			serviceID,
+			srNumber,
+			srFaultFlag,
+			srComplaintFlag,
 			ticketID
-		}).then(responseData => {return responseData}).catch(err => {return err});
+		}).then(responseData => {
+			return responseData
+		}).catch(err => {
+			return err
+		});
+	},
+
+	updateSRNumber(cToken, srNumber) {
+		return Axios.post(url + '/case/save-SR', {
+			cToken, srNumber
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
+	},
+
+	updateTTNumber(cToken, ttNumber) {
+		return Axios.post(url + '/case/save-SR', {
+			cToken, ttNumber
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		});
 	}
 }
 
