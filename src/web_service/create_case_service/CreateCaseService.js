@@ -239,9 +239,9 @@ const CreateCaseService = {
 		});
 	},
 
-	updateSRNumber(cToken, srNumber) {
+	updateSRNumber(cToken, srNum) {
 		return Axios.post(url + '/case/save-SR', {
-			cToken, srNumber
+			cToken, srNum
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -249,9 +249,9 @@ const CreateCaseService = {
 		});
 	},
 
-	updateTTNumber(cToken, ttNumber) {
+	updateTTNumber(cToken, ttNum) {
 		return Axios.post(url + '/case/save-SR', {
-			cToken, ttNumber
+			cToken, ttNum
 		}).then(res => {
 			return res
 		}).catch(err => {

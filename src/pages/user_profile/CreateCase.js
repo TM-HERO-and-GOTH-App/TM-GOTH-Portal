@@ -203,6 +203,12 @@ function CreateCase() {
 			if (res.data.message !== 'Success') {
 				return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
 			}
+			// CreateCaseService.updateSRNumber("", res.data.response.SRNumber).then(
+			// 		(res, err) => {
+			// 			if (err) { console.log(err, 'Insert SR Number Failed'); }
+			// 			else { console.log(res) }
+			// 		}
+			// )
 			return setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
 		})
 	}
