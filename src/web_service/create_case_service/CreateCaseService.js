@@ -187,33 +187,21 @@ const CreateCaseService = {
 		});
 	},
 
-	createICPTT(customerRowID, severity, product, productCategory,
-	            description, symptomCode, serviceRowID,
-	            relatedSRRowID, createdBy, endDate, dueDate, migrationFlag, migrationNotes,
-	            serviceNumber, srNumber, bilingAccountNumber, ccpChargingMethod, category,
-	            contactDetailRowID, contactDetailReportedID, bilingAccountRowID) {
+	createICPTT(customerRowID,
+	            dataDescription, symptomCode, serviceRowID,
+	            createdBy, serviceNumber, billingAccountNumber,
+	            contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
-			severity,
-			product,
-			productCategory,
-			description,
+			dataDescription,
 			symptomCode,
 			serviceRowID,
-			relatedSRRowID,
 			createdBy,
-			endDate,
-			dueDate,
-			migrationFlag,
-			migrationNotes,
 			serviceNumber,
-			srNumber,
-			bilingAccountNumber,
-			ccpChargingMethod,
-			category,
+			billingAccountNumber,
 			contactDetailRowID,
 			contactDetailReportedID,
-			bilingAccountRowID
+			billingAccountRowID
 		}).then(res => {
 			return res
 		}).catch(err => {

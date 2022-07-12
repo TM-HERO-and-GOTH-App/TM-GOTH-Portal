@@ -108,7 +108,7 @@ function CreateCase() {
 				.then(res => {
 					console.log(res.data);
 					if (res.message !== null) {
-						setAlert(true, true, res.message);
+						setAlert(true, true, res.data.message);
 						if (siebelTargetSystemSelect === '660') return createICPSR();
 						if (siebelTargetSystemSelect === '662') return createNovaSR();
 					}
@@ -164,7 +164,7 @@ function CreateCase() {
 		CreateCaseService.createICPTT(
 			customerProfileFromNova.CustInfo.CustomerRowID, 
 			caseDescriptionInput, 
-			lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0],
+			'DSL_Slow_Physical',
 			customerProfileFromNova.ServiceInfo.ServiceRowID,
 			'AIMAN', 
 			serviceID,
@@ -174,8 +174,8 @@ function CreateCase() {
 			customerProfileFromNova.BillInfo.BillingAccountRowID
 		).then(res => {
 			console.log(res.data, 'createICPTT');
-			if (res.data === undefined || res.data.message !== 'Success') {
-				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.message}]`);
+			if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
 			}
 			return setAlert(true, true, 'TT creation has been successful!!');
 		})
