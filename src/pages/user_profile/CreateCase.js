@@ -41,6 +41,7 @@ function CreateCase() {
 
 	// Spinner
 	const [searchingCustomer, setSearchingCustomer] = useState(false);
+	const [isCreateCase, setIsCreateCase] = useState(false);
 
 	const getCustomerProfile = (e) => {
 		e.preventDefault();
@@ -92,7 +93,7 @@ function CreateCase() {
 				setCustomerProfileFromNova(res.data.result)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setMobileNumberInput(res.data.result.CustInfo.MobileNo)
-				setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === res.data.result.ServiceInfo[0].ServiceAddress.State).map(data => data.L_ID))
+				setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === res.data.result.ServiceInfo.ServiceAddress.State).map(data => data.L_ID))
 				setSearchingCustomer(false);
 			})
 		}
@@ -140,17 +141,17 @@ function CreateCase() {
 			'AIMAN', 
 			lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0],
 			lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
-			userData.stakeholderName,
+			'TM CCR Technical CPC Follow Up',
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo.BillingAccountRowID,
 			customerProfileFromNova.BillInfo.BillingAccountNo,
 			caseDescriptionInput,
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+			customerProfileFromNova.ServiceInfo.ServiceRowID
 		).then(res => {
 			console.log(res.data, 'createICPSR')
 			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
-			if (res.data === undefined || res.data.message !== 'Success') {
+			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
 				setIsCreateCase(false);
 				setAlertStatus(true);
 				setAlertMessage('SR creation failed!!');
@@ -165,18 +166,19 @@ function CreateCase() {
 
 	const createICPTT = () => {
 		CreateCaseService.createICPTT(
-			customerProfileFromNova.CustInfo.CustomerRowID, null, 'Streamyx',
-			productType, caseDescriptionInput, symptomSelect,
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID, null,
-			userData.fullName, null, null, null, null,
-			null, null, customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			null, null,
+			customerProfileFromNova.CustInfo.CustomerRowID, 
+			caseDescriptionInput, 
+			lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0],
+			customerProfileFromNova.ServiceInfo.ServiceRowID,
+			userData.fullName.toUpperCase(), 
+			serviceID,
+			customerProfileFromNova.BillInfo.BillingAccountNo,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID
+			customerProfileFromNova.BillInfo.BillingAccountRowID
 		).then(res => {
 			console.log(res.data, 'createICPTT');
-			if (res.data.message !== 'Success') {
+			if (res.data === undefined || res.data.message !== 'Success') {
 				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.message}]`);
 			}
 			return setAlert(true, true, 'TT creation has been successful!!');
