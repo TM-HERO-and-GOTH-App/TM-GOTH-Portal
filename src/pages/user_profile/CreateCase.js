@@ -137,23 +137,29 @@ function CreateCase() {
 	const createICPSR = () => {
 		CreateCaseService.createICPSR(
 			customerProfileFromNova.CustInfo.CustomerRowID,
-			'Open', userData.fullName, areaType, subAreaSelect,
-			caseType, moment.now().toString(), null, null, userData.stakeholderName,
+			'AIMAN', 
+			lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0],
+			lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
+			userData.stakeholderName,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo.BillingAccountRowID,
 			customerProfileFromNova.BillInfo.BillingAccountNo,
-			caseDescriptionInput, null, null,
-			productType, customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-			null, null
+			caseDescriptionInput,
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
 		).then(res => {
 			console.log(res.data, 'createICPSR')
-			if (res.data.message !== 'Success' || res === undefined) {
-				setAlert(true, false, 'SR creation failed!!');
+			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
+			if (res.data === undefined || res.data.message !== 'Success') {
+				setIsCreateCase(false);
+				setAlertStatus(true);
+				setAlertMessage('SR creation failed!!');
 				return;
 			}
-			setAlert(true, true, 'Successfully create SR for ICP!!');
-			return createICPTT();
+			setAlertStatus(true);
+			setAlertMessage('Successfully create SR for ICP!!');
+			// return createICPTT();
+			return
 		})
 	}
 
@@ -237,20 +243,20 @@ function CreateCase() {
 						</div>
 					}
 					{/*Button Added for api testing*/}
-					{/* <div className="hb-input-group">
+					<div className="hb-input-group">
 						<button className='btn btn-sm' onClick={createICPSR}>
 							createICPSR
 						</button>
 						<button className='btn btn-sm' onClick={createICPTT}>
 							createICPTT
 						</button>
-						<button className='btn btn-sm' onClick={createSR}>
+						<button className='btn btn-sm' onClick={createNovaSR}>
 							createSR
 						</button>
-						<button className='btn btn-sm' onClick={createTT}>
+						<button className='btn btn-sm' onClick={createNovaTT}>
 							createTT
 						</button>
-					</div> */}
+					</div>
 					<div align="right" className="row row-cols-auto">
 						<div align="center" className='cc-search-container'>
 							<div align="left" className="cc-search-container-title">Query Customer Information</div>
