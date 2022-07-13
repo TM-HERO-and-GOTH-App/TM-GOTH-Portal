@@ -2,32 +2,18 @@ import React, { useEffect, useState } from "react";
 import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
+import unifiFormPageData from "./dataForUnifiBuddy";
 
 function NonTechnicalCase() {
-	let area = [
-		{ id: '124', city: 'Johor' },
-		{ id: '127', city: 'Kedah' },
-		{ id: '127', city: 'Perlis' },
-		{ id: '133', city: 'Kelantan' },
-		{ id: '136', city: 'Terengganu' },
-		{ id: '139', city: 'Kuala Lumpur', state: 'WILAYAH PERSEKUTUAN' },
-		{ id: '142', city: 'Melaka' },
-		{ id: '145', city: 'MSC' },
-		{ id: '148', city: 'Negeri Sembilan' },
-		{ id: '151', city: 'Pahang' },
-		{ id: '154', city: 'Pulau Pinang' },
-		{ id: '157', city: 'Perak' },
-		{ id: '160', city: 'Selangor' },
-		{ id: '163', city: 'Petaling Jaya' },
-		{ id: '166', city: 'Sabah' },
-		{ id: '169', city: 'Sarawak' },
-		{ id: '641', city: 'RRT' }
-	]
-	let type = [{ id: '28', caseType: 'Assurance' }, { id: '37', caseType: 'Billing' }]
+	let areaLocation = unifiFormPageData.areaLocation
+	let type = unifiFormPageData.type
+	let area = unifiFormPageData.area
+	let subArea = unifiFormPageData.subArea
+	let product = unifiFormPageData.product
 
 	const findCityID = (name) => {
-		for (let i = 0; i < area.length; i++) {
-			if (area[i].city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (area[i].hasOwnProperty('state') ? area[i].state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return area[i].id;
+		for (const element of areaLocation) {
+			if (element.city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (element.hasOwnProperty('state') ? element.state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return element.id;
 		}
 	}
 
@@ -61,28 +47,12 @@ function NonTechnicalCase() {
 		setShowAlert(showAlert);
 		setAlertMessage(alertMessage);
 	}
-	let createdDate = new Date();
+	const [caseToken, setCaseToken] = useState({});
+	const [isCreateCase, setIsCreateCase] = useState(false);
+
 	// let [serviceIDInput, setServiceIDInput] = useState('');
 	// let [loginIDInput, setLoginIDInput] = useState('');
 
-	const createNonTechnicalCase = (e) => {
-		e.preventDefault();
-		CreateCaseService.createCase(
-			token, userData.hID, customerNameInput, null, customerMobileNumberInput,
-			locationSelect, null, null, null, null,
-			descriptionInput, typeSelect, areaSelect, subAreaSelect,
-			null, searchBarInput, null).then((res, err) => {
-				if (err) {
-					console.log(err);
-					return alertPopUp(false, true, 'Case creation Failed!!');
-				}
-
-				alertPopUp(true, true, 'Case has been created successfully');
-				if (customerProfileFromICP !== null || customerProfileFromICP !== undefined) return createICPSR();
-				if (customerProfileFromNova !== null || customerProfileFromNova !== undefined) return createNovaSR();
-				return;
-			})
-	}
 
 	function getCustomerProfileFromNova() {
 		CreateCaseService.getCustomerProfileFromNova(serviceID, customerID).then((res, err) => {
@@ -97,100 +67,161 @@ function NonTechnicalCase() {
 				alertPopUp(false, true, `Error during searching customer in NOVA.. (${res.data.message})`);
 				return;
 			}
+			setIsLoading(false);
 			alertPopUp(true, true, 'Query user info success from NOVA.');
+			console.log(res.data.result.ServiceInfo[0].ServiceAddress.State)
 			setCustomerProfileFromNova(res.data.result)
 			setCustomerNameInput(res.data.result.CustInfo.AccountName)
 			setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
-			setLocation(lovData.filter(data => data.L_NAME.toUpperCase() === res.data.result.ServiceInfo[0].ServiceAddress.State).map(data => data.L_ID))
-			return setIsLoading(false);
+			setLocation(Array.isArray(res.data.result.ServiceInfo) === true ?
+				findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State):
+				findCityID(res.data.result.ServiceInfo.ServiceAddress.State) 
+				
+			)
+			return;
 		})
 	}
 
-	const getCustomerProfile = (e) => {
+	function getCustomerProfile(e) {
 		e.preventDefault();
 		setIsLoading(true);
-		console.log(isLoading)
 		if (searchBarType === 'icp' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
-			alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
 			setIsLoading(false);
+			alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
 			return;
 		}
 		if (searchBarType === 'icp') {
 			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
-				console.log(res.data, 'getCustomerProfileFromICP');
+				// console.log(res.data, 'getCustomerProfileFromICP');
 				if (err || typeof res.data === 'undefined') {
-					alertPopUp(false, true, res.message)
 					setIsLoading(false);
+					alertPopUp(false, true, res.message)
 					return;
 				}
 				if (res.data.message !== 'Success') {
 					alertPopUp(false, true, `Error during searching customer in ICP.. (${res?.data.message})`)
-					// setIsLoading(false);
 					return getCustomerProfileFromNova();
 				}
+				setIsLoading(false)
 				alertPopUp(true, true, 'Query user info success in ICP.')
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
-				setCustomerProfileFromICP(res.data.result)
-				return setIsLoading(false);
+				setLocation(
+					Array.isArray(res.data.result.ServiceInfo) ?
+						findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
+						findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
+				)
+				return setCustomerProfileFromICP(res.data.result)
 			})
 		} else {
 			// Reuse serviceID as loginID as it has shared similar value
 			CreateCaseService.getCustomerProfileFromHeroBuddy(serviceID).then(function (res, err) {
-				console.log(res.data, 'getCustomerProfileFromHeroBuddy');
+				setIsLoading(true);
+				// console.log(res.data, 'getCustomerProfileFromHeroBuddy');
 				if (err || typeof res.data === 'undefined') {
-					alertPopUp(false, true, res.message)
 					setIsLoading(false);
+					alertPopUp(false, true, res.message)
 					return
 				}
 				if (res.data === '') {
-					alertPopUp(false, true, `Error during searching customer..`)
 					setIsLoading(false);
+					alertPopUp(false, true, `Error during searching customer..`)
 					return;
 				}
-				alertPopUp(true, true, 'Query user info success.')
 				setIsLoading(false);
+				alertPopUp(true, true, 'Query user info success.')
 				return setCustomerNameInput(res.data.Customer_Data.customer_name)
 			})
 		}
 	}
 
-	const createNovaSR = (e) => {
-		CreateCaseService.createNovaSR(customerProfileFromNova.CustInfo[0].CustomerRowID[0], null, areaSelect, subAreaSelect, null, createdDate, null,
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID[0],
-			customerProfileFromNova.CustInfo[0].PrimaryContactRowID[0], customerProfileFromNova.CustInfo[0].PrimaryContactRowID[0],
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID[0], customerProfileFromNova.BillInfo[0].BillingAccountNo[0],
-			descriptionInput, userData.stakeholderName, userData.fullName, null, null, null, null,
-			null, null, null, '1', userData.fullName, 'note', null).then((res, err) => {
-				console.log(res, 'createSR');
-				setIsLoading(true)
-				if (err) {
-					setIsLoading(false)
-					alertPopUp('warning', true, 'An error occurred during SR Creation. Please request again.');
+	const createNovaSR = () => {
+		CreateCaseService.createNovaSR(
+			customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
+			area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
+			subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
+			product.filter(filter => filter.L_ID === productSelect).map(data => data.L_NAME)[0], // to be removed
+			'SPICE', // temp source naming
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+			customerProfileFromNova.BillInfo[0].BillingAccountNo,
+			descriptionInput, 'AIMAN', 'AIMAN',
+			'RRT', descriptionInput, 'EAI'
+		).then(res => {
+			setIsCreateCase(true);
+			console.log(res.data, 'createSR');
+			if (res.message) {
+				setIsCreateCase(false);
+				return alertPopUp(true, false, res.message);
+			}
+			if (res.data.message !== 'Success') {
+				setIsCreateCase(false);
+				return alertPopUp(false, true, `SR Creation for NOVA Failed (${res.data.message})`);
+			}
+			setIsCreateCase(false);
+			alertPopUp(true, true, `${res.data.message} Create SR for NOVA!!`);
+			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					return console.log('Successfully save SR in DB!!')
 				}
-				return alertPopUp('success', true, 'SR number has been created successfully!!');
-			})
+			)
+			return 
+		})
 	}
 
 	const createICPSR = () => {
 		CreateCaseService.createICPSR(
 			customerProfileFromICP.CustInfo.CustomerRowID,
-			userData.fullName, areaSelect, subAreaSelect, 'Inquiry',
-			null, null, userData.stakeholderName,
+			'AIMAN',
+			area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
+			subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
+			'TM CCR Technical CPC Follow Up',
 			customerProfileFromICP.CustInfo.PrimaryContactRowID,
 			customerProfileFromICP.CustInfo.PrimaryContactRowID,
 			customerProfileFromICP.BillInfo.BillingAccountRowID,
 			customerProfileFromICP.BillInfo.BillingAccountNo,
 			descriptionInput,
-			customerProfileFromICP.ServiceInfo[0].ServiceID,
-			customerProfileFromICP.BillInfo[0].ServiceStatus,
-			'PSTN').then((res, err) => {
-				console.log(res.data, 'createTT');
-				if (err) {
-					setIsLoading(false);
-					return alertPopUp('warning', true, 'An error occurred during TT Creation. Please request again.');
+			customerProfileFromICP.ServiceInfo[0].ServiceRowID
+		).then(res => {
+			setIsCreateCase(true);
+			console.log(res.data, 'createICPSR')
+			console.log(area.filter(filter => filter.id === areaSelect).map(data => data.area), 'createICPSR')
+			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
+				setIsCreateCase(false);
+				return alertPopUp(false, true, 'SR Creation Failed!!');
+			}
+			setIsCreateCase(false);
+			alertPopUp(true, false, 'Successfully create SR for ICP!!');
+			CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					return console.log('Successfully save SR in DB!!')
 				}
-				setIsLoading(false);
-				return alertPopUp('success', true, 'CTT number has been created successfully!!');
+			)
+			return;
+		})
+	}
+
+	function createNonTechnicalCase(e) {
+		e.preventDefault();
+		CreateCaseService.createCase(
+			token, userData.hID, customerNameInput, null, customerMobileNumberInput,
+			locationSelect, null, null, null, null,
+			descriptionInput, typeSelect, areaSelect, subAreaSelect,
+			null, searchBarInput, null).then((res, err) => {
+				setIsCreateCase(true);
+				if (err) {
+					console.log(err);
+					setIsCreateCase(false);
+					return alertPopUp(false, true, 'Case creation Failed!!');
+				}
+				setIsCreateCase(false);
+				alertPopUp(true, true, 'Case has been created successfully');
+				if (customerProfileFromICP !== null || customerProfileFromICP !== undefined) return createICPSR();
+				if (customerProfileFromNova !== null || customerProfileFromNova !== undefined) return createNovaSR();
+				return;
 			})
 	}
 
@@ -318,7 +349,8 @@ function NonTechnicalCase() {
 						<div className="hb-input-box">
 							<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
 								<option disabled value='0'>Select One</option>
-								<option value='82'>Complaint/Enquiries</option>
+								<option value='82'>Complaint</option>
+								<option value='83'>Enquiries</option>
 							</select>
 						</div>
 					</div>
@@ -328,14 +360,7 @@ function NonTechnicalCase() {
 						<div className="hb-input-box">
 							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
 								<option disabled value='0'>Select One</option>
-								<option value='88'>Report Progress</option>
-								<option value='91'>Payment</option>
-								<option value='94'>Charges</option>
-								<option value='97'>Bill Details</option>
-								<option value='100'>TOS/RTN</option>
-								<option value='103'>Dispute-Invalid Charges</option>
-								<option value='106'>Complaint Handling & Resolution</option>
-								<option value='109'>Payment Not Updated</option>
+								{subArea.filter(filter => filter.id !== '85').map((data, key) => <option key={key} value={data.id}>{data.subArea}</option>)}
 							</select>
 						</div>
 					</div>
@@ -346,10 +371,7 @@ function NonTechnicalCase() {
 							<select id="product" name="product" value={productSelect}
 								onChange={(e) => setProduct(e.target.value)}>
 								<option disabled value='0'>Select One</option>
-								<option value='590'>UniFi Mobile</option>
-								<option value='587'>UniFi TV</option>
-								<option value='584'>Broadband</option>
-								<option value='581'>Telephony</option>
+								{product.map((data, key) => <option key={key} value={data.id}>{data.product}</option>)}
 							</select>
 						</div>
 					</div>
@@ -360,7 +382,7 @@ function NonTechnicalCase() {
 							<select id="location" name="location" value={locationSelect}
 								onChange={e => setLocation(e.target.value)}>
 								<option disabled value='0'>Select One</option>
-								{area.map((c, i) => <option value={c.id}>{c.city}</option>)}
+								{areaLocation.map((data, i) => <option value={data.id}>{data.city}</option>)}
 							</select>
 						</div>
 					</div>
