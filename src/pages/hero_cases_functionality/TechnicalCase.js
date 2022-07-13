@@ -68,6 +68,9 @@ function TechnicalCase() {
 	let [symptomSelect, setSymptom] = useState('0');
 	let [locationSelect, setLocation] = useState('0');
 	let [pictureInput, setPicture] = useState('');
+	let [targetSystem, setTargetSystem] = useState('');
+	let [isPureDEL, setIsPureDEL] = useState(false);
+
 	// Next
 	let [openModal, setOpenModal] = useState(false);
 	const [nextResponses, setNextResponses] = useState('');
@@ -80,8 +83,14 @@ function TechnicalCase() {
 
 	// Submit
 	const [submitIsLoading, setSubmitIsLoading] = useState(true)
-	const [progress, setProgress] = useState(60)
+	const [progress, setProgress] = useState(0)
 	const [progressMessage, setProgressMessage] = useState('. . .')
+	const [submitStatus, setSubmitStatus] = useState(true)
+	const submitProgress = (progress, message, status) => {
+		setProgress(progress);
+		setProgressMessage(message);
+		setSubmitStatus(status)
+	}
 
 	const nextCheckNetwork = () => {
 		NextService.checkNetworkOutage('HERO-20220425-0002', serviceID).then((res, err) => {
@@ -120,6 +129,16 @@ function TechnicalCase() {
 						findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
 						findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
 				)
+				setIsPureDEL(() => {
+					if (Array.isArray(res.data.result.ServiceInfo) === false) {
+						if (res.data.result.ServiceInfo.Product === 'Home Line') {
+							return true
+						}
+					}
+					return false
+				})
+				setProduct(isPureDEL === true ? '581' : '0')
+				setSymptom(isPureDEL === true ? '658' : '0')
 				nextCheckNetwork()
 				setIsLoading(false);
 			})
@@ -145,6 +164,7 @@ function TechnicalCase() {
 	}
 
 	const createCTT = (serviceID, symptomCode, mobileNumber) => {
+		submitProgress(40, 'Case creation Success . . .', true)
 		CreateCaseService.autoCreateCTT(serviceID, symptomCode, mobileNumber).then((err, res) => {
 			if (err) return alertPopUp('Something went wrong during SR and TT Creation');
 			console.log(res)
@@ -154,15 +174,19 @@ function TechnicalCase() {
 
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
+		submitProgress(20, 'Creating New Case at GOTH . . .', true)
 		CreateCaseService.createCaseHeroBuddy(
 				'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
 				null, null, null, descriptionInput,
-				typeSelect, areaSelect, subAreaSelect, symptomSelect, 'ICP'
+				typeSelect, areaSelect, subAreaSelect, symptomSelect, targetSystem
 		).then((res, err) => {
 			console.log(res)
+			submitProgress(30, 'Done processing . . .', true)
 			if (err) {
+				submitProgress(30, 'Case creation Failed.', false)
 				return alertPopUp(false, true, 'Case creation Failed!!');
 			}
+			submitProgress(40, 'Case creation Success . . .', true)
 			createCTT(serviceID, symptomSelect, customerMobileNumberInput);
 			return alertPopUp(true, true, 'Case has been created successfully');
 		})
