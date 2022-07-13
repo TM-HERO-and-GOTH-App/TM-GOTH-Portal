@@ -1,4 +1,4 @@
-const data = {
+const unifiFormPageData = {
 	areaLocation: [
 		{id: '124', city: 'Johor'},
 		{id: '127', city: 'Kedah'},
@@ -24,7 +24,7 @@ const data = {
 	],
 	area: [
 		{id: '79', area: 'Service Failure'},
-		{id: '82', area: 'Complaint/Enquiries'}
+		{id: '82', area: 'Complaint'}
 	],
 	subArea: [
 		{id: '85', subArea: 'Services Down'},
@@ -45,4 +45,4 @@ const data = {
 	]
 }
 
-module.exports = data
+module.exports = unifiFormPageData

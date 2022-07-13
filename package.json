@@ -20,7 +20,6 @@
     "bootstrap": "^5.2.0-beta1",
     "chat-ui-react": "^0.3.0",
     "dotenv": "^16.0.1",
-    "firebase": "^9.0.0",
     "moment": "^2.29.3",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",

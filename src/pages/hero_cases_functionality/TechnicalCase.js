@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
-import {Box, Modal, Typography} from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import NextService from "../../web_service/next_service/NextService";
-import data from "./dataForUnifiBuddy"
 import LinearProgress from '@mui/material/LinearProgress';
+import unifiFormPageData from "./dataForUnifiBuddy";
 
 function TechnicalCase() {
 	let styles = {
@@ -31,11 +31,11 @@ function TechnicalCase() {
 		}
 	};
 
-	let areaLocation = data.areaLocation
-	let type = data.type
-	let area = data.area
-	let subArea = data.subArea
-	let product = data.product
+	let areaLocation = unifiFormPageData.areaLocation
+	let type = unifiFormPageData.type
+	let area = unifiFormPageData.area
+	let subArea = unifiFormPageData.subArea
+	let product = unifiFormPageData.product
 
 	const findCityID = (name) => {
 		for (const element of areaLocation) {
@@ -117,8 +117,8 @@ function TechnicalCase() {
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
 				setLocation(Array.isArray(res.data.result.ServiceInfo) ?
-						findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
-						findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
+					findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
+					findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
 				)
 				nextCheckNetwork()
 				setIsLoading(false);
@@ -155,9 +155,9 @@ function TechnicalCase() {
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
 		CreateCaseService.createCaseHeroBuddy(
-				'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
-				null, null, null, descriptionInput,
-				typeSelect, areaSelect, subAreaSelect, symptomSelect, 'ICP'
+			'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
+			null, null, null, descriptionInput,
+			typeSelect, areaSelect, subAreaSelect, symptomSelect, 'ICP'
 		).then((res, err) => {
 			console.log(res)
 			if (err) {
@@ -169,284 +169,284 @@ function TechnicalCase() {
 	}
 
 	return (
-			<div style={styles.body}>
-				<Modal open={openModal} onClose={() => setOpenModal(false)}>
-					<Box sx={styles.modalStyle}>
-						<h3>
-							NTT Info
-						</h3>
-						<ul style={{fontSize: '1.5em'}}>
-							<li>NTT ID: {nextResponses.NTTID}</li>
-							<li>ETTR: {nextResponses.ETTR}</li>
-							<li>Fault Category: {nextResponses.FaultCategory}</li>
-							<li>Service Impact: {nextResponses.ServiceImpact}</li>
-						</ul>
-						<button className="btn btn-primary" style={{marginLeft: '23vw'}} onClick={() => setOpenModal(false)}>Ok
-						</button>
-					</Box>
-				</Modal>
+		<div style={styles.body}>
+			<Modal open={openModal} onClose={() => setOpenModal(false)}>
+				<Box sx={styles.modalStyle}>
+					<h3>
+						NTT Info
+					</h3>
+					<ul style={{ fontSize: '1.5em' }}>
+						<li>NTT ID: {nextResponses.NTTID}</li>
+						<li>ETTR: {nextResponses.ETTR}</li>
+						<li>Fault Category: {nextResponses.FaultCategory}</li>
+						<li>Service Impact: {nextResponses.ServiceImpact}</li>
+					</ul>
+					<button className="btn btn-primary" style={{ marginLeft: '23vw' }} onClick={() => setOpenModal(false)}>Ok
+					</button>
+				</Box>
+			</Modal>
 
-				<div className="hb-container">
-					<div className="hb-title">Technical Case</div>
+			<div className="hb-container">
+				<div className="hb-title">Technical Case</div>
 
-					{
-							showAlert &&
-							<div className="row">
-								<div className="col-xs-12">
-									<div
-											className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
-											style={{marginBottom: '0', marginTop: '10px'}}
-									>
-										<button type="button" onClick={() => setShowAlert(false)} className="close"
-										        data-dismiss="alert">
-											<i className="ace-icon fa fa-times"/>
-										</button>
-										<p>{alertMessage}</p>
-									</div>
-								</div>
-							</div>
-					}
-
-					<form onSubmit={createTechnicalCase}>
-						<div className="hb-input-group w-100" id="searchbar">
-							<div className="hb-input-group-prepend">
-								<select id="searchbar-type" name="searchbar-type" value={searchBarType}
-								        onChange={(e) => setSearchBarType(e.target.value)}>
-									<option value="icp">ICP</option>
-									<option value="herobuddy">Hero Buddy</option>
-								</select>
-							</div>
-							<div className="hb-input-box hb-input-group-area">
-								<input
-										type="text"
-										id="search-detail"
-										name="search-detail"
-										placeholder={searchBarType === "icp" ? "Insert Service ID" : "Insert Login ID"}
-										value={serviceID}
-										onChange={(e) => setServiceID(e.target.value)}
-								/>
-								{searchBarType === 'icp' &&
-										<input
-												type='text'
-												id='customerIC'
-												name='customerIC'
-												placeholder='Insert Customer ID'
-												value={customerID}
-												onChange={(e) => setCustomerID(e.target.value)}
-										/>
-								}
-							</div>
-							<div className="hb-input-group-append">
-								<button className="btn" type="button" disabled={isLoading} onClick={getCustomerProfile}>
-									<SearchIcon fontSize="large"/>
+				{
+					showAlert &&
+					<div className="row">
+						<div className="col-xs-12">
+							<div
+								className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
+								style={{ marginBottom: '0', marginTop: '10px' }}
+							>
+								<button type="button" onClick={() => setShowAlert(false)} className="close"
+									data-dismiss="alert">
+									<i className="ace-icon fa fa-times" />
 								</button>
-								{isLoading &&
-										<CircularProgress
-												size={24}
-												sx={{
-													color: 'var(--color-success)',
-													position: 'absolute',
-													marginTop: '-32px',
-													marginLeft: '15px',
-												}}
-										/>
+								<p>{alertMessage}</p>
+							</div>
+						</div>
+					</div>
+				}
+
+				<form onSubmit={createTechnicalCase}>
+					<div className="hb-input-group w-100" id="searchbar">
+						<div className="hb-input-group-prepend">
+							<select id="searchbar-type" name="searchbar-type" value={searchBarType}
+								onChange={(e) => setSearchBarType(e.target.value)}>
+								<option value="icp">ICP</option>
+								<option value="herobuddy">Hero Buddy</option>
+							</select>
+						</div>
+						<div className="hb-input-box hb-input-group-area">
+							<input
+								type="text"
+								id="search-detail"
+								name="search-detail"
+								placeholder={searchBarType === "icp" ? "Insert Service ID" : "Insert Login ID"}
+								value={serviceID}
+								onChange={(e) => setServiceID(e.target.value)}
+							/>
+							{searchBarType === 'icp' &&
+								<input
+									type='text'
+									id='customerIC'
+									name='customerIC'
+									placeholder='Insert Customer ID'
+									value={customerID}
+									onChange={(e) => setCustomerID(e.target.value)}
+								/>
+							}
+						</div>
+						<div className="hb-input-group-append">
+							<button className="btn" type="button" disabled={isLoading} onClick={getCustomerProfile}>
+								<SearchIcon fontSize="large" />
+							</button>
+							{isLoading &&
+								<CircularProgress
+									size={24}
+									sx={{
+										color: 'var(--color-success)',
+										position: 'absolute',
+										marginTop: '-32px',
+										marginLeft: '15px',
+									}}
+								/>
+							}
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="customerName">Customer Name*</label>
+						<div className="hb-input-box">
+							<input
+								type="text"
+								id="customerName"
+								name="customerName"
+								placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
+								value={customerNameInput}
+								onChange={(e) => setCustomerNameInput(e.target.value)}
+							/>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number*</label>
+						<div className="hb-input-box">
+							<input
+								type="tel"
+								id="customerNumber"
+								name="customerName"
+								min={0}
+								placeholder="example: 0123456789"
+								value={customerMobileNumberInput}
+								onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
+							/>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number*</label>
+						<div className="hb-input-box">
+							<input
+								type="tel"
+								id="loggerNumber"
+								name="loggerName"
+								min={0}
+								placeholder="example: 0123456789"
+								value={loggerMobileNumberInput}
+								onChange={(e) => setLoggerMobileNumber(e.target.value)}
+							/>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
+						<div className="hb-input-box">
+							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}
+								style={areaSelect === '0' ? { color: 'var(--color-danger)' } : { color: 'var(--color-gray-700)' }}>
+								{areaSelect === '0' ?
+									<option disabled value='0'>Please select an Area Type</option> :
+									<option disabled value='0'>Select One</option>
 								}
-							</div>
+								{areaSelect !== '0' &&
+									(areaSelect === '79' ?
+										subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
+											key={value.id}>{value.subArea}</option>)
+										:
+										subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
+											key={value.id}>{value.subArea}</option>)
+									)}
+							</select>
 						</div>
+					</div>
 
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="customerName">Customer Name*</label>
-							<div className="hb-input-box">
-								<input
-										type="text"
-										id="customerName"
-										name="customerName"
-										placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
-										value={customerNameInput}
-										onChange={(e) => setCustomerNameInput(e.target.value)}
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="area">Area*</label>
+						<div className="hb-input-box">
+							<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
+								<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
+								{
+									typeSelect === '28' ?
+										area.filter(filter => filter.id === '79').map((value, i) => <option value={value.id}
+											key={i}>{value.area}</option>) :
+										area.filter(filter => filter.id === '82').map((value, i) => <option value={value.id}
+											key={i}>{value.area}</option>)
+								}
+							</select>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
+						<div className="hb-input-box">
+							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
+								{
+									areaSelect === '0' ?
+										<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area
+											Type</option>
+										:
+										<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option> &&
+											areaSelect === '79' ?
+											subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
+												key={value.id}>{value.subArea}</option>)
+											:
+											subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
+												key={value.id}>{value.subArea}</option>)
+								}
+							</select>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="product">Product*</label>
+						<div className="hb-input-box">
+							<select id="product" name="product" value={productSelect}
+								onChange={(e) => setProduct(e.target.value)}>
+								<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
+								{product.map((value) => <option value={value.id} key={value.id}>{value.product}</option>)}
+							</select>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="symptom">Symptom*</label>
+						<div className="hb-input-box">
+							<select id="symptom" name="symptom" value={symptomSelect}
+								onChange={(e) => setSymptom(e.target.value)}>
+								<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
+								{
+									serviceID.endsWith('@streamyx') === true ?
+										<option value='658'>Voice Down</option>
+										:
+										<>
+											<option value='642'>All Services Down</option>
+											<option value='676'>DSL_CantLoginDTDSLBlinkPortReset</option>
+											<option value='674'>DSL_CantLoginDTDSLBlinkCantReset</option>
+											<option value='672'>DSL_NoDialTone</option>
+											<option value='670'>DT_NoDialTone</option>
+											<option value='658'>Voice Down</option>
+											<option value='656'>IPTV Quality Issue</option>
+											<option value='654'>IPTV Down</option>
+											<option value='652'>IPTV & Voice Down</option>
+											<option value='650'>HSI wireless Down</option>
+											<option value='648'>HSI & Voice Down</option>
+											<option value='646'>HSI & IPTV Down</option>
+											<option value='644'>HSI Down</option>
+											<option value='678'>DSL_LineDisconnect</option>
+										</>
+								}
+							</select>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="location">Location*</label>
+						<div className="hb-input-box">
+							<select id="location" name="location" value={locationSelect}
+								onChange={e => setLocation(e.target.value)}>
+								<option style={{ color: 'var(--color-gray-800)' }} disabled value='0'>Select One</option>
+								{areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
+							</select>
+						</div>
+					</div>
+
+					<div className="hb-button">
+						{submitIsLoading &&
+							<>
+								<CircularProgress
+									size={16}
+									sx={{
+										color: 'var(--color-primary)',
+										position: 'absolute',
+										marginTop: '9px',
+										marginLeft: '12px',
+									}}
 								/>
-							</div>
-						</div>
+								<h6 style={{ marginLeft: '35px' }}>{progressMessage}</h6>
+							</>
+						}
+						<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
+							style={submitIsLoading ? { opacity: .5 } : { opacity: 1 }} />
+						{submitIsLoading &&
+							<LinearProgress sx={{ width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px' }}
+								variant="determinate" value={progress} />
+						}
+					</div>
 
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number*</label>
-							<div className="hb-input-box">
-								<input
-										type="tel"
-										id="customerNumber"
-										name="customerName"
-										min={0}
-										placeholder="example: 0123456789"
-										value={customerMobileNumberInput}
-										onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
-								/>
-							</div>
+					<div className="hb-input-group">
+						<label className="hb-detail">Attachment</label>
+						<div className="hb-attachment">
+							<input type="file" name="imageAttach" value={pictureInput}
+								onChange={(e) => setPicture(e.target.value)} />
 						</div>
+					</div>
 
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number*</label>
-							<div className="hb-input-box">
-								<input
-										type="tel"
-										id="loggerNumber"
-										name="loggerName"
-										min={0}
-										placeholder="example: 0123456789"
-										value={loggerMobileNumberInput}
-										onChange={(e) => setLoggerMobileNumber(e.target.value)}
-								/>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="type">Type*</label>
-							<div className="hb-input-box" id="type">
-								<select id='type' name='type' value={typeSelect} disabled>
-									{type.map((value) => <option value={value.id} key={value.id}>{value.caseType}</option>)}
-								</select>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="area">Area*</label>
-							<div className="hb-input-box">
-								<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
-									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
-									{
-										typeSelect === '28' ?
-												area.filter(filter => filter.id === '79').map((value, i) => <option value={value.id}
-												                                                                    key={i}>{value.area}</option>) :
-												area.filter(filter => filter.id === '82').map((value, i) => <option value={value.id}
-												                                                                    key={i}>{value.area}</option>)
-									}
-								</select>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
-							<div className="hb-input-box">
-								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}
-								        style={areaSelect === '0' ? {color: 'var(--color-danger)'} : {color: 'var(--color-gray-700)'}}>
-									{areaSelect === '0' ?
-											<option disabled value='0'>Please select an Area Type</option> :
-											<option disabled value='0'>Select One</option>
-									}
-									{areaSelect !== '0' &&
-											(areaSelect === '79' ?
-															subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
-															                                                                       key={value.id}>{value.subArea}</option>)
-															:
-															subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
-															                                                                       key={value.id}>{value.subArea}</option>)
-											)}
-								</select>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="product">Product*</label>
-							<div className="hb-input-box">
-								<select id="product" name="product" value={productSelect}
-								        onChange={(e) => setProduct(e.target.value)}>
-									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
-									{product.map((value) => <option value={value.id} key={value.id}>{value.product}</option>)}
-								</select>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="symptom">Symptom*</label>
-							<div className="hb-input-box">
-								<select id="symptom" name="symptom" value={symptomSelect}
-								        onChange={(e) => setSymptom(e.target.value)}>
-									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
-									{
-										serviceID.endsWith('@streamyx') === true ?
-												<option value='658'>Voice Down</option>
-												:
-												<>
-													<option value='642'>All Services Down</option>
-													<option value='676'>DSL_CantLoginDTDSLBlinkPortReset</option>
-													<option value='674'>DSL_CantLoginDTDSLBlinkCantReset</option>
-													<option value='672'>DSL_NoDialTone</option>
-													<option value='670'>DT_NoDialTone</option>
-													<option value='658'>Voice Down</option>
-													<option value='656'>IPTV Quality Issue</option>
-													<option value='654'>IPTV Down</option>
-													<option value='652'>IPTV & Voice Down</option>
-													<option value='650'>HSI wireless Down</option>
-													<option value='648'>HSI & Voice Down</option>
-													<option value='646'>HSI & IPTV Down</option>
-													<option value='644'>HSI Down</option>
-													<option value='678'>DSL_LineDisconnect</option>
-												</>
-									}
-								</select>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="location">Location*</label>
-							<div className="hb-input-box">
-								<select id="location" name="location" value={locationSelect}
-								        onChange={e => setLocation(e.target.value)}>
-									<option style={{color: 'var(--color-gray-800)'}} disabled value='0'>Select One</option>
-									{areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
-								</select>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail" htmlFor="description">Description*</label>
-							<div className="hb-input-box">
-										<textarea
-												id="description"
-												className="hb-border"
-												name="userDescription"
-												cols={40}
-												placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
-												value={descriptionInput}
-												onChange={(e) => setDescription(e.target.value)}
-										/>
-							</div>
-						</div>
-
-						<div className="hb-input-group">
-							<label className="hb-detail">Attachment</label>
-							<div className="hb-attachment">
-								<input type="file" name="imageAttach" value={pictureInput}
-								       onChange={(e) => setPicture(e.target.value)}/>
-							</div>
-						</div>
-
-						<div className="hb-button">
-							{submitIsLoading &&
-									<>
-										<CircularProgress
-												size={16}
-												sx={{
-													color: 'var(--color-primary)',
-													position: 'absolute',
-													marginTop: '9px',
-													marginLeft: '12px',
-												}}
-										/>
-										<h6 style={{marginLeft: '35px'}}>{progressMessage}</h6>
-									</>
-							}
-							<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
-							       style={submitIsLoading ? {opacity: .5} : {opacity: 1}}/>
-							{submitIsLoading &&
-									<LinearProgress sx={{width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px'}}
-									                variant="determinate" value={progress}/>
-							}
-						</div>
-					</form>
-				</div>
-			</div>
-	)
-			;
+					<div className="hb-button">
+						<input className="hb-submit" type="submit" title="Submit" />
+					</div>
+				</form>
+			</div >
+		</div >
+	);
 }
 
 export default TechnicalCase;
