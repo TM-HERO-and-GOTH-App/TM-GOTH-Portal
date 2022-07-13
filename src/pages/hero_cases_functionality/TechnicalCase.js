@@ -79,7 +79,7 @@ function TechnicalCase() {
 	const [isLoading, setIsLoading] = useState(false)
 
 	// Submit
-	const [submitIsLoading, setSubmitIsLoading] = useState(true)
+	const [submitIsLoading, setSubmitIsLoading] = useState(false)
 	const [progress, setProgress] = useState(60)
 	const [progressMessage, setProgressMessage] = useState('. . .')
 
@@ -409,8 +409,16 @@ function TechnicalCase() {
 						</div>
 					</div>
 
+					<div className="hb-input-group">
+						<label className="hb-detail">Attachment</label>
+						<div className="hb-attachment">
+							<input type="file" name="imageAttach" value={pictureInput}
+								onChange={(e) => setPicture(e.target.value)} />
+						</div>
+					</div>
+
 					<div className="hb-button">
-						{submitIsLoading &&
+						{submitIsLoading === true &&
 							<>
 								<CircularProgress
 									size={16}
@@ -426,22 +434,10 @@ function TechnicalCase() {
 						}
 						<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
 							style={submitIsLoading ? { opacity: .5 } : { opacity: 1 }} />
-						{submitIsLoading &&
+						{submitIsLoading === true &&
 							<LinearProgress sx={{ width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px' }}
 								variant="determinate" value={progress} />
 						}
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail">Attachment</label>
-						<div className="hb-attachment">
-							<input type="file" name="imageAttach" value={pictureInput}
-								onChange={(e) => setPicture(e.target.value)} />
-						</div>
-					</div>
-
-					<div className="hb-button">
-						<input className="hb-submit" type="submit" title="Submit" />
 					</div>
 				</form>
 			</div >
