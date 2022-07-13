@@ -40,7 +40,7 @@ const CreateCaseService = {
 			externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
 			caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
 	) {
-		return Axios.post(url + '/case/create-new-case', {
+		return Axios.post(url + '/case/create-new-case-herobuddy', {
 			hID: hID,
 			customerName: customerNameInput,
 			nricNumber: nricInput,

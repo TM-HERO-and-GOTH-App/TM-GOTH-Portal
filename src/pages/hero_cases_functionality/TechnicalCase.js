@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import NextService from "../../web_service/next_service/NextService";
 import data from "./dataForUnifiBuddy"
+import LinearProgress from '@mui/material/LinearProgress';
 
 function TechnicalCase() {
 	let styles = {
@@ -75,8 +76,12 @@ function TechnicalCase() {
 	const [searchBarType, setSearchBarType] = useState('icp');
 	const [serviceID, setServiceID] = useState('');
 	const [customerID, setCustomerID] = useState('');
-	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false)
+
+	// Submit
+	const [submitIsLoading, setSubmitIsLoading] = useState(true)
+	const [progress, setProgress] = useState(60)
+	const [progressMessage, setProgressMessage] = useState('. . .')
 
 	const nextCheckNetwork = () => {
 		NextService.checkNetworkOutage('HERO-20220425-0002', serviceID).then((res, err) => {
@@ -111,10 +116,10 @@ function TechnicalCase() {
 				alertPopUp(true, true, 'Query user info success.')
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
-				setLocation(res.data.result.ServiceInfo ?
-					findCityID(res.data.result.ServiceInfo.ServiceAddress.State):
-					findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State)
-			)
+				setLocation(Array.isArray(res.data.result.ServiceInfo) ?
+						findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
+						findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
+				)
 				nextCheckNetwork()
 				setIsLoading(false);
 			})
@@ -149,16 +154,16 @@ function TechnicalCase() {
 
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
-		createCTT(serviceID, symptomSelect, customerMobileNumberInput);
 		CreateCaseService.createCaseHeroBuddy(
-				'642', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
-				null, null, '', descriptionInput,
+				'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
+				null, null, null, descriptionInput,
 				typeSelect, areaSelect, subAreaSelect, symptomSelect, 'ICP'
 		).then((res, err) => {
-			// console.log(res)
+			console.log(res)
 			if (err) {
 				return alertPopUp(false, true, 'Case creation Failed!!');
 			}
+			createCTT(serviceID, symptomSelect, customerMobileNumberInput);
 			return alertPopUp(true, true, 'Case has been created successfully');
 		})
 	}
@@ -321,20 +326,20 @@ function TechnicalCase() {
 						<div className="hb-input-group">
 							<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
 							<div className="hb-input-box">
-								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
-									{
-										areaSelect === '0' ?
-												<option style={{color: 'var(--color-danger)'}} disabled value='0'>Please select an Area
-													Type</option>
-												:
-												<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option> &&
-												areaSelect === '79' ?
-														subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
-														                                                                       key={value.id}>{value.subArea}</option>)
-														:
-														subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
-														                                                                       key={value.id}>{value.subArea}</option>)
+								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}
+								        style={areaSelect === '0' ? {color: 'var(--color-danger)'} : {color: 'var(--color-gray-700)'}}>
+									{areaSelect === '0' ?
+											<option disabled value='0'>Please select an Area Type</option> :
+											<option disabled value='0'>Select One</option>
 									}
+									{areaSelect !== '0' &&
+											(areaSelect === '79' ?
+															subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
+															                                                                       key={value.id}>{value.subArea}</option>)
+															:
+															subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
+															                                                                       key={value.id}>{value.subArea}</option>)
+											)}
 								</select>
 							</div>
 						</div>
@@ -416,7 +421,26 @@ function TechnicalCase() {
 						</div>
 
 						<div className="hb-button">
-							<input className="hb-submit" type="submit" title="Submit"/>
+							{submitIsLoading &&
+									<>
+										<CircularProgress
+												size={16}
+												sx={{
+													color: 'var(--color-primary)',
+													position: 'absolute',
+													marginTop: '9px',
+													marginLeft: '12px',
+												}}
+										/>
+										<h6 style={{marginLeft: '35px'}}>{progressMessage}</h6>
+									</>
+							}
+							<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
+							       style={submitIsLoading ? {opacity: .5} : {opacity: 1}}/>
+							{submitIsLoading &&
+									<LinearProgress sx={{width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px'}}
+									                variant="determinate" value={progress}/>
+							}
 						</div>
 					</form>
 				</div>

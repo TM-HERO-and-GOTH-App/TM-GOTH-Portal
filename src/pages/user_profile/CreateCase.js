@@ -93,7 +93,11 @@ function CreateCase() {
 				setCustomerProfileFromNova(res.data.result)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setMobileNumberInput(res.data.result.CustInfo.MobileNo)
-				setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === res.data.result.ServiceInfo.ServiceAddress.State).map(data => data.L_ID))
+				setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === (
+						Array.isArray(res.data.result.ServiceInfo) ?
+								res.data.result.ServiceInfo[0].ServiceAddress.State:
+								res.data.result.ServiceInfo.ServiceAddress.State
+				)).map(data => data.L_ID))
 				setSearchingCustomer(false);
 			})
 		}
