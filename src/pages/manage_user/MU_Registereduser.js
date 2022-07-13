@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
+import moment from "moment";
 
 function MU_Registereduser() {
     const userData = JSON.parse(sessionStorage.getItem('UserData'));
@@ -141,7 +142,7 @@ function MU_Registereduser() {
                                                                                 <p style={{color: 'var(--color-danger)'}}>N/A</p>}
                                                                         </div>
                                                                     </TableCell>
-                                                                    <TableCell>{data.REGISTERED_DATE}</TableCell>
+                                                                    <TableCell>{moment(data.REGISTERED_DATE).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
                                                                     <TableCell align={'center'}>
                                                                         <input type="checkbox" disabled/>
                                                                     </TableCell>

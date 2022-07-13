@@ -26,7 +26,39 @@ const CreateCaseService = {
 			areaID: areaType,
 			subAreaID: subAreaSelect,
 			symptomID: symptomSelect,
-			siebelTargetSystem: siebelTargetSystemSelect
+			siebelTargetSystem: siebelTargetSystemSelect,
+			createdAt: 'GOTH'
+		}).then(res => {
+			return res
+		}).catch(err => {
+			return err
+		})
+	},
+
+	createCaseHeroBuddy(
+			hID, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
+			externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
+			caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
+	) {
+		return Axios.post(url + '/case/create-new-case', {
+			hID: hID,
+			customerName: customerNameInput,
+			nricNumber: nricInput,
+			customerMobileNumber: mobileNumberInput,
+			serviceID: serviceID,
+			stateID: stateType,
+			flag: 'COMPLAINT',
+			externalSystem: externalSystemInput,
+			stakeholderReference: stakeholderReferenceSelect,
+			sourceID: sourceType,
+			subSource: 0,
+			caseContent: caseDescriptionInput,
+			caseType: caseType,
+			areaID: areaType,
+			subAreaID: subAreaSelect,
+			symptomID: symptomSelect,
+			siebelTargetSystem: siebelTargetSystemSelect,
+			createdAt: 'HEROBUDDY'
 		}).then(res => {
 			return res
 		}).catch(err => {

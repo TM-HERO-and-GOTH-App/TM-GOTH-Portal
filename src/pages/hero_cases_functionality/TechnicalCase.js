@@ -6,9 +6,10 @@ import {Box, Modal, Typography} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import NextService from "../../web_service/next_service/NextService";
+import data from "./dataForUnifiBuddy"
 
 function TechnicalCase() {
-    let styles = {
+	let styles = {
 		body: {
 			display: "flex",
 			justifyContent: "center",
@@ -29,44 +30,11 @@ function TechnicalCase() {
 		}
 	};
 
-	let areaLocation = [
-		{id: '124', city: 'Johor'},
-		{id: '127', city: 'Kedah'},
-		{id: '127', city: 'Perlis'},
-		{id: '133', city: 'Kelantan'},
-		{id: '136', city: 'Terengganu'},
-		{id: '139', city: 'Kuala Lumpur', state: 'WILAYAH PERSEKUTUAN'},
-		{id: '142', city: 'Melaka'},
-		{id: '145', city: 'MSC'},
-		{id: '148', city: 'Negeri Sembilan'},
-		{id: '151', city: 'Pahang'},
-		{id: '154', city: 'Pulau Pinang'},
-		{id: '157', city: 'Perak'},
-		{id: '160', city: 'Selangor'},
-		{id: '163', city: 'Petaling Jaya'},
-		{id: '166', city: 'Sabah'},
-		{id: '169', city: 'Sarawak'},
-		{id: '641', city: 'RRT'}
-	]
-	let type = [{id: '28', caseType: 'Assurance'}, {id: '37', caseType: 'Billing'}]
-	let area = [{id: '79', area: 'Service Failure'}, {id: '82', area: 'Complaint/Enquiries'}]
-	let subArea = [
-		{id: '85', subArea: 'Services Down'},
-		{id: '88', subArea: 'Report Progress'},
-		{id: '91', subArea: 'Payment'},
-		{id: '94', subArea: 'Charges'},
-		{id: '97', subArea: 'Bill Details'},
-		{id: '100', subArea: 'TOS/RTN'},
-		{id: '103', subArea: 'Dispute-Invalid Charges'},
-		{id: '106', subArea: 'Complaint Handling & Resolution'},
-		{id: '109', subArea: 'Payment Not Updated'}
-	]
-	let product = [
-		{id: '590', product: 'UniFi Mobile'},
-		{id: '587', product: 'UniFi TV'},
-		{id: '584', product: 'Broadband'},
-		{id: '581', product: 'Telephony'}
-	]
+	let areaLocation = data.areaLocation
+	let type = data.type
+	let area = data.area
+	let subArea = data.subArea
+	let product = data.product
 
 	const findCityID = (name) => {
 		for (const element of areaLocation) {
@@ -113,7 +81,7 @@ function TechnicalCase() {
 	const nextCheckNetwork = () => {
 		NextService.checkNetworkOutage('HERO-20220425-0002', serviceID).then((res, err) => {
 			if (err) return console.log(err);
-			console.log(res.data);
+			console.log(res)
 			setNextResponses(res.data)
 			return setOpenModal(true);
 		})
@@ -143,7 +111,11 @@ function TechnicalCase() {
 				alertPopUp(true, true, 'Query user info success.')
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
-				setLocation(findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State))
+				setLocation(res.data.result.ServiceInfo ?
+					findCityID(res.data.result.ServiceInfo.ServiceAddress.State):
+					findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State)
+			)
+				nextCheckNetwork()
 				setIsLoading(false);
 			})
 		} else {
@@ -178,10 +150,11 @@ function TechnicalCase() {
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
 		createCTT(serviceID, symptomSelect, customerMobileNumberInput);
-		CreateCaseService.createCase(
-				token, userData.hID, customerNameInput, null, customerMobileNumberInput,
-				locationSelect, null, null, null, null, descriptionInput, typeSelect, areaSelect, subAreaSelect,
-				symptomSelect, serviceID, null).then((res, err) => {
+		CreateCaseService.createCaseHeroBuddy(
+				'642', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
+				null, null, '', descriptionInput,
+				typeSelect, areaSelect, subAreaSelect, symptomSelect, 'ICP'
+		).then((res, err) => {
 			// console.log(res)
 			if (err) {
 				return alertPopUp(false, true, 'Case creation Failed!!');
@@ -257,12 +230,6 @@ function TechnicalCase() {
 												onChange={(e) => setCustomerID(e.target.value)}
 										/>
 								}
-							</div>
-							<div className="hb-input-group-append" onClick={nextCheckNetwork}
-							     style={{display: `${searchBarType === "icp" ? "" : "none"}`}}>
-								<button className="btn btn-secondary" type="button" aria-label="Next"><LocationSearchingIcon
-										fontSize="large"/>
-								</button>
 							</div>
 							<div className="hb-input-group-append">
 								<button className="btn" type="button" disabled={isLoading} onClick={getCustomerProfile}>
@@ -355,13 +322,16 @@ function TechnicalCase() {
 							<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
 							<div className="hb-input-box">
 								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
-									<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
 									{
 										areaSelect === '0' ?
-												<option style={{color: 'var(--color-danger)'}} disabled>Please select an Area Type</option>
-												: areaSelect === '79' ?
+												<option style={{color: 'var(--color-danger)'}} disabled value='0'>Please select an Area
+													Type</option>
+												:
+												<option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option> &&
+												areaSelect === '79' ?
 														subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
-														                                                                       key={value.id}>{value.subArea}</option>) :
+														                                                                       key={value.id}>{value.subArea}</option>)
+														:
 														subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
 														                                                                       key={value.id}>{value.subArea}</option>)
 									}
