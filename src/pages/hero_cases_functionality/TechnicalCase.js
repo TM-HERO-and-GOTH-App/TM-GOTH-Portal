@@ -307,7 +307,7 @@ function TechnicalCase() {
 									<option disabled value='0'>Please select an Area Type</option> :
 									<option disabled value='0'>Select One</option>
 								}
-								{areaSelect !== '0' &&
+								{
 									(areaSelect === '79' ?
 										subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
 											key={value.id}>{value.subArea}</option>)
@@ -344,8 +344,8 @@ function TechnicalCase() {
 										<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area
 											Type</option>
 										:
-										<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option> &&
-											areaSelect === '79' ?
+
+										areaSelect === '79' ?
 											subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
 												key={value.id}>{value.subArea}</option>)
 											:
