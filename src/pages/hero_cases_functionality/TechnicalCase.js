@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
-import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
-import { Box, Modal, Typography } from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import NextService from "../../web_service/next_service/NextService";
 import LinearProgress from '@mui/material/LinearProgress';
 import unifiFormPageData from "./dataForUnifiBuddy";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 function TechnicalCase() {
 	let styles = {
@@ -68,6 +69,8 @@ function TechnicalCase() {
 	let [symptomSelect, setSymptom] = useState('0');
 	let [locationSelect, setLocation] = useState('0');
 	let [pictureInput, setPicture] = useState('');
+
+	// if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
 	let [targetSystem, setTargetSystem] = useState('');
 	let [isPureDEL, setIsPureDEL] = useState(false);
 
@@ -82,14 +85,16 @@ function TechnicalCase() {
 	const [isLoading, setIsLoading] = useState(false)
 
 	// Submit
-	const [submitIsLoading, setSubmitIsLoading] = useState(true)
+	const [showSubmitLoading, setShowSubmitLoading] = useState(false)
+	const [submitIsLoading, setSubmitIsLoading] = useState(false)
 	const [progress, setProgress] = useState(0)
 	const [progressMessage, setProgressMessage] = useState('. . .')
 	const [submitStatus, setSubmitStatus] = useState(true)
-	const submitProgress = (progress, message, status) => {
+	const submitProgress = (progress, message, status, loading) => {
 		setProgress(progress);
 		setProgressMessage(message);
 		setSubmitStatus(status)
+		setSubmitIsLoading(loading)
 	}
 
 	const nextCheckNetwork = () => {
@@ -161,33 +166,43 @@ function TechnicalCase() {
 				setIsLoading(false);
 			})
 		}
-	}
-
-	const createCTT = (serviceID, symptomCode, mobileNumber) => {
-		submitProgress(40, 'Case creation Success . . .', true)
-		CreateCaseService.autoCreateCTT(serviceID, symptomCode, mobileNumber).then((err, res) => {
-			if (err) return alertPopUp('Something went wrong during SR and TT Creation');
-			console.log(res)
-			return alertPopUp('SR and TT number has been successfully created!!');
-		});
+		// if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
+		isPureDEL === true ? setTargetSystem('icp'): setTargetSystem('')
 	}
 
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
-		submitProgress(20, 'Creating New Case at GOTH . . .', true)
+		setShowSubmitLoading(true)
+		submitProgress(20, 'Creating New Case at GOTH . . .', true, true)
 		CreateCaseService.createCaseHeroBuddy(
 				'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
 				null, null, null, descriptionInput,
 				typeSelect, areaSelect, subAreaSelect, symptomSelect, targetSystem
 		).then((res, err) => {
-			console.log(res)
-			submitProgress(30, 'Done processing . . .', true)
+			submitProgress(30, 'Done processing . . .', true, true)
 			if (err) {
-				submitProgress(30, 'Case creation Failed.', false)
+				submitProgress(30, 'Case creation Failed.', false, false)
 				return alertPopUp(false, true, 'Case creation Failed!!');
 			}
-			submitProgress(40, 'Case creation Success . . .', true)
-			createCTT(serviceID, symptomSelect, customerMobileNumberInput);
+			console.log(res)
+			if (res.data.message !== 'Case successfully created.') {
+				submitProgress(40, `Case creation Failed (${res.data}) . . .`, false, false)
+				return alertPopUp(false, true, 'Case creation Failed!!');
+			}
+			submitProgress(40, 'Case creation Success . . .', true, true)
+
+			// autoCreateCTT (run only if the case is detected as pure DEL)
+			if (isPureDEL) {
+				submitProgress(60, 'Requesting SIEBEL to create SR/TT for DEL . . . ', true, true)
+				CreateCaseService.autoCreateCTT(serviceID, symptomSelect, customerMobileNumberInput).then((err, res) => {
+					if (err) {
+						return submitProgress(60, 'Something went wrong during SR and TT Creation', false)
+					}
+					console.log(res)
+					return submitProgress(70, 'SR and TT number has been successfully created.', true)
+				});
+			}
+			submitProgress(100, 'Case has been created successfully', true)
 			return alertPopUp(true, true, 'Case has been created successfully');
 		})
 	}
@@ -442,23 +457,29 @@ function TechnicalCase() {
 					</div>
 
 					<div className="hb-button">
-						{submitIsLoading === true &&
+						{showSubmitLoading === true &&
 							<>
 								<CircularProgress
 									size={16}
 									sx={{
-										color: 'var(--color-primary)',
+										color: submitStatus === true ? 'var(--color-primary)': 'var(--color-warning)',
 										position: 'absolute',
 										marginTop: '9px',
 										marginLeft: '12px',
 									}}
 								/>
-								<h6 style={{ marginLeft: '35px' }}>{progressMessage}</h6>
+								<h6 style={{ marginLeft: '35px', maxWidth: '60%' }}>{progressMessage}</h6>
 							</>
 						}
+						<FormControlLabel
+								sx={{ position: 'absolute', right: '0', marginTop: '-30px'}}
+								disabled
+								control={<Switch checked={isPureDEL} color="error" size="small"/>}
+								label="Is Pure DEL?"
+						/>
 						<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
 							style={submitIsLoading ? { opacity: .5 } : { opacity: 1 }} />
-						{submitIsLoading === true &&
+						{showSubmitLoading === true &&
 							<LinearProgress sx={{ width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px' }}
 								variant="determinate" value={progress} />
 						}

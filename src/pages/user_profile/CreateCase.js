@@ -90,6 +90,7 @@ function CreateCase() {
 					return;
 				}
 				setAlert(true, true, 'Query user info success.');
+				console.log(res.data.result, 'getCustomerProfileFrom')
 				setCustomerProfileFromNova(res.data.result)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setMobileNumberInput(res.data.result.CustInfo.MobileNo)
@@ -111,7 +112,10 @@ function CreateCase() {
 			caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect, 'No'
 		)
 			.then(res => {
-				// console.log(res.data);
+				console.log(res)
+				if (res.status === 202) {
+					return setAlert(true, false, `Case Creation Failed. (${res.data})`);
+				}
 				setCaseToken(res.data.caseToken)
 				if (res.message !== null) {
 					setAlert(true, true, res.data.message);
@@ -163,7 +167,7 @@ function CreateCase() {
 				setAlertMessage('SR creation failed!!');
 				return;
 			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+			CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
 					return console.log('Successfully save SR in DB!!')
@@ -187,11 +191,11 @@ function CreateCase() {
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo.BillingAccountRowID
 		).then(res => {
-			console.log(res.data, 'createICPTT');
+			console.log(res, 'createICPTT');
 			if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
 				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
 			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.response.SRNumber).then(
+			CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
 					return console.log('Successfully save TT in DB!!')
@@ -279,21 +283,23 @@ function CreateCase() {
 							</div>
 						</div>
 					}
-					{/*Button Added for api testing*/}
-					<div className="hb-input-group">
-						<button className='btn btn-sm' onClick={createICPSR}>
-							createICPSR
-						</button>
-						<button className='btn btn-sm' onClick={createICPTT}>
-							createICPTT
-						</button>
-						<button className='btn btn-sm' onClick={createNovaSR}>
-							createSR
-						</button>
-						<button className='btn btn-sm' onClick={createNovaTT}>
-							createTT
-						</button>
-					</div>
+
+					{/*/!*Button Added for api testing*!/*/}
+					{/*<div className="hb-input-group">*/}
+					{/*	<button className='btn btn-sm' onClick={createICPSR}>*/}
+					{/*		createICPSR*/}
+					{/*	</button>*/}
+					{/*	<button className='btn btn-sm' onClick={createICPTT}>*/}
+					{/*		createICPTT*/}
+					{/*	</button>*/}
+					{/*	<button className='btn btn-sm' onClick={createNovaSR}>*/}
+					{/*		createSR*/}
+					{/*	</button>*/}
+					{/*	<button className='btn btn-sm' onClick={createNovaTT}>*/}
+					{/*		createTT*/}
+					{/*	</button>*/}
+					{/*</div>*/}
+
 					<div align="right" className="row row-cols-auto">
 						<div align="center" className='cc-search-container'>
 							<div align="left" className="cc-search-container-title">Query Customer Information</div>
