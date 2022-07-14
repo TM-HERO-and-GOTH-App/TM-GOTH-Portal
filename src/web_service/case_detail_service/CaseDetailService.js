@@ -82,7 +82,7 @@ const CaseDetailService = {
     updateCaseInfo(
         authToken, gID, cToken, caseTypeID, productNameID, packageName, serviceID, serviceAddress,
         srNum, ttNum, areaLocationID, customerName, segmentID, sourceID, ckc, ckcNumber, loginID,
-        stakeholderRef, extSysRef, areaCode, subAreaID, symptomID
+        stakeholderRef, extSysRef, areaCode, subAreaID, symptomID, siebelSystem
     ) {
         return Axios.post(url + '/case/update-case-info', {
             authToken: authToken,
@@ -106,7 +106,8 @@ const CaseDetailService = {
             extSysRef: extSysRef,
             areaCode: areaCode,
             subAreaID: subAreaID,
-            symptomID: symptomID
+            symptomID: symptomID,
+            siebelTargetSystem: siebelSystem
         }).then(res => {
             return res
         }).catch(err => {

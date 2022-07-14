@@ -225,15 +225,17 @@ const CreateCaseService = {
 
 	createICPTT(customerRowID,
 	            dataDescription, symptomCode, serviceRowID,
-	            createdBy, serviceNumber, billingAccountNumber,
+				relatedSrRowID, createdBy, serviceNumber, srNumber, billingAccountNumber,
 	            contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			dataDescription,
 			symptomCode,
 			serviceRowID,
+			relatedSrRowID,
 			createdBy,
 			serviceNumber,
+			srNumber,
 			billingAccountNumber,
 			contactDetailRowID,
 			contactDetailReportedID,
@@ -259,9 +261,9 @@ const CreateCaseService = {
 		});
 	},
 
-	updateSRNumber(cToken, srNum) {
+	updateSRNumber(cToken, srNum, srRowID) {
 		return Axios.post(url + '/case/save-SR', {
-			cToken, srNum
+			cToken, srNum, srRowID
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -270,7 +272,7 @@ const CreateCaseService = {
 	},
 
 	updateTTNumber(cToken, ttNum) {
-		return Axios.post(url + '/case/save-SR', {
+		return Axios.post(url + '/case/save-TT', {
 			cToken, ttNum
 		}).then(res => {
 			return res

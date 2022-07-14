@@ -14,6 +14,13 @@ const LoginService = {
             .catch((err) => console.log(err));
     },
 
+    ldapLogin(id, password){
+        return Axios.post(url + '/login/test-promised-ldap-package',{
+            username: id,
+            password
+        }).then(res => { return res.data }).catch(err => {return err})
+    },
+
     signIn(authToken, email, password) {
         return Axios.post(url + '/login/sign-in', {
             'authToken': authToken,
@@ -40,6 +47,15 @@ const LoginService = {
         })
             .then(res => { return res })
             .catch((err) => console.log(err))
+    },
+
+    validateAccount(eventName, userEmail, ldapEmail){
+        return Axios.post(url + '/user/validate-account',{
+            'apiKey': apiKey,
+            'eventName': eventName,
+            'userEmail': userEmail,
+            'ldapEmail': ldapEmail
+        }).then(res => { return res }).catch(err => { return err });
     }
 }
 
