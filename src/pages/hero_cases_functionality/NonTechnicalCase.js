@@ -144,8 +144,7 @@ function NonTechnicalCase() {
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
 			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			descriptionInput, 'AIMAN', 'AIMAN',
-			'RRT', descriptionInput, 'EAI'
+			descriptionInput, 'AIMAN', descriptionInput, 'EAI'
 		).then(res => {
 			setIsCreateCase(true);
 			console.log(res.data, 'createSR');

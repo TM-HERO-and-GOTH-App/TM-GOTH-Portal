@@ -112,8 +112,7 @@ const CreateCaseService = {
 
 	createNovaSR(customerRowID, type, area, subArea, caseCategory,
 	             source, serviceRowID, contactDetailRowID, contactDetailReportedID, billingAccountRowID,
-	             billingAccountNumber, detailDataDescription, group, owner,
-	             noteCreatedBy, noteDescription, createdByPosition) {
+	             billingAccountNumber, detailDataDescription, noteCreatedBy, noteDescription, createdByPosition) {
 		return Axios.post(url + '/siebel_eai/nova/create-sr', {
 			customerRowID,
 			type,
@@ -129,7 +128,7 @@ const CreateCaseService = {
 			billingAccountNumber,
 			detailDataDescription,
 			"group": "WIDER_TMUC_TECH_SOC2", // TODO: this should be group
-			"owner": "WIDER_TMUC_TECH_SOC2", // TODO: this should be owner
+			"owner": "AIMAN", // TODO: this should be owner
 			"closureCategory": "",
 			"closureReason": "",
 			"closureRemark": "",
@@ -223,10 +222,7 @@ const CreateCaseService = {
 		});
 	},
 
-	createICPTT(customerRowID,
-	            dataDescription, symptomCode, serviceRowID,
-				relatedSrRowID, createdBy, serviceNumber, srNumber, billingAccountNumber,
-	            contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
+	createICPTT(customerRowID, dataDescription, symptomCode, serviceRowID,relatedSrRowID, createdBy, serviceNumber, srNumber, billingAccountNumber, contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			dataDescription,

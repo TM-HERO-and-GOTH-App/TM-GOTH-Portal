@@ -37,7 +37,8 @@ function CreateCase() {
 	const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
 	const [customerID, setCustomerID] = useState('');
 	const [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
-	const [caseToken, setCaseToken] = useState({});
+	const [caseToken, setCaseToken] = useState([]);
+	const [srData, setSRData] = useState({})
 
 	// Spinner
 	const [searchingCustomer, setSearchingCustomer] = useState(false);
@@ -112,8 +113,10 @@ function CreateCase() {
 			caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect, 'No'
 		)
 			.then(res => {
-				console.log(res)
+				setIsCreateCase(true)
+				console.log(res.data)
 				if (res.status === 202) {
+					setIsCreateCase(false);
 					return setAlert(true, false, `Case Creation Failed. (${res.data})`);
 				}
 				setCaseToken(res.data.caseToken)
@@ -122,6 +125,7 @@ function CreateCase() {
 					if (siebelTargetSystemSelect === '660') return createICPSR();
 					if (siebelTargetSystemSelect === '662') return createNovaSR();
 				}
+				setIsCreateCase(false)
 				resetForm();
 				return setAlert(true, true, 'Successfully Create Case');
 			})
@@ -157,7 +161,7 @@ function CreateCase() {
 			customerProfileFromNova.BillInfo.BillingAccountRowID,
 			customerProfileFromNova.BillInfo.BillingAccountNo,
 			caseDescriptionInput,
-			customerProfileFromNova.ServiceInfo.ServiceRowID
+			Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[1].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID
 		).then(res => {
 			console.log(res.data, 'createICPSR')
 			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
@@ -167,13 +171,14 @@ function CreateCase() {
 				setAlertMessage('SR creation failed!!');
 				return;
 			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber).then(
+			CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber, res.data.SRRowID).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					setSRData(res.data)
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
-			setAlert(true, false, 'Successfully create SR for ICP!!');
+			setAlert(true, true, 'Successfully create SR for ICP!!');
 			return createICPTT();
 		})
 	}
@@ -184,23 +189,27 @@ function CreateCase() {
 			caseDescriptionInput,
 			'DSL_Slow_Physical',
 			customerProfileFromNova.ServiceInfo.ServiceRowID,
+			'3-EAT58H',
 			'AIMAN',
 			serviceID,
+			'3-864682433',
 			customerProfileFromNova.BillInfo.BillingAccountNo,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo.BillingAccountRowID
-		).then(res => {
-			console.log(res, 'createICPTT');
-			if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+		).then((res) => {
+			console.log(res.data, 'createICPTT');
+			if (res.data === 'relatedSrRowID is required' || res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+				setIsCreateCase(false);
 				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
 			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
+			CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
+			setIsCreateCase(false);
 			return setAlert(true, true, 'TT creation has been successful!!');
 		})
 	}
@@ -217,17 +226,17 @@ function CreateCase() {
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
 			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			caseDescriptionInput, userData.stakeholderName, userData.stakeholderName,
-			userData.stakeholderName, caseDescriptionInput, 'EAI'
+			caseDescriptionInput, userData.stakeholderName, caseDescriptionInput, 'EAI'
 		).then(res => {
 			console.log(res.data, 'createSR');
 			if (res.message) {
+				setIsCreateCase(false);
 				return setAlert(true, false, res.message);
 			}
 			if (res.data.message !== 'Success') {
 				return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
 			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber, res.data.response.SRRowID).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
 					return console.log('Successfully save SR in DB!!')
@@ -250,7 +259,8 @@ function CreateCase() {
 			caseDescriptionInput, userData.stakeholderName
 		).then((res, err) => {
 			console.log(res, 'createTT');
-			if (res.data === undefined || err) {
+			if (res.data === undefined || err || res.data.message !== 'Success') {
+				setIsCreateCase(false);
 				return setAlert(true, false, 'TT Creation for NOVA failed!!');
 			}
 			CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
@@ -259,6 +269,7 @@ function CreateCase() {
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
+			setIsCreateCase(false);
 			return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
 		})
 	}
@@ -528,10 +539,14 @@ function CreateCase() {
 												<select className='chosen-select form-control' name='caseTypeID'
 													value={areaType}
 													onChange={(e) => setAreaType(parseFloat(e.target.value))}>
-													<option value='0' disabled>Choose a Area Type</option>
+													<option value='0'>Choose a Area Type</option>
 													{
 														lovData.filter(filter => filter.L_GROUP === 'AREA').map((data, key) => {
-															return <option key={key}
+															return caseType == data.PARENT_ID  ? <option key={key}
+																value={data.L_ID}>{data.L_NAME}</option> 
+																:
+																caseType === '0' &&
+																<option key={key}
 																value={data.L_ID}>{data.L_NAME}</option>
 														})
 													}
@@ -548,7 +563,10 @@ function CreateCase() {
 													<option value='0' disabled>Choose a Sub-area Type</option>
 													{
 														lovData.filter(filter => filter.L_GROUP === 'SUB-AREA').map((data, key) => {
-															return <option key={key}
+															return areaType === data.PARENT_ID ? <option key={key}
+																value={data.L_ID}>{data.L_NAME}</option> :
+																areaType === '0' &&
+																<option key={key}
 																value={data.L_ID}>{data.L_NAME}</option>
 														})
 													}
