@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import './styleHeroBuddy.css'
-import axios from 'axios';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
+import unifiFormPageData from "./dataForUnifiBuddy";
+
 
 function CautionReport() {
 	const userData = JSON.parse(sessionStorage.getItem('UserData'));
 	const token = JSON.parse(sessionStorage.getItem('userToken'))
-	const lovData = JSON.parse(sessionStorage.getItem('LovData'));
 	const [customerNameInput, setCustomerNameInput] = useState('');
 	const [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	const [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
 	const [descriptionInput, setDescription] = useState('');
-	const [typeSelect, setTypeSelect] = useState(37);
+	const [typeSelect, setTypeSelect] = useState(503);
 	const [locationSelect, setLocation] = useState('default');
 	const [pictureInput, setPicture] = useState('');
+
+	// Alert
+	const [alertIsSuccess, setAlertIsSuccess] = useState(false);
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
+	const alertPopUp = (success, alert, message) => {
+		setAlertIsSuccess(success);
+		setAlertMessage(message);
+		setShowAlert(alert);
+	}
+
+	let areaLocation = unifiFormPageData.areaLocation
+	let type = unifiFormPageData.type
 
 	let styles = {
 		body: {
@@ -27,10 +40,14 @@ function CautionReport() {
 
 	const createCautionCase = (e) => {
 		e.preventDefault();
-		CreateCaseService.createCase(token, userData.hID, customerNameInput, null, customerMobileNumberInput,
-				locationSelect, null, null, null, null, descriptionInput, typeSelect, null, null,
-				null, null, null).then(res => {
-			console.log(res)
+		CreateCaseService.createCaseHeroBuddy(
+			'0', customerNameInput, null, customerMobileNumberInput, null, locationSelect,
+			null, null, null, descriptionInput,
+			typeSelect, null, null, null, null)
+			.then((res, err) => {
+				if (res.status === 202) { return alertPopUp(false, true, `Query Error: ${res.data}`); }
+				if (err) { return alertPopUp(false, true, 'Case creation Failed!!');}
+				return alertPopUp(true, true, 'Case creation Success');
 		})
 	}
 
@@ -38,6 +55,23 @@ function CautionReport() {
 			<div style={styles.body}>
 				<div className="hb-container">
 					<div className="hb-title">Caution Report</div>
+					{
+						showAlert &&
+						<div className="row">
+							<div className="col-xs-12">
+								<div
+									className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
+									style={{ marginBottom: '0', marginTop: '10px' }}
+								>
+									<button type="button" onClick={() => setShowAlert(false)} className="close"
+											data-dismiss="alert">
+										<i className="ace-icon fa fa-times" />
+									</button>
+									<p>{alertMessage}</p>
+								</div>
+							</div>
+						</div>
+					}
 					<form onSubmit={createCautionCase}>
 						<div className="hb-input-group">
 							<label className="hb-detail" for="customerName">Customer Name*</label>
@@ -86,8 +120,8 @@ function CautionReport() {
 						<div className="hb-input-group">
 							<label className="hb-detail" for='type'>Type*</label>
 							<div className="hb-input-box">
-								<select id='type' name='type' value={typeSelect}>
-									<option value={503} disabled>Caution Report</option>
+								<select id='type' name='type' value={typeSelect} disabled>
+									<option value={503}>Caution Report</option>
 								</select>
 							</div>
 						</div>
@@ -97,11 +131,7 @@ function CautionReport() {
 							<div className="hb-input-box">
 								<select id="location" name="location" value={locationSelect} onChange={e => setLocation(e.target.value)}>
 									<option disabled value='default'>Select One</option>
-									{/*{*/}
-									{/*	lovData.filter(data => data.L_GROUP === 'STATE').map((data, key) => (*/}
-									{/*			<option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>*/}
-									{/*	))*/}
-									{/*}*/}
+									{areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
 								</select>
 							</div>
 						</div>

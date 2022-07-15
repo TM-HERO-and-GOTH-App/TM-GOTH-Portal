@@ -3,10 +3,10 @@ import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import unifiFormPageData from "./dataForUnifiBuddy";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function NonTechnicalCase() {
 	let areaLocation = unifiFormPageData.areaLocation
-	let type = unifiFormPageData.type
 	let area = unifiFormPageData.area
 	let subArea = unifiFormPageData.subArea
 	let product = unifiFormPageData.product
@@ -17,9 +17,6 @@ function NonTechnicalCase() {
 		}
 	}
 
-	let userData = JSON.parse(sessionStorage.getItem('UserData'));
-	let token = JSON.parse(sessionStorage.getItem('userToken'))
-	let lovData = JSON.parse(sessionStorage.getItem('LovData'));
 	let [customerNameInput, setCustomerNameInput] = useState('');
 	let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
@@ -32,11 +29,11 @@ function NonTechnicalCase() {
 	let [subAreaSelect, setSubArea] = useState('0');
 	let [locationSelect, setLocation] = useState('0');
 	let [pictureInput, setPicture] = useState('');
-	let [searchBarType, setSearchBarType] = useState('icp');
-	let [searchBarInput, setSearchBarInput] = useState('');
+	let [searchBarType, setSearchBarType] = useState('service');
 	let [isLoading, setIsLoading] = useState(false);
 	let [serviceID, setServiceID] = useState('');
 	let [customerID, setCustomerID] = useState('');
+	let [targetSystem, setTargetSystem] = useState('');
 
 	// Alert
 	let [alertIsSuccess, setAlertIsSuccess] = useState(false);
@@ -75,22 +72,22 @@ function NonTechnicalCase() {
 			setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
 			setLocation(Array.isArray(res.data.result.ServiceInfo) === true ?
 				findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State):
-				findCityID(res.data.result.ServiceInfo.ServiceAddress.State) 
-				
+				findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
+
 			)
-			return;
+			return setTargetSystem('NOVA')
 		})
 	}
 
 	function getCustomerProfile(e) {
 		e.preventDefault();
 		setIsLoading(true);
-		if (searchBarType === 'icp' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
+		if (searchBarType === 'service' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
 			setIsLoading(false);
 			alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
 			return;
 		}
-		if (searchBarType === 'icp') {
+		if (searchBarType === 'service') {
 			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
 				// console.log(res.data, 'getCustomerProfileFromICP');
 				if (err || typeof res.data === 'undefined') {
@@ -103,7 +100,8 @@ function NonTechnicalCase() {
 					return getCustomerProfileFromNova();
 				}
 				setIsLoading(false)
-				alertPopUp(true, true, 'Query user info success in ICP.')
+				setTargetSystem('ICP')
+				alertPopUp(true, true, `Query user info success in ${targetSystem}.`)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setLocation(
 					Array.isArray(res.data.result.ServiceInfo) ?
@@ -167,7 +165,7 @@ function NonTechnicalCase() {
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
-			return 
+			return
 		})
 	}
 
@@ -206,11 +204,11 @@ function NonTechnicalCase() {
 
 	function createNonTechnicalCase(e) {
 		e.preventDefault();
-		CreateCaseService.createCase(
-			token, userData.hID, customerNameInput, null, customerMobileNumberInput,
-			locationSelect, null, null, null, null,
-			descriptionInput, typeSelect, areaSelect, subAreaSelect,
-			null, searchBarInput, null).then((res, err) => {
+		CreateCaseService.createCaseHeroBuddy(
+			'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
+			null, null, null, descriptionInput,
+			typeSelect, areaSelect, subAreaSelect, null, targetSystem)
+			.then((res, err) => {
 				setIsCreateCase(true);
 				if (err) {
 					console.log(err);
@@ -261,7 +259,7 @@ function NonTechnicalCase() {
 						<div className="hb-input-group-prepend">
 							<select id="searchbar-type" name="searchbar-type" value={searchBarType}
 								onChange={(e) => setSearchBarType(e.target.value)}>
-								<option value="icp">Service ID</option>
+								<option value="service">Service ID</option>
 								<option value="login">Login ID</option>
 							</select>
 						</div>
@@ -270,11 +268,11 @@ function NonTechnicalCase() {
 								type="text"
 								id="search-detail"
 								name="search-detail"
-								placeholder={searchBarType === "icp" ? "Insert Service ID" : "Insert Login ID"}
+								placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
 								value={serviceID}
 								onChange={(e) => setServiceID(e.target.value)}
 							/>
-							{searchBarType === 'icp' &&
+							{searchBarType === 'service' &&
 								<input
 									type='text'
 									id='customerIC'
@@ -287,6 +285,17 @@ function NonTechnicalCase() {
 						</div>
 						<div className="hb-input-group-append" onClick={getCustomerProfile}>
 							<button className="btn" type="button" disabled={isLoading}><SearchIcon fontSize="large" /></button>
+							{isLoading &&
+								<CircularProgress
+									size={24}
+									sx={{
+										color: 'var(--color-success)',
+										position: 'absolute',
+										marginTop: '-32px',
+										marginLeft: '15px',
+									}}
+								/>
+							}
 						</div>
 					</div>
 

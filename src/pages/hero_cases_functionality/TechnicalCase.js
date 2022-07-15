@@ -117,6 +117,7 @@ function TechnicalCase() {
 		if (searchBarType === 'icp') {
 			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromICP');
+				nextCheckNetwork() // TODO: check if this flow is correct
 				if (err || typeof res.data === 'undefined') {
 					alertPopUp(false, true, res.message)
 					setIsLoading(false);
@@ -144,7 +145,6 @@ function TechnicalCase() {
 				})
 				setProduct(isPureDEL === true ? '581' : '0')
 				setSymptom(isPureDEL === true ? '658' : '0')
-				nextCheckNetwork()
 				setIsLoading(false);
 			})
 		} else {
