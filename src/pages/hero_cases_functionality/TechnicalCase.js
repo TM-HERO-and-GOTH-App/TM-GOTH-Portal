@@ -374,26 +374,26 @@ function TechnicalCase() {
 						</div>
 					</div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
-						<div className="hb-input-box">
-							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
-								{
-									areaSelect === '0' ?
-										<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area
-											Type</option>
-										:
+					{/*<div className="hb-input-group">*/}
+					{/*	<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>*/}
+					{/*	<div className="hb-input-box">*/}
+					{/*		<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>*/}
+					{/*			{*/}
+					{/*				areaSelect === '0' ?*/}
+					{/*					<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area*/}
+					{/*						Type</option>*/}
+					{/*					:*/}
 
-										areaSelect === '79' ?
-											subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
-												key={value.id}>{value.subArea}</option>)
-											:
-											subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
-												key={value.id}>{value.subArea}</option>)
-								}
-							</select>
-						</div>
-					</div>
+					{/*					areaSelect === '79' ?*/}
+					{/*						subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}*/}
+					{/*							key={value.id}>{value.subArea}</option>)*/}
+					{/*						:*/}
+					{/*						subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}*/}
+					{/*							key={value.id}>{value.subArea}</option>)*/}
+					{/*			}*/}
+					{/*		</select>*/}
+					{/*	</div>*/}
+					{/*</div>*/}
 
 					<div className="hb-input-group">
 						<label className="hb-detail" htmlFor="product">Product*</label>
