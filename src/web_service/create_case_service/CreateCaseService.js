@@ -150,23 +150,24 @@ const CreateCaseService = {
 	},
 
 	createNovaTT(customerRowID, billingAccountNumber, billingAccountRowID,
-	             symptomCode, serviceRowID, contactDetailRowID, contactDetailReported,
+	             symptomCode, contactDetailRowID, contactDetailReported,
 	             noteDescription, createdByPosition) {
 		return Axios.post(url + '/siebel_eai/nova/create-TT', {
-			customerRowID,
-			billingAccountNumber,
-			billingAccountRowID,
+			"customerRowID": customerRowID,
+			"billingAccountNumber": billingAccountNumber,
+			"billingAccountRowID": billingAccountRowID,
 			"severity": "4-Low",
-			"source": "GOTH",
+			"source": "SPICE",
 			"product": "",
-			symptomCode,
+			"symptomCode": symptomCode,
 			"category": "Performance",
-			"owner": "",
-			serviceRowID,
+			"owner": "AIMAN",
+			"serviceRowID": "",
+			"relatedSRRowID": "",
 			"status": "In Progress",
 			"ccpChargingMethod": "",
-			contactDetailRowID,
-			contactDetailReported,
+			"contactDetailRowID": contactDetailRowID,
+			"contactDetailReported": contactDetailReported,
 			"description": "",
 			"ownerCctActivity": "",
 			"activityID": "",
@@ -257,9 +258,11 @@ const CreateCaseService = {
 		});
 	},
 
-	updateSRNumber(cToken, srNum, srRowID) {
+	updateSRNumber(srNum, srRowID, cToken) {
 		return Axios.post(url + '/case/save-SR', {
-			cToken, srNum, srRowID
+			srNum, 
+			srRowID,
+			cToken, 
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -267,9 +270,9 @@ const CreateCaseService = {
 		});
 	},
 
-	updateTTNumber(cToken, ttNum) {
+	updateTTNumber(ttNum, cToken) {
 		return Axios.post(url + '/case/save-TT', {
-			cToken, ttNum
+			ttNum, cToken
 		}).then(res => {
 			return res
 		}).catch(err => {

@@ -126,10 +126,10 @@ function EditCaseDetail(props) {
         // setSubSourceType("0");
     };
 
-    function getCustomerProfile() {
+    async function getCustomerProfile() {
         setSearchingCustomer(true);
         if (siebelSystem === '662' || caseDetailData?.SYSTEM_TARGET === 'NOVA') {
-            CreateCaseService.getCustomerProfileFromNova(serviceIDInput, icInput).then((res, err) => {
+            await CreateCaseService.getCustomerProfileFromNova(serviceIDInput, icInput).then((res, err) => {
                 console.log(res.data, 'getCustomerProfileFromNova');
                 if (err || typeof res.data === 'undefined') {
                     setAlertStatus(true);
@@ -149,7 +149,7 @@ function EditCaseDetail(props) {
                 return;
             })
         } else {
-            CreateCaseService.getCustomerProfileFromICP(serviceIDInput, icInput).then((res, err) => {
+            await CreateCaseService.getCustomerProfileFromICP(serviceIDInput, icInput).then((res, err) => {
                 console.log(res.data, 'getCustomerProfileFromICP');
                 if (err || typeof res.data === 'undefined') {
                     setAlertStatus(true);
@@ -172,21 +172,19 @@ function EditCaseDetail(props) {
         }
     }
 
-    const createICPSR = (e) => {
-        e.preventDefault();
-        getCustomerProfile();
+    const ICPSR = () => {
         CreateCaseService.createICPSR(
             customerProfileFromICP.CustInfo.CustomerRowID,
             'AIMAN',
-            caseDetailData?.AREA_CODE,
-            caseDetailData?.SUB_AREA,
+            lovData.filter(filter => filter.L_ID === areaCode).map(data => data.L_NAME)[0],
+            lovData.filter(filter => filter.L_ID === subAreaCode).map(data => data.L_NAME)[0],
             'TM CCR Technical CPC Follow Up',
             customerProfileFromICP.CustInfo.PrimaryContactRowID,
             customerProfileFromICP.CustInfo.PrimaryContactRowID,
             customerProfileFromICP.BillInfo.BillingAccountRowID,
             customerProfileFromICP.BillInfo.BillingAccountNo,
             caseDetailData?.CASE_CONTENT,
-            customerProfileFromICP.ServiceInfo[0].ServiceRowID
+            Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[0].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID
         ).then(res => {
             setCreateSiebelSRAndTT(true);
             console.log(res.data, 'createICPSR')
@@ -210,17 +208,16 @@ function EditCaseDetail(props) {
         })
     }
 
-    function createICPTT() {
-        getCustomerProfile();
+    function ICPTT() {
         CreateCaseService.createICPTT(
             customerProfileFromICP.CustInfo.CustomerRowID,
             caseDetailData?.CASE_CONTENT,
             'DSL_Slow_Physical',
-            customerProfileFromICP.ServiceInfo[1].ServiceRowID,
-            caseDetailData?.srRowID,
+            Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[1].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID,
+            '3-44J8CV',
             'AIMAN',
             caseDetailData?.SERVICE_ID,
-            caseDetailData?.SR_NUM,
+            '3-249480463',
             customerProfileFromICP.BillInfo.BillingAccountNo,
             customerProfileFromICP.CustInfo.PrimaryContactRowID,
             customerProfileFromICP.CustInfo.PrimaryContactRowID,
@@ -228,6 +225,7 @@ function EditCaseDetail(props) {
         ).then(res => {
             setCreateSiebelSRAndTT(true);
             console.log(res.data, 'createICPTT');
+            console.log(symptomCode, 'createICPTT');
             if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
                 setCreateSiebelSRAndTT(false);
                 setAlert(true, false, `TT Creation for ICP failed!! [${res.data.Header.ErrorMessage}]`);
@@ -249,8 +247,8 @@ function EditCaseDetail(props) {
     const NovaSR = () => {
         CreateCaseService.createNovaSR(
             customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
-            areaCode,
-            subAreaCode,
+            lovData.filter(filter => filter.L_GROUP === areaCode).map(data => data.L_NAME)[0],
+            lovData.filter(filter => filter.L_GROUP === subAreaCode).map(data => data.L_NAME)[0],
             'Slow Domestic', // to be removed
             'SPICE', // temp source naming
             customerProfileFromNova.ServiceInfo[0].ServiceRowID,
@@ -258,15 +256,11 @@ function EditCaseDetail(props) {
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
             customerProfileFromNova.BillInfo[0].BillingAccountRowID,
             customerProfileFromNova.BillInfo[0].BillingAccountNo,
-            caseDetailData?.CASE_CONTENT, userData.stakeholderName, userData.stakeholderName,
-            userData.stakeholderName, caseDetailData?.CASE_CONTENT, 'EAI'
+            caseDetailData?.CASE_CONTENT,
+            'AIMAN', caseDetailData?.CASE_CONTENT, 'EAI'
         ).then(res => {
             setCreateSiebelSRAndTT(true);
             console.log(res.data, 'createSR');
-            if (res.message) {
-                setCreateSiebelSRAndTT(false);
-                return setAlert(true, false, res.message);
-            }
             if (res.data.message !== 'Success') {
                 setCreateSiebelSRAndTT(false);
                 return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
@@ -283,7 +277,7 @@ function EditCaseDetail(props) {
         })
     }
 
-    const createNovaTT = () => {
+    const NovaTT = () => {
         CreateCaseService.createNovaTT(
             customerProfileFromNova.CustInfo.CustomerRowID,
             customerProfileFromNova.BillInfo[0].BillingAccountNo,
@@ -296,7 +290,7 @@ function EditCaseDetail(props) {
         ).then((res, err) => {
             setCreateSiebelSRAndTT(true);
             console.log(res, 'createTT');
-            if (res.data === undefined || err) {
+            if (res.data === undefined || err || res.data !== 'Success') {
                 setCreateSiebelSRAndTT(false);
                 return setAlert(true, false, 'TT Creation for NOVA failed!!');
             }
@@ -311,9 +305,21 @@ function EditCaseDetail(props) {
         })
     }
 
-    async function createNovaSR() {
-        await getCustomerProfile();
+    function createNovaSR() {
+        getCustomerProfile();
         NovaSR();
+    }
+    function createNovaTT() {
+        getCustomerProfile();
+        NovaTT();
+    }
+    function createICPSR() {
+        getCustomerProfile();
+        ICPSR();
+    }
+    function createICPTT() {
+        getCustomerProfile();
+        ICPTT();
     }
 
     return (
@@ -756,14 +762,16 @@ function EditCaseDetail(props) {
                                             onChange={(e) => setSymptomCode(e.target.value)}
                                             placeholder='Choose a Symptom Type...'
                                         >
-                                            <option value='0' disabled>Choose a Symptom Type</option>
+                                            <option value='0'>Choose a Symptom Type</option>
                                             {
-                                                lovData.filter(filter => filter.lovGroup === 'SYMPTOM').map((data, key) => {
-                                                    return <option key={key}
-                                                        value={data.lovID}>{data.lovName}</option>
+                                                lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
+                                                    return data.PARENT_ID == siebelSystem ? <option key={key}
+                                                        value={data.L_ID}>{data.L_NAME}</option> :
+                                                        siebelSystem === '0' && 
+                                                        <option key={key}
+                                                        value={data.L_ID}>{data.L_NAME}</option> 
                                                 })
                                             }
-                                            <option value='800'>All Services Down</option>
                                         </select>
                                     </div>
                                 </div>
@@ -775,12 +783,16 @@ function EditCaseDetail(props) {
                                             name="areaCode"
                                             value={areaCode}
                                             onChange={(e) => setAreaCode(e.target.value)}
+                                            placeholder='Please select one'
                                         >
-                                            <option value='0' disabled>Choose a Area Type</option>
+                                            <option value='0'>Choose a Area Type</option>
                                             {
-                                                lovData.filter(filter => filter.lovGroup === 'AREA').map((data, key) => {
-                                                    return <option key={key}
-                                                        value={data.lovID}>{data.lovName}</option>
+                                                lovData.filter(filter => filter.L_GROUP === 'AREA').map((data, key) => {
+                                                    return data.PARENT_ID == caseType ? <option key={key}
+                                                        value={data.L_ID}>{data.L_NAME}</option> :
+                                                        caseType === '0' && 
+                                                        <option key={key}
+                                                        value={data.L_ID}>{data.L_NAME}</option>
                                                 })
                                             }
                                         </select>
@@ -797,9 +809,12 @@ function EditCaseDetail(props) {
                                         >
                                             <option value='0' disabled>Choose a Sub-area Type</option>
                                             {
-                                                lovData.filter(filter => filter.lovGroup === 'SUB_AREA').map((data, key) => {
-                                                    return <option key={key}
-                                                        value={data.lovID}>{data.lovName}</option>
+                                                lovData.filter(filter => filter.L_GROUP === 'SUB-AREA').map((data, key) => {
+                                                    return data.PARENT_ID == areaCode ? <option key={key}
+                                                    value={data.L_ID}>{data.L_NAME}</option> :
+                                                    areaCode === '0' && 
+                                                    <option key={key}
+                                                    value={data.L_ID}>{data.L_NAME}</option>
                                                 })
                                             }
                                         </select>

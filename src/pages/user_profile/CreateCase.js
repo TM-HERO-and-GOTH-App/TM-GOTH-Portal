@@ -52,12 +52,12 @@ function CreateCase() {
 			setSearchingCustomer(false);
 			return;
 		}
-		if (serviceID === '' || customerID === '') {
-			setAlert(true, false, 'Please fill in your Service ID/ NRIC...')
-			setSearchingCustomer(false);
-			return;
-		}
 		if (siebelTargetSystemSelect === '662') {
+			if (serviceID === '') {
+				setAlert(true, false, 'Please fill in your Service ID...')
+				setSearchingCustomer(false);
+				return;
+			}
 			CreateCaseService.getCustomerProfileFromNova(serviceID, customerID).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromNova');
 				if (err || typeof res.data === 'undefined') {
@@ -78,6 +78,11 @@ function CreateCase() {
 				return setSearchingCustomer(false);
 			})
 		} else {
+			if (serviceID === '' || customerID === '') {
+				setAlert(true, false, 'Please fill in your Service ID/ NRIC...')
+				setSearchingCustomer(false);
+				return;
+			}
 			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromICP');
 				if (err || typeof res.data === 'undefined') {
@@ -171,7 +176,7 @@ function CreateCase() {
 				setAlertMessage('SR creation failed!!');
 				return;
 			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber, res.data.SRRowID).then(
+			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
 					setSRData(res.data)
@@ -179,7 +184,8 @@ function CreateCase() {
 				}
 			)
 			setAlert(true, true, 'Successfully create SR for ICP!!');
-			return createICPTT();
+			// return createICPTT();
+			return;
 		})
 	}
 
@@ -188,7 +194,7 @@ function CreateCase() {
 			customerProfileFromNova.CustInfo.CustomerRowID,
 			caseDescriptionInput,
 			'DSL_Slow_Physical',
-			customerProfileFromNova.ServiceInfo.ServiceRowID,
+			Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
 			'3-EAT58H',
 			'AIMAN',
 			serviceID,
@@ -203,9 +209,10 @@ function CreateCase() {
 				setIsCreateCase(false);
 				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
 			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
+			CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
+					if(caseToken === undefined) return console.log('Case Token is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
@@ -219,7 +226,7 @@ function CreateCase() {
 			customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
 			lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0],
 			lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
-			lovData.filter(filter => filter.L_ID === productType).map(data => data.L_NAME)[0], // to be removed
+			'wifi@unifi', // to be removed
 			'SPICE', // temp source naming
 			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
@@ -236,34 +243,34 @@ function CreateCase() {
 			if (res.data.message !== 'Success') {
 				return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
 			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber, res.data.response.SRRowID).then(
+			CreateCaseService.updateSRNumber(res.data.response.SRNumber, res.data.response.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
 			setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
-			return createNovaTT();
+			// return createNovaTT();
+			return;
 		})
 	}
 
 	const createNovaTT = () => {
 		CreateCaseService.createNovaTT(
 			customerProfileFromNova.CustInfo.CustomerRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			'Error',
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+			Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountNo : customerProfileFromNova.BillInfo.BillingAccountNo,
+			Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountRowID : customerProfileFromNova.BillInfo.BillingAccountRowID,
+			lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0],
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			caseDescriptionInput, userData.stakeholderName
+			caseDescriptionInput, 'EAI'
 		).then((res, err) => {
 			console.log(res, 'createTT');
 			if (res.data === undefined || err || res.data.message !== 'Success') {
 				setIsCreateCase(false);
 				return setAlert(true, false, 'TT Creation for NOVA failed!!');
 			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
+			CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
 					return console.log('Successfully save TT in DB!!')
@@ -296,20 +303,20 @@ function CreateCase() {
 					}
 
 					{/*/!*Button Added for api testing*!/*/}
-					{/*<div className="hb-input-group">*/}
-					{/*	<button className='btn btn-sm' onClick={createICPSR}>*/}
-					{/*		createICPSR*/}
-					{/*	</button>*/}
-					{/*	<button className='btn btn-sm' onClick={createICPTT}>*/}
-					{/*		createICPTT*/}
-					{/*	</button>*/}
-					{/*	<button className='btn btn-sm' onClick={createNovaSR}>*/}
-					{/*		createSR*/}
-					{/*	</button>*/}
-					{/*	<button className='btn btn-sm' onClick={createNovaTT}>*/}
-					{/*		createTT*/}
-					{/*	</button>*/}
-					{/*</div>*/}
+					<div className="hb-input-group">
+						<button className='btn btn-sm' onClick={createICPSR}>
+							createICPSR
+						</button>
+						<button className='btn btn-sm' onClick={createICPTT}>
+							createICPTT
+						</button>
+						<button className='btn btn-sm' onClick={createNovaSR}>
+							createNovaSR
+						</button>
+					<button className='btn btn-sm' onClick={createNovaTT}>
+						createNovaTT
+					</button>
+					</div>
 
 					<div align="right" className="row row-cols-auto">
 						<div align="center" className='cc-search-container'>
@@ -598,7 +605,9 @@ function CreateCase() {
 											<div className="profile-info-value">
 												<select className='chosen-select form-control' name='siebelSystem'
 													value={siebelTargetSystemSelect}
-													onChange={(e) => setSiebelTargetSystemSelect(e.target.value)}>
+													readOnly
+													disabled
+												>
 													<option value='0'>Choose a Target System</option>
 													{lovData.filter(filter => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
 														return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
