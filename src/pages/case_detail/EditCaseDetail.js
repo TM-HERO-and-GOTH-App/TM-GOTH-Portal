@@ -51,9 +51,6 @@ function EditCaseDetail(props) {
         setAlertMessage(message)
     };
 
-    useEffect(() => console.log(symptomCode), [symptomCode])
-    console.log(lovData)
-
     useEffect(() => {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
