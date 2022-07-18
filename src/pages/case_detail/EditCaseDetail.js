@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Layout from "../Layout";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+
 function EditCaseDetail(props) {
     let caseDetail = useRef({});
     const userData = JSON.parse(sessionStorage.getItem('UserData'))
@@ -50,6 +51,9 @@ function EditCaseDetail(props) {
         setAlertMessage(message)
     };
 
+    useEffect(() => console.log(symptomCode), [symptomCode])
+    console.log(lovData)
+
     useEffect(() => {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
@@ -75,7 +79,7 @@ function EditCaseDetail(props) {
             if (res.response === "FAILED") {
                 setAlert(true, false, 'The case failed to updated.')
             } else {
-                props.history.push(`/case-detail/${caseDetailData.C_TOKEN}`, { message: res.data[0].message })
+                props.history.push(`/case-detail/${caseDetailData.C_TOKEN}`, {message: res.data[0].message})
             }
         });
     };
@@ -197,7 +201,9 @@ function EditCaseDetail(props) {
             setSrData(res.data)
             CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber, res.data.SRRowID).then(
                 (res, err) => {
-                    if (err) { console.log(err, 'Insert SR Number Failed'); }
+                    if (err) {
+                        console.log(err, 'Insert SR Number Failed');
+                    }
                     console.log('Successfully save SR in DB!!')
                 }
             )
@@ -209,35 +215,37 @@ function EditCaseDetail(props) {
     }
 
     const ICPTT = () => {
-		CreateCaseService.createICPTT(
-			customerProfileFromNova.CustInfo.CustomerRowID,
-			caseDetailData.CASE_CONTENT,
-			lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
-			Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
-			'AIMAN',
-			serviceIDInput,
-			customerProfileFromNova.BillInfo.BillingAccountNo,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo.BillingAccountRowID
-		).then((res) => {
+        CreateCaseService.createICPTT(
+            customerProfileFromNova.CustInfo.CustomerRowID,
+            caseDetailData.CASE_CONTENT,
+            lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
+            Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
+            'AIMAN',
+            serviceIDInput,
+            customerProfileFromNova.BillInfo.BillingAccountNo,
+            customerProfileFromNova.CustInfo.PrimaryContactRowID,
+            customerProfileFromNova.CustInfo.PrimaryContactRowID,
+            customerProfileFromNova.BillInfo.BillingAccountRowID
+        ).then((res) => {
             setCreateSiebelSRAndTT(true);
-			console.log(res, 'createICPTT');
-			if (res.data === 'relatedSrRowID is required' || res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+            console.log(res, 'createICPTT');
+            if (res.data === 'relatedSrRowID is required' || res.data === undefined || res.data?.Header?.ErrorCode === '1') {
                 setCreateSiebelSRAndTT(false);
-				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
-			}
-			CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					if(caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
-					return console.log('Successfully save TT in DB!!')
-				}
-			)
+                return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
+            }
+            CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
+                (res, err) => {
+                    if (err) {
+                        console.log(err, 'Insert TT Number Failed');
+                    }
+                    if (caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+                    return console.log('Successfully save TT in DB!!')
+                }
+            )
             setCreateSiebelSRAndTT(false);
-			return setAlert(true, true, 'TT creation has been successful!!');
-		})
-	}
+            return setAlert(true, true, 'TT creation has been successful!!');
+        })
+    }
 
     const NovaSR = () => {
         CreateCaseService.createNovaSR(
@@ -262,7 +270,9 @@ function EditCaseDetail(props) {
             }
             CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
                 (res, err) => {
-                    if (err) { console.log(err, 'Insert SR Number Failed'); }
+                    if (err) {
+                        console.log(err, 'Insert SR Number Failed');
+                    }
                     return console.log('Successfully save SR in DB!!')
                 }
             )
@@ -274,45 +284,50 @@ function EditCaseDetail(props) {
 
     const NovaTT = () => {
         // getCustomerProfile();
-		CreateCaseService.createNovaTT(
-			customerProfileFromNova.CustInfo.CustomerRowID,
-			Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountNo : customerProfileFromNova.BillInfo.BillingAccountNo,
-			Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountRowID : customerProfileFromNova.BillInfo.BillingAccountRowID,
-			lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			caseDetailData?.CASE_CONTENT, 'EAI'
-		).then((res, err) => {
-			console.log(res, 'createTT');
-			console.log(lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0], 'createTT');
-			if (res.data === undefined || err || res.data.message !== 'Success') {
+        CreateCaseService.createNovaTT(
+            customerProfileFromNova.CustInfo.CustomerRowID,
+            Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountNo : customerProfileFromNova.BillInfo.BillingAccountNo,
+            Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountRowID : customerProfileFromNova.BillInfo.BillingAccountRowID,
+            lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
+            customerProfileFromNova.CustInfo.PrimaryContactRowID,
+            customerProfileFromNova.CustInfo.PrimaryContactRowID,
+            caseDetailData?.CASE_CONTENT, 'EAI'
+        ).then((res, err) => {
+            console.log(res, 'createTT');
+            console.log(lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0], 'createTT');
+            if (res.data === undefined || err || res.data.message !== 'Success') {
                 setCreateSiebelSRAndTT(false);
-				return setAlert(true, false, 'TT Creation for NOVA failed!!');
-			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					if(caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
-					return console.log('Successfully save TT in DB!!')
-				}
-			)
+                return setAlert(true, false, 'TT Creation for NOVA failed!!');
+            }
+            CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
+                (res, err) => {
+                    if (err) {
+                        console.log(err, 'Insert TT Number Failed');
+                    }
+                    if (caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+                    return console.log('Successfully save TT in DB!!')
+                }
+            )
             setCreateSiebelSRAndTT(false);
-			return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
-		})
-	}
+            return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
+        })
+    }
 
     function createNovaSR() {
         getCustomerProfile();
         NovaSR();
     }
+
     function createNovaTT() {
         getCustomerProfile();
         NovaTT();
     }
+
     function createICPSR() {
         getCustomerProfile();
         ICPSR();
     }
+
     function createICPTT() {
         getCustomerProfile();
         ICPTT();
@@ -322,7 +337,7 @@ function EditCaseDetail(props) {
         <Layout
             pageTitle={
                 <span>
-                    CASE DETAIL : <span style={{ color: 'green' }}>{caseDetailData.CASE_NUM}</span>
+                    CASE DETAIL : <span style={{color: 'green'}}>{caseDetailData.CASE_NUM}</span>
                 </span>
             }
             pageContent={
@@ -331,28 +346,32 @@ function EditCaseDetail(props) {
                         <div className="col-sm-12">
                             <div className={`alert alert-block alert-${alertSuccess === true ? 'success' : 'danger'}`}>
                                 <button type="button" className="close" data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times" />
+                                    <i className="ace-icon fa fa-times"/>
                                 </button>
                                 {alertMessage}
                             </div>
                         </div>
                     )}
-                    <br />
-                    <div className="space-10" />
+                    <br/>
+                    <div className="space-10"/>
                     <div className="col-sm-4">
                         <Link
                             className="btn btn-primary"
                             to={`/case-detail/${caseToken}`}
                         >
-                            <i className="ace-icon fa fa-arrow-left icon-on-left" />
+                            <i className="ace-icon fa fa-arrow-left icon-on-left"/>
                             Back to Case Detail
                         </Link>
                     </div>
                     <div className='col-sm-5' align='right'>
-                        <button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP</button>
-                        <button className='btn btn-danger' type='button' onClick={createICPTT}>Create TT for ICP</button>
-                        <button className='btn btn-danger' type='button' onClick={createNovaSR}>Create SR for NOVA</button>
-                        <button className='btn btn-danger' type='button' onClick={createNovaTT}>Create TT for NOVA</button>
+                        <button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP
+                        </button>
+                        <button className='btn btn-danger' type='button' onClick={createICPTT}>Create TT for ICP
+                        </button>
+                        <button className='btn btn-danger' type='button' onClick={createNovaSR}>Create SR for NOVA
+                        </button>
+                        <button className='btn btn-danger' type='button' onClick={createNovaTT}>Create TT for NOVA
+                        </button>
                         {
                             caseDetailData?.SYSTEM_TARGET === 'ICP' ?
                                 caseDetailData?.SR_NUM === null ?
@@ -366,17 +385,18 @@ function EditCaseDetail(props) {
                                         (<button className='btn btn-danger' type='button'>Create SR for NOVA</button>)
                                         :
                                         (caseDetailData?.TT_NUM === null &&
-                                            <button className='btn btn-danger' type='button'>Create TT for NOVA</button>)
+                                            <button className='btn btn-danger' type='button'>Create TT for
+                                                NOVA</button>)
                                     : null
                         }
                     </div>
-                    <br />
-                    <div className="space-20" />
+                    <br/>
+                    <div className="space-20"/>
                     <form name="form" onSubmit={editCaseDetail} onReset={reset}>
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{ margin: 0 }}
+                                style={{margin: 0}}
                             >
                                 {caseDetailData ? (
                                     <div className="profile-info-row">
@@ -405,7 +425,7 @@ function EditCaseDetail(props) {
                                             <div className="profile-info-name">CASE OWNER</div>
                                             <div className="profile-info-value">
                                                 <span className="editable" id="username">
-                                                    <i style={{ color: "red" }}>Unassigned</i>
+                                                    <i style={{color: "red"}}>Unassigned</i>
                                                 </span>
                                             </div>
                                         </div>
@@ -413,7 +433,7 @@ function EditCaseDetail(props) {
                                 )}
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ width: "20%" }}>
+                                    <div className="profile-info-name" style={{width: "20%"}}>
                                         HERO
                                     </div>
                                     <div className="profile-info-value">
@@ -429,7 +449,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="customerName"
                                                 placeholder={caseDetailData.CUSTOMER_NAME}
@@ -441,7 +461,7 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         State{" "}
                                     </div>
 
@@ -483,7 +503,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="customerName"
                                                 placeholder={caseDetailData.NRIC_NUM}
@@ -497,7 +517,7 @@ function EditCaseDetail(props) {
                                     <div className="profile-info-name">Descriptions</div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="login">
-                                            <i style={{ color: "blue" }}>
+                                            <i style={{color: "blue"}}>
                                                 {caseDetailData.CASE_CONTENT}
                                             </i>
                                         </span>
@@ -538,7 +558,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="loginID"
                                                 placeholder="Login ID"
@@ -554,7 +574,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="serviceID"
                                                 placeholder="Service ID"
@@ -570,7 +590,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="serviceAddress"
                                                 placeholder="Service Address"
@@ -631,7 +651,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="extSysRef"
                                                 placeholder="External System Reference"
@@ -646,12 +666,12 @@ function EditCaseDetail(props) {
                         <div className="col-sm-6">
                             <div
                                 className="profile-user-info profile-user-info-striped"
-                                style={{ margin: 0 }}
+                                style={{margin: 0}}
                             >
                                 <div className="profile-info-row">
                                     <div
                                         className="profile-info-name"
-                                        style={{ color: "red", width: "20%" }}
+                                        style={{color: "red", width: "20%"}}
                                     >
                                         Case Type
                                     </div>
@@ -677,7 +697,7 @@ function EditCaseDetail(props) {
                                     </div>
                                 </div>
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         Product Name
                                     </div>
                                     <div className="profile-info-value">
@@ -737,7 +757,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="packageName"
                                                 placeholder="Package Name"
@@ -760,12 +780,12 @@ function EditCaseDetail(props) {
                                         >
                                             <option value='0'>Choose a Symptom Type</option>
                                             {
-                                                lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
-                                                    return data.PARENT_ID == siebelSystem ? <option key={key}
-                                                        value={data.L_ID}>{data.L_NAME}</option> :
-                                                        siebelSystem === '0' && 
-                                                        <option key={key}
-                                                        value={data.L_ID}>{data.L_NAME}</option> 
+                                                lovData.filter((filter) => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
+                                                    return (
+                                                        data.PARENT_ID == siebelSystem ?
+                                                            <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
+                                                            siebelSystem === '0' && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                    )
                                                 })
                                             }
                                         </select>
@@ -783,12 +803,11 @@ function EditCaseDetail(props) {
                                         >
                                             <option value='0'>Choose a Area Type</option>
                                             {
-                                                lovData.filter(filter => filter.L_GROUP === 'AREA').map((data, key) => {
-                                                    return data.PARENT_ID == caseType ? <option key={key}
-                                                        value={data.L_ID}>{data.L_NAME}</option> :
-                                                        caseType === '0' && 
-                                                        <option key={key}
-                                                        value={data.L_ID}>{data.L_NAME}</option>
+                                                lovData.filter((filter) => filter.L_GROUP === 'AREA').map((data, key) => {
+                                                    return (
+                                                        data.PARENT_ID == caseType ? <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
+                                                            caseType === '0' && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                    )
                                                 })
                                             }
                                         </select>
@@ -805,12 +824,11 @@ function EditCaseDetail(props) {
                                         >
                                             <option value='0' disabled>Choose a Sub-area Type</option>
                                             {
-                                                lovData.filter(filter => filter.L_GROUP === 'SUB-AREA').map((data, key) => {
-                                                    return data.PARENT_ID == areaCode ? <option key={key}
-                                                    value={data.L_ID}>{data.L_NAME}</option> :
-                                                    areaCode === '0' && 
-                                                    <option key={key}
-                                                    value={data.L_ID}>{data.L_NAME}</option>
+                                                lovData.filter((filter) => filter.L_GROUP === 'SUB-AREA').map((data, key) => {
+                                                    return (
+                                                        data.PARENT_ID == areaCode ? <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
+                                                        areaCode === '0' && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                    )
                                                 })
                                             }
                                         </select>
@@ -818,14 +836,14 @@ function EditCaseDetail(props) {
                                 </div>
 
                                 <div className="profile-info-row">
-                                    <div className="profile-info-name" style={{ color: "red" }}>
+                                    <div className="profile-info-name" style={{color: "red"}}>
                                         SR Number
                                     </div>
                                     <div className="profile-info-value">
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="srNum"
                                                 placeholder={caseDetailData?.SR_NUM}
@@ -842,7 +860,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="ttNum"
                                                 placeholder="TT Number"
@@ -867,8 +885,7 @@ function EditCaseDetail(props) {
                                             >
                                                 <option value='0'>Choose a Source...</option>
                                                 {lovData
-                                                    .filter(
-                                                        (filter) =>
+                                                    .filter((filter) =>
                                                             filter.L_GROUP === "SOURCE" &&
                                                             filter.L_NAME !== "Mobile Apps"
                                                     )
@@ -931,7 +948,7 @@ function EditCaseDetail(props) {
                                         <span className="editable" id="signup">
                                             <input
                                                 className="input-sm"
-                                                style={{ width: "100%" }}
+                                                style={{width: "100%"}}
                                                 type="text"
                                                 name="ckcNum"
                                                 placeholder="CKC Number"
@@ -949,10 +966,10 @@ function EditCaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="signup">
                                                 <select className='chosen-select form-control' name='siebelSystem'
-                                                    value={siebelSystem}
-                                                    onChange={(e) => setSiebelSystem(e.target.value)}>
+                                                        value={siebelSystem}
+                                                        onChange={(e) => setSiebelSystem(e.target.value)}>
                                                     <option value='0'>Choose a Target System</option>
-                                                    {lovData.filter(filter => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
+                                                    {lovData.filter((filter) => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
                                                         return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
                                                     })
                                                     }
@@ -963,17 +980,17 @@ function EditCaseDetail(props) {
                                 }
                             </div>
                         </div>
-                        <div style={{ clear: "both" }} />
-                        <div className="col-sm-6" style={{ paddingTop: "30px" }}>
-                            <p style={{ color: "red" }}>
+                        <div style={{clear: "both"}}/>
+                        <div className="col-sm-6" style={{paddingTop: "30px"}}>
+                            <p style={{color: "red"}}>
                                 <i>*** Inputs with red color are compulsory</i>
                             </p>
                             <button type="reset" className="btn btn-sm btn-inverse">
-                                <i className="ace-icon fa fa-repeat align-top bigger-125" />
+                                <i className="ace-icon fa fa-repeat align-top bigger-125"/>
                                 <span>Reset</span>
                             </button>
                             <button type="submit" className="btn btn-sm btn-success">
-                                <i className="ace-icon fa fa-save align-top bigger-125" />
+                                <i className="ace-icon fa fa-save align-top bigger-125"/>
                                 Update Info
                             </button>
                         </div>
