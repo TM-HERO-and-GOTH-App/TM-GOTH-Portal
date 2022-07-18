@@ -32,7 +32,7 @@ function EditCaseDetail(props) {
     const [icInput, setIcInput] = useState('');
     const [ambassador, setAmbassador] = useState(false);
     const [stakeHolderRef, setStakeHolderRef] = useState('');
-    const [siebelSystem, setSiebelSystem] = useState('');
+    const [siebelSystem, setSiebelSystem] = useState('0');
     let [createSiebelSRAndTT, setCreateSiebelSRAndTT] = useState(false);
     let [srData, setSrData] = useState({});
 
@@ -779,9 +779,9 @@ function EditCaseDetail(props) {
                                             {
                                                 lovData.filter((filter) => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                     return (
-                                                        data.PARENT_ID == siebelSystem ?
+                                                        data.PARENT_ID != siebelSystem ?
                                                             <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
-                                                            siebelSystem === '0' && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                            data.PARENT_ID === siebelSystem && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
                                                     )
                                                 })
                                             }
@@ -802,8 +802,10 @@ function EditCaseDetail(props) {
                                             {
                                                 lovData.filter((filter) => filter.L_GROUP === 'AREA').map((data, key) => {
                                                     return (
-                                                        data.PARENT_ID == caseType ? <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
-                                                            caseType === '0' && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                        data.PARENT_ID == caseType ?
+                                                            <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
+                                                            caseType === '0' &&
+                                                            <option key={key} value={data.L_ID}>{data.L_NAME}</option>
                                                     )
                                                 })
                                             }
@@ -823,8 +825,10 @@ function EditCaseDetail(props) {
                                             {
                                                 lovData.filter((filter) => filter.L_GROUP === 'SUB-AREA').map((data, key) => {
                                                     return (
-                                                        data.PARENT_ID == areaCode ? <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
-                                                        areaCode === '0' && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                        data.PARENT_ID == areaCode ?
+                                                            <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
+                                                            areaCode === '0' &&
+                                                            <option key={key} value={data.L_ID}>{data.L_NAME}</option>
                                                     )
                                                 })
                                             }
@@ -883,8 +887,8 @@ function EditCaseDetail(props) {
                                                 <option value='0'>Choose a Source...</option>
                                                 {lovData
                                                     .filter((filter) =>
-                                                            filter.L_GROUP === "SOURCE" &&
-                                                            filter.L_NAME !== "Mobile Apps"
+                                                        filter.L_GROUP === "SOURCE" &&
+                                                        filter.L_NAME !== "Mobile Apps"
                                                     )
                                                     .map((data, key) => {
                                                         return (
@@ -967,7 +971,8 @@ function EditCaseDetail(props) {
                                                         onChange={(e) => setSiebelSystem(e.target.value)}>
                                                     <option value='0'>Choose a Target System</option>
                                                     {lovData.filter((filter) => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
-                                                        return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                        return <option key={key}
+                                                                       value={data.L_ID}>{data.L_NAME}</option>
                                                     })
                                                     }
                                                 </select>
