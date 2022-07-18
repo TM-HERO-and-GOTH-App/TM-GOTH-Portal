@@ -58,7 +58,7 @@ function CreateCase() {
 				setSearchingCustomer(false);
 				return;
 			}
-			CreateCaseService.getCustomerProfileFromNova(serviceID, customerID).then((res, err) => {
+			CreateCaseService.getCustomerProfileFromNova(serviceID, nricInput).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromNova');
 				if (err || typeof res.data === 'undefined') {
 					setAlert(true, false, res.message);
@@ -78,12 +78,12 @@ function CreateCase() {
 				return setSearchingCustomer(false);
 			})
 		} else {
-			if (serviceID === '' || customerID === '') {
+			if (serviceID === '' || nricInput === '') {
 				setAlert(true, false, 'Please fill in your Service ID/ NRIC...')
 				setSearchingCustomer(false);
 				return;
 			}
-			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
+			CreateCaseService.getCustomerProfileFromICP(serviceID, nricInput).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromICP');
 				if (err || typeof res.data === 'undefined') {
 					setAlert(true, false, res.message);
@@ -179,6 +179,7 @@ function CreateCase() {
 			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					if(caseToken === undefined || res.data.SRNumber === null || res.data.SRNumber === undefined || res.data.SRRowID === undefined || res.data.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					setSRData(res.data)
 					return console.log('Successfully save SR in DB!!')
 				}
@@ -189,22 +190,21 @@ function CreateCase() {
 		})
 	}
 
+	// Need to Pass relatedSrRowID data
 	const createICPTT = () => {
 		CreateCaseService.createICPTT(
 			customerProfileFromNova.CustInfo.CustomerRowID,
 			caseDescriptionInput,
-			'DSL_Slow_Physical',
+			lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0],
 			Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
-			'3-EAT58H',
 			'AIMAN',
 			serviceID,
-			'3-864682433',
 			customerProfileFromNova.BillInfo.BillingAccountNo,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.CustInfo.PrimaryContactRowID,
 			customerProfileFromNova.BillInfo.BillingAccountRowID
 		).then((res) => {
-			console.log(res.data, 'createICPTT');
+			console.log(res, 'createICPTT');
 			if (res.data === 'relatedSrRowID is required' || res.data === undefined || res.data?.Header?.ErrorCode === '1') {
 				setIsCreateCase(false);
 				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
@@ -212,7 +212,7 @@ function CreateCase() {
 			CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					if(caseToken === undefined) return console.log('Case Token is empty! Failed to save Ticket ID!!');
+					if(caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
@@ -246,6 +246,7 @@ function CreateCase() {
 			CreateCaseService.updateSRNumber(res.data.response.SRNumber, res.data.response.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					if(caseToken === undefined || res.data.response.SRNumber === null || res.data.response.SRNumber === undefined || res.data.response.SRRowID === undefined || res.data.response.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
@@ -255,6 +256,7 @@ function CreateCase() {
 		})
 	}
 
+	// Error cause from Symptom Code tag
 	const createNovaTT = () => {
 		CreateCaseService.createNovaTT(
 			customerProfileFromNova.CustInfo.CustomerRowID,
@@ -270,9 +272,10 @@ function CreateCase() {
 				setIsCreateCase(false);
 				return setAlert(true, false, 'TT Creation for NOVA failed!!');
 			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
+			CreateCaseService.updateTTNumber(res.data.response.TicketID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
+					if(caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
@@ -332,8 +335,8 @@ function CreateCase() {
 							</select>
 							<input className="input-medium" type='text' placeholder='ServiceID' value={serviceID}
 								onChange={(e) => setServiceID(e.target.value)} />
-							<input className="input-medium" type='text' placeholder='NRIC' value={customerID}
-								onChange={(e) => setCustomerID(e.target.value)} />
+							<input className="input-medium" type='text' placeholder='NRIC' value={nricInput}
+								onChange={(e) => setNRICInput(e.target.value)} />
 							<button className='btn btn-sm' onClick={getCustomerProfile}>
 								{
 									searchingCustomer === true ? <CircularProgress disabled /> :
@@ -360,7 +363,7 @@ function CreateCase() {
 									<div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name" style={{ width: '25%' }}>Customer Name
+											<div className="profile-info-name" style={{ width: '25%' }}>Customer Name<span style={{color:'red'}}>*</span>
 											</div>
 											<div className="profile-info-value">
 												<span className="editable" id="username">
@@ -374,7 +377,7 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">NRIC No</div>
+											<div className="profile-info-name">NRIC No<span style={{color:'red'}}>*</span></div>
 											<div className="profile-info-value">
 												<span className="editable" id="username">
 													<input className="input-sm" style={{ width: '100%' }} type="text"
@@ -387,7 +390,7 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">Mobile No</div>
+											<div className="profile-info-name">Mobile No<span style={{color:'red'}}>*</span></div>
 											<div className="profile-info-value">
 												<span className="editable" id="username">
 													<input className="input-sm" style={{ width: '100%' }} type="text"
@@ -413,7 +416,7 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">State</div>
+											<div className="profile-info-name">State<span style={{color:'red'}}>*</span></div>
 											<div className="profile-info-value">
 												<select className='chosen-select form-control' name='areaLocationID'
 													value={stateType}

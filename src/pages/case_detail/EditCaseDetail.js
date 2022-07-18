@@ -208,41 +208,36 @@ function EditCaseDetail(props) {
         })
     }
 
-    function ICPTT() {
-        CreateCaseService.createICPTT(
-            customerProfileFromICP.CustInfo.CustomerRowID,
-            caseDetailData?.CASE_CONTENT,
-            'DSL_Slow_Physical',
-            Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[1].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID,
-            '3-44J8CV',
-            'AIMAN',
-            caseDetailData?.SERVICE_ID,
-            '3-249480463',
-            customerProfileFromICP.BillInfo.BillingAccountNo,
-            customerProfileFromICP.CustInfo.PrimaryContactRowID,
-            customerProfileFromICP.CustInfo.PrimaryContactRowID,
-            customerProfileFromICP.BillInfo.BillingAccountRowID
-        ).then(res => {
+    const ICPTT = () => {
+		CreateCaseService.createICPTT(
+			customerProfileFromNova.CustInfo.CustomerRowID,
+			caseDetailData.CASE_CONTENT,
+			lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
+			Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
+			'AIMAN',
+			serviceIDInput,
+			customerProfileFromNova.BillInfo.BillingAccountNo,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.BillInfo.BillingAccountRowID
+		).then((res) => {
             setCreateSiebelSRAndTT(true);
-            console.log(res.data, 'createICPTT');
-            console.log(symptomCode, 'createICPTT');
-            if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+			console.log(res, 'createICPTT');
+			if (res.data === 'relatedSrRowID is required' || res.data === undefined || res.data?.Header?.ErrorCode === '1') {
                 setCreateSiebelSRAndTT(false);
-                setAlert(true, false, `TT Creation for ICP failed!! [${res.data.Header.ErrorMessage}]`);
-                return
-            }
-            CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
-                (res, err) => {
-                    if (err) { console.log(err, 'Insert TT Number Failed'); }
-                    console.log('Successfully save TT in DB!!');
-                    return
-                }
-            )
+				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
+			}
+			CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert TT Number Failed'); }
+					if(caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+					return console.log('Successfully save TT in DB!!')
+				}
+			)
             setCreateSiebelSRAndTT(false);
-            setAlert(true, true, 'TT creation has been successful!!');
-            return
-        })
-    }
+			return setAlert(true, true, 'TT creation has been successful!!');
+		})
+	}
 
     const NovaSR = () => {
         CreateCaseService.createNovaSR(
@@ -278,32 +273,33 @@ function EditCaseDetail(props) {
     }
 
     const NovaTT = () => {
-        CreateCaseService.createNovaTT(
-            customerProfileFromNova.CustInfo.CustomerRowID,
-            customerProfileFromNova.BillInfo[0].BillingAccountNo,
-            customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-            'Error',
-            customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-            customerProfileFromNova.CustInfo.PrimaryContactRowID,
-            customerProfileFromNova.CustInfo.PrimaryContactRowID,
-            caseDetailData?.CASE_CONTENT, userData.stakeholderName
-        ).then((res, err) => {
-            setCreateSiebelSRAndTT(true);
-            console.log(res, 'createTT');
-            if (res.data === undefined || err || res.data !== 'Success') {
+        // getCustomerProfile();
+		CreateCaseService.createNovaTT(
+			customerProfileFromNova.CustInfo.CustomerRowID,
+			Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountNo : customerProfileFromNova.BillInfo.BillingAccountNo,
+			Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountRowID : customerProfileFromNova.BillInfo.BillingAccountRowID,
+			lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			caseDetailData?.CASE_CONTENT, 'EAI'
+		).then((res, err) => {
+			console.log(res, 'createTT');
+			console.log(lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0], 'createTT');
+			if (res.data === undefined || err || res.data.message !== 'Success') {
                 setCreateSiebelSRAndTT(false);
-                return setAlert(true, false, 'TT Creation for NOVA failed!!');
-            }
-            CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
-                (res, err) => {
-                    if (err) { console.log(err, 'Insert TT Number Failed'); }
-                    return console.log('Successfully save TT in DB!!')
-                }
-            )
+				return setAlert(true, false, 'TT Creation for NOVA failed!!');
+			}
+			CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert TT Number Failed'); }
+					if(caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+					return console.log('Successfully save TT in DB!!')
+				}
+			)
             setCreateSiebelSRAndTT(false);
-            return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
-        })
-    }
+			return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
+		})
+	}
 
     function createNovaSR() {
         getCustomerProfile();

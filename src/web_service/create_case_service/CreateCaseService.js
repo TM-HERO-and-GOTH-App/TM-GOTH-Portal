@@ -5,9 +5,9 @@ const url = config
 
 const CreateCaseService = {
 	createCase(
-			token, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
-			externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
-			caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
+		token, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
+		externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
+		caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
 	) {
 		return Axios.post(url + '/case/create-new-case', {
 			authToken: token,
@@ -36,9 +36,9 @@ const CreateCaseService = {
 	},
 
 	createCaseHeroBuddy(
-			hID, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
-			externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
-			caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
+		hID, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
+		externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
+		caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
 	) {
 		return Axios.post(url + '/case/create-new-case-herobuddy', {
 			hID: hID,
@@ -111,8 +111,8 @@ const CreateCaseService = {
 	},
 
 	createNovaSR(customerRowID, type, area, subArea, caseCategory,
-	             source, serviceRowID, contactDetailRowID, contactDetailReportedID, billingAccountRowID,
-	             billingAccountNumber, detailDataDescription, noteCreatedBy, noteDescription, createdByPosition) {
+		source, serviceRowID, contactDetailRowID, contactDetailReportedID, billingAccountRowID,
+		billingAccountNumber, detailDataDescription, noteCreatedBy, noteDescription, createdByPosition) {
 		return Axios.post(url + '/siebel_eai/nova/create-sr', {
 			customerRowID,
 			type,
@@ -150,25 +150,25 @@ const CreateCaseService = {
 	},
 
 	createNovaTT(customerRowID, billingAccountNumber, billingAccountRowID,
-	             symptomCode, contactDetailRowID, contactDetailReported,
-	             noteDescription, createdByPosition) {
+		symptomCode, contactDetailRowID, contactDetailReported, caseDescription, createdByPosition) {
 		return Axios.post(url + '/siebel_eai/nova/create-TT', {
 			"customerRowID": customerRowID,
 			"billingAccountNumber": billingAccountNumber,
 			"billingAccountRowID": billingAccountRowID,
 			"severity": "4-Low",
-			"source": "SPICE",
 			"product": "",
+			"source": "SPICE",
 			"symptomCode": symptomCode,
 			"category": "Performance",
-			"owner": "AIMAN",
+			"owner": "",
 			"serviceRowID": "",
+			"preferredAcknowledgement": "",
 			"relatedSRRowID": "",
 			"status": "In Progress",
 			"ccpChargingMethod": "",
 			"contactDetailRowID": contactDetailRowID,
 			"contactDetailReported": contactDetailReported,
-			"description": "",
+			"description": caseDescription,
 			"ownerCctActivity": "",
 			"activityID": "",
 			"activityType": "",
@@ -179,8 +179,8 @@ const CreateCaseService = {
 			"activityDescription": "",
 			"notedID": "",
 			"createdBy": "",
-			noteDescription,
-			createdByPosition
+			"noteDescription": caseDescription,
+			"createdByPosition": "EAI"
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -202,20 +202,20 @@ const CreateCaseService = {
 	},
 
 	createICPSR(customerRowID, createdBy, area, subArea,
-	            group, contactDetailRowID, contactDetailReportedID,
-	            billingAccountRowID, billingAccountNumber, dataDescription, serviceRowID) {
+		group, contactDetailRowID, contactDetailReportedID,
+		billingAccountRowID, billingAccountNumber, dataDescription, serviceRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-SR', {
-			'customerRowID':customerRowID,
-			'createdBy':createdBy,
-			'area':area,
-			'subArea':subArea,
-			'group':group,
-			'contactDetailRowID':contactDetailRowID,
-			'contactDetailReportedID':contactDetailReportedID,
-			'billingAccountRowID':billingAccountRowID,
-			'billingAccountNumber':billingAccountNumber,
-			'dataDescription':dataDescription,
-			'serviceRowID':serviceRowID
+			'customerRowID': customerRowID,
+			'createdBy': createdBy,
+			'area': area,
+			'subArea': subArea,
+			'group': group,
+			'contactDetailRowID': contactDetailRowID,
+			'contactDetailReportedID': contactDetailReportedID,
+			'billingAccountRowID': billingAccountRowID,
+			'billingAccountNumber': billingAccountNumber,
+			'dataDescription': dataDescription,
+			'serviceRowID': serviceRowID
 		}).then(res => {
 			return res
 		}).catch(err => {
@@ -223,16 +223,16 @@ const CreateCaseService = {
 		});
 	},
 
-	createICPTT(customerRowID, dataDescription, symptomCode, serviceRowID,relatedSrRowID, createdBy, serviceNumber, srNumber, billingAccountNumber, contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
+	createICPTT(customerRowID, dataDescription, symptomCode, serviceRowID, createdBy, serviceNumber, billingAccountNumber, contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
 		return Axios.post(url + '/siebel_eai/icp/create-TT', {
 			customerRowID,
 			dataDescription,
 			symptomCode,
 			serviceRowID,
-			relatedSrRowID,
+			'relatedSrRowID': '3-EAT58H',
 			createdBy,
 			serviceNumber,
-			srNumber,
+			'srNumber': '',
 			billingAccountNumber,
 			contactDetailRowID,
 			contactDetailReportedID,
@@ -260,9 +260,9 @@ const CreateCaseService = {
 
 	updateSRNumber(srNum, srRowID, cToken) {
 		return Axios.post(url + '/case/save-SR', {
-			srNum, 
+			srNum,
 			srRowID,
-			cToken, 
+			cToken,
 		}).then(res => {
 			return res
 		}).catch(err => {
