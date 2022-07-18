@@ -3,7 +3,7 @@ import AA_Assigned from './pages/all_assignments/AA_Assigned';
 import AA_Inprogress from './pages/all_assignments/AA_Inprogress';
 import AA_Unassigned from './pages/all_assignments/AA_Unassigned';
 import ActionTaken from './pages/assignment/ActionTaken';
-import Activate from './pages/ActivateAcc';
+import ActivateAccount from './pages/first_time_login/ActivateAccount';
 import AdvancedSearch from './pages/AdvancedSearch';
 import AnnouncementInfo from './pages/announcement/AnnouncementInfo';
 import AssignToOther from './pages/assignment/AssignToOthers';
@@ -52,7 +52,7 @@ function App() {
         <Route path="/login" component={Loginbox} />
         <Route path="/forgotpassword" component={Forgot} />
         <Route path="/signup" component={SignUp} />
-        <Route path="/activate" component={Activate} />
+        <Route path="/activate-ldap-profile" component={ActivateAccount} />
         <Route path="/chat/1" component={ChatPage} />
         <Route path='/non-technical-case' component={NonTechnicalCase} />
         <Route path='/technical-case' component={TechnicalCase} />
