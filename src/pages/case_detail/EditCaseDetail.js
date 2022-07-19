@@ -35,6 +35,7 @@ function EditCaseDetail(props) {
     const [siebelSystem, setSiebelSystem] = useState('0');
     let [createSiebelSRAndTT, setCreateSiebelSRAndTT] = useState(false);
     let [srData, setSrData] = useState({});
+    console.log(siebelSystem, 'siebelSystem')
 
     // Customer Profile from Siebel
     let [searchingCustomer, setSearchingCustomer] = useState(false);
@@ -779,9 +780,9 @@ function EditCaseDetail(props) {
                                             {
                                                 lovData.filter((filter) => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                     return (
-                                                        data.PARENT_ID != siebelSystem ?
+                                                        (siebelSystem === '0' || siebelSystem === undefined) ?
                                                             <option key={key} value={data.L_ID}>{data.L_NAME}</option> :
-                                                            data.PARENT_ID === siebelSystem && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
+                                                            data.PARENT_ID == siebelSystem && <option key={key} value={data.L_ID}>{data.L_NAME}</option>
                                                     )
                                                 })
                                             }

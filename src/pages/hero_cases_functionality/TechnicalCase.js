@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Modal } from "@mui/material";
+import {Box, Modal} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import NextService from "../../web_service/next_service/NextService";
@@ -11,483 +11,520 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
 function TechnicalCase() {
-	let styles = {
-		body: {
-			display: "flex",
-			justifyContent: "center",
-			alignItems: "center",
-			padding: "10px",
-			background: "darkgrey",
-		},
-		modalStyle: {
-			position: "absolute",
-			top: "50%",
-			left: "50%",
-			transform: "translate(-50%, -50%)",
-			width: 400,
-			bgcolor: "background.paper",
-			border: "2px solid #000",
-			boxShadow: 24,
-			padding: 2,
-		}
-	};
+    let styles = {
+        body: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "10px",
+            background: "darkgrey",
+        },
+        modalStyle: {
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            padding: 2,
+        }
+    };
 
-	let areaLocation = unifiFormPageData.areaLocation
-	let type = unifiFormPageData.type
-	let area = unifiFormPageData.area
-	let subArea = unifiFormPageData.subArea
-	let product = unifiFormPageData.product
+    let areaLocation = unifiFormPageData.areaLocation
+    let caseType = unifiFormPageData.type
+    let area = unifiFormPageData.area
+    let symptom = unifiFormPageData.symptom
+    let subArea = unifiFormPageData.subArea
+    let product = unifiFormPageData.product
 
-	const findCityID = (name) => {
-		for (const element of areaLocation) {
-			if (element.city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (element.hasOwnProperty('state') ? element.state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return element.id;
-		}
-	}
+    const findCityID = (name) => {
+        for (const element of areaLocation) {
+            if (element.city.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() || (element.hasOwnProperty('state') ? element.state.replace(/^\s+/, '').toLowerCase() === name.replace(/^\s+/, '').toLowerCase() : false)) return element.id;
+        }
+    }
 
-	const userData = JSON.parse(sessionStorage.getItem('UserData'));
-	const token = JSON.parse(sessionStorage.getItem('userToken'))
-	let [customerInfo, setCustomerInfo] = useState({});
+    // Alert
+    const [alertIsSuccess, setAlertIsSuccess] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const alertPopUp = (success, alert, message) => {
+        setAlertIsSuccess(success);
+        setAlertMessage(message);
+        setShowAlert(alert);
+    }
 
-	// Alert
-	const [alertIsSuccess, setAlertIsSuccess] = useState(false);
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertMessage, setAlertMessage] = useState('');
-	const alertPopUp = (success, alert, message) => {
-		setAlertIsSuccess(success);
-		setAlertMessage(message);
-		setShowAlert(alert);
-	}
+    let [customerNameInput, setCustomerNameInput] = useState('');
+    let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
+    let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
+    let [descriptionInput, setDescription] = useState('');
+    let [typeSelect, setTypeSelect] = useState('28');
+    let [productSelect, setProduct] = useState('0');
+    let [areaSelect, setArea] = useState('0');
+    let [subAreaSelect, setSubArea] = useState('0');
+    let [symptomSelect, setSymptom] = useState('0');
+    let [locationSelect, setLocation] = useState('0');
+    let [pictureInput, setPicture] = useState(null);
 
-	let [customerNameInput, setCustomerNameInput] = useState('');
-	let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
-	let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
-	let [descriptionInput, setDescription] = useState('');
-	let [typeSelect, setTypeSelect] = useState('28');
-	let [productSelect, setProduct] = useState('0');
-	let [areaSelect, setArea] = useState('0');
-	let [subAreaSelect, setSubArea] = useState('0');
-	let [symptomSelect, setSymptom] = useState('0');
-	let [locationSelect, setLocation] = useState('0');
-	let [pictureInput, setPicture] = useState('');
+    // if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
+    let [targetSystem, setTargetSystem] = useState('');
+    let [isPureDEL, setIsPureDEL] = useState(false);
 
-	// if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
-	let [targetSystem, setTargetSystem] = useState('');
-	let [isPureDEL, setIsPureDEL] = useState(false);
+    // Next
+    let [openModal, setOpenModal] = useState(false);
+    const [nextResponses, setNextResponses] = useState('');
 
-	// Next
-	let [openModal, setOpenModal] = useState(false);
-	const [nextResponses, setNextResponses] = useState('');
+    // Search bar
+    const [searchBarType, setSearchBarType] = useState('icp');
+    const [serviceID, setServiceID] = useState('');
+    const [customerID, setCustomerID] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
 
-	// Search bar
-	const [searchBarType, setSearchBarType] = useState('icp');
-	const [serviceID, setServiceID] = useState('');
-	const [customerID, setCustomerID] = useState('');
-	const [isLoading, setIsLoading] = useState(false)
+    // Submit
+    const [showSubmitLoading, setShowSubmitLoading] = useState(false)
+    const [submitIsLoading, setSubmitIsLoading] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [progressMessage, setProgressMessage] = useState('. . .')
+    const [submitStatus, setSubmitStatus] = useState(true)
+    const submitProgress = (progress, message, status, loading) => {
+        setProgress(progress);
+        setProgressMessage(message);
+        setSubmitStatus(status)
+        setSubmitIsLoading(loading)
+    }
 
-	// Submit
-	const [showSubmitLoading, setShowSubmitLoading] = useState(false)
-	const [submitIsLoading, setSubmitIsLoading] = useState(false)
-	const [progress, setProgress] = useState(0)
-	const [progressMessage, setProgressMessage] = useState('. . .')
-	const [submitStatus, setSubmitStatus] = useState(true)
-	const submitProgress = (progress, message, status, loading) => {
-		setProgress(progress);
-		setProgressMessage(message);
-		setSubmitStatus(status)
-		setSubmitIsLoading(loading)
-	}
+    const nextCheckNetwork = () => {
+        NextService.checkNetworkOutage('HERO-20220425-0002', serviceID).then((res, err) => {
+            if (err) return console.log(err);
+            console.log(res)
+            setNextResponses(res.data)
+            return setOpenModal(true);
+        })
+    }
 
-	const nextCheckNetwork = () => {
-		NextService.checkNetworkOutage('HERO-20220425-0002', serviceID).then((res, err) => {
-			if (err) return console.log(err);
-			console.log(res)
-			setNextResponses(res.data)
-			return setOpenModal(true);
-		})
-	}
+    const getBase64 = (file, cb) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            cb(reader.result)
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    }
 
-	const getCustomerProfile = (e) => {
-		e.preventDefault();
-		setIsLoading(true);
-		if (searchBarType === 'icp' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
-			alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
-			setIsLoading(false);
-			return;
-		}
-		if (searchBarType === 'icp') {
-			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
-				console.log(res, 'getCustomerProfileFromICP');
-				nextCheckNetwork() // TODO: check if this flow is correct
-				if (err || typeof res.data === 'undefined') {
-					alertPopUp(false, true, res.message)
-					setIsLoading(false);
-					return
-				}
-				if (res.data.message !== 'Success') {
-					alertPopUp(false, true, `Error during searching customer.. (${res?.data.message})`)
-					setIsLoading(false);
-					return;
-				}
-				alertPopUp(true, true, 'Query user info success.')
-				setCustomerNameInput(res.data.result.CustInfo.AccountName)
-				setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
-				setLocation(Array.isArray(res.data.result.ServiceInfo) ?
-					findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
-					findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
-				)
-				setIsPureDEL(() => {
-					if (Array.isArray(res.data.result.ServiceInfo) === false) {
-						if (res.data.result.ServiceInfo.Product === 'Home Line') {
-							return true
-						}
-					}
-					return false
-				})
-				setProduct(isPureDEL === true ? '581' : '0')
-				setSymptom(isPureDEL === true ? '658' : '0')
-				setIsLoading(false);
-			})
-		} else {
-			// Reuse serviceID as loginID as it has shared similar value
-			CreateCaseService.getCustomerProfileFromHeroBuddy(serviceID).then(function (res, err) {
-				console.log(res.data, 'getCustomerProfileFromHeroBuddy');
-				if (err || typeof res.data === 'undefined') {
-					alertPopUp(false, true, res.message)
-					setIsLoading(false);
-					return
-				}
-				if (res.data === '') {
-					alertPopUp(false, true, `Error during searching customer..`)
-					setIsLoading(false);
-					return;
-				}
-				alertPopUp(true, true, 'Query user info success.')
-				setCustomerNameInput(res.data.Customer_Data.customer_name)
-				setIsLoading(false);
-			})
-		}
-		// if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
-		isPureDEL === true ? setTargetSystem('icp'): setTargetSystem('')
-	}
+    const handleAttach = (e) => {
+        e.preventDefault();
+        getBase64( pictureInput, (result) => {
+            CreateCaseService.attachImage('123123' , result, '', '').then((res, err) => {
+                if (err) return console.log(`Failed ${err}`)
+                else return console.log(res)
+            })
+        })
+    }
 
-	const createTechnicalCase = (e) => {
-		e.preventDefault();
-		setShowSubmitLoading(true)
-		submitProgress(20, 'Creating New Case at GOTH . . .', true, true)
-		CreateCaseService.createCaseHeroBuddy(
-				'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
-				null, null, null, descriptionInput,
-				typeSelect, areaSelect, subAreaSelect, symptomSelect, targetSystem
-		).then((res, err) => {
-			submitProgress(30, 'Done processing . . .', true, true)
-			if (err) {
-				submitProgress(30, 'Case creation Failed.', false, false)
-				return alertPopUp(false, true, 'Case creation Failed!!');
-			}
-			console.log(res)
-			if (res.data.message !== 'Case successfully created.') {
-				submitProgress(40, `Case creation Failed (${res.data}) . . .`, false, false)
-				return alertPopUp(false, true, 'Case creation Failed!!');
-			}
-			submitProgress(40, 'Case creation Success . . .', true, true)
+    const getCustomerProfile = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        if (searchBarType === 'icp' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
+            alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
+            setIsLoading(false);
+            return;
+        }
+        if (searchBarType === 'icp') {
+            CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
+                console.log(res, 'getCustomerProfileFromICP');
+                nextCheckNetwork() // TODO: check if this flow is correct
+                if (err || typeof res.data === 'undefined') {
+                    alertPopUp(false, true, res.message)
+                    setIsLoading(false);
+                    return
+                }
+                if (res.data.message !== 'Success') {
+                    alertPopUp(false, true, `Error during searching customer.. (${res?.data.message})`)
+                    setIsLoading(false);
+                    return;
+                }
+                alertPopUp(true, true, 'Query user info success.')
+                setCustomerNameInput(res.data.result.CustInfo.AccountName)
+                setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
+                setLocation(Array.isArray(res.data.result.ServiceInfo) ?
+                    findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
+                    findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
+                )
+                setIsPureDEL(() => {
+                    if (Array.isArray(res.data.result.ServiceInfo) === false) {
+                        if (res.data.result.ServiceInfo.Product === 'Home Line') {
+                            return true
+                        }
+                    }
+                    return false
+                })
+                setProduct(isPureDEL === true ? '581' : '0')
+                setSymptom(isPureDEL === true ? '658' : '0')
+                setIsLoading(false);
+            })
+        } else {
+            // Reuse serviceID as loginID as it has shared similar value
+            CreateCaseService.getCustomerProfileFromHeroBuddy(serviceID).then(function (res, err) {
+                console.log(res.data, 'getCustomerProfileFromHeroBuddy');
+                if (err || typeof res.data === 'undefined') {
+                    alertPopUp(false, true, res.message)
+                    setIsLoading(false);
+                    return
+                }
+                if (res.data === '') {
+                    alertPopUp(false, true, `Error during searching customer..`)
+                    setIsLoading(false);
+                    return;
+                }
+                alertPopUp(true, true, 'Query user info success.')
+                setCustomerNameInput(res.data.Customer_Data.customer_name)
+                setIsLoading(false);
+            })
+        }
+        // if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
+        isPureDEL === true ? setTargetSystem('icp') : setTargetSystem('')
+    }
 
-			// autoCreateCTT (run only if the case is detected as pure DEL)
-			if (isPureDEL) {
-				submitProgress(60, 'Requesting SIEBEL to create SR/TT for DEL . . . ', true, true)
-				CreateCaseService.autoCreateCTT(serviceID, symptomSelect, customerMobileNumberInput).then((err, res) => {
-					if (err) {
-						return submitProgress(60, 'Something went wrong during SR and TT Creation', false)
-					}
-					console.log(res)
-					return submitProgress(70, 'SR and TT number has been successfully created.', true)
-				});
-			}
-			submitProgress(100, 'Case has been created successfully', true)
-			return alertPopUp(true, true, 'Case has been created successfully');
-		})
-	}
+    const createTechnicalCase = (e) => {
+        e.preventDefault();
+        setShowSubmitLoading(true)
+        submitProgress(20, 'Creating New Case at GOTH . . .', true, true)
+        CreateCaseService.createCaseHeroBuddy(
+            '0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
+            null, null, null, descriptionInput,
+            typeSelect, areaSelect, subAreaSelect, symptomSelect, targetSystem
+        ).then((res, err) => {
+            submitProgress(30, 'Done processing . . .', true, true)
+            if (err) {
+                submitProgress(30, 'Case creation Failed.', false, false)
+                return alertPopUp(false, true, 'Case creation Failed!!');
+            }
+            console.log(res)
+            if (res.data.message !== 'Case successfully created.') {
+                submitProgress(40, `Case creation Failed (${res.data}) . . .`, false, false)
+                return alertPopUp(false, true, 'Case creation Failed!!');
+            }
+            submitProgress(40, 'Case creation Success . . .', true, true)
 
-	return (
-		<div style={styles.body}>
-			<Modal open={openModal} onClose={() => setOpenModal(false)}>
-				<Box sx={styles.modalStyle}>
-					<h3>
-						NTT Info
-					</h3>
-					<ul style={{ fontSize: '1.5em' }}>
-						<li>NTT ID: {nextResponses.NTTID}</li>
-						<li>ETTR: {nextResponses.ETTR}</li>
-						<li>Fault Category: {nextResponses.FaultCategory}</li>
-						<li>Service Impact: {nextResponses.ServiceImpact}</li>
-					</ul>
-					<button className="btn btn-primary" style={{ marginLeft: '23vw' }} onClick={() => setOpenModal(false)}>Ok
-					</button>
-				</Box>
-			</Modal>
+            // autoCreateCTT (run only if the case is detected as pure DEL)
+            if (isPureDEL) {
+                submitProgress(60, 'Requesting SIEBEL to create SR/TT for DEL . . . ', true, true)
+                CreateCaseService.autoCreateCTT(serviceID, symptomSelect, customerMobileNumberInput).then((err, res) => {
+                    if (err) {
+                        return submitProgress(60, 'Something went wrong during SR and TT Creation', false)
+                    }
+                    console.log(res)
+                    return submitProgress(70, 'SR and TT number has been successfully created.', true)
+                });
+            }
+            submitProgress(100, 'Case has been created successfully', true)
+            return alertPopUp(true, true, 'Case has been created successfully');
+        })
+    }
 
-			<div className="hb-container">
-				<div className="hb-title">Technical Case</div>
+    return (
+        <div style={styles.body}>
+            <Modal open={openModal} onClose={() => setOpenModal(false)}>
+                <Box sx={styles.modalStyle}>
+                    <h3>
+                        NTT Info
+                    </h3>
+                    <ul style={{fontSize: '1.5em'}}>
+                        <li>NTT ID: {nextResponses.NTTID}</li>
+                        <li>ETTR: {nextResponses.ETTR}</li>
+                        <li>Fault Category: {nextResponses.FaultCategory}</li>
+                        <li>Service Impact: {nextResponses.ServiceImpact}</li>
+                    </ul>
+                    <button className="btn btn-primary" style={{marginLeft: '23vw'}}
+                            onClick={() => setOpenModal(false)}>Ok
+                    </button>
+                </Box>
+            </Modal>
 
-				{
-					showAlert &&
-					<div className="row">
-						<div className="col-xs-12">
-							<div
-								className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
-								style={{ marginBottom: '0', marginTop: '10px' }}
-							>
-								<button type="button" onClick={() => setShowAlert(false)} className="close"
-									data-dismiss="alert">
-									<i className="ace-icon fa fa-times" />
-								</button>
-								<p>{alertMessage}</p>
-							</div>
-						</div>
-					</div>
-				}
+            <div className="hb-container">
+                <div className="hb-title">Technical Case</div>
 
-				<form onSubmit={createTechnicalCase}>
-					<div className="hb-input-group w-100" id="searchbar">
-						<div className="hb-input-group-prepend">
-							<select id="searchbar-type" name="searchbar-type" value={searchBarType}
-								onChange={(e) => setSearchBarType(e.target.value)}>
-								<option value="icp">ICP</option>
-								<option value="herobuddy">Hero Buddy</option>
-							</select>
-						</div>
-						<div className="hb-input-box hb-input-group-area">
-							<input
-								type="text"
-								id="search-detail"
-								name="search-detail"
-								placeholder={searchBarType === "icp" ? "Insert Service ID" : "Insert Login ID"}
-								value={serviceID}
-								onChange={(e) => setServiceID(e.target.value)}
-							/>
-							{searchBarType === 'icp' &&
-								<input
-									type='text'
-									id='customerIC'
-									name='customerIC'
-									placeholder='Insert Customer ID'
-									value={customerID}
-									onChange={(e) => setCustomerID(e.target.value)}
-								/>
-							}
-						</div>
-						<div className="hb-input-group-append">
-							<button className="btn" type="button" disabled={isLoading} onClick={getCustomerProfile}>
-								<SearchIcon fontSize="large" />
-							</button>
-							{isLoading &&
-								<CircularProgress
-									size={24}
-									sx={{
-										color: 'var(--color-success)',
-										position: 'absolute',
-										marginTop: '-32px',
-										marginLeft: '15px',
-									}}
-								/>
-							}
-						</div>
-					</div>
+                {
+                    showAlert &&
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <div
+                                className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
+                                style={{marginBottom: '0', marginTop: '10px'}}
+                            >
+                                <button type="button" onClick={() => setShowAlert(false)} className="close"
+                                        data-dismiss="alert">
+                                    <i className="ace-icon fa fa-times"/>
+                                </button>
+                                <p>{alertMessage}</p>
+                            </div>
+                        </div>
+                    </div>
+                }
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="customerName">Customer Name*</label>
-						<div className="hb-input-box">
-							<input
-								type="text"
-								id="customerName"
-								name="customerName"
-								placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
-								value={customerNameInput}
-								onChange={(e) => setCustomerNameInput(e.target.value)}
-							/>
-						</div>
-					</div>
+                <form onSubmit={createTechnicalCase}>
+                    <div className="hb-input-group w-100" id="searchbar">
+                        <div className="hb-input-group-prepend">
+                            <select id="searchbar-type" name="searchbar-type" value={searchBarType}
+                                    onChange={(e) => setSearchBarType(e.target.value)}>
+                                <option value="icp">ICP</option>
+                                <option value="herobuddy">Hero Buddy</option>
+                            </select>
+                        </div>
+                        <div className="hb-input-box hb-input-group-area">
+                            <input
+                                type="text"
+                                id="search-detail"
+                                name="search-detail"
+                                placeholder={searchBarType === "icp" ? "Insert Service ID" : "Insert Login ID"}
+                                value={serviceID}
+                                onChange={(e) => setServiceID(e.target.value)}
+                            />
+                            {searchBarType === 'icp' &&
+                                <input
+                                    type='text'
+                                    id='customerIC'
+                                    name='customerIC'
+                                    placeholder='Insert Customer ID'
+                                    value={customerID}
+                                    onChange={(e) => setCustomerID(e.target.value)}
+                                />
+                            }
+                        </div>
+                        <div className="hb-input-group-append">
+                            <button className="btn" type="button" disabled={isLoading} onClick={getCustomerProfile}>
+                                <SearchIcon fontSize="large"/>
+                            </button>
+                            {isLoading &&
+                                <CircularProgress
+                                    size={24}
+                                    sx={{
+                                        color: 'var(--color-success)',
+                                        position: 'absolute',
+                                        marginTop: '-32px',
+                                        marginLeft: '15px',
+                                    }}
+                                />
+                            }
+                        </div>
+                    </div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number*</label>
-						<div className="hb-input-box">
-							<input
-								type="tel"
-								id="customerNumber"
-								name="customerName"
-								min={0}
-								placeholder="example: 0123456789"
-								value={customerMobileNumberInput}
-								onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
-							/>
-						</div>
-					</div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="customerName">Customer Name*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="text"
+                                id="customerName"
+                                name="customerName"
+                                placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
+                                value={customerNameInput}
+                                onChange={(e) => setCustomerNameInput(e.target.value)}
+                            />
+                        </div>
+                    </div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number*</label>
-						<div className="hb-input-box">
-							<input
-								type="tel"
-								id="loggerNumber"
-								name="loggerName"
-								min={0}
-								placeholder="example: 0123456789"
-								value={loggerMobileNumberInput}
-								onChange={(e) => setLoggerMobileNumber(e.target.value)}
-							/>
-						</div>
-					</div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="tel"
+                                id="customerNumber"
+                                name="customerName"
+                                min={0}
+                                placeholder="example: 0123456789"
+                                value={customerMobileNumberInput}
+                                onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
+                            />
+                        </div>
+                    </div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
-						<div className="hb-input-box">
-							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}
-								style={areaSelect === '0' ? { color: 'var(--color-danger)' } : { color: 'var(--color-gray-700)' }}>
-								{areaSelect === '0' ?
-									<option disabled value='0'>Please select an Area Type</option> :
-									<option disabled value='0'>Select One</option>
-								}
-								{
-									(areaSelect === '79' ?
-										subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}
-											key={value.id}>{value.subArea}</option>)
-										:
-										subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}
-											key={value.id}>{value.subArea}</option>)
-									)}
-							</select>
-						</div>
-					</div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number*</label>
+                        <div className="hb-input-box">
+                            <input
+                                type="tel"
+                                id="loggerNumber"
+                                name="loggerName"
+                                min={0}
+                                placeholder="example: 0123456789"
+                                value={loggerMobileNumberInput}
+                                onChange={(e) => setLoggerMobileNumber(e.target.value)}
+                            />
+                        </div>
+                    </div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="area">Area*</label>
-						<div className="hb-input-box">
-							<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
-								<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
-								{
-									typeSelect === '28' ?
-										area.filter(filter => filter.id === '79').map((value, i) => <option value={value.id}
-											key={i}>{value.area}</option>) :
-										area.filter(filter => filter.id === '82').map((value, i) => <option value={value.id}
-											key={i}>{value.area}</option>)
-								}
-							</select>
-						</div>
-					</div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor='type'>Type*</label>
+                        <div className="hb-input-box">
+                            <select id='type' name='type' value={typeSelect} disabled>
+                                {
+                                    caseType.map((data, key) => <option key={key}
+                                                                        value={data.id}>{data.caseType}</option>)
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-					{/*<div className="hb-input-group">*/}
-					{/*	<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>*/}
-					{/*	<div className="hb-input-box">*/}
-					{/*		<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>*/}
-					{/*			{*/}
-					{/*				areaSelect === '0' ?*/}
-					{/*					<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area*/}
-					{/*						Type</option>*/}
-					{/*					:*/}
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="area">Area*</label>
+                        <div className="hb-input-box">
+                            <select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
+                                <option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+                                {
+                                    typeSelect === '28' ?
+                                        area.filter(filter => filter.id === '79').map((value, i) => <option
+                                            value={value.id}
+                                            key={i}>{value.area}</option>) :
+                                        area.filter(filter => filter.id === '82').map((value, i) => <option
+                                            value={value.id}
+                                            key={i}>{value.area}</option>)
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-					{/*					areaSelect === '79' ?*/}
-					{/*						subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}*/}
-					{/*							key={value.id}>{value.subArea}</option>)*/}
-					{/*						:*/}
-					{/*						subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}*/}
-					{/*							key={value.id}>{value.subArea}</option>)*/}
-					{/*			}*/}
-					{/*		</select>*/}
-					{/*	</div>*/}
-					{/*</div>*/}
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
+                        <div className="hb-input-box">
+                            <select id="area" name="area" value={subAreaSelect}
+                                    onChange={e => setSubArea(e.target.value)}
+                                    disabled={ areaSelect === '0' }
+                                    style={areaSelect === '0' ? {color: 'var(--color-danger)'} : null}>
+                                {areaSelect === '0' ?
+                                    <option disabled value='0'>Please select an Area Type</option> :
+                                    <option disabled value='0'>Select One</option>
+                                }
+                                {
+                                    areaSelect === '79' ?
+                                        subArea.filter(filter => filter.id === '85').map((value, i) => <option
+                                            value={value.id}
+                                            key={value.id}>{value.subArea}</option>)
+                                        :
+                                        subArea.filter(filter => filter.id !== '85').map((value, i) => <option
+                                            value={value.id}
+                                            key={value.id}>{value.subArea}</option>)
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="product">Product*</label>
-						<div className="hb-input-box">
-							<select id="product" name="product" value={productSelect}
-								onChange={(e) => setProduct(e.target.value)}>
-								<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
-								{product.map((value) => <option value={value.id} key={value.id}>{value.product}</option>)}
-							</select>
-						</div>
-					</div>
+                    {/*<div className="hb-input-group">*/}
+                    {/*	<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>*/}
+                    {/*	<div className="hb-input-box">*/}
+                    {/*		<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>*/}
+                    {/*			{*/}
+                    {/*				areaSelect === '0' ?*/}
+                    {/*					<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area*/}
+                    {/*						Type</option>*/}
+                    {/*					:*/}
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="symptom">Symptom*</label>
-						<div className="hb-input-box">
-							<select id="symptom" name="symptom" value={symptomSelect}
-								onChange={(e) => setSymptom(e.target.value)}>
-								<option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
-								{
-									serviceID.endsWith('@streamyx') === true ?
-										<option value='658'>Voice Down</option>
-										:
-										<>
-											<option value='642'>All Services Down</option>
-											<option value='676'>DSL_CantLoginDTDSLBlinkPortReset</option>
-											<option value='674'>DSL_CantLoginDTDSLBlinkCantReset</option>
-											<option value='672'>DSL_NoDialTone</option>
-											<option value='670'>DT_NoDialTone</option>
-											<option value='658'>Voice Down</option>
-											<option value='656'>IPTV Quality Issue</option>
-											<option value='654'>IPTV Down</option>
-											<option value='652'>IPTV & Voice Down</option>
-											<option value='650'>HSI wireless Down</option>
-											<option value='648'>HSI & Voice Down</option>
-											<option value='646'>HSI & IPTV Down</option>
-											<option value='644'>HSI Down</option>
-											<option value='678'>DSL_LineDisconnect</option>
-										</>
-								}
-							</select>
-						</div>
-					</div>
+                    {/*					areaSelect === '79' ?*/}
+                    {/*						subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}*/}
+                    {/*							key={value.id}>{value.subArea}</option>)*/}
+                    {/*						:*/}
+                    {/*						subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}*/}
+                    {/*							key={value.id}>{value.subArea}</option>)*/}
+                    {/*			}*/}
+                    {/*		</select>*/}
+                    {/*	</div>*/}
+                    {/*</div>*/}
 
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="location">Location*</label>
-						<div className="hb-input-box">
-							<select id="location" name="location" value={locationSelect}
-								onChange={e => setLocation(e.target.value)}>
-								<option style={{ color: 'var(--color-gray-800)' }} disabled value='0'>Select One</option>
-								{areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
-							</select>
-						</div>
-					</div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="product">Product*</label>
+                        <div className="hb-input-box">
+                            <select id="product" name="product" value={productSelect}
+                                    onChange={(e) => setProduct(e.target.value)}>
+                                <option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+                                {product.map((value) => <option value={value.id}
+                                                                key={value.id}>{value.product}</option>)}
+                            </select>
+                        </div>
+                    </div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail">Attachment</label>
-						<div className="hb-attachment">
-							<input type="file" name="imageAttach" value={pictureInput}
-								onChange={(e) => setPicture(e.target.value)} />
-						</div>
-					</div>
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="symptom">Symptom*</label>
+                        <div className="hb-input-box">
+                            <select id="symptom" name="symptom" value={symptomSelect}
+                                    onChange={(e) => setSymptom(e.target.value)}>
+                                <option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+                                {
+                                    symptom.filter(filter => filter.source === 660).map((value) => <option value={value.id}>{value.symptom}</option>)
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-					<div className="hb-button">
-						{showSubmitLoading === true &&
-							<>
-								<CircularProgress
-									size={16}
-									sx={{
-										color: submitStatus === true ? 'var(--color-primary)': 'var(--color-warning)',
-										position: 'absolute',
-										marginTop: '9px',
-										marginLeft: '12px',
-									}}
-								/>
-								<h6 style={{ marginLeft: '35px', maxWidth: '60%' }}>{progressMessage}</h6>
-							</>
-						}
-						<FormControlLabel
-								sx={{ position: 'absolute', right: '0', marginTop: '-30px'}}
-								disabled
-								control={<Switch checked={isPureDEL} color="error" size="small"/>}
-								label="Is Pure DEL?"
-						/>
-						<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
-							style={submitIsLoading ? { opacity: .5 } : { opacity: 1 }} />
-						{showSubmitLoading === true &&
-							<LinearProgress sx={{ width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px' }}
-								variant="determinate" value={progress} />
-						}
-					</div>
-				</form>
-			</div >
-		</div >
-	);
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="location">Location*</label>
+                        <div className="hb-input-box">
+                            <select id="location" name="location" value={locationSelect}
+                                    onChange={e => setLocation(e.target.value)}>
+                                <option style={{color: 'var(--color-gray-800)'}} disabled value='0'>Select One</option>
+                                {areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="description">Description*</label>
+                        <div className="hb-input-box">
+										<textarea
+                                            id="description"
+                                            className="hb-border"
+                                            name="userDescription"
+                                            cols={40}
+                                            placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
+                                            value={descriptionInput}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                        />
+                        </div>
+                    </div>
+
+                    <div className="hb-input-group">
+                        <label className="hb-detail">Attachment</label>
+                        <div className="hb-attachment">
+                            <input type="file" name="imageAttach" onChange={(e) => setPicture(e.target.files[0])}/>
+                            <button onClick={handleAttach} placeholder="Upload">stt</button>
+                        </div>
+                    </div>
+
+                    <div className="hb-button">
+                        {showSubmitLoading === true &&
+                            <>
+                                <CircularProgress
+                                    size={16}
+                                    sx={{
+                                        color: submitStatus === true ? 'var(--color-primary)' : 'var(--color-warning)',
+                                        position: 'absolute',
+                                        marginTop: '9px',
+                                        marginLeft: '12px',
+                                    }}
+                                />
+                                <h6 style={{marginLeft: '35px', maxWidth: '60%'}}>{progressMessage}</h6>
+                            </>
+                        }
+                        <FormControlLabel
+                            sx={{position: 'absolute', right: '0', marginTop: '-30px'}}
+                            disabled
+                            control={<Switch checked={isPureDEL} color="error" size="small"/>}
+                            label="Is Pure DEL?"
+                        />
+                        <input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
+                               style={submitIsLoading ? {opacity: .5} : {opacity: 1}}/>
+                        {showSubmitLoading === true &&
+                            <LinearProgress sx={{width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px'}}
+                                            color={submitStatus === true ? 'primary' : 'error'}
+                                            variant="determinate" value={progress}
+                            />
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
 }
 
 export default TechnicalCase;

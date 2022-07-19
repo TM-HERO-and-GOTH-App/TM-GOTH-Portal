@@ -43,6 +43,18 @@ const unifiFormPageData = {
 		{id: '587', product: 'UniFi TV'},
 		{id: '584', product: 'Broadband'},
 		{id: '581', product: 'Telephony'}
+	],
+	symptom: [
+		{id: '670', symptom: 'DT_NoDialTone', source: 660},
+		{id: '672', symptom: 'DSL_NoDialTone', source: 660},
+		{id: '674', symptom: 'DSL_CantLoginDTDSLBlinkCantReset', source: 660},
+		{id: '676', symptom: 'DSL_CantLoginDTDSLBlinkPortReset', source: 660},
+		{id: '678', symptom: 'DSL_LineDisconnect', source: 660},
+		{id: '680', symptom: 'Blank Screen_All Channel', source: 662},
+		{id: '682', symptom: 'Line Disconnect', source: 662},
+		{id: '684', symptom: 'TMWiFi Modem Down', source: 662},
+		{id: '686', symptom: 'VoBB Down', source: 662},
+		{id: '688', symptom: 'Jerks/Pixel_HD Live TV', source: 662}
 	]
 }
 
