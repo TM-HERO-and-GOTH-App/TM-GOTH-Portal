@@ -25,18 +25,19 @@ const unifiFormPageData = {
 	],
 	area: [
 		{id: '79', area: 'Service Failure'},
-		{id: '82', area: 'Complaint'}
+		{id: '82', area: 'Complaint'},
+		{id: '121', area: 'Enquiries'}
 	],
 	subArea: [
-		{id: '85', subArea: 'Services Down'},
-		{id: '88', subArea: 'Report Progress'},
-		{id: '91', subArea: 'Payment'},
-		{id: '94', subArea: 'Charges'},
-		{id: '97', subArea: 'Bill Details'},
-		{id: '100', subArea: 'TOS/RTN'},
-		{id: '103', subArea: 'Dispute-Invalid Charges'},
-		{id: '106', subArea: 'Complaint Handling & Resolution'},
-		{id: '109', subArea: 'Payment Not Updated'}
+		{id: '85', subArea: 'Services Down', parentID: '121'},
+		{id: '88', subArea: 'Report Progress', parentID: '121'},
+		{id: '91', subArea: 'Payment', parentID: '121'},
+		{id: '94', subArea: 'Charges', parentID: '121'},
+		{id: '97', subArea: 'Bill Details', parentID: '121'},
+		{id: '100', subArea: 'TOS/RTN', parentID: '82'},
+		{id: '103', subArea: 'Dispute-Invalid Charges', parentID: '82'},
+		{id: '106', subArea: 'Complaint Handling & Resolution', parentID: '82'},
+		{id: '109', subArea: 'Payment Not Updated', parentID: '82'}
 	],
 	product: [
 		{id: '590', product: 'UniFi Mobile'},

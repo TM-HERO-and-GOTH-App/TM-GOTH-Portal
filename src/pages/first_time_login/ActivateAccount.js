@@ -30,7 +30,7 @@ function ActivateAccount(props) {
         LoginService.validateAccount('merge-account', emailInput, ldapEmail).then(res => {
             if (res.data[0].message === 'OK') {
                 alert('Successfully merge account, you can login to GOTH now!!');
-                return props.history.replace('/');
+                return props.history.replace('/login');
             }
             return setAlert(true, false, 'Error during merge account. Email does not exist!!');
         })
@@ -121,7 +121,6 @@ function ActivateAccount(props) {
                         </div>
                         <div>
                             <button type='button' className="width-50 pull-right btn btn-sm btn-danger" onClick={generateCode}>Send Activation Code</button>
-
                         </div>
                     </div>
                 </div>
