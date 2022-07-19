@@ -15,15 +15,21 @@ function ActionTaken(props) {
     const [ctID, setCTID] = useState('');
     const [caseRemarks, setCaseRemarks] = useState([]);
     // const [groupMembers, setGroupMembers] = useState([]);
-    const [alertStatus, setAlertStatus] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertBadge, setAlertBadge] = useState('');
     const [caseOwner, setCaseOwner] = useState('');
     const [isCoordinator, setCoordinator] = useState('');
     const [isAdmin, setAdmin] = useState('');
     const [remark, setRemark] = useState('');
     const [caseStatus, setCaseStatus] = useState('0');
     const [remarkType, setRemarkType] = useState('0');
+    //Alert
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertBadge, setAlertBadge] = useState('');
+    const alertPopUp = (success, badge, message) => {
+        setAlertStatus(success);
+        setAlertMessage(message);
+        setAlertBadge(badge);
+    }
 
     useEffect(() => {
         const getActionRemark = () => {
@@ -34,8 +40,8 @@ function ActionTaken(props) {
         }
 
         const getGroupResult = () => {
-            ManageUserService.getProfileByGroup(token, userData.shID).then((res) => {
-                // console.log(res, 'getGroupResult');
+            ManageUserService.getAllUser(token, userData.hID, 'STAKEHOLDER', userData.shID, 'Y').then((res) => {
+                console.log(res.data, 'getGroupResult');
                 // setGroupMembers(res.data);
                 setCoordinator(res.data.map(data => data.POSITION_NAME === "Coordinator"));
                 setAdmin(res.data.map(data => data.POSITION_NAME === "Admin"))
@@ -44,8 +50,8 @@ function ActionTaken(props) {
 
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                console.log(res.data[0][0], 'getCaseDetail')
-                setCaseData(res.data[0][0])
+                console.log(res.data, 'getCaseDetail')
+                setCaseData(res.data)
                 setCTID(res.data.CT_ID)
                 setCaseOwner(res.data.OWNER_NAME)
             })
@@ -56,23 +62,14 @@ function ActionTaken(props) {
         getGroupResult();
     }, [])
 
-
-
-
-    const setRemarks = () => {
-        // e.preventDefault();
-        console.log(token, caseToken, userData.hID, caseStatus, ctID, remark)
+    const setRemarks = (e) => {
+        e.preventDefault();
         ActionTakenService.setRemark(token, caseToken, userData.hID, caseStatus, ctID, remark)
-            .then(res => {
-                console.log(res)
-                if (res.statusText === 'Not Found') {
-                    setAlertStatus(true)
-                    setAlertMessage('Action cannot be implemented')
-                    setAlertBadge('danger')
-                } else {
-                    setAlertStatus(true)
-                    setAlertMessage('Action has been implemented')
-                    setAlertBadge('success')
+            .then((res, err) => {
+                if (err) return alertPopUp(true,'danger', 'Action cannot be implemented')
+                if (res) {
+                    if (res.status === 202) return alertPopUp(true,'danger', 'Action cannot be implemented (Failed to Update)')
+                    return alertPopUp(true,'success', 'Action has been implemented')
                 }
             })
     }
