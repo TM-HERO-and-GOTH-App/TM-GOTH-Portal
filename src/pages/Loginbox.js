@@ -73,7 +73,7 @@ function Loginbox(props) {
 			if (res.data[0].message === 'OK') {
 				auth(email)
 			}
-			firstTimeLoginAlert(res.data[0].userAttribute.mail);
+			firstTimeLoginAlert(email);
 			setIsValidating(false);
 			setAlertStatus(true)
 			setAlertMessage('Email is not registered in DB');
