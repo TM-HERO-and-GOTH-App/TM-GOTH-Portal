@@ -35,7 +35,7 @@ function EditCaseDetail(props) {
     const [siebelSystem, setSiebelSystem] = useState('0');
     let [createSiebelSRAndTT, setCreateSiebelSRAndTT] = useState(false);
     let [srData, setSrData] = useState({});
-    console.log(siebelSystem, 'siebelSystem')
+    let [ttData, setTtData] = useState({});
 
     // Customer Profile from Siebel
     let [searchingCustomer, setSearchingCustomer] = useState(false);
@@ -60,10 +60,10 @@ function EditCaseDetail(props) {
             })
         }
 
-        // caseDetail.current = caseDetailData;
+        caseDetail.current = caseDetailData.TT_NUM;
         onInitialLoad();
         getCaseDetail();
-    }, []);
+    }, [caseDetail]);
 
     const editCaseDetail = (e) => {
         e.preventDefault();
@@ -286,24 +286,24 @@ function EditCaseDetail(props) {
             customerProfileFromNova.CustInfo.CustomerRowID,
             Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountNo : customerProfileFromNova.BillInfo.BillingAccountNo,
             Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountRowID : customerProfileFromNova.BillInfo.BillingAccountRowID,
-            lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
+            lovData.filter(filter => filter.L_ID == symptomCode).map(data => data.L_NAME)[0],
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
             caseDetailData?.CASE_CONTENT, 'EAI'
         ).then((res, err) => {
+            setCreateSiebelSRAndTT(true);
             console.log(res, 'createTT');
-            console.log(lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0], 'createTT');
             if (res.data === undefined || err || res.data.message !== 'Success') {
                 setCreateSiebelSRAndTT(false);
                 return setAlert(true, false, 'TT Creation for NOVA failed!!');
             }
-            CreateCaseService.updateTTNumber(caseToken, res.data.response.TicketID).then(
-                (res, err) => {
+            CreateCaseService.updateTTNumber(res.data.response.TicketID, caseToken).then(
+                (dbres, err) => {
                     if (err) {
                         console.log(err, 'Insert TT Number Failed');
                     }
-                    if (caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
-                    return console.log('Successfully save TT in DB!!')
+                    if (caseToken === undefined || res.data.response.TicketID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+                    console.log('Successfully save TT in DB!!')
                 }
             )
             setCreateSiebelSRAndTT(false);
@@ -316,8 +316,8 @@ function EditCaseDetail(props) {
         NovaSR();
     }
 
-    function createNovaTT() {
-        getCustomerProfile();
+    async function createNovaTT() {
+        await getCustomerProfile();
         NovaTT();
     }
 
