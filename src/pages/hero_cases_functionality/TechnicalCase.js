@@ -9,7 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import unifiFormPageData from "./dataForUnifiBuddy";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import moment from 'moment';
+import axios from "axios";
 
 function TechnicalCase() {
     let styles = {
@@ -104,25 +104,12 @@ function TechnicalCase() {
         })
     }
 
-    const cyrb53 = function (str, seed) {
-        let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-        for (let i = 0, ch; i < str.length; i++) {
-            ch = str.charCodeAt(i);
-            h1 = Math.imul(h1 ^ ch, 2654435761);
-            h2 = Math.imul(h2 ^ ch, 1597334677);
-        }
-        h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-        h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-        return 4294967296 * (2097151 & h2) + (h1 >>> 0);
-    };
-
     const handleAttach = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        const randomFileName = cyrb53(moment.now().toString(), 0)
         formData.append('cToken', '965b91c8cddd457e7b70145e864af30f')
         formData.append(
-            'fileData' , pictureInput, randomFileName
+            'imgCollection', pictureInput
         )
         formData.append('longitude', '')
         formData.append('latitude', '')

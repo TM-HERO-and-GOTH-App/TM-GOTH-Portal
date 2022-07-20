@@ -4,12 +4,8 @@ import config from '../config'
 const url = config
 
 const CreateCaseService = {
-    attachImage(data) {
-        return Axios.post(url + '/case/attach-picture', data,{
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
+    attachImage(_formData) {
+        return Axios.post(url + '/upload/upload-images', _formData)
             .then(response => {
                 return response
             })
