@@ -104,17 +104,6 @@ function TechnicalCase() {
         })
     }
 
-    const getBase64 = (file, cb) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            cb(reader.result)
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    }
-
     const cyrb53 = function (str, seed) {
         let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
         for (let i = 0, ch; i < str.length; i++) {
@@ -341,6 +330,21 @@ function TechnicalCase() {
                                 placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
                                 value={customerNameInput}
                                 onChange={(e) => setCustomerNameInput(e.target.value)}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="hb-input-group">
+                        <label className="hb-detail" htmlFor="customerName">Customer NRIC<span style={{ color: 'red' }}>*</span></label>
+                        <div className="hb-input-box">
+                            <input
+                                type="text"
+                                id="customerIC"
+                                name="customerIC"
+                                placeholder="9XXXXX-XX-XXXX"
+                                value={customerID}
+                                onChange={(e) => setCustomerID(e.target.value)}
                                 required
                             />
                         </div>

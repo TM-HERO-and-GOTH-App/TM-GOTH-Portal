@@ -88,6 +88,21 @@ function CautionReport() {
 						</div>
 
 						<div className="hb-input-group">
+							<label className="hb-detail" htmlFor="customerName">Customer NRIC<span style={{ color: 'red' }}>*</span></label>
+							<div className="hb-input-box">
+								<input
+									type="text"
+									id="customerIC"
+									name="customerIC"
+									placeholder="9XXXXX-XX-XXXX"
+									value={customerID}
+									onChange={(e) => setCustomerID(e.target.value)}
+									required
+								/>
+							</div>
+						</div>
+
+						<div className="hb-input-group">
 							<label className="hb-detail" for="customerNumber">Customer Mobile Number*</label>
 							<div className="hb-input-box">
 								<input

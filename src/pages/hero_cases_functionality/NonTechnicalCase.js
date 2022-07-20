@@ -321,6 +321,21 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
+						<label className="hb-detail" htmlFor="customerName">Customer NRIC<span style={{ color: 'red' }}>*</span></label>
+						<div className="hb-input-box">
+							<input
+								type="text"
+								id="customerIC"
+								name="customerIC"
+								placeholder="9XXXXX-XX-XXXX"
+								value={customerID}
+								onChange={(e) => setCustomerID(e.target.value)}
+								required
+							/>
+						</div>
+					</div>
+
+					<div className="hb-input-group">
 						<label className="hb-detail" for="customerNumber">Customer Mobile Number<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<input
@@ -377,7 +392,7 @@ function NonTechnicalCase() {
 							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
 								<option value='0'>Select One</option>
 								{
-									subArea.filter(filter => filter.id !== '85').map((data, key) => data.parentID == areaSelect ? <option key={key} value={data.id}>{data.subArea}</option> : areaSelect === '0' && <option key={key} value={data.id}>{data.subArea}</option> 
+									subArea.filter(filter => filter.id !== '85').map((data, key) => data.parentID == areaSelect ? <option key={key} value={data.id}>{data.subArea}</option> : areaSelect === '0' && <option key={key} value={data.id}>{data.subArea}</option>
 									)
 								}
 							</select>

@@ -28,8 +28,8 @@ function Loginbox(props) {
 	const handleSubmit = (email, password) => e => {
 		setIsValidating(true);
 		e.preventDefault();
-		return ldapAuth(email, password);
-		// return auth(email, password);
+		// return ldapAuth(email, password);
+		return auth(email, password);
 	};
 
 	function createLdapProfile(email) {

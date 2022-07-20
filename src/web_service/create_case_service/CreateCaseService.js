@@ -74,7 +74,7 @@ const CreateCaseService = {
             symptomID: symptomSelect,
             siebelTargetSystem: siebelTargetSystemSelect,
             createdAt: 'HEROBUDDY',
-            'loggerPhoneNumber': loggerPhoneNumber
+            loggerPhoneNumber: loggerPhoneNumber
         }).then(res => {
             return res
         }).catch(err => {

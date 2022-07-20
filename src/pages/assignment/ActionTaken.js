@@ -66,7 +66,7 @@ function ActionTaken(props) {
 
     const setRemarks = (e) => {
         e.preventDefault();
-        ActionTakenService.setRemark(token, caseToken, userData.hID, caseStatus, ctID, remark)
+        ActionTakenService.setRemark(token, caseToken, userData.hID, caseStatus, closureTypeID, remark)
             .then((res, err) => {
                 console.log(res, 'res')
                 if (err) return alertPopUp(true,'danger', 'Action cannot be implemented')
