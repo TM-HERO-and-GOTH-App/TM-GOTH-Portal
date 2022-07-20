@@ -5,11 +5,10 @@ import unifiFormPageData from "./dataForUnifiBuddy";
 
 
 function CautionReport() {
-	const userData = JSON.parse(sessionStorage.getItem('UserData'));
-	const token = JSON.parse(sessionStorage.getItem('userToken'))
 	const [customerNameInput, setCustomerNameInput] = useState('');
 	const [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	const [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
+	const [customerID, setCustomerID] = useState('');
 	const [descriptionInput, setDescription] = useState('');
 	const [typeSelect, setTypeSelect] = useState(503);
 	const [locationSelect, setLocation] = useState('default');
