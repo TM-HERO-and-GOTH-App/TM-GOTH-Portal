@@ -14,7 +14,6 @@ function ActionTaken(props) {
     const [caseData, setCaseData] = useState({});
     const [ctID, setCTID] = useState('');
     const [caseRemarks, setCaseRemarks] = useState([]);
-    // const [groupMembers, setGroupMembers] = useState([]);
     const [caseOwner, setCaseOwner] = useState('');
     const [isCoordinator, setCoordinator] = useState('');
     const [isAdmin, setAdmin] = useState('');
@@ -64,8 +63,10 @@ function ActionTaken(props) {
 
     const setRemarks = (e) => {
         e.preventDefault();
+        console.log(token, caseToken, userData.hID, caseStatus, ctID, remark)
         ActionTakenService.setRemark(token, caseToken, userData.hID, caseStatus, ctID, remark)
             .then((res, err) => {
+                console.log(res, 'res')
                 if (err) return alertPopUp(true,'danger', 'Action cannot be implemented')
                 if (res) {
                     if (res.status === 202) return alertPopUp(true,'danger', 'Action cannot be implemented (Failed to Update)')

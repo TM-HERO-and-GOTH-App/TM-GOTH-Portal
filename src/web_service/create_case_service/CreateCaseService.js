@@ -4,12 +4,11 @@ import config from '../config'
 const url = config
 
 const CreateCaseService = {
-    attachImage(cToken, fileName, longitude, latitude) {
-        return Axios.post(url + '/case/attach-picture', {
-            cToken: cToken,
-            fileName: fileName,
-            longitude: longitude,
-            latitude: latitude
+    attachImage(data) {
+        return Axios.post(url + '/case/attach-picture', data,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         })
             .then(response => {
                 return response
