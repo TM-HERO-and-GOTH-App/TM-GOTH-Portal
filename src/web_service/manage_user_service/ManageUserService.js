@@ -68,7 +68,7 @@ const ManageUserService = {
 			gID: gID,
 			gToken: hToken,
 			shID: shID,
-			action: 'set'
+			action: 'SET'
 		}).then(res => {
 			return res
 		}).catch(err => console.log(err));

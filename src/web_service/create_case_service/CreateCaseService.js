@@ -215,11 +215,12 @@ const CreateCaseService = {
         });
     },
 
-    createICPSR(customerRowID, createdBy, area, subArea,
+    createICPSR(customerRowID, type, createdBy, area, subArea,
                 group, contactDetailRowID, contactDetailReportedID,
                 billingAccountRowID, billingAccountNumber, dataDescription, serviceRowID) {
         return Axios.post(url + '/siebel_eai/icp/create-SR', {
             'customerRowID': customerRowID,
+            'type': type,
             'createdBy': createdBy,
             'area': area,
             'subArea': subArea,

@@ -71,7 +71,7 @@ function NonTechnicalCase() {
 			setCustomerNameInput(res.data.result.CustInfo.AccountName)
 			setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
 			setLocation(Array.isArray(res.data.result.ServiceInfo) === true ?
-				findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State):
+				findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
 				findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
 
 			)
@@ -82,7 +82,7 @@ function NonTechnicalCase() {
 	function getCustomerProfile(e) {
 		e.preventDefault();
 		setIsLoading(true);
-		if (searchBarType === 'service' ? (serviceID === '' || customerID === '') : (serviceID === '')) {
+		if (searchBarType === 'service' ? ((serviceID === '' && customerID === '') || serviceID === '') : (serviceID === '')) {
 			setIsLoading(false);
 			alertPopUp('warning', true, 'Please fill in your Service ID/ Customer ID...')
 			return;
@@ -101,7 +101,7 @@ function NonTechnicalCase() {
 				}
 				setIsLoading(false)
 				setTargetSystem('ICP')
-				alertPopUp(true, true, `Query user info success in ${targetSystem}.`)
+				alertPopUp(true, true, `Query user info success in ICP.`)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setLocation(
 					Array.isArray(res.data.result.ServiceInfo) ?
@@ -134,7 +134,7 @@ function NonTechnicalCase() {
 
 	const createNovaSR = () => {
 		CreateCaseService.createNovaSR(
-			customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
+			customerProfileFromNova.CustInfo.CustomerRowID, 'Enquiries',
 			area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
 			subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
 			'wifi@unifi', // to be removed
@@ -171,6 +171,7 @@ function NonTechnicalCase() {
 	const createICPSR = () => {
 		CreateCaseService.createICPSR(
 			customerProfileFromICP.CustInfo.CustomerRowID,
+			'Inquiry',
 			'AIMAN',
 			area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
 			subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
@@ -180,17 +181,17 @@ function NonTechnicalCase() {
 			customerProfileFromICP.BillInfo.BillingAccountRowID,
 			customerProfileFromICP.BillInfo.BillingAccountNo,
 			descriptionInput,
-			customerProfileFromICP.ServiceInfo[0].ServiceRowID
+			Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[0].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID
 		).then(res => {
 			setIsCreateCase(true);
 			console.log(res.data, 'createICPSR')
-			console.log(area.filter(filter => filter.id === areaSelect).map(data => data.area), 'createICPSR')
+			// console.log(area.filter(filter => filter.id === areaSelect).map(data => data.area), 'createICPSR')
 			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
 				setIsCreateCase(false);
 				return alertPopUp(false, true, 'SR Creation Failed!!');
 			}
 			setIsCreateCase(false);
-			alertPopUp(true, false, 'Successfully create SR for ICP!!');
+			alertPopUp(true, true, 'Successfully create SR for ICP!!');
 			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
@@ -253,6 +254,12 @@ function NonTechnicalCase() {
 						</div>
 					</div>
 				}
+				{/* <div>
+					<button onClick={createICPSR}>ICP SR</button>
+				</div>
+				<div>
+					<button onClick={createNovaSR}>NOVA SR</button>
+				</div> */}
 				<form onSubmit={createNonTechnicalCase}>
 					<div className="hb-input-group w-100" id="searchbar">
 						<div className="hb-input-group-prepend">
@@ -299,7 +306,7 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="customerName">Customer Name<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for="customerName">Customer Name<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<input
 								type="text"
@@ -313,7 +320,7 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="customerNumber">Customer Mobile Number<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for="customerNumber">Customer Mobile Number<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<input
 								type="tel"
@@ -328,7 +335,7 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="loggerNumber">Logger Mobile Number<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for="loggerNumber">Logger Mobile Number<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<input
 								type="tel"
@@ -353,22 +360,25 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="area">Area<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for="area">Area<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
 								<option disabled value='0'>Select One</option>
 								<option value='82'>Complaint</option>
-								<option value='83'>Enquiries</option>
+								<option value='121'>Enquiries</option>
 							</select>
 						</div>
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="subarea">Sub-Area<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for="subarea">Sub-Area<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
-								<option disabled value='0'>Select One</option>
-								{subArea.filter(filter => filter.id !== '85').map((data, key) => <option key={key} value={data.id}>{data.subArea}</option>)}
+								<option value='0'>Select One</option>
+								{
+									subArea.filter(filter => filter.id !== '85').map((data, key) => data.parentID == areaSelect ? <option key={key} value={data.id}>{data.subArea}</option> : areaSelect === '0' && <option key={key} value={data.id}>{data.subArea}</option> 
+									)
+								}
 							</select>
 						</div>
 					</div>
@@ -385,7 +395,7 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for="location">Location<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for="location">Location<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<select id="location" name="location" value={locationSelect}
 								onChange={e => setLocation(e.target.value)}>
@@ -396,7 +406,7 @@ function NonTechnicalCase() {
 					</div>
 
 					<div className="hb-input-group">
-						<label className="hb-detail" for='description'>Description<span style={{color:'red'}}>*</span></label>
+						<label className="hb-detail" for='description'>Description<span style={{ color: 'red' }}>*</span></label>
 						<div className="hb-input-box">
 							<textarea type='text' id='description' name='userDescription'
 								cols={50}

@@ -14,7 +14,7 @@ const ActionTakenService = {
         }).then(res => { return res }).catch(err => console.log(err));
     },
 
-    setRemark(authToken, cToken, gID, caseStatusID, closureTypeID, remark) {
+    setRemark(authToken, cToken, gID, closureTypeID, caseStatusID, remark) {
         return Axios.post(url + '/case/update-action-remark', {
             'authToken': authToken,
             'cToken': cToken,

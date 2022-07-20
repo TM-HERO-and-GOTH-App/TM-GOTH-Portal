@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../Layout';
 import ActionTakenService from '../../web_service/action_taken_service/ActionTakenService';
@@ -6,13 +6,14 @@ import CaseDetailService from '../../web_service/case_detail_service/CaseDetailS
 import ManageUserService from '../../web_service/manage_user_service/ManageUserService';
 
 function ActionTaken(props) {
+    let caseRemarksList = useRef([]);
     // Find and Match the current case token
     const [caseToken, setCaseToken] = useState(props.match.params.id);
     const [lovData, setLOVData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
     const [token, setToken] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [caseData, setCaseData] = useState({});
-    const [ctID, setCTID] = useState('');
+    const [closureTypeID, setClosureTypeID] = useState('');
     const [caseRemarks, setCaseRemarks] = useState([]);
     const [caseOwner, setCaseOwner] = useState('');
     const [isCoordinator, setCoordinator] = useState('');
@@ -33,7 +34,7 @@ function ActionTaken(props) {
     useEffect(() => {
         const getActionRemark = () => {
             ActionTakenService.getActionRemarkLists(token, userData.hID, caseToken).then(res => {
-                // console.log(res, 'getActionRemark')
+                // console.log(res.data, 'getActionRemark')
                 setCaseRemarks(res.data[0])
             })
         }
@@ -51,19 +52,20 @@ function ActionTaken(props) {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
                 console.log(res.data, 'getCaseDetail')
                 setCaseData(res.data)
-                setCTID(res.data.CT_ID)
+                setClosureTypeID(res.data.CT_ID)
                 setCaseOwner(res.data.OWNER_NAME)
             })
         }
 
+        caseRemarksList.current = remark.length;
         getActionRemark();
         getCaseDetail();
         getGroupResult();
-    }, [])
+    }, [caseRemarksList.current])
+
 
     const setRemarks = (e) => {
         e.preventDefault();
-        console.log(token, caseToken, userData.hID, caseStatus, ctID, remark)
         ActionTakenService.setRemark(token, caseToken, userData.hID, caseStatus, ctID, remark)
             .then((res, err) => {
                 console.log(res, 'res')
@@ -124,7 +126,7 @@ function ActionTaken(props) {
                             {
                                 caseRemarks === [] ? <div style={{ color: "red" }}>Case Updates is empty</div> :
                                     caseRemarks.map((data, key) => {
-                                        const formattedDate = new Date(data.LOGGED_DATE).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric'})
+                                        const formattedDate = new Date(data.LOGGED_DATE).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric' })
                                         return <div key={key} className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
                                             <div className="profile-info-row">
                                                 <div className="profile-info-name"><b>Logged Date</b></div>
@@ -200,27 +202,22 @@ function ActionTaken(props) {
                                                         <select className="chosen-select form-control" name="caseStatusID" id="caseStatusID" value={caseStatus} onChange={(e) => setCaseStatus(e.target.value)}>
                                                             <option value="0">Choose a Case Status...</option>
                                                             {
-                                                                caseRemarks.filter(filter => filter.REMARK_TYPE !== 'NEW'
-                                                                    && filter.REMARK_TYPE !== 'ASSIGNED' && filter.REMARK_TYPE !== 'IN-PROGRESSED') &&
-                                                                    caseRemarks.filter(filter => filter.REMARK_TYPE === 'CLOSED') &&
-                                                                    (caseOwner || isAdmin) ?
+                                                                caseRemarks.filter(filter => filter.REMARK_TYPE !== 'CANCELLED') ?
                                                                     lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
                                                                         return <option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
                                                                     }) :
 
-                                                                    (caseRemarks.filter(filter => filter.REMARK_TYPE === 'TO-BE-DELETED') && isAdmin) ?
-                                                                        lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
-                                                                            return <option key={data.L_ID} value={data.L_ID} >{data.L_NAME}</option>
-                                                                        }) : lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
-                                                                            return <option key={data.L_ID} value={data.L_ID}>{data.L_NAME}</option>
-                                                                        })
+                                                                    (caseRemarks.filter(filter => filter.REMARK_TYPE === 'TO-BE-DELETED') && isAdmin) &&
+                                                                    lovData.filter(filter => filter.L_GROUP === 'CASE-STATUS').map(data => {
+                                                                        return <option key={data.L_ID} value={data.L_ID} >{data.L_NAME}</option>
+                                                                    })
                                                             }
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-4" style={{ paddingLeft: 5 }} id="closureType">
                                                     <div className="form-group">
-                                                        <select className="chosen-select form-control" name="ctID" value={ctID} onChange={(e) => setCTID(e.target.value)}>
+                                                        <select className="chosen-select form-control" name="ctID" value={closureTypeID} onChange={(e) => setClosureTypeID(e.target.value)}>
                                                             <option value="0">Choose a Closure Type...</option>
                                                             {
                                                                 lovData.filter(filter => filter.L_ID > 427 && filter.L_ID < 489) &&
