@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
-import {Box, Modal} from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import NextService from "../../web_service/next_service/NextService";
@@ -60,7 +60,7 @@ function TechnicalCase() {
     let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
     let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
     let [descriptionInput, setDescription] = useState('');
-    let [typeSelect, setTypeSelect] = useState('28');
+    let [typeSelect, setTypeSelect] = useState(28);
     let [productSelect, setProduct] = useState('0');
     let [areaSelect, setArea] = useState('0');
     let [subAreaSelect, setSubArea] = useState('0');
@@ -213,17 +213,17 @@ function TechnicalCase() {
         submitProgress(20, 'Creating New Case at GOTH . . .', true, true)
         CreateCaseService.createCaseHeroBuddy(
             '0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
-            null, null, null, descriptionInput,
-            typeSelect, areaSelect, subAreaSelect, symptomSelect, targetSystem
+            null, null, descriptionInput,
+            typeSelect, areaSelect, subAreaSelect, symptomSelect, targetSystem, loggerMobileNumberInput
         ).then((res, err) => {
             submitProgress(30, 'Done processing . . .', true, true)
             if (err) {
-                submitProgress(30, 'Case creation Failed.', false, false)
+                submitProgress(100, 'Case creation Failed.', false, false)
                 return alertPopUp(false, true, 'Case creation Failed!!');
             }
             console.log(res)
             if (res.data.message !== 'Case successfully created.') {
-                submitProgress(40, `Case creation Failed (${res.data}) . . .`, false, false)
+                submitProgress(100, `Case creation Failed (${res.data}) . . .`, false, false)
                 return alertPopUp(false, true, 'Case creation Failed!!');
             }
             submitProgress(40, 'Case creation Success . . .', true, true)
@@ -251,14 +251,14 @@ function TechnicalCase() {
                     <h3>
                         NTT Info
                     </h3>
-                    <ul style={{fontSize: '1.5em'}}>
+                    <ul style={{ fontSize: '1.5em' }}>
                         <li>NTT ID: {nextResponses.NTTID}</li>
                         <li>ETTR: {nextResponses.ETTR}</li>
                         <li>Fault Category: {nextResponses.FaultCategory}</li>
                         <li>Service Impact: {nextResponses.ServiceImpact}</li>
                     </ul>
-                    <button className="btn btn-primary" style={{marginLeft: '23vw'}}
-                            onClick={() => setOpenModal(false)}>Ok
+                    <button className="btn btn-primary" style={{ marginLeft: '23vw' }}
+                        onClick={() => setOpenModal(false)}>Ok
                     </button>
                 </Box>
             </Modal>
@@ -272,11 +272,11 @@ function TechnicalCase() {
                         <div className="col-xs-12">
                             <div
                                 className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
-                                style={{marginBottom: '0', marginTop: '10px'}}
+                                style={{ marginBottom: '0', marginTop: '10px' }}
                             >
                                 <button type="button" onClick={() => setShowAlert(false)} className="close"
-                                        data-dismiss="alert">
-                                    <i className="ace-icon fa fa-times"/>
+                                    data-dismiss="alert">
+                                    <i className="ace-icon fa fa-times" />
                                 </button>
                                 <p>{alertMessage}</p>
                             </div>
@@ -288,7 +288,7 @@ function TechnicalCase() {
                     <div className="hb-input-group w-100" id="searchbar">
                         <div className="hb-input-group-prepend">
                             <select id="searchbar-type" name="searchbar-type" value={searchBarType}
-                                    onChange={(e) => setSearchBarType(e.target.value)}>
+                                onChange={(e) => setSearchBarType(e.target.value)}>
                                 <option value="icp">ICP</option>
                                 <option value="herobuddy">Hero Buddy</option>
                             </select>
@@ -315,7 +315,7 @@ function TechnicalCase() {
                         </div>
                         <div className="hb-input-group-append">
                             <button className="btn" type="button" disabled={isLoading} onClick={getCustomerProfile}>
-                                <SearchIcon fontSize="large"/>
+                                <SearchIcon fontSize="large" />
                             </button>
                             {isLoading &&
                                 <CircularProgress
@@ -332,7 +332,7 @@ function TechnicalCase() {
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="customerName">Customer Name*</label>
+                        <label className="hb-detail" htmlFor="customerName">Customer Name<span style={{ color: 'red' }}>*</span></label>
                         <div className="hb-input-box">
                             <input
                                 type="text"
@@ -341,12 +341,13 @@ function TechnicalCase() {
                                 placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
                                 value={customerNameInput}
                                 onChange={(e) => setCustomerNameInput(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number*</label>
+                        <label className="hb-detail" htmlFor="customerNumber">Customer Mobile Number<span style={{ color: 'red' }}>*</span></label>
                         <div className="hb-input-box">
                             <input
                                 type="tel"
@@ -356,12 +357,13 @@ function TechnicalCase() {
                                 placeholder="example: 0123456789"
                                 value={customerMobileNumberInput}
                                 onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number*</label>
+                        <label className="hb-detail" htmlFor="loggerNumber">Logger Mobile Number<span style={{ color: 'red' }}>*</span></label>
                         <div className="hb-input-box">
                             <input
                                 type="tel"
@@ -371,27 +373,28 @@ function TechnicalCase() {
                                 placeholder="example: 0123456789"
                                 value={loggerMobileNumberInput}
                                 onChange={(e) => setLoggerMobileNumber(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor='type'>Type*</label>
+                        <label className="hb-detail" htmlFor='type'>Type</label>
                         <div className="hb-input-box">
                             <select id='type' name='type' value={typeSelect} disabled>
                                 {
                                     caseType.map((data, key) => <option key={key}
-                                                                        value={data.id}>{data.caseType}</option>)
+                                        value={data.id}>{data.caseType}</option>)
                                 }
                             </select>
                         </div>
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="area">Area*</label>
+                        <label className="hb-detail" htmlFor="area">Area</label>
                         <div className="hb-input-box">
                             <select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
-                                <option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+                                <option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
                                 {
                                     typeSelect === '28' ?
                                         area.filter(filter => filter.id === '79').map((value, i) => <option
@@ -406,7 +409,7 @@ function TechnicalCase() {
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="subarea">Sub-Area*</label>
+                        <label className="hb-detail" htmlFor="subarea">Sub-Area</label>
                         <div className="hb-input-box">
                             <select id="area" name="area" value={subAreaSelect}
                                     onChange={e => setSubArea(e.target.value)}
@@ -430,45 +433,24 @@ function TechnicalCase() {
                         </div>
                     </div>
 
-                    {/*<div className="hb-input-group">*/}
-                    {/*	<label className="hb-detail" htmlFor="subarea">Sub-Area*</label>*/}
-                    {/*	<div className="hb-input-box">*/}
-                    {/*		<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>*/}
-                    {/*			{*/}
-                    {/*				areaSelect === '0' ?*/}
-                    {/*					<option style={{ color: 'var(--color-danger)' }} disabled value='0'>Please select an Area*/}
-                    {/*						Type</option>*/}
-                    {/*					:*/}
-
-                    {/*					areaSelect === '79' ?*/}
-                    {/*						subArea.filter(filter => filter.id === '85').map((value, i) => <option value={value.id}*/}
-                    {/*							key={value.id}>{value.subArea}</option>)*/}
-                    {/*						:*/}
-                    {/*						subArea.filter(filter => filter.id !== '85').map((value, i) => <option value={value.id}*/}
-                    {/*							key={value.id}>{value.subArea}</option>)*/}
-                    {/*			}*/}
-                    {/*		</select>*/}
-                    {/*	</div>*/}
-                    {/*</div>*/}
-
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="product">Product*</label>
+                        <label className="hb-detail" htmlFor="product">Product</label>
                         <div className="hb-input-box">
                             <select id="product" name="product" value={productSelect}
-                                    onChange={(e) => setProduct(e.target.value)}>
-                                <option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+                                onChange={(e) => setProduct(e.target.value)}>
+                                <option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
                                 {product.map((value) => <option value={value.id}
-                                                                key={value.id}>{value.product}</option>)}
+                                    key={value.id}>{value.product}</option>)}
                             </select>
                         </div>
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="symptom">Symptom*</label>
+                        <label className="hb-detail" htmlFor="symptom">Symptom</label>
                         <div className="hb-input-box">
                             <select id="symptom" name="symptom" value={symptomSelect}
-                                    onChange={(e) => setSymptom(e.target.value)}>
-                                <option style={{color: 'var(--color-gray-300)'}} disabled value='0'>Select One</option>
+                                onChange={(e) => setSymptom(e.target.value)}>
+                                <option style={{ color: 'var(--color-gray-300)' }} disabled value='0'>Select One</option>
                                 {
                                     symptom.filter(filter => filter.source === 660).map((value) => <option
                                         value={value.id}>{value.symptom}</option>)
@@ -478,28 +460,29 @@ function TechnicalCase() {
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="location">Location*</label>
+                        <label className="hb-detail" htmlFor="location">Location<span style={{ color: 'red' }}>*</span></label>
                         <div className="hb-input-box">
                             <select id="location" name="location" value={locationSelect}
-                                    onChange={e => setLocation(e.target.value)}>
-                                <option style={{color: 'var(--color-gray-800)'}} disabled value='0'>Select One</option>
+                                onChange={e => setLocation(e.target.value)}>
+                                <option style={{ color: 'var(--color-gray-800)' }} disabled value='0'>Select One</option>
                                 {areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
                             </select>
                         </div>
                     </div>
 
                     <div className="hb-input-group">
-                        <label className="hb-detail" htmlFor="description">Description*</label>
+                        <label className="hb-detail" htmlFor="description">Description<span style={{ color: 'red' }}>*</span></label>
                         <div className="hb-input-box">
-										<textarea
-                                            id="description"
-                                            className="hb-border"
-                                            name="userDescription"
-                                            cols={40}
-                                            placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
-                                            value={descriptionInput}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                        />
+                            <textarea
+                                id="description"
+                                className="hb-border"
+                                name="userDescription"
+                                cols={40}
+                                placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
+                                value={descriptionInput}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
                         </div>
                     </div>
 
@@ -524,21 +507,21 @@ function TechnicalCase() {
                                         marginLeft: '12px',
                                     }}
                                 />
-                                <h6 style={{marginLeft: '35px', maxWidth: '60%'}}>{progressMessage}</h6>
+                                <h6 style={{ marginLeft: '35px', maxWidth: '60%' }}>{progressMessage}</h6>
                             </>
                         }
                         <FormControlLabel
-                            sx={{position: 'absolute', right: '0', marginTop: '-30px'}}
+                            sx={{ position: 'absolute', right: '0', marginTop: '-30px' }}
                             disabled
-                            control={<Switch checked={isPureDEL} color="error" size="small"/>}
+                            control={<Switch checked={isPureDEL} color="error" size="small" />}
                             label="Is Pure DEL?"
                         />
                         <input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
-                               style={submitIsLoading ? {opacity: .5} : {opacity: 1}}/>
+                            style={submitIsLoading ? { opacity: .5 } : { opacity: 1 }} />
                         {showSubmitLoading === true &&
-                            <LinearProgress sx={{width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px'}}
-                                            color={submitStatus === true ? 'primary' : 'error'}
-                                            variant="determinate" value={progress}
+                            <LinearProgress sx={{ width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px' }}
+                                color={submitStatus === true ? 'primary' : 'error'}
+                                variant="determinate" value={progress}
                             />
                         }
                     </div>

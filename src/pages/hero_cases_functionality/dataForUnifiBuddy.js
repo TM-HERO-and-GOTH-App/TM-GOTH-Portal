@@ -19,9 +19,9 @@ const unifiFormPageData = {
 		{id: '641', city: 'RRT'}
 	],
 	type: [
-		{id: '28', caseType: 'Assurance'},
-		{id: '37', caseType: 'Billing'},
-		{id: '503', caseType: 'Caution Report'},
+		{id: 28, caseType: 'Assurance'},
+		{id: 37, caseType: 'Billing'},
+		{id: 503, caseType: 'Caution Report'},
 	],
 	area: [
 		{id: '79', area: 'Service Failure'},

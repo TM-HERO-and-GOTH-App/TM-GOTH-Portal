@@ -206,19 +206,20 @@ function NonTechnicalCase() {
 		e.preventDefault();
 		CreateCaseService.createCaseHeroBuddy(
 			'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
-			null, null, null, descriptionInput,
-			typeSelect, areaSelect, subAreaSelect, null, targetSystem)
+			null, null, descriptionInput,
+			typeSelect, areaSelect, subAreaSelect, null, targetSystem, loggerMobileNumberInput)
 			.then((res, err) => {
+				console.log(res)
 				setIsCreateCase(true);
-				if (err) {
+				if (err || res.data.message !== 'Case successfully created.') {
 					console.log(err);
 					setIsCreateCase(false);
 					return alertPopUp(false, true, 'Case creation Failed!!');
 				}
 				setIsCreateCase(false);
 				alertPopUp(true, true, 'Case has been created successfully');
-				if (customerProfileFromICP !== null || customerProfileFromICP !== undefined) return createICPSR();
-				if (customerProfileFromNova !== null || customerProfileFromNova !== undefined) return createNovaSR();
+				if (customerProfileFromICP !== null || customerProfileFromICP !== undefined || (serviceID !== '' && customerID !== '')) return createICPSR();
+				if (customerProfileFromNova !== null || customerProfileFromNova !== undefined || serviceID !== '') return createNovaSR();
 				return;
 			})
 	}

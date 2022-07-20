@@ -41,7 +41,8 @@ const CreateCaseService = {
             subAreaID: subAreaSelect,
             symptomID: symptomSelect,
             siebelTargetSystem: siebelTargetSystemSelect,
-            createdAt: 'GOTH'
+            'createdAt': 'GOTH',
+            'loggerPhoneNumber': ''
         }).then(res => {
             return res
         }).catch(err => {
@@ -51,8 +52,8 @@ const CreateCaseService = {
 
     createCaseHeroBuddy(
         hID, customerNameInput, nricInput, mobileNumberInput, serviceID, stateType,
-        externalSystemInput, stakeholderReferenceSelect, sourceType, caseDescriptionInput,
-        caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect
+        externalSystemInput, stakeholderReferenceSelect, caseDescriptionInput,
+        caseType, areaType, subAreaSelect, symptomSelect, siebelTargetSystemSelect, loggerPhoneNumber
     ) {
         return Axios.post(url + '/case/create-new-case-herobuddy', {
             hID: hID,
@@ -64,15 +65,16 @@ const CreateCaseService = {
             flag: 'COMPLAINT',
             externalSystem: externalSystemInput,
             stakeholderReference: stakeholderReferenceSelect,
-            sourceID: sourceType,
-            subSource: 0,
+            sourceID: '284',
+            subSource: '0',
             caseContent: caseDescriptionInput,
             caseType: caseType,
             areaID: areaType,
             subAreaID: subAreaSelect,
             symptomID: symptomSelect,
             siebelTargetSystem: siebelTargetSystemSelect,
-            createdAt: 'HEROBUDDY'
+            createdAt: 'HEROBUDDY',
+            'loggerPhoneNumber': loggerPhoneNumber
         }).then(res => {
             return res
         }).catch(err => {
