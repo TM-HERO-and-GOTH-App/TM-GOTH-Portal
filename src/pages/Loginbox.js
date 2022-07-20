@@ -44,14 +44,6 @@ function Loginbox(props) {
 		})
 	}
 
-	function firstTimeLoginAlert(emailData){
-		if (window.confirm('Is this your first time login to GOTH? If not, merge your ldap account by pressing "Cancel" button!!')){
-			return createLdapProfile(emailData)
-		} else {
-			return props.history.push("/activate-ldap-profile", {email: emailData});
-		}
-	}
-
 	// LDAP Auth
 	function ldapAuth(id, password) {
 		LoginService.ldapLogin(id, password).then(res => {
@@ -60,7 +52,7 @@ function Loginbox(props) {
 				localStorage.setItem('userData', JSON.stringify(res.data.userAttribute));
 				return verifyEmail(res.data.userAttribute.mail);
 			}
-			firstTimeLoginAlert(res.data[0].userAttribute.mail);
+			if (window.confirm('Is this your first time login to GOTH?')) return createLdapProfile(res.data[0].userAttribute.mail)
 			setIsValidating(false);
 			setAlertStatus(true);
 			setAlertMessage(res.data.message);
@@ -73,7 +65,7 @@ function Loginbox(props) {
 			if (res.data[0].message === 'OK') {
 				auth(email)
 			}
-			firstTimeLoginAlert(email);
+			if (window.confirm('Is this your first time login to GOTH?!!')) return createLdapProfile(res.data[0].userAttribute.mail)
 			setIsValidating(false);
 			setAlertStatus(true)
 			setAlertMessage('Email is not registered in DB');
