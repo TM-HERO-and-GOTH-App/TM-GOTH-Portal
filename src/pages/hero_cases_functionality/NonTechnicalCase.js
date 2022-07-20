@@ -32,7 +32,7 @@ function NonTechnicalCase() {
 	let [searchBarType, setSearchBarType] = useState('service');
 	let [isLoading, setIsLoading] = useState(false);
 	let [serviceID, setServiceID] = useState('');
-	let [customerID, setCustomerID] = useState('');
+	let [customerID, setCustomerID] = useState(null);
 	let [targetSystem, setTargetSystem] = useState('');
 
 	// Alert
@@ -330,7 +330,7 @@ function NonTechnicalCase() {
 								placeholder="9XXXXX-XX-XXXX"
 								value={customerID}
 								onChange={(e) => setCustomerID(e.target.value)}
-								required
+								// required
 							/>
 						</div>
 					</div>

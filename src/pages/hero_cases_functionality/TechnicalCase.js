@@ -79,7 +79,7 @@ function TechnicalCase() {
     // Search bar
     const [searchBarType, setSearchBarType] = useState('icp');
     const [serviceID, setServiceID] = useState('');
-    const [customerID, setCustomerID] = useState('');
+    const [customerID, setCustomerID] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
 
     // Submit
@@ -330,7 +330,7 @@ function TechnicalCase() {
                                 placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
                                 value={customerNameInput}
                                 onChange={(e) => setCustomerNameInput(e.target.value)}
-                                required
+                                // required
                             />
                         </div>
                     </div>

@@ -8,7 +8,7 @@ function CautionReport() {
 	const [customerNameInput, setCustomerNameInput] = useState('');
 	const [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	const [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
-	const [customerID, setCustomerID] = useState('');
+	const [customerID, setCustomerID] = useState(null);
 	const [descriptionInput, setDescription] = useState('');
 	const [typeSelect, setTypeSelect] = useState(503);
 	const [locationSelect, setLocation] = useState('default');
@@ -96,7 +96,7 @@ function CautionReport() {
 									placeholder="9XXXXX-XX-XXXX"
 									value={customerID}
 									onChange={(e) => setCustomerID(e.target.value)}
-									required
+									// required
 								/>
 							</div>
 						</div>
