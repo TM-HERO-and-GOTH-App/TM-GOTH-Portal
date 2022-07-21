@@ -9,7 +9,7 @@ function HeroChat(props) {
     const [lovData] = useState(JSON.parse(sessionStorage.getItem('LovData')));
     const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
-    const [caseData, setCaseData] = useState({});
+    const [caseData, setCaseData] = useState(null);
     const [messageData, setMessageData] = useState([]);
     const [alertStatus, setAlertStatus] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -20,22 +20,15 @@ function HeroChat(props) {
     useEffect(() => {
         const getCaseDetail = () => {
             CaseDetailService.getCaseDetail(token, caseToken).then(res => {
-                console.log(res.data, 'getCaseDetail')
                 setCaseData(res.data)
-            })
-        }
-
-        const getMessage = () => {
-            console.log(caseData.C_ID)
-            ChatService.pullChatMessage(token, caseData.C_ID).then(res => {
-                console.log(res, 'pullChatMessage')
-                setMessageData(res)
+                ChatService.pullChatMessage(token, res.data.C_ID).then(res => {
+                    setMessageData(res.data)
+                })
             })
         }
 
         getCaseDetail();
-        getMessage();
-    }, [messageData])
+    }, [])
 
 
     const sendMessage = (e) => {
@@ -136,9 +129,9 @@ function HeroChat(props) {
 
                     <div className="row">
                         <div className="col-sm-12">
-                            {   messageData === [] ? 
+                            { messageData === [] ?
                                 <i style={{ color: "red" }}>HERO Chat is empty</i> :
-                                messageData?.map(data => {
+                                messageData?.slice(0).reverse().map(data => {
                                     const date = new Date(data?.SENT_TIME)
                                     const formattedDate = date.toLocaleDateString("en-US", {
                                         day: "2-digit",

@@ -29,7 +29,7 @@ const ChatService = {
 				message: message,
 				source: 'GOTH',
 				userID: gID,
-				fileName: null
+				fileName: null //TODO: handle attachment
 		}).then(res => {return res}).catch(err => console.log(err));
 	}
 }

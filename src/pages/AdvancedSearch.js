@@ -265,10 +265,14 @@ function AdvancedSearch(props) {
 																	<TableCell style={{fontSize: '1.2rem'}}>{data.CUSTOMER_NAME}</TableCell>
 																	<TableCell style={{fontSize: '1.2rem'}}>{data.VIP ? <span
 																			className="label label-success arrowed-right">{data.FULLNAME}</span> : data.FULLNAME}</TableCell>
-																	<TableCell style={{fontSize: '1.2rem'}}> {data.OWNER_NAME ? <>{data.OWNER_NAME}<br/></>: ''}
-																		<span className="label label-lg label-info arrowed-right">
-																			<small>{data.STAKEHOLDER_NAME}</small>
-																		</span>
+																	<TableCell
+																			style={{fontSize: '1.2rem'}}> {data.OWNER_NAME ? <>{data.OWNER_NAME}<br/></> : ''}
+																		{
+																				data.STAKEHOLDER_NAME !== null &&
+																				<span className="label label-lg label-info arrowed-right">
+																					<small>{data.STAKEHOLDER_NAME}</small>
+																				</span>
+																		}
 																	</TableCell>
 																	<TableCell style={{fontSize: '1.2rem'}}>{data.STAKEHOLDER_REF}</TableCell>
 																	<TableCell style={{fontSize: '1.2rem'}}>{data.REMARK}</TableCell>
