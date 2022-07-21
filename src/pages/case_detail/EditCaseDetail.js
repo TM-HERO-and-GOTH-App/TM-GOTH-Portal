@@ -179,33 +179,34 @@ function EditCaseDetail(props) {
 
 	const ICPSR = () => {
 		CreateCaseService.createICPSR(
-				customerProfileFromICP.CustInfo.CustomerRowID,
+				customerProfileFromNova.CustInfo.CustomerRowID,
+				// lovData.filter(filter => filter.L_ID === siebelCaseType).map(data => data.L_NAME)[0],
 				'AIMAN',
 				lovData.filter(filter => filter.L_ID === areaCode).map(data => data.L_NAME)[0],
 				lovData.filter(filter => filter.L_ID === subAreaCode).map(data => data.L_NAME)[0],
 				'TM CCR Technical CPC Follow Up',
-				customerProfileFromICP.CustInfo.PrimaryContactRowID,
-				customerProfileFromICP.CustInfo.PrimaryContactRowID,
-				customerProfileFromICP.BillInfo.BillingAccountRowID,
-				customerProfileFromICP.BillInfo.BillingAccountNo,
+				customerProfileFromNova.CustInfo.PrimaryContactRowID,
+				customerProfileFromNova.CustInfo.PrimaryContactRowID,
+				customerProfileFromNova.BillInfo.BillingAccountRowID,
+				customerProfileFromNova.BillInfo.BillingAccountNo,
 				caseDetailData?.CASE_CONTENT,
-				Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[0].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID
+				Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[1].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID
 		).then(res => {
 			setCreateSiebelSRAndTT(true);
 			console.log(res.data, 'createICPSR')
-			// console.log(customerProfileFromICP.ServiceInfo[1].ServiceRowID, 'createICPSR')
+			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
 			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
 				setCreateSiebelSRAndTT(false);
-				setAlert(true, false, 'Successfully create SR for ICP!!');
+				setAlert(true, false, 'SR creation failed!!')
 				return;
 			}
-			setSrData(res.data)
-			CreateCaseService.updateSRNumber(caseToken, res.data.SRNumber, res.data.SRRowID).then(
+			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
 					(res, err) => {
 						if (err) {
 							console.log(err, 'Insert SR Number Failed');
 						}
-						console.log('Successfully save SR in DB!!')
+						if (caseToken === undefined || res.data.SRNumber === null || res.data.SRNumber === undefined || res.data.SRRowID === undefined || res.data.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+						return console.log('Successfully save SR in DB!!')
 					}
 			)
 			setCreateSiebelSRAndTT(false);
@@ -215,12 +216,14 @@ function EditCaseDetail(props) {
 		})
 	}
 
+	// Need to Pass relatedSrRowID data
 	const ICPTT = () => {
 		CreateCaseService.createICPTT(
 				customerProfileFromNova.CustInfo.CustomerRowID,
-				caseDetailData.CASE_CONTENT,
+				caseDetailData?.CASE_CONTENT,
 				lovData.filter(filter => filter.L_ID === symptomCode).map(data => data.L_NAME)[0],
 				Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
+				caseDetailData?.SR_ROW_ID,
 				'AIMAN',
 				serviceIDInput,
 				customerProfileFromNova.BillInfo.BillingAccountNo,

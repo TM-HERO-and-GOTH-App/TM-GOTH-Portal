@@ -13,19 +13,24 @@ import ModalComponent from '../../components/modal/Modal';
 
 function CaseDetail(props) {
     // const
-
     const alertMessageFromEditDetailPage = props.history.location.state?.message
-
-
     const [caseToken] = useState(props.match.params.id);
     const [token] = useState(JSON.parse(sessionStorage.getItem('userToken')));
     const [userData] = useState(JSON.parse(sessionStorage.getItem('UserData')));
     const [caseData, setCaseData] = useState([]);
-    const [alertStatus, setAlertStatus] = useState(false);
     const [fetchData, setFetchData] = useState(false);
     const [left, setLeft] = useState(true);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [statusBadge, setStatusBadge] = useState('');
+
+    // Alert
+    const [alertStatus, setAlertStatus] = useState(false);
+	const [alertSuccess, setAlertSuccess] = useState(false);
+	const [alertMessage, setAlertMessage] = useState('');
+	const setAlert = (status, success, message) => {
+		setAlertStatus(status);
+		setAlertSuccess(success);
+		setAlertMessage(message)
+	};
+
     const [isCoordinator, setCoordinator] = useState('');
     const [isAdmin, setAdmin] = useState('');
     const [heroBuddyData, setHeroBuddyData] = useState([]);
@@ -34,6 +39,7 @@ function CaseDetail(props) {
     let [customerProfileFromICP, setCustomerProfileFromICP] = useState({});
     let [searchingCustomer, setSearchingCustomer] = useState(false);
     let [openModal, setOpenModal] = useState(false);
+    let [createSiebelSRAndTT, setCreateSiebelSRAndTT] = useState(false);
 
     useEffect(() => {
         const getCaseDetail = () => {
@@ -63,14 +69,10 @@ function CaseDetail(props) {
                 // console.log(res.data, 'HeroBuddy')
                 if (typeof res == 'undefined') {
                     setFetchData(false)
-                    setAlertStatus(true)
-                    setAlertMessage('"Hero-Buddy: Data Unreachable."')
-                    setStatusBadge('danger')
+                    setAlert(true, false, 'Hero-Buddy: Data Unreachable.')
                 } else if (res.data[0]?.response === 'FAILED') {
                     setFetchData(false)
-                    setAlertStatus(true);
-                    setAlertMessage('"Hero-Buddy: No Result Found"')
-                    setStatusBadge('danger')
+                    setAlert(true, false, "Hero-Buddy: No Result Found")
                 } else {
                     setHeroBuddyData(res.data[0]);
                     setFetchData(false);
@@ -80,9 +82,7 @@ function CaseDetail(props) {
 
         const getMessageFromEditDetail = () => {
             if (alertMessageFromEditDetailPage !== undefined) {
-                setAlertStatus(true);
-                setAlertMessage(alertMessageFromEditDetailPage)
-                setStatusBadge('success')
+                setAlert(true, true, alertMessageFromEditDetailPage)
             }
         }
 
@@ -97,13 +97,9 @@ function CaseDetail(props) {
         CaseDetailService.assignToMe(token, userData.hID, userData.shID, caseToken).then(res => {
             // console.log(res.data);
             if (res?.data[0].response === 'FAILED') {
-                setAlertStatus(true);
-                setAlertMessage('The case cannot assign to your pool.')
-                setStatusBadge('danger')
+                setAlert(true, false, 'The case cannot assign to your pool.')
             } else {
-                setAlertStatus(true);
-                setAlertMessage('The case has been successfully assigned your pool.')
-                setStatusBadge('success')
+                setAlert(true, true, 'he case has been successfully assigned your pool.')
             }
         })
     }
@@ -112,9 +108,7 @@ function CaseDetail(props) {
         CaseDetailService.reopenCase(token, userData.hID, caseToken).then(res => {
             // console.log(res)
             if (res.data[0].response === 'Success') {
-                setAlertStatus(true);
-                setAlertMessage('The case has been reverted to IN-PROGRESS');
-                statusBadge('success');
+                setAlert(true, true, 'The case has been reverted to IN-PROGRESS')
                 props.windows.location.reload(false);
             }
         })
@@ -135,120 +129,181 @@ function CaseDetail(props) {
         })
     }
 
-    // const getCustomerProfile = (e) => {
-    // 	e.preventDefault();
-    // 	setSearchingCustomer(true);
-    // 	if (siebelTargetSystemSelect === '660') {
-    // 		CreateCaseService.getCustomerProfileFromNova(serviceID, customerID).then((res, err) => {
-    // 			console.log(res, 'getCustomerProfileFromNova');
-    // 			if (err || typeof res.data === 'undefined') {
-    // 				setAlertStatus(true);
-    // 				setAlertMessage(res.message);
-    // 				setSearchingCustomer(false);
-    // 			}
-    // 			if (res.data.message !== 'Success') {
-    // 				setAlertStatus(true);
-    // 				setAlertMessage(`Error during searching customer.. (${res.data.message})`);
-    // 				setSearchingCustomer(false);
-    // 				return;
-    // 			}
-    // 			setAlertStatus(true);
-    // 			setAlertMessage('Query user info success.');
-    // 			setCustomerProfileFromNova(res.data.result)
-    // 			return setSearchingCustomer(false);
-    // 		})
-    // 	} else {
-    // 		CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
-    // 			console.log(res, 'getCustomerProfileFromICP');
-    // 			if (err || typeof res.data === 'undefined') {
-    // 				setAlertStatus(true);
-    // 				setAlertMessage(res.message);
-    // 				setSearchingCustomer(false);
-    // 			}
-    // 			if (res.data.message !== 'Success') {
-    // 				setAlertStatus(true);
-    // 				setAlertMessage(`Error during searching customer.. (${res?.data.message})`);
-    // 				setSearchingCustomer(false);
-    // 				return;
-    // 			}
-    // 			setAlertStatus(true);
-    // 			setAlertMessage('Query user info success.');
-    // 			setCustomerProfileFromICP(res.response)
-    // 			return setSearchingCustomer(false);
-    // 		})
-    // 	}
-    // }
+    const getCustomerProfile = (e) => {
+    	e.preventDefault();
+    	setSearchingCustomer(true);
+    	if (caseData?.SYSTEM_TARGET === 'NOVA') {
+    		CreateCaseService.getCustomerProfileFromNova(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
+    			console.log(res, 'getCustomerProfileFromNova');
+    			if (err || typeof res.data === 'undefined') {
+    				setAlertStatus(true);
+    				setAlertMessage(res.message);
+    				setSearchingCustomer(false);
+    			}
+    			if (res.data.message !== 'Success') {
+    				setAlertStatus(true);
+    				setAlertMessage(`Error during searching customer.. (${res.data.message})`);
+    				setSearchingCustomer(false);
+    				return;
+    			}
+    			setAlertStatus(true);
+    			setAlertMessage('Query user info success.');
+    			setCustomerProfileFromNova(res.data.result)
+    			return setSearchingCustomer(false);
+    		})
+    	} else {
+    		CreateCaseService.getCustomerProfileFromICP(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
+    			console.log(res, 'getCustomerProfileFromICP');
+    			if (err || typeof res.data === 'undefined') {
+    				setAlertStatus(true);
+    				setAlertMessage(res.message);
+    				setSearchingCustomer(false);
+    			}
+    			if (res.data.message !== 'Success') {
+    				setAlertStatus(true);
+    				setAlertMessage(`Error during searching customer.. (${res?.data.message})`);
+    				setSearchingCustomer(false);
+    				return;
+    			}
+    			setAlertStatus(true);
+    			setAlertMessage('Query user info success.');
+    			setCustomerProfileFromICP(res.response)
+    			setSearchingCustomer(false);
+                return createICPSR();
+    		})
+    	}
+    }
 
-    // const createICPSR = () => {
-    // 	CreateCaseService.createICPSR(
-    // 		customerProfileFromNova.CustInfo.CustomerRowID,
-    // 		'Open', userData.fullName, areaType, subAreaSelect,
-    // 		caseType, moment.now().toString(), null, null, userData.stakholderName,
-    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
-    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
-    // 		customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-    // 		customerProfileFromNova.BillInfo[0].BillingAccountNo,
-    // 		caseDescriptionInput, null, null,
-    // 		productType, customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-    // 		null, null
-    // 	).then(res => {
-    // 		console.log(res, 'createICPSR')
-    // 		setAlertStatus(true);
-    // 		setAlertMessage(res.data)
-    // 	})
-    // }
+    const createICPSR = () => {
+        getCustomerProfile();
+		CreateCaseService.createICPSR(
+			customerProfileFromNova.CustInfo.CustomerRowID,
+			'AIMAN',
+			caseData?.AREA_CODE,
+			caseData?.SUB_AREA,
+			'X1002408',
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.BillInfo.BillingAccountRowID,
+			customerProfileFromNova.BillInfo.BillingAccountNo,
+			caseData?.CASE_CONTENT,
+			customerProfileFromNova.ServiceInfo.ServiceRowID
+		).then(res => {
+            setCreateSiebelSRAndTT(true);
+			console.log(res.data, 'createICPSR')
+			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
+			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
+				setCreateSiebelSRAndTT(false);
+				setAlert(true, false, 'Successfully create SR for ICP!!');
+				return;
+			}
+			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					return console.log('Successfully save SR in DB!!')
+				}
+			)
+            setCreateSiebelSRAndTT(false);
+			setAlert(true, true, 'Successfully create SR for ICP!!');
+			return;
+		})
+	}
 
-    // const createICPTT = () => {
-    // 	CreateCaseService.createICPTT(
-    // 		customerProfileFromNova.CustInfo.CustomerRowID, null, 'Streamyx',
-    // 		productType, caseDescriptionInput, symptomSelect,
-    // 		customerProfileFromNova.ServiceInfo[0].ServiceRowID, null,
-    // 		userData.fullName, null, null, null, null,
-    // 		null, null, customerProfileFromNova.BillInfo[0].BillingAccountNo,
-    // 		null, null,
-    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
-    // 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
-    // 		customerProfileFromNova.BillInfo[0].BillingAccountRowID
-    // 	).then(res => {
-    // 		console.log(res, 'createICPTT');
-    // 		setAlertStatus(true);
-    // 		setAlertMessage(res.data)
-    // 	})
-    // }
+    const createICPTT = () => {
+        getCustomerProfile();
+		CreateCaseService.createICPTT(
+			customerProfileFromNova.CustInfo.CustomerRowID,
+			caseData?.CASE_CONTENT,
+			'DSL_Slow_Physical',
+			customerProfileFromNova.ServiceInfo.ServiceRowID,
+			'AIMAN',
+			caseData?.SERVICE_ID,
+			customerProfileFromNova.BillInfo.BillingAccountNo,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.BillInfo.BillingAccountRowID
+		).then(res => {
+            setCreateSiebelSRAndTT(true);
+			// console.log(res.data, 'createICPTT');
+			if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+                setCreateSiebelSRAndTT(false);
+				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
+			}
+			CreateCaseService.updateTTNumber(caseToken, res.data.response.SRNumber).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert TT Number Failed'); }
+					return console.log('Successfully save TT in DB!!')
+				}
+			)
+            setCreateSiebelSRAndTT(false);
+			return setAlert(true, true, 'TT creation has been successful!!');
+		})
+	}
 
-    // const createSR = () => {
-    // 	CreateCaseService.createNovaSR(
-    // 		customerProfileFromNova.CustInfo.CustomerRowID, null,
-    // 		areaType, subAreaSelect, null, null, null,
-    // 		customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-    // 		null, null, null, null,
-    // 		caseDescriptionInput, null, null, null, null,
-    // 		null, null, null, null,
-    // 		null, null, userData.fullName, null, null
-    // 	).then(res => {
-    // 		console.log(res, 'createSR');
-    // 		setAlertStatus(true);
-    // 		setAlertMessage(res.data)
-    // 	})
-    // }
+    const createNovaSR = () => {
+		CreateCaseService.createNovaSR(
+			customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
+			caseData?.AREA_CODE,
+			caseData?.SUB_AREA,
+			caseData?.PRODUCT_NAME, // to be removed
+			'SPICE', // temp source naming
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+			customerProfileFromNova.BillInfo[0].BillingAccountNo,
+			caseData?.CASE_CONTENT, userData.stakeholderName, userData.stakeholderName,
+			userData.stakeholderName, caseData?.CASE_CONTENT, 'EAI'
+		).then(res => {
+            setCreateSiebelSRAndTT(true);
+			// console.log(res.data, 'createSR');
+			if (res.message) {
+                setCreateSiebelSRAndTT(false);
+				return setAlert(true, false, res.message);
+			}
+			if (res.data.message !== 'Success') {
+                setCreateSiebelSRAndTT(false);
+				return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
+			}
+			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert SR Number Failed'); }
+					return console.log('Successfully save SR in DB!!')
+				}
+			)
+            setCreateSiebelSRAndTT(false);
+			setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
+			return;
+		})
+	}
 
-    // const createTT = () => {
-    // 	CreateCaseService.createNovaTT(
-    // 		customerProfileFromNova.CustInfo.CustomerRowID,
-    // 		customerProfileFromNova.BillInfo[0].BillingAccountNo,
-    // 		customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-    // 		null, productType, null, null, userData.fullName,
-    // 		customerProfileFromNova.ServiceInfo[0].ServiceRowID, null,
-    // 		null, 'New', null, null, null,
-    // 		caseDescriptionInput, null, null, null,
-    // 		null, null, null, null,
-    // 		null, null, userData.fullName, null, null
-    // 	).then(res => {
-    // 		console.log(res, 'createTT');
-    // 		setAlertStatus(true);
-    // 		setAlertMessage(res.data)
-    // 	})
-    // }
+    const createNovaTT = () => {
+		CreateCaseService.createNovaTT(
+			customerProfileFromNova.CustInfo.CustomerRowID,
+			customerProfileFromNova.BillInfo[0].BillingAccountNo,
+			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+			'Error',
+			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			customerProfileFromNova.CustInfo.PrimaryContactRowID,
+			caseData?.CASE_CONTENT, userData.stakeholderName
+		).then((res, err) => {
+            setCreateSiebelSRAndTT(true);
+			console.log(res, 'createTT');
+			if (res.data === undefined || err) {
+                setCreateSiebelSRAndTT(false);
+				return setAlert(true, false, 'TT Creation for NOVA failed!!');
+			}
+			CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
+				(res, err) => {
+					if (err) { console.log(err, 'Insert TT Number Failed'); }
+					return console.log('Successfully save TT in DB!!')
+				}
+			)
+            setCreateSiebelSRAndTT(false);
+			return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
+		})
+	}
 
     return (
         <Layout
@@ -291,7 +346,7 @@ function CaseDetail(props) {
                             alertStatus &&
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <div className={`alert alert-block alert-${statusBadge}`}>
+                                    <div className={`alert alert-block alert-${alertSuccess === true ? 'success' : 'danger'}`}>
                                         <button type="button" className="close" data-dismiss="alert">
                                             <i className="ace-icon fa fa-times"></i>
                                         </button>
@@ -333,10 +388,10 @@ function CaseDetail(props) {
                                     {
                                         caseData?.SYSTEM_TARGET === 'ICP' ?
                                             caseData?.SR_NUM === null ?
-                                                (<button className='btn btn-danger' type='button'>Create SR for ICP</button>)
+                                                (<button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP</button>)
                                                 :
                                                 caseData?.TT_NUM === null &&
-                                                (<button className='btn btn-danger' type='button'>Create TT for ICP</button>)
+                                                (<button className='btn btn-danger' type='button' onClick={createICPTT}>Create TT for ICP</button>)
                                             :
                                             caseData?.SYSTEM_TARGET === 'NOVA' ?
                                                 caseData?.SR_NUM === null ?

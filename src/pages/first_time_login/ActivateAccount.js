@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from 'react-router-dom';
 
 function ActivateAccount(props) {
+    const [isValidating, setIsValidating] = useState(false);
     let [emailInput, setEmailInput] = useState('');
     let [activationCodeInput, setActivationCodeInput] = useState('');
     let [activationCode, setActivationCode] = useState('');
@@ -41,6 +42,70 @@ function ActivateAccount(props) {
         return setAlert(true, true, 'Wrong activation code!!');
     }
 
+    function verifyEmail(email) {
+		LoginService.validateAccount('check-email', email, '').then(res => {
+			if (res.data[0].message === 'OK') {
+				return auth(email)
+			}
+			setIsValidating(false);
+			setAlertStatus(true)
+			setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
+			return;
+		})
+	}
+
+    const auth = (email, password) => {
+		LoginService.requestToken(email).then((err, res) => {
+			// console.log(Object.values(res.data[0])[0]);
+			// console.log(res.data)
+			if (err) {
+				console.log(err);
+				setIsValidating(false);
+				setAlertStatus(true);
+				return;
+			}
+			if (Object.values(res.data[0])[0] === '') {
+				console.log(err);
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage('Authentication token creation failed!!')
+				return;
+			}
+			const authToken = Object.values(res.data[0])[0];
+			sessionStorage.setItem("userToken", JSON.stringify(authToken));
+			return getLoggerProfile(authToken)
+		})
+			.catch(e => {
+				setIsValidating(false);
+				console.log(e);
+			})
+	};
+
+	const getLoggerProfile = (authToken) => {
+		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
+		LoginService.getUserProfile(authToken).then((res) => {
+			// console.log(res.data[0]);
+			// setIsValidating(false);
+			const data = res.data[0]
+			if (data.category !== "STAKEHOLDER") {
+				setAlertStatus(true);
+				setAlertMessage("Your account is not yet registered as Stakeholder");
+				setIsValidating(false);
+			} else {
+				sessionStorage.setItem("UserData", JSON.stringify(data));
+				getLov(authToken);
+			}
+		});
+	};
+
+	const getLov = (authToken) => {
+		LoginService.getSystemLOV(authToken).then((res) => {
+			sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
+			props.history.replace("/");
+			setIsValidating(false);
+		});
+	};
+
     return (
         <LoginTheme>
             <div id="login-box" className="login-box visible widget-box no-border ">
@@ -51,6 +116,9 @@ function ActivateAccount(props) {
                             Activate Account
                         </h4>
                         <div className="space-6" />
+                        <div>
+                            <h4>Have LDAP Profile but not using TM email, Please insert Non-TM email and Login immediately</h4>
+                        </div>
                         <form>
                             <fieldset>
                                 {alertStatus && (
@@ -96,6 +164,7 @@ function ActivateAccount(props) {
                                 </label>
                                 <div className="space" />
                                 <div className='clearfix'>
+                                    <button onClick={verifyEmail(emailInput)} className='btn btn-sm bt-primary'>Check email</button>
                                     <button className="width-35 pull-right btn btn-sm btn-primary" onClick={checkCode}>
                                         {/* {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5} /> : */}
                                         <>

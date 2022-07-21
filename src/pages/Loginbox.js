@@ -6,6 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 function Loginbox(props) {
 	const [alertStatus, setAlertStatus] = useState(false);
 	const [isValidating, setIsValidating] = useState(false);
+	const [successLogin, setSuccessLogin] = useState(true);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [userEmail, setUserEmail] = useState("");
 	const [userPassword, setUserPassword] = useState("");
@@ -28,8 +29,8 @@ function Loginbox(props) {
 	const handleSubmit = (email, password) => e => {
 		setIsValidating(true);
 		e.preventDefault();
-		// return ldapAuth(email, password);
-		return auth(email, password);
+		return ldapAuth(email, password);
+		// return auth(email, password);
 	};
 
 	function createLdapProfile(email) {
@@ -37,6 +38,7 @@ function Loginbox(props) {
 			if (res.data[0].message === 'OK') {
 				return auth(email)
 			}
+			setSuccessLogin(false)
 			setIsValidating(false);
 			setAlertStatus(true)
 			setAlertMessage('Email is not registered in DB');
@@ -46,35 +48,41 @@ function Loginbox(props) {
 
 	// LDAP Auth
 	function ldapAuth(id, password) {
-		LoginService.ldapLogin(id, password).then(res => {
+		LoginService.ldapLogin(id, password).then((res, err) => {
 			console.log(res)
-			if (res[0].message === 'User successfully login to GOTH!!') {
-				localStorage.setItem('userData', JSON.stringify(res.data.userAttribute));
-				return verifyEmail(res.data.userAttribute.mail);
+			if (err && res === {} && res === undefined && res === null) {
+				setSuccessLogin(false)
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage('An error has happened!!');
+				return;
 			}
-			if (window.confirm('Is this your first time login to GOTH?')) return createLdapProfile(res.data[0].userAttribute.mail)
-			setIsValidating(false);
-			setAlertStatus(true);
-			setAlertMessage(res.data.message);
-			return;
+			if(res.data[0].message !== 'User successfully login to GOTH!!'){
+				setSuccessLogin(false)
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage('Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!');
+				return;
+			}
+			localStorage.setItem('userData', JSON.stringify(res.data.userAttribute));
+			return verifyEmail(res.data[0].userAttribute.mail);
 		})
 	}
 
 	function verifyEmail(email) {
 		LoginService.validateAccount('check-email', email, '').then(res => {
 			if (res.data[0].message === 'OK') {
-				auth(email)
+				return auth(email)
 			}
-			if (window.confirm('Is this your first time login to GOTH?!!')) return createLdapProfile(res.data[0].userAttribute.mail)
 			setIsValidating(false);
 			setAlertStatus(true)
-			setAlertMessage('Email is not registered in DB');
+			setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
 			return;
 		})
 	}
 
 	const auth = (email, password) => {
-		LoginService.requestToken(email).then((res, err) => {
+		LoginService.requestToken(email).then((err, res) => {
 			// console.log(Object.values(res.data[0])[0]);
 			// console.log(res.data)
 			if (err) {
@@ -126,14 +134,15 @@ function Loginbox(props) {
 	};
 
 	// GOTH Login
-	// const auth = (email, password) => {
+	// function auth(email, password) {
 	// 	LoginService.requestToken(email).then((res, err) => {
 	// 		// console.log(Object.values(res.data[0])[0]);
-	// 		// console.log(res.data)
+	// 		console.log(res.data)
 	// 		if (err) {
 	// 			console.log(err);
 	// 			setIsValidating(false);
 	// 			setAlertStatus(true);
+	// 			setAlertMessage(err);
 	// 			return;
 	// 		}
 	// 		if (Object.values(res.data[0])[0] === '') {
@@ -145,6 +154,7 @@ function Loginbox(props) {
 	// 		}
 	// 		const authToken = Object.values(res.data[0])[0];
 	// 		sessionStorage.setItem("userToken", JSON.stringify(authToken));
+	// 		// if(window.confirm('Testing')) return signIn(authToken, email, password)
 	// 		return signIn(authToken, email, password)
 	// 	})
 	// 		.catch(e => {
@@ -153,7 +163,7 @@ function Loginbox(props) {
 	// 		})
 	// };
 
-	// const signIn = (authToken, email, password) => {
+	// function signIn(authToken, email, password) {
 	// 	LoginService.signIn(authToken, email, password).then((res, err) => {
 	// 		// console.log(res.data);
 	// 		// console.log(Object.values(res.data[0])[0])
@@ -174,7 +184,7 @@ function Loginbox(props) {
 	// 	});
 	// };
 
-	// const getLoggerProfile = (authToken) => {
+	// function getLoggerProfile(authToken) {
 	// 	const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 	// 	LoginService.getUserProfile(authToken).then((res) => {
 	// 		// console.log(res.data[0]);
@@ -192,7 +202,7 @@ function Loginbox(props) {
 	// 	});
 	// };
 
-	// const getLov = (authToken) => {
+	// function getLov(authToken) {
 	// 	LoginService.getSystemLOV(authToken).then((res) => {
 	// 		sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
 	// 		props.history.replace("/");
@@ -271,7 +281,21 @@ function Loginbox(props) {
 					</div>
 					{/* /.widget-main */}
 
-					<div className="toolbar clearfix" />
+					{
+						successLogin === false && <div className="toolbar clearfix">
+							<div />
+							<div>
+								<a href="/activate-ldap-profile" data-target="#activate-box" class="user-signup-link">
+									<i class="ace-icon fa fa-unlock" /> {' '}
+									Activate Account
+								</a>
+								<button onCick={createLdapProfile} class="user-signup-link">
+									Merge Non-TM Email with LDAP System {' '}
+									<i class="ace-icon fa fa-arrow-right" />
+								</button>
+							</div>
+						</div>
+					}
 				</div>
 			</div>
 		</LoginTheme>

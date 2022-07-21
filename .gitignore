@@ -41,3 +41,4 @@ yarn.lock
 .idea/sqldialects.xml
 .env
 .idea/
+.vscode/settings.json

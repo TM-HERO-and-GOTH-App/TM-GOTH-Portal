@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 import CircularProgress from '@mui/material/CircularProgress'
@@ -20,6 +20,7 @@ function CreateCase() {
 	};
 
 	// Variables
+	let srRowID = useRef('');
 	const [caseDescriptionInput, setCaseDescriptionInput] = useState('');
 	const [customerNameInput, setCustomerNameInput] = useState('');
 	const [serviceID, setServiceID] = useState('');
@@ -29,6 +30,7 @@ function CreateCase() {
 	const [stateType, setStateType] = useState('0');
 	const [sourceType, setSourceType] = useState('0');
 	const [productType, setProductType] = useState('0');
+	const [siebelCaseType, setSiebelCaseType] = useState('0');
 	const [areaType, setAreaType] = useState('0');
 	const [subAreaSelect, setSubAreaSelect] = useState('0');
 	const [symptomSelect, setSymptomSelect] = useState('0');
@@ -96,14 +98,13 @@ function CreateCase() {
 					return;
 				}
 				setAlert(true, true, 'Query user info success.');
-				console.log(res.data.result, 'getCustomerProfileFrom')
 				setCustomerProfileFromNova(res.data.result)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setMobileNumberInput(res.data.result.CustInfo.MobileNo)
 				setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === (
-						Array.isArray(res.data.result.ServiceInfo) ?
-								res.data.result.ServiceInfo[0].ServiceAddress.State:
-								res.data.result.ServiceInfo.ServiceAddress.State
+					Array.isArray(res.data.result.ServiceInfo) ?
+						res.data.result.ServiceInfo[0].ServiceAddress.State :
+						res.data.result.ServiceInfo.ServiceAddress.State
 				)).map(data => data.L_ID))
 				setSearchingCustomer(false);
 			})
@@ -157,6 +158,7 @@ function CreateCase() {
 	const createICPSR = () => {
 		CreateCaseService.createICPSR(
 			customerProfileFromNova.CustInfo.CustomerRowID,
+			lovData.filter(filter => filter.L_ID === siebelCaseType).map(data => data.L_NAME)[0],
 			'AIMAN',
 			lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0],
 			lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
@@ -172,21 +174,21 @@ function CreateCase() {
 			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
 			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
 				setIsCreateCase(false);
-				setAlertStatus(true);
-				setAlertMessage('SR creation failed!!');
+				setAlert(true, false, 'SR creation failed!!')
 				return;
 			}
 			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					if(caseToken === undefined || res.data.SRNumber === null || res.data.SRNumber === undefined || res.data.SRRowID === undefined || res.data.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
-					setSRData(res.data)
+					if (caseToken === undefined || res.data.SRNumber === null || res.data.SRNumber === undefined || res.data.SRRowID === undefined || res.data.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
 			setAlert(true, true, 'Successfully create SR for ICP!!');
-			// return createICPTT();
-			return;
+			srRowID.current = res.data.SRRowID;
+			// console.log(srRowID.current);
+			return createICPTT();
+			// return;
 		})
 	}
 
@@ -197,6 +199,7 @@ function CreateCase() {
 			caseDescriptionInput,
 			lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0],
 			Array.isArray(customerProfileFromNova.ServiceInfo) ? customerProfileFromNova.ServiceInfo[0].ServiceRowID : customerProfileFromNova.ServiceInfo.ServiceRowID,
+			`${srRowID.current}`,
 			'AIMAN',
 			serviceID,
 			customerProfileFromNova.BillInfo.BillingAccountNo,
@@ -212,7 +215,7 @@ function CreateCase() {
 			CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					if(caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+					if (caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
@@ -223,7 +226,8 @@ function CreateCase() {
 
 	const createNovaSR = () => {
 		CreateCaseService.createNovaSR(
-			customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
+			customerProfileFromNova.CustInfo.CustomerRowID,
+			lovData.filter(filter => filter.L_ID === siebelCaseType).map(data => data.L_NAME)[0],
 			lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0],
 			lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
 			'wifi@unifi', // to be removed
@@ -246,10 +250,11 @@ function CreateCase() {
 			CreateCaseService.updateSRNumber(res.data.response.SRNumber, res.data.response.SRRowID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					if(caseToken === undefined || res.data.response.SRNumber === null || res.data.response.SRNumber === undefined || res.data.response.SRRowID === undefined || res.data.response.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+					if (caseToken === undefined || res.data.response.SRNumber === undefined ||  res.data.response.SRNumber === null || res.data.response.SRRowID === undefined || res.data.response.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
+			console.log(res.data.response.SRNumber)
 			setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
 			// return createNovaTT();
 			return;
@@ -275,7 +280,7 @@ function CreateCase() {
 			CreateCaseService.updateTTNumber(res.data.response.TicketID, caseToken).then(
 				(res, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					if(caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+					if (caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
 				}
 			)
@@ -316,9 +321,9 @@ function CreateCase() {
 						<button className='btn btn-sm' onClick={createNovaSR}>
 							createNovaSR
 						</button>
-					<button className='btn btn-sm' onClick={createNovaTT}>
-						createNovaTT
-					</button>
+						<button className='btn btn-sm' onClick={createNovaTT}>
+							createNovaTT
+						</button>
 					</div>
 
 					<div align="right" className="row row-cols-auto">
@@ -363,7 +368,7 @@ function CreateCase() {
 									<div className="profile-user-info profile-user-info-striped" style={{ margin: 0 }}>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name" style={{ width: '25%' }}>Customer Name<span style={{color:'red'}}>*</span>
+											<div className="profile-info-name" style={{ width: '25%' }}>Customer Name<span style={{ color: 'red' }}>*</span>
 											</div>
 											<div className="profile-info-value">
 												<span className="editable" id="username">
@@ -371,33 +376,39 @@ function CreateCase() {
 														name="customerName"
 														placeholder="Customer Name"
 														defaultValue={customerNameInput ? customerNameInput : ''}
-														onChange={(e) => setCustomerNameInput(e.target.value)} />
+														onChange={(e) => setCustomerNameInput(e.target.value)}
+														required
+													/>
 												</span>
 											</div>
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">NRIC No<span style={{color:'red'}}>*</span></div>
+											<div className="profile-info-name">NRIC No<span style={{ color: 'red' }}>*</span></div>
 											<div className="profile-info-value">
 												<span className="editable" id="username">
 													<input className="input-sm" style={{ width: '100%' }} type="text"
 														name="nricNum"
 														placeholder="NRIC Number"
 														defaultValue={nricInput ? nricInput : ''}
-														onChange={(e) => setNRICInput(e.target.value)} />
+														onChange={(e) => setNRICInput(e.target.value)}
+														required
+													/>
 												</span>
 											</div>
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">Mobile No<span style={{color:'red'}}>*</span></div>
+											<div className="profile-info-name">Mobile No<span style={{ color: 'red' }}>*</span></div>
 											<div className="profile-info-value">
 												<span className="editable" id="username">
 													<input className="input-sm" style={{ width: '100%' }} type="text"
 														name="mobileNum"
 														placeholder="Mobile Number"
 														defaultValue={mobileNumberInput ? mobileNumberInput : ''}
-														onChange={(e) => setMobileNumberInput(e.target.value)} />
+														onChange={(e) => setMobileNumberInput(e.target.value)}
+														required
+													/>
 												</span>
 											</div>
 										</div>
@@ -416,11 +427,12 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">State<span style={{color:'red'}}>*</span></div>
+											<div className="profile-info-name">State<span style={{ color: 'red' }}>*</span></div>
 											<div className="profile-info-value">
 												<select className='chosen-select form-control' name='areaLocationID'
 													value={stateType}
-													onChange={(e) => setStateType(parseFloat(e.target.value))}>
+													onChange={(e) => setStateType(parseFloat(e.target.value))}
+												>
 													<option value='0' hidden>Choose a State...</option>
 													{
 														lovData.filter(filter => filter.L_GROUP === 'STATE').map((data, key) => {
@@ -432,7 +444,7 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name">Case Type</div>
+											<div className="profile-info-name">Case Type<span style={{ color: 'red' }}>*</span></div>
 											<div className="profile-info-value">
 												<select className='chosen-select form-control' name='caseTypeID'
 													value={caseType} onChange={(e) => setCaseType(e.target.value)}>
@@ -493,13 +505,15 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
-											<div className="profile-info-name" style={{ width: '25%' }}>Case Description
+											<div className="profile-info-name" style={{ width: '25%' }}>Case Description<span style={{ color: 'red' }}>*</span>
 											</div>
 											<div className="profile-info-value">
 												<textarea className="form-control limited" rows={10} name="caseContent"
 													maxLength={9999}
 													value={caseDescriptionInput}
-													onChange={(e) => setCaseDescriptionInput(e.target.value)} />
+													onChange={(e) => setCaseDescriptionInput(e.target.value)}
+													required
+												/>
 											</div>
 										</div>
 									</div>
@@ -544,6 +558,27 @@ function CreateCase() {
 										</div>
 
 										<div className="profile-info-row">
+											<div className="profile-info-name">Siebel Case Type</div>
+											<div className="profile-info-value">
+												<select className='chosen-select form-control' name='caseTypeID'
+													value={siebelCaseType}
+													onChange={(e) => setSiebelCaseType(parseFloat(e.target.value))}>
+													<option value='0'>Choose a Type</option>
+													{
+														lovData.filter(filter => filter.L_GROUP === 'TYPE').map((data, key) => {
+															return caseType == data.PARENT_ID ? <option key={key}
+																value={data.L_ID}>{data.L_NAME}</option>
+																:
+																caseType === '0' &&
+																<option key={key}
+																	value={data.L_ID}>{data.L_NAME}</option>
+														})
+													}
+												</select>
+											</div>
+										</div>
+
+										<div className="profile-info-row">
 											<div className="profile-info-name">Area Type</div>
 											<div className="profile-info-value">
 												<select className='chosen-select form-control' name='caseTypeID'
@@ -552,12 +587,12 @@ function CreateCase() {
 													<option value='0'>Choose a Area Type</option>
 													{
 														lovData.filter(filter => filter.L_GROUP === 'AREA').map((data, key) => {
-															return caseType == data.PARENT_ID  ? <option key={key}
-																value={data.L_ID}>{data.L_NAME}</option> 
+															return caseType == data.PARENT_ID ? <option key={key}
+																value={data.L_ID}>{data.L_NAME}</option>
 																:
 																caseType === '0' &&
 																<option key={key}
-																value={data.L_ID}>{data.L_NAME}</option>
+																	value={data.L_ID}>{data.L_NAME}</option>
 														})
 													}
 												</select>
@@ -577,7 +612,7 @@ function CreateCase() {
 																value={data.L_ID}>{data.L_NAME}</option> :
 																areaType === '0' &&
 																<option key={key}
-																value={data.L_ID}>{data.L_NAME}</option>
+																	value={data.L_ID}>{data.L_NAME}</option>
 														})
 													}
 												</select>

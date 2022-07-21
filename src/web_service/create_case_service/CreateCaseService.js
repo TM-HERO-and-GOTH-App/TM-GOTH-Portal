@@ -236,13 +236,13 @@ const CreateCaseService = {
         });
     },
 
-    createICPTT(customerRowID, dataDescription, symptomCode, serviceRowID, createdBy, serviceNumber, billingAccountNumber, contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
+    createICPTT(customerRowID, dataDescription, symptomCode, serviceRowID, relatedSrRowID, createdBy, serviceNumber, billingAccountNumber, contactDetailRowID, contactDetailReportedID, billingAccountRowID) {
         return Axios.post(url + '/siebel_eai/icp/create-TT', {
             customerRowID,
             dataDescription,
             symptomCode,
             serviceRowID,
-            'relatedSrRowID': '3-EAT58H',
+            'relatedSrRowID': relatedSrRowID,
             createdBy,
             serviceNumber,
             'srNumber': '',
