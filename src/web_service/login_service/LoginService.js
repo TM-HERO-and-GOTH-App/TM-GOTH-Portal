@@ -16,9 +16,9 @@ const LoginService = {
 
     ldapLogin(id, password){
         return Axios.post(url + '/login/test-promised-ldap-package',{
-            username: id,
-            password
-        }).then(res => { return res.data }).catch(err => {return err})
+            'username': id,
+            'userPassword': password
+        }).then(res => { console.log(res); return res }).catch(err => {console.log(err); return err})
     },
 
     signIn(authToken, email, password) {
