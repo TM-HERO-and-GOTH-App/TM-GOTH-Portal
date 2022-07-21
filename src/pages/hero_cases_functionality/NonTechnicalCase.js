@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import './styleHeroBuddy.css'
 import SearchIcon from '@mui/icons-material/Search';
 import CreateCaseService from "../../web_service/create_case_service/CreateCaseService";
 import unifiFormPageData from "./dataForUnifiBuddy";
 import CircularProgress from "@mui/material/CircularProgress";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import LinearProgress from "@mui/material/LinearProgress";
 
 function NonTechnicalCase() {
 	let areaLocation = unifiFormPageData.areaLocation
@@ -21,19 +24,32 @@ function NonTechnicalCase() {
 	let [customerMobileNumberInput, setCustomerMobileNumberInput] = useState('');
 	let [loggerMobileNumberInput, setLoggerMobileNumber] = useState('');
 	let [descriptionInput, setDescription] = useState('');
-	let [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
-	let [customerProfileFromICP, setCustomerProfileFromICP] = useState({});
+	let [customerProfileFromNova, setCustomerProfileFromNova] = useState(null);
+	let [customerProfileFromICP, setCustomerProfileFromICP] = useState(null);
 	let [typeSelect, setTypeSelect] = useState(37);
 	let [productSelect, setProduct] = useState('0');
 	let [areaSelect, setArea] = useState('0');
 	let [subAreaSelect, setSubArea] = useState('0');
 	let [locationSelect, setLocation] = useState('0');
-	let [pictureInput, setPicture] = useState('');
+	let [pictureInput, setPicture] = useState(null);
 	let [searchBarType, setSearchBarType] = useState('service');
 	let [isLoading, setIsLoading] = useState(false);
 	let [serviceID, setServiceID] = useState('');
-	let [customerID, setCustomerID] = useState(null);
+	let [customerID, setCustomerID] = useState('');
 	let [targetSystem, setTargetSystem] = useState('');
+
+	// Submit
+	const [showSubmitLoading, setShowSubmitLoading] = useState(false)
+	const [submitIsLoading, setSubmitIsLoading] = useState(false)
+	const [progress, setProgress] = useState(0)
+	const [progressMessage, setProgressMessage] = useState('. . .')
+	const [submitStatus, setSubmitStatus] = useState(true)
+	const submitProgress = (progress, message, status, loading) => {
+		setProgress(progress);
+		setProgressMessage(message);
+		setSubmitStatus(status)
+		setSubmitIsLoading(loading)
+	}
 
 	// Alert
 	let [alertIsSuccess, setAlertIsSuccess] = useState(false);
@@ -44,6 +60,7 @@ function NonTechnicalCase() {
 		setShowAlert(showAlert);
 		setAlertMessage(alertMessage);
 	}
+
 	const [caseToken, setCaseToken] = useState({});
 	const [isCreateCase, setIsCreateCase] = useState(false);
 
@@ -71,9 +88,8 @@ function NonTechnicalCase() {
 			setCustomerNameInput(res.data.result.CustInfo.AccountName)
 			setCustomerMobileNumberInput(res.data.result.CustInfo.MobileNo)
 			setLocation(Array.isArray(res.data.result.ServiceInfo) === true ?
-				findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
-				findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
-
+					findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
+					findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
 			)
 			return setTargetSystem('NOVA')
 		})
@@ -104,9 +120,9 @@ function NonTechnicalCase() {
 				alertPopUp(true, true, `Query user info success in ICP.`)
 				setCustomerNameInput(res.data.result.CustInfo.AccountName)
 				setLocation(
-					Array.isArray(res.data.result.ServiceInfo) ?
-						findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
-						findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
+						Array.isArray(res.data.result.ServiceInfo) ?
+								findCityID(res.data.result.ServiceInfo[0].ServiceAddress.State) :
+								findCityID(res.data.result.ServiceInfo.ServiceAddress.State)
 				)
 				return setCustomerProfileFromICP(res.data.result)
 			})
@@ -133,18 +149,19 @@ function NonTechnicalCase() {
 	}
 
 	const createNovaSR = () => {
+		submitProgress(20, 'Creating New Case at GOTH . . .', true, true)
 		CreateCaseService.createNovaSR(
-			customerProfileFromNova.CustInfo.CustomerRowID, 'Enquiries',
-			area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
-			subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
-			'wifi@unifi', // to be removed
-			'SPICE', // temp source naming
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			descriptionInput, 'AIMAN', descriptionInput, 'EAI'
+				customerProfileFromNova.CustInfo.CustomerRowID, 'Enquiries',
+				area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
+				subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
+				'wifi@unifi', // to be removed
+				'SPICE', // temp source naming
+				customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+				customerProfileFromNova.CustInfo.PrimaryContactRowID,
+				customerProfileFromNova.CustInfo.PrimaryContactRowID,
+				customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+				customerProfileFromNova.BillInfo[0].BillingAccountNo,
+				descriptionInput, 'AIMAN', descriptionInput, 'EAI'
 		).then(res => {
 			setIsCreateCase(true);
 			console.log(res.data, 'createSR');
@@ -159,30 +176,31 @@ function NonTechnicalCase() {
 			setIsCreateCase(false);
 			alertPopUp(true, true, `${res.data.message} Create SR for NOVA!!`);
 			CreateCaseService.updateSRNumber(res.data.response.SRNumber, caseToken).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					return console.log('Successfully save SR in DB!!')
-				}
+					(res, err) => {
+						if (err) {
+							console.log(err, 'Insert SR Number Failed');
+						}
+						return console.log('Successfully save SR in DB!!')
+					}
 			)
-			return
 		})
 	}
 
 	const createICPSR = () => {
 		CreateCaseService.createICPSR(
-			customerProfileFromICP.CustInfo.CustomerRowID,
-			'Inquiry',
-			'AIMAN',
-			area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
-			subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
-			'TM CCR Technical CPC Follow Up',
-			customerProfileFromICP.CustInfo.PrimaryContactRowID,
-			customerProfileFromICP.CustInfo.PrimaryContactRowID,
-			customerProfileFromICP.BillInfo.BillingAccountRowID,
-			customerProfileFromICP.BillInfo.BillingAccountNo,
-			descriptionInput,
-			Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[0].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID
-		).then(res => {
+				customerProfileFromICP.CustInfo.CustomerRowID,
+				'Inquiry',
+				'AIMAN',
+				area.filter(filter => filter.id === areaSelect).map(data => data.area)[0],
+				subArea.filter(filter => filter.id === subAreaSelect).map(data => data.subArea)[0],
+				'TM CCR Technical CPC Follow Up',
+				customerProfileFromICP.CustInfo.PrimaryContactRowID,
+				customerProfileFromICP.CustInfo.PrimaryContactRowID,
+				customerProfileFromICP.BillInfo.BillingAccountRowID,
+				customerProfileFromICP.BillInfo.BillingAccountNo,
+				descriptionInput,
+				Array.isArray(customerProfileFromICP.ServiceInfo) ? customerProfileFromICP.ServiceInfo[0].ServiceRowID : customerProfileFromICP.ServiceInfo.ServiceRowID
+		).then((err, res) => {
 			setIsCreateCase(true);
 			console.log(res.data, 'createICPSR')
 			// console.log(area.filter(filter => filter.id === areaSelect).map(data => data.area), 'createICPSR')
@@ -193,35 +211,62 @@ function NonTechnicalCase() {
 			setIsCreateCase(false);
 			alertPopUp(true, true, 'Successfully create SR for ICP!!');
 			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					return console.log('Successfully save SR in DB!!')
-				}
+					(res, err) => {
+						if (err) {
+							console.log(err, 'Insert SR Number Failed');
+						}
+						return console.log('Successfully save SR in DB!!')
+					}
 			)
-			return;
 		})
 	}
 
 	function createNonTechnicalCase(e) {
 		e.preventDefault();
+		setShowSubmitLoading(true)
+		submitProgress(20, 'Creating New Case at GOTH . . .', true, true)
 		CreateCaseService.createCaseHeroBuddy(
-			'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
-			null, null, descriptionInput,
-			typeSelect, areaSelect, subAreaSelect, null, targetSystem, loggerMobileNumberInput)
-			.then((res, err) => {
-				console.log(res)
-				setIsCreateCase(true);
-				if (err || res.data.message !== 'Case successfully created.') {
-					console.log(err);
+				'0', customerNameInput, customerID, customerMobileNumberInput, serviceID, locationSelect,
+				null, null, descriptionInput,
+				typeSelect, areaSelect, subAreaSelect, null, targetSystem, loggerMobileNumberInput)
+				.then((res, err) => {
+					console.log(res)
+					setIsCreateCase(true);
+					if (err || res.data.message !== 'Case successfully created.') {
+						console.log(err);
+						setIsCreateCase(false);
+						submitProgress(100, 'Case creation Failed.', false, false)
+						return alertPopUp(false, true, `Case creation Failed!! (${res.data})`);
+					}
+
+					// if case is created successfully and not null
+					if (pictureInput !== null) {
+						submitProgress(45, 'Uploading Image to DB . . .', true, true)
+						const formData = new FormData();
+						formData.append('cToken', res.data.caseToken)
+						formData.append('imgCollection', pictureInput)
+						formData.append('longitude', '')
+						formData.append('latitude', '')
+						CreateCaseService.attachImage(formData).then((res, err) => {
+							if (err || res.request.status !== 200) {
+								return submitProgress(100, `Image Upload Failed (${res?.name}) . . .`, false, false)
+							}
+						})
+					}
+
 					setIsCreateCase(false);
-					return alertPopUp(false, true, 'Case creation Failed!!');
-				}
-				setIsCreateCase(false);
-				alertPopUp(true, true, 'Case has been created successfully');
-				if (customerProfileFromICP !== null || customerProfileFromICP !== undefined || (serviceID !== '' && customerID !== '')) return createICPSR();
-				if (customerProfileFromNova !== null || customerProfileFromNova !== undefined || serviceID !== '') return createNovaSR();
-				return;
-			})
+					console.log(serviceID !== '', customerID !== '', customerProfileFromICP !== null, typeof customerProfileFromICP !== "undefined")
+					alertPopUp(true, true, 'Case has been created successfully');
+					if (serviceID !== '' && customerID !== '' && customerProfileFromICP !== null) {
+						submitProgress(60, 'Requesting SIEBEL(ICP) to create SR/TT . . . ', true, true)
+						createICPSR();
+					}
+					if ( serviceID !== '' && customerProfileFromNova !== null) {
+						submitProgress(60, 'Requesting SIEBEL(NOVA) to create SR/TT . . . ', true, true)
+						createNovaSR();
+					}
+					return submitProgress(100, 'Case has been created successfully', true, false)
+				})
 	}
 
 	let styles = {
@@ -235,216 +280,248 @@ function NonTechnicalCase() {
 	}
 
 	return (
-		<div style={styles.body}>
-			<div className="hb-container">
-				<div className="hb-title">Non-Technical Case</div>
-				{
-					showAlert &&
-					<div className="row">
-						<div className="col-xs-12">
-							<div
-								className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
-								style={{ marginBottom: '0', marginTop: '10px' }}
-							>
-								<button type="button" onClick={() => setShowAlert(false)} className="close"
-									data-dismiss="alert">
-									<i className="ace-icon fa fa-times" />
-								</button>
-								<p>{alertMessage}</p>
+			<div style={styles.body}>
+				<div className="hb-container">
+					<div className="hb-title">Non-Technical Case</div>
+					{
+							showAlert &&
+							<div className="row">
+								<div className="col-xs-12">
+									<div
+											className={`alert alert-block ${alertIsSuccess === true ? 'alert-success' : 'alert-danger'}`}
+											style={{marginBottom: '0', marginTop: '10px'}}
+									>
+										<button type="button" onClick={() => setShowAlert(false)} className="close"
+										        data-dismiss="alert">
+											<i className="ace-icon fa fa-times"/>
+										</button>
+										<p>{alertMessage}</p>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-				}
-				{/* <div>
+					}
+					{/* <div>
 					<button onClick={createICPSR}>ICP SR</button>
 				</div>
 				<div>
 					<button onClick={createNovaSR}>NOVA SR</button>
 				</div> */}
-				<form onSubmit={createNonTechnicalCase}>
-					<div className="hb-input-group w-100" id="searchbar">
-						<div className="hb-input-group-prepend">
-							<select id="searchbar-type" name="searchbar-type" value={searchBarType}
-								onChange={(e) => setSearchBarType(e.target.value)}>
-								<option value="service">Service ID</option>
-								<option value="login">Login ID</option>
-							</select>
-						</div>
-						<div className="hb-input-box hb-input-group-area">
-							<input
-								type="text"
-								id="search-detail"
-								name="search-detail"
-								placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
-								value={serviceID}
-								onChange={(e) => setServiceID(e.target.value)}
-							/>
-							{searchBarType === 'service' &&
+					<form onSubmit={createNonTechnicalCase}>
+						<div className="hb-input-group w-100" id="searchbar">
+							<div className="hb-input-group-prepend">
+								<select id="searchbar-type" name="searchbar-type" value={searchBarType}
+								        onChange={(e) => setSearchBarType(e.target.value)}>
+									<option value="service">Service ID</option>
+									<option value="login">Login ID</option>
+								</select>
+							</div>
+							<div className="hb-input-box hb-input-group-area">
 								<input
-									type='text'
-									id='customerIC'
-									name='customerIC'
-									placeholder='Please insert customer IC'
-									value={customerID}
-									onChange={(e) => setCustomerID(e.target.value)}
+										type="text"
+										id="search-detail"
+										name="search-detail"
+										placeholder={searchBarType === "service" ? "Insert Service ID" : "Insert Login ID"}
+										value={serviceID}
+										onChange={(e) => setServiceID(e.target.value)}
 								/>
-							}
-						</div>
-						<div className="hb-input-group-append" onClick={getCustomerProfile}>
-							<button className="btn" type="button" disabled={isLoading}><SearchIcon fontSize="large" /></button>
-							{isLoading &&
-								<CircularProgress
-									size={24}
-									sx={{
-										color: 'var(--color-success)',
-										position: 'absolute',
-										marginTop: '-32px',
-										marginLeft: '15px',
-									}}
-								/>
-							}
-						</div>
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail" for="customerName">Customer Name<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<input
-								type="text"
-								id="customerName"
-								name="customerName"
-								placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
-								value={customerNameInput}
-								onChange={(e) => setCustomerNameInput(e.target.value)}
-							/>
-						</div>
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail" htmlFor="customerName">Customer NRIC<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<input
-								type="text"
-								id="customerIC"
-								name="customerIC"
-								placeholder="9XXXXX-XX-XXXX"
-								value={customerID}
-								onChange={(e) => setCustomerID(e.target.value)}
-								// required
-							/>
-						</div>
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail" for="customerNumber">Customer Mobile Number<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<input
-								type="tel"
-								id="customerNumber"
-								name="customerName"
-								min={0}
-								placeholder="example: 0123456789"
-								value={customerMobileNumberInput}
-								onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
-							/>
-						</div>
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail" for="loggerNumber">Logger Mobile Number<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<input
-								type="tel"
-								id="loggerNumber"
-								name="loggerName"
-								min={0}
-								placeholder="example: 0123456789"
-								value={loggerMobileNumberInput}
-								onChange={(e) => setLoggerMobileNumber(e.target.value)}
-							/>
-						</div>
-					</div>
-
-
-					<div className="hb-input-group">
-						<label className="hb-detail" for='type'>Type</label>
-						<div className="hb-input-box">
-							<select id='type' name='type' value={typeSelect} disabled>
-								<option value={37}>Biling</option>
-							</select>
-						</div>
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail" for="area">Area<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
-								<option disabled value='0'>Select One</option>
-								<option value='82'>Complaint</option>
-								<option value='121'>Enquiries</option>
-							</select>
-						</div>
-					</div>
-
-					<div className="hb-input-group">
-						<label className="hb-detail" for="subarea">Sub-Area<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
-								<option value='0'>Select One</option>
-								{
-									subArea.filter(filter => filter.id !== '85').map((data, key) => data.parentID == areaSelect ? <option key={key} value={data.id}>{data.subArea}</option> : areaSelect === '0' && <option key={key} value={data.id}>{data.subArea}</option>
-									)
+								{searchBarType === 'service' &&
+										<input
+												type='text'
+												id='customerIC'
+												name='customerIC'
+												placeholder='Please insert customer IC'
+												value={customerID}
+												onChange={(e) => setCustomerID(e.target.value)}
+										/>
 								}
-							</select>
+							</div>
+							<div className="hb-input-group-append" onClick={getCustomerProfile}>
+								<button className="btn" type="button" disabled={isLoading}><SearchIcon fontSize="large"/></button>
+								{isLoading &&
+										<CircularProgress
+												size={24}
+												sx={{
+													color: 'var(--color-success)',
+													position: 'absolute',
+													marginTop: '-32px',
+													marginLeft: '15px',
+												}}
+										/>
+								}
+							</div>
 						</div>
-					</div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" for="product">Product</label>
-						<div className="hb-input-box">
-							<select id="product" name="product" value={productSelect}
-								onChange={(e) => setProduct(e.target.value)}>
-								<option disabled value='0'>Select One</option>
-								{product.map((data, key) => <option key={key} value={data.id}>{data.product}</option>)}
-							</select>
+						<div className="hb-input-group">
+							<label className="hb-detail" for="customerName">Customer Name<span style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<input
+										type="text"
+										id="customerName"
+										name="customerName"
+										placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
+										value={customerNameInput}
+										onChange={(e) => setCustomerNameInput(e.target.value)}
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" for="location">Location<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<select id="location" name="location" value={locationSelect}
-								onChange={e => setLocation(e.target.value)}>
-								<option disabled value='0'>Select One</option>
-								{areaLocation.map((data, i) => <option value={data.id}>{data.city}</option>)}
-							</select>
+						<div className="hb-input-group">
+							<label className="hb-detail" htmlFor="customerName">Customer NRIC<span
+									style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<input
+										type="text"
+										id="customerIC"
+										name="customerIC"
+										placeholder="9XXXXX-XX-XXXX"
+										value={customerID}
+										onChange={(e) => setCustomerID(e.target.value)}
+										// required
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail" for='description'>Description<span style={{ color: 'red' }}>*</span></label>
-						<div className="hb-input-box">
-							<textarea type='text' id='description' name='userDescription'
-								cols={50}
-								placeholder='example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps'
-								value={descriptionInput} onChange={(e) => setDescription(e.target.value)}
-							/>
+						<div className="hb-input-group">
+							<label className="hb-detail" for="customerNumber">Customer Mobile Number<span
+									style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<input
+										type="tel"
+										id="customerNumber"
+										name="customerName"
+										min={0}
+										placeholder="example: 0123456789"
+										value={customerMobileNumberInput}
+										onChange={(e) => setCustomerMobileNumberInput(e.target.value)}
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="hb-input-group">
-						<label className="hb-detail">Attachment</label>
-						<div className="hb-attachment">
-							<input type='file' name='imageAttach' />
+						<div className="hb-input-group">
+							<label className="hb-detail" for="loggerNumber">Logger Mobile Number<span style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<input
+										type="tel"
+										id="loggerNumber"
+										name="loggerName"
+										min={0}
+										placeholder="example: 0123456789"
+										value={loggerMobileNumberInput}
+										onChange={(e) => setLoggerMobileNumber(e.target.value)}
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="hb-button">
-						<input className="hb-submit" type="submit" title="Submit" />
-					</div>
-				</form>
+
+						<div className="hb-input-group">
+							<label className="hb-detail" for='type'>Type</label>
+							<div className="hb-input-box">
+								<select id='type' name='type' value={typeSelect} disabled>
+									<option value={37}>Biling</option>
+								</select>
+							</div>
+						</div>
+
+						<div className="hb-input-group">
+							<label className="hb-detail" for="area">Area<span style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<select id="area" name="area" value={areaSelect} onChange={e => setArea(e.target.value)}>
+									<option disabled value='0'>Select One</option>
+									<option value='82'>Complaint</option>
+									<option value='121'>Enquiries</option>
+								</select>
+							</div>
+						</div>
+
+						<div className="hb-input-group">
+							<label className="hb-detail" for="subarea">Sub-Area<span style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<select id="area" name="area" value={subAreaSelect} onChange={e => setSubArea(e.target.value)}>
+									<option value='0'>Select One</option>
+									{
+										subArea.filter(filter => filter.id !== '85').map((data, key) => data.parentID == areaSelect ?
+												<option key={key} value={data.id}>{data.subArea}</option> : areaSelect === '0' &&
+												<option key={key} value={data.id}>{data.subArea}</option>
+										)
+									}
+								</select>
+							</div>
+						</div>
+
+						<div className="hb-input-group">
+							<label className="hb-detail" for="product">Product</label>
+							<div className="hb-input-box">
+								<select id="product" name="product" value={productSelect}
+								        onChange={(e) => setProduct(e.target.value)}>
+									<option disabled value='0'>Select One</option>
+									{product.map((data, key) => <option key={key} value={data.id}>{data.product}</option>)}
+								</select>
+							</div>
+						</div>
+
+						<div className="hb-input-group">
+							<label className="hb-detail" for="location">Location<span style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+								<select id="location" name="location" value={locationSelect}
+								        onChange={e => setLocation(e.target.value)}>
+									<option disabled value='0'>Select One</option>
+									{areaLocation.map((data, i) => <option value={data.id}>{data.city}</option>)}
+								</select>
+							</div>
+						</div>
+
+						<div className="hb-input-group">
+							<label className="hb-detail" htmlFor="description">Description<span
+									style={{color: 'red'}}>*</span></label>
+							<div className="hb-input-box">
+                            <textarea
+		                            id="description"
+		                            className="hb-border"
+		                            name="userDescription"
+		                            cols={40}
+		                            placeholder="example: Need Help with abcd@unifi or Sales Lead Package unifi 100mbps"
+		                            value={descriptionInput}
+		                            onChange={(e) => setDescription(e.target.value)}
+		                            required
+                            />
+							</div>
+						</div>
+
+						<div className="hb-input-group">
+							<label className="hb-detail">Attachment</label>
+							<div className="hb-attachment">
+								<input type="file" name="imageAttach" onChange={(e) => setPicture(e.target.files[0])}
+								       accept="image/*"/>
+							</div>
+						</div>
+
+						<div className="hb-button">
+							{showSubmitLoading === true &&
+									<>
+										<CircularProgress
+												size={16}
+												sx={{
+													color: submitStatus === true ? 'var(--color-primary)' : 'var(--color-warning)',
+													position: 'absolute',
+													marginTop: '9px',
+													marginLeft: '12px',
+												}}
+										/>
+										<h6 style={{marginLeft: '35px', maxWidth: '60%'}}>{progressMessage}</h6>
+									</>
+							}
+							<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
+							       style={submitIsLoading ? {opacity: .5} : {opacity: 1}}/>
+							{showSubmitLoading === true &&
+									<LinearProgress sx={{width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px'}}
+									                color={submitStatus === true ? 'primary' : 'error'}
+									                variant="determinate" value={progress}
+									/>
+							}
+						</div>
+					</form>
+				</div>
 			</div>
-		</div>
 	)
 }
 
