@@ -45,7 +45,7 @@ function ActivateAccount(props) {
     function verifyEmail(email) {
 		LoginService.validateAccount('check-email', email, '').then(res => {
             console.log(res, 'verify email')
-			if (res.data[0].message === 'OK') {
+			if (res.data[0].response === 'OK') {
 				return auth(email)
 			}
 			setIsValidating(false);
@@ -165,7 +165,7 @@ function ActivateAccount(props) {
                                 </label>
                                 <div className="space" />
                                 <div className='clearfix'>
-                                    <button onClick={verifyEmail(emailInput)} className='btn btn-sm bt-primary' type='button'>Check email</button>
+                                    <button onClick={() => verifyEmail(emailInput)} className='btn btn-sm bt-primary' type='button'>Check email</button>
                                     <button className="width-35 pull-right btn btn-sm btn-primary" type='submit'>
                                         {/* {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5} /> : */}
                                         <>
