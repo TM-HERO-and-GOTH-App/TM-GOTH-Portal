@@ -72,7 +72,7 @@ function EditCaseDetail(props) {
 				serviceIDInput, serviceAddressInput, srNumberInput, ttNumberInput, locationType,
 				customerNameInput, segmentType, sourceType, ckcStatus, ckcNumberInput, customerLoginID,
 				stakeHolderRef, externalSystemInput, areaCode, subAreaCode, parseFloat(symptomCode),
-				siebelTargetSystem
+				siebelSystem
 		).then((res) => {
 			console.log(res, 'editCaseDetail');
 			if (res.response === "FAILED") {
