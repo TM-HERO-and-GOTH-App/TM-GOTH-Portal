@@ -184,7 +184,7 @@ function TechnicalCase() {
 			}
 			console.log(res)
 			if (res.data.message !== 'Case successfully created.') {
-				submitProgress(100, `Case creation Failed (${res.data}) . . .`, false, false)
+				submitProgress(100, `Case creation Failed (${res.data.message}) . . .`, false, false)
 				return alertPopUp(false, true, 'Case creation Failed!!');
 			}
 			submitProgress(40, 'Case creation Success . . .', true, true)
@@ -318,7 +318,7 @@ function TechnicalCase() {
 										placeholder="example: Mr Ahmad/Ms Chiu/Mr Rama"
 										value={customerNameInput}
 										onChange={(e) => setCustomerNameInput(e.target.value)}
-										// required
+										required
 								/>
 							</div>
 						</div>
@@ -458,7 +458,7 @@ function TechnicalCase() {
 							<label className="hb-detail" htmlFor="location">Location<span style={{color: 'red'}}>*</span></label>
 							<div className="hb-input-box">
 								<select id="location" name="location" value={locationSelect}
-								        onChange={e => setLocation(e.target.value)}>
+								        onChange={e => setLocation(e.target.value)} required>
 									<option style={{color: 'var(--color-gray-800)'}} disabled value='0'>Select One</option>
 									{areaLocation.map((c, i) => <option value={c.id}>{c.city}</option>)}
 								</select>
