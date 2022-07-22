@@ -178,7 +178,7 @@ function CreateCase() {
 				return;
 			}
 			CreateCaseService.updateSRNumber(res.data.SRNumber, res.data.SRRowID, caseToken).then(
-				(res, err) => {
+				(dbRes, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
 					if (caseToken === undefined || res.data.SRNumber === null || res.data.SRNumber === undefined || res.data.SRRowID === undefined || res.data.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save SR in DB!!')
@@ -192,7 +192,7 @@ function CreateCase() {
 		})
 	}
 
-	// Need to Pass relatedSrRowID data
+	// Need to Pass relatedSrRowID data - Fix by passing useRef variable
 	const createICPTT = () => {
 		CreateCaseService.createICPTT(
 			customerProfileFromNova.CustInfo.CustomerRowID,
@@ -213,7 +213,7 @@ function CreateCase() {
 				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
 			}
 			CreateCaseService.updateTTNumber(res.data.TicketID, caseToken).then(
-				(res, err) => {
+				(dbRes, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
 					if (caseToken === undefined || res.data.TicketID === null || res.data.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
@@ -248,20 +248,20 @@ function CreateCase() {
 				return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
 			}
 			CreateCaseService.updateSRNumber(res.data.response.SRNumber, res.data.response.SRRowID, caseToken).then(
-				(res, err) => {
+				(dbRes, err) => {
 					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					if (caseToken === undefined || res.data.response.SRNumber === undefined ||  res.data.response.SRNumber === null || res.data.response.SRRowID === undefined || res.data.response.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
+					if (caseToken === undefined && res.data.response?.SRNumber === undefined &&  res.data.response?.SRNumber === null && res.data.response?.SRRowID === undefined && res.data.response?.SRRowID === null) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save SR in DB!!')
 				}
 			)
-			console.log(res.data.response.SRNumber)
+			// console.log(res.data.response.SRNumber)
 			setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
 			// return createNovaTT();
 			return;
 		})
 	}
 
-	// Error cause from Symptom Code tag
+	// Error cause from Symptom Code tag - FIX by the performance filteration
 	const createNovaTT = () => {
 		CreateCaseService.createNovaTT(
 			customerProfileFromNova.CustInfo.CustomerRowID,
@@ -278,7 +278,7 @@ function CreateCase() {
 				return setAlert(true, false, 'TT Creation for NOVA failed!!');
 			}
 			CreateCaseService.updateTTNumber(res.data.response.TicketID, caseToken).then(
-				(res, err) => {
+				(dbRes, err) => {
 					if (err) { console.log(err, 'Insert TT Number Failed'); }
 					if (caseToken === undefined || res.data.response.TicketID === null || res.data.response.TicketID === undefined) return console.log('Case Token or TicketID is empty! Failed to save Ticket ID!!');
 					return console.log('Successfully save TT in DB!!')
