@@ -63,6 +63,7 @@ function ActivateAccount(props) {
 				console.log(err);
 				setIsValidating(false);
 				setAlertStatus(true);
+                setAlertMessage(err)
 				return;
 			}
 			if (Object.values(res.data[0])[0] === '') {
@@ -76,10 +77,6 @@ function ActivateAccount(props) {
 			sessionStorage.setItem("userToken", JSON.stringify(authToken));
 			return getLoggerProfile(authToken)
 		})
-			.catch(e => {
-				setIsValidating(false);
-				console.log(e);
-			})
 	};
 
 	const getLoggerProfile = (authToken) => {
