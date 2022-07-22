@@ -44,6 +44,7 @@ function ActivateAccount(props) {
 
     function verifyEmail(email) {
 		LoginService.validateAccount('check-email', email, '').then(res => {
+            console.log(res, 'verify email')
 			if (res.data[0].message === 'OK') {
 				return auth(email)
 			}
