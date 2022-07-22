@@ -29,117 +29,66 @@ function Loginbox(props) {
 	const handleSubmit = (email, password) => e => {
 		setIsValidating(true);
 		e.preventDefault();
-		return ldapAuth(email, password);
-		// return auth(email, password);
+		// return ldapAuth(email, password);
+		return auth(email, password);
 	};
 
-	function createLdapProfile(email) {
-		LoginService.validateAccount('first-time-login', '', email).then(res => {
-			if (res.data[0].message === 'OK') {
-				return auth(email)
-			}
-			setSuccessLogin(false)
-			setIsValidating(false);
-			setAlertStatus(true)
-			setAlertMessage('Email is not registered in DB');
-			return;
-		})
-	}
+	// function createLdapProfile(email) {
+	// 	LoginService.validateAccount('first-time-login', '', email).then(res => {
+	// 		if (res.data[0].response === 'OK') {
+	// 			return auth(email)
+	// 		}
+	// 		setSuccessLogin(false)
+	// 		setIsValidating(false);
+	// 		setAlertStatus(true)
+	// 		setAlertMessage('Email is not registered in DB');
+	// 		return;
+	// 	})
+	// }
 
-	// LDAP Auth
-	function ldapAuth(id, password) {
-		LoginService.ldapLogin(id, password).then((res, err) => {
-			console.log(res)
-			if (err && res === {} && res === undefined && res === null) {
-				setSuccessLogin(false)
-				setIsValidating(false);
-				setAlertStatus(true);
-				setAlertMessage('An error has happened!!');
-				return;
-			}
-			if(res.data[0].message !== 'User successfully login to GOTH!!'){
-				setSuccessLogin(false)
-				setIsValidating(false);
-				setAlertStatus(true);
-				setAlertMessage('Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!');
-				return;
-			}
-			localStorage.setItem('userData', JSON.stringify(res.data.userAttribute));
-			return verifyEmail(res.data[0].userAttribute.mail);
-		})
-	}
+	// // LDAP Auth
+	// function ldapAuth(id, password) {
+	// 	LoginService.ldapLogin(id, password).then((res, err) => {
+	// 		console.log(res)
+	// 		if (err && res === {} && res === undefined && res === null) {
+	// 			setSuccessLogin(false)
+	// 			setIsValidating(false);
+	// 			setAlertStatus(true);
+	// 			setAlertMessage('An error has happened!!');
+	// 			return;
+	// 		}
+	// 		if(res.data[0].message !== 'User successfully login to GOTH!!'){
+	// 			setSuccessLogin(false)
+	// 			setIsValidating(false);
+	// 			setAlertStatus(true);
+	// 			setAlertMessage('Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!');
+	// 			return;
+	// 		}
+	// 		localStorage.setItem('userData', JSON.stringify(res.data.userAttribute));
+	// 		return verifyEmail(res.data[0].userAttribute.mail);
+	// 	})
+	// }
 
-	function verifyEmail(email) {
-		LoginService.validateAccount('check-email', email, '').then(res => {
-			if (res.data[0].message === 'OK') {
-				return auth(email)
-			}
-			setIsValidating(false);
-			setAlertStatus(true)
-			setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
-			return;
-		})
-	}
+	// function verifyEmail(email) {
+	// 	LoginService.validateAccount('check-email', email, '').then(res => {
+	// 		if (res.data[0].message === 'OK') {
+	// 			return auth(email)
+	// 		}
+	// 		setIsValidating(false);
+	// 		setAlertStatus(true)
+	// 		setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
+	// 		return;
+	// 	})
+	// }
 
-	const auth = (email, password) => {
-		LoginService.requestToken(email).then((err, res) => {
-			console.log(Object.values(res.data[0])[0]);
-			console.log(res.data)
-			if (err) {
-				console.log(err);
-				setIsValidating(false);
-				setAlertStatus(true);
-				setAlertMessage(err)
-				return;
-			}
-			if (Object.values(res.data[0])[0] === '') {
-				console.log(err);
-				setIsValidating(false);
-				setAlertStatus(true);
-				setAlertMessage('Authentication token creation failed!!')
-				return;
-			}
-			const authToken = Object.values(res.data[0])[0];
-			sessionStorage.setItem("userToken", JSON.stringify(authToken));
-			return getLoggerProfile(authToken)
-		})
-	};
-
-	const getLoggerProfile = (authToken) => {
-		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
-		LoginService.getUserProfile(authToken).then((res) => {
-			// console.log(res.data[0]);
-			// setIsValidating(false);
-			const data = res.data[0]
-			if (data.category !== "STAKEHOLDER") {
-				setAlertStatus(true);
-				setAlertMessage("Your account is not yet registered as Stakeholder");
-				setIsValidating(false);
-			} else {
-				sessionStorage.setItem("UserData", JSON.stringify(data));
-				getLov(authToken);
-			}
-		});
-	};
-
-	const getLov = (authToken) => {
-		LoginService.getSystemLOV(authToken).then((res) => {
-			sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
-			props.history.replace("/");
-			setIsValidating(false);
-		});
-	};
-
-	// GOTH Login
-	// function auth(email, password) {
-	// 	LoginService.requestToken(email).then((res, err) => {
+	// const auth = (email, password) => {
+	// 	LoginService.requestToken(email).then((err, res) => {
 	// 		// console.log(Object.values(res.data[0])[0]);
-	// 		console.log(res.data)
+	// 		// console.log(res.data)
 	// 		if (err) {
 	// 			console.log(err);
 	// 			setIsValidating(false);
 	// 			setAlertStatus(true);
-	// 			setAlertMessage(err);
 	// 			return;
 	// 		}
 	// 		if (Object.values(res.data[0])[0] === '') {
@@ -151,37 +100,15 @@ function Loginbox(props) {
 	// 		}
 	// 		const authToken = Object.values(res.data[0])[0];
 	// 		sessionStorage.setItem("userToken", JSON.stringify(authToken));
-	// 		// if(window.confirm('Testing')) return signIn(authToken, email, password)
-	// 		return signIn(authToken, email, password)
+	// 		return getLoggerProfile(authToken)
 	// 	})
 	// 		.catch(e => {
 	// 			setIsValidating(false);
 	// 			console.log(e);
 	// 		})
 	// };
-	//
-	// function signIn(authToken, email, password) {
-	// 	LoginService.signIn(authToken, email, password).then((res, err) => {
-	// 		// console.log(res.data);
-	// 		// console.log(Object.values(res.data[0])[0])
-	// 		// setIsValidating(false);
-	// 		if (err) {
-	// 			setAlertStatus(true);
-	// 			setAlertMessage("An error has occured");
-	// 			setIsValidating(false);
-	// 			return;
-	// 		}
-	// 		if (res.data === undefined || Object.values(res.data[0])[0] === 0) {
-	// 			setAlertStatus(true);
-	// 			setAlertMessage("Email or Password does not match.");
-	// 			setIsValidating(false);
-	// 			return;
-	// 		}
-	// 		return getLoggerProfile(authToken);
-	// 	});
-	// };
-	//
-	// function getLoggerProfile(authToken) {
+
+	// const getLoggerProfile = (authToken) => {
 	// 	const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 	// 	LoginService.getUserProfile(authToken).then((res) => {
 	// 		// console.log(res.data[0]);
@@ -191,21 +118,97 @@ function Loginbox(props) {
 	// 			setAlertStatus(true);
 	// 			setAlertMessage("Your account is not yet registered as Stakeholder");
 	// 			setIsValidating(false);
-	// 			return;
 	// 		} else {
 	// 			sessionStorage.setItem("UserData", JSON.stringify(data));
-	// 			return getLov(authToken);
+	// 			getLov(authToken);
 	// 		}
 	// 	});
 	// };
-	//
-	// function getLov(authToken) {
+
+	// const getLov = (authToken) => {
 	// 	LoginService.getSystemLOV(authToken).then((res) => {
 	// 		sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
 	// 		props.history.replace("/");
 	// 		setIsValidating(false);
 	// 	});
 	// };
+
+	// GOTH Login
+	function auth(email, password) {
+		LoginService.requestToken(email).then((res, err) => {
+			// console.log(Object.values(res.data[0])[0]);
+			console.log(res.data)
+			if (err) {
+				console.log(err);
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage(err);
+				return;
+			}
+			if (Object.values(res.data[0])[0] === '') {
+				console.log(err);
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage('Authentication token creation failed!!')
+				return;
+			}
+			const authToken = Object.values(res.data[0])[0];
+			sessionStorage.setItem("userToken", JSON.stringify(authToken));
+			// if(window.confirm('Testing')) return signIn(authToken, email, password)
+			return signIn(authToken, email, password)
+		})
+			.catch(e => {
+				setIsValidating(false);
+				console.log(e);
+			})
+	};
+
+	function signIn(authToken, email, password) {
+		LoginService.signIn(authToken, email, password).then((res, err) => {
+			// console.log(res.data);
+			// console.log(Object.values(res.data[0])[0])
+			// setIsValidating(false);
+			if (err) {
+				setAlertStatus(true);
+				setAlertMessage("An error has occured");
+				setIsValidating(false);
+				return;
+			}
+			if (res.data === undefined || Object.values(res.data[0])[0] === 0) {
+				setAlertStatus(true);
+				setAlertMessage("Email or Password does not match.");
+				setIsValidating(false);
+				return;
+			}
+			return getLoggerProfile(authToken);
+		});
+	};
+
+	function getLoggerProfile(authToken) {
+		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
+		LoginService.getUserProfile(authToken).then((res) => {
+			// console.log(res.data[0]);
+			// setIsValidating(false);
+			const data = res.data[0]
+			if (data.category !== "STAKEHOLDER") {
+				setAlertStatus(true);
+				setAlertMessage("Your account is not yet registered as Stakeholder");
+				setIsValidating(false);
+				return;
+			} else {
+				sessionStorage.setItem("UserData", JSON.stringify(data));
+				return getLov(authToken);
+			}
+		});
+	};
+
+	function getLov(authToken) {
+		LoginService.getSystemLOV(authToken).then((res) => {
+			sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
+			props.history.replace("/");
+			setIsValidating(false);
+		});
+	};
 
 	return (
 		// We make props so that the styling is apply
@@ -278,7 +281,7 @@ function Loginbox(props) {
 					</div>
 					{/* /.widget-main */}
 
-					{
+					{/* {
 						successLogin === false && <div className="toolbar clearfix">
 							<div />
 							<div>
@@ -292,7 +295,7 @@ function Loginbox(props) {
 								</button>
 							</div>
 						</div>
-					}
+					} */}
 				</div>
 			</div>
 		</LoginTheme>

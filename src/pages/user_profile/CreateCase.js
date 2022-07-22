@@ -311,7 +311,7 @@ function CreateCase() {
 					}
 
 					{/*/!*Button Added for api testing*!/*/}
-					<div className="hb-input-group">
+					{/* <div className="hb-input-group">
 						<button className='btn btn-sm' onClick={createICPSR}>
 							createICPSR
 						</button>
@@ -324,7 +324,7 @@ function CreateCase() {
 						<button className='btn btn-sm' onClick={createNovaTT}>
 							createNovaTT
 						</button>
-					</div>
+					</div> */}
 
 					<div align="right" className="row row-cols-auto">
 						<div align="center" className='cc-search-container'>

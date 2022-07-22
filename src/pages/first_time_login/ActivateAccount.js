@@ -58,7 +58,7 @@ function ActivateAccount(props) {
     const auth = (email, password) => {
 		LoginService.requestToken(email).then((err, res) => {
 			console.log(Object.values(res.data[0])[0]);
-			// console.log(res.data)
+			console.log(res.data)
 			if (err) {
 				console.log(err);
 				setIsValidating(false);
