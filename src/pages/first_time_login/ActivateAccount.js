@@ -57,7 +57,7 @@ function ActivateAccount(props) {
 
     const auth = (email, password) => {
 		LoginService.requestToken(email).then((err, res) => {
-			// console.log(Object.values(res.data[0])[0]);
+			console.log(Object.values(res.data[0])[0]);
 			// console.log(res.data)
 			if (err) {
 				console.log(err);
@@ -82,7 +82,7 @@ function ActivateAccount(props) {
 	const getLoggerProfile = (authToken) => {
 		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 		LoginService.getUserProfile(authToken).then((res) => {
-			// console.log(res.data[0]);
+			console.log(res.data[0]);
 			// setIsValidating(false);
 			const data = res.data[0]
 			if (data.category !== "STAKEHOLDER") {
