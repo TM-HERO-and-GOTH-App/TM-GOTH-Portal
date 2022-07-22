@@ -44,7 +44,8 @@ function ActivateAccount(props) {
 
     function verifyEmail(email) {
 		LoginService.validateAccount('check-email', email, '').then(res => {
-			if (res.data[0].message === 'OK') {
+            console.log(res, 'verify email')
+			if (res.data[0].response === 'OK') {
 				return auth(email)
 			}
 			setIsValidating(false);
@@ -56,12 +57,13 @@ function ActivateAccount(props) {
 
     const auth = (email, password) => {
 		LoginService.requestToken(email).then((err, res) => {
-			// console.log(Object.values(res.data[0])[0]);
+			console.log(Object.values(res.data[0])[0]);
 			// console.log(res.data)
 			if (err) {
 				console.log(err);
 				setIsValidating(false);
 				setAlertStatus(true);
+                setAlertMessage(err)
 				return;
 			}
 			if (Object.values(res.data[0])[0] === '') {
@@ -75,16 +77,12 @@ function ActivateAccount(props) {
 			sessionStorage.setItem("userToken", JSON.stringify(authToken));
 			return getLoggerProfile(authToken)
 		})
-			.catch(e => {
-				setIsValidating(false);
-				console.log(e);
-			})
 	};
 
 	const getLoggerProfile = (authToken) => {
 		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 		LoginService.getUserProfile(authToken).then((res) => {
-			// console.log(res.data[0]);
+			console.log(res.data[0]);
 			// setIsValidating(false);
 			const data = res.data[0]
 			if (data.category !== "STAKEHOLDER") {
@@ -164,7 +162,7 @@ function ActivateAccount(props) {
                                 </label>
                                 <div className="space" />
                                 <div className='clearfix'>
-                                    <button onClick={verifyEmail(emailInput)} className='btn btn-sm bt-primary' type='button'>Check email</button>
+                                    <button onClick={() => verifyEmail(emailInput)} className='btn btn-sm bt-primary' type='button'>Check email</button>
                                     <button className="width-35 pull-right btn btn-sm btn-primary" type='submit'>
                                         {/* {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5} /> : */}
                                         <>
