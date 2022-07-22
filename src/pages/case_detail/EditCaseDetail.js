@@ -371,30 +371,31 @@ function EditCaseDetail(props) {
 						</Link>
 					</div>
 					<div className='col-sm-5' align='right'>
-						<button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP
+						{/* <button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP
 						</button>
 						<button className='btn btn-danger' type='button' onClick={createICPTT}>Create TT for ICP
 						</button>
 						<button className='btn btn-danger' type='button' onClick={createNovaSR}>Create SR for NOVA
 						</button>
 						<button className='btn btn-danger' type='button' onClick={createNovaTT}>Create TT for NOVA
-						</button>
+						</button> */}
 						{
-							caseDetailData?.SYSTEM_TARGET === 'ICP' ?
-								caseDetailData?.SR_NUM === null ?
-									(<button className='btn btn-danger' type='button'>Create SR for ICP</button>)
-									:
-									caseDetailData?.TT_NUM === null &&
-									(<button className='btn btn-danger' type='button'>Create TT for ICP</button>)
-								:
-								caseDetailData?.SYSTEM_TARGET === 'NOVA' ?
-									caseDetailData?.SR_NUM === null ?
-										(<button className='btn btn-danger' type='button'>Create SR for NOVA</button>)
-										:
-										(caseDetailData?.TT_NUM === null &&
-											<button className='btn btn-danger' type='button'>Create TT for
-												NOVA</button>)
-									: null
+							(caseDetailData?.SYSTEM_TARGET === 'ICP' || siebelSystem === '660') &&
+							<>
+								{caseDetailData?.SR_NUM === null && <button className='btn btn-danger' type='button'>Create SR for ICP</button>}
+								{caseDetailData?.TT_NUM === null && <button className='btn btn-danger' type='button'>Create TT for ICP</button>}
+
+							</>
+						}
+						{
+
+							(caseDetailData?.SYSTEM_TARGET === 'ICP' || siebelSystem === '662') &&
+							<>
+								{caseDetailData?.SR_NUM === null && <button className='btn btn-danger' type='button'>Create SR for NOVA</button>}
+								{caseDetailData?.TT_NUM === null &&
+									<button className='btn btn-danger' type='button'>Create TT for
+										NOVA</button>}
+							</>
 						}
 					</div>
 					<br />
@@ -848,7 +849,7 @@ function EditCaseDetail(props) {
 								</div>
 
 								<div className="profile-info-row">
-									<div className="profile-info-name" style={{ color: "red" }}>
+									<div className="profile-info-name">
 										SR Number
 									</div>
 									<div className="profile-info-value">
