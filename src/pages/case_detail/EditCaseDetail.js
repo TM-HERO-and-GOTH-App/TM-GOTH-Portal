@@ -482,6 +482,7 @@ function EditCaseDetail(props) {
 											name="areaLocationID"
 											value={locationType}
 											onChange={(e) => setLocationType(e.target.value)}
+                                            required
 										>
 											<option value="0">Choose a State...</option>
 											{lovData
@@ -693,6 +694,7 @@ function EditCaseDetail(props) {
 											data-placeholder="Choose a Case Type..."
 											value={caseType}
 											onChange={(e) => setCaseType(e.target.value)}
+                                            required
 										>
 											<option value="0">Choose a Case Type...</option>
 											{lovData
@@ -718,6 +720,7 @@ function EditCaseDetail(props) {
 											name="productNameID"
 											value={productType}
 											onChange={(e) => setProductType(e.target.value)}
+                                            required
 										>
 											<option value="0">Choose a Product Name...</option>
 											{lovData

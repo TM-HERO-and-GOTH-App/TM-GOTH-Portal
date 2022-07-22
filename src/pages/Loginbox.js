@@ -83,12 +83,13 @@ function Loginbox(props) {
 
 	const auth = (email, password) => {
 		LoginService.requestToken(email).then((err, res) => {
-			// console.log(Object.values(res.data[0])[0]);
-			// console.log(res.data)
+			console.log(Object.values(res.data[0])[0]);
+			console.log(res.data)
 			if (err) {
 				console.log(err);
 				setIsValidating(false);
 				setAlertStatus(true);
+				setAlertMessage(err)
 				return;
 			}
 			if (Object.values(res.data[0])[0] === '') {
@@ -102,10 +103,6 @@ function Loginbox(props) {
 			sessionStorage.setItem("userToken", JSON.stringify(authToken));
 			return getLoggerProfile(authToken)
 		})
-			.catch(e => {
-				setIsValidating(false);
-				console.log(e);
-			})
 	};
 
 	const getLoggerProfile = (authToken) => {
@@ -162,7 +159,7 @@ function Loginbox(props) {
 	// 			console.log(e);
 	// 		})
 	// };
-
+	//
 	// function signIn(authToken, email, password) {
 	// 	LoginService.signIn(authToken, email, password).then((res, err) => {
 	// 		// console.log(res.data);
@@ -183,7 +180,7 @@ function Loginbox(props) {
 	// 		return getLoggerProfile(authToken);
 	// 	});
 	// };
-
+	//
 	// function getLoggerProfile(authToken) {
 	// 	const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 	// 	LoginService.getUserProfile(authToken).then((res) => {
@@ -201,7 +198,7 @@ function Loginbox(props) {
 	// 		}
 	// 	});
 	// };
-
+	//
 	// function getLov(authToken) {
 	// 	LoginService.getSystemLOV(authToken).then((res) => {
 	// 		sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
