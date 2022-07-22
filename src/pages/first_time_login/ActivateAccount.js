@@ -119,7 +119,7 @@ function ActivateAccount(props) {
                         <div>
                             <h4>Have LDAP Profile but not using TM email, Please insert Non-TM email and Login immediately</h4>
                         </div>
-                        <form>
+                        <form onSubmit={checkCode}>
                             <fieldset>
                                 {alertStatus && (
                                     <div className={`alert alert-${alertSuccess === true ? 'success' : 'danger'}`}>
@@ -128,7 +128,7 @@ function ActivateAccount(props) {
                                             className="close"
                                             data-dismiss="alert"
                                         >
-                                            <i className="ace-icon fa fa-times" onClick={() => setAlertStatus(!alertStatus)} />
+                                            <i className="ace-icon fa fa-times" onClick={() => setAlertStatus(false)} />
                                         </button>
                                         {alertMessage}
                                     </div>
@@ -164,8 +164,8 @@ function ActivateAccount(props) {
                                 </label>
                                 <div className="space" />
                                 <div className='clearfix'>
-                                    <button onClick={verifyEmail(emailInput)} className='btn btn-sm bt-primary'>Check email</button>
-                                    <button className="width-35 pull-right btn btn-sm btn-primary" onClick={checkCode}>
+                                    <button onClick={verifyEmail(emailInput)} className='btn btn-sm bt-primary' type='button'>Check email</button>
+                                    <button className="width-35 pull-right btn btn-sm btn-primary" type='submit'>
                                         {/* {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5} /> : */}
                                         <>
                                             <i className="ace-icon fa fa-key" />
