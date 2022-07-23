@@ -45,18 +45,18 @@ function ActivateAccount(props) {
     function verifyEmail(email) {
 		LoginService.validateAccount('check-email', email, '').then(res => {
             console.log(res, 'verify email')
-			if (res.data[0].response === 'OK') {
-				return auth(email)
+			if (res.data[0].response !== 'OK') {
+                setIsValidating(false);
+                setAlertStatus(true)
+                setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
+                return;
 			}
-			setIsValidating(false);
-			setAlertStatus(true)
-			setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
-			return;
+            return auth(email)
 		})
 	}
 
     const auth = (email, password) => {
-		LoginService.requestToken(email).then((err, res) => {
+		LoginService.requestToken(email).then((res, err) => {
 			console.log(Object.values(res.data[0])[0]);
 			console.log(res.data)
 			if (err) {
