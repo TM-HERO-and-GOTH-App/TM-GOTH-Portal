@@ -85,9 +85,9 @@ function ActivateAccount(props) {
 			console.log(res.data[0]);
 			// setIsValidating(false);
 			const data = res.data[0]
-			if (data.category !== "STAKEHOLDER") {
+			if (data.category !== "TM") {
 				setAlertStatus(true);
-				setAlertMessage("Your account is not yet registered as Stakeholder");
+				setAlertMessage("Your account is not yet registered as TM Staff");
 				setIsValidating(false);
 			} else {
 				sessionStorage.setItem("UserData", JSON.stringify(data));

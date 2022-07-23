@@ -663,7 +663,7 @@ function CreateCase() {
                                                                     {
                                                                         ["SAVE QOS SME", "SAVE QOS Consumer"].map((_data) => {
                                                                             return (
-                                                                                <optgroup className="" label={_data}>
+                                                                                <optgroup label={_data}>
                                                                                     {
                                                                                         lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                                                             return (data.PARENT_ID === 662 && [680, 682, 686, 688].includes(data.L_ID) &&
@@ -675,7 +675,7 @@ function CreateCase() {
                                                                             )
                                                                         })
                                                                     },
-                                                                    <optgroup className="" label="Failure">
+                                                                    <optgroup label="Failure">
                                                                         {
                                                                             lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                                                 return (data.PARENT_ID === 662 && [680, 682, 686, 684].includes(data.L_ID) &&
@@ -685,7 +685,7 @@ function CreateCase() {
                                                                             })
                                                                         }
                                                                     </optgroup>
-                                                                    <optgroup className="" label="Performance">
+                                                                    <optgroup label="Performance">
                                                                         {
                                                                             lovData.filter(filter => filter.L_GROUP === 'SYMPTOM').map((data, key) => {
                                                                                 return (data.PARENT_ID === 662 && [688].includes(data.L_ID) &&
