@@ -161,8 +161,8 @@ const CreateCaseService = {
         })
     },
 
-    createNovaTT(customerRowID, billingAccountNumber, billingAccountRowID,
-                 symptomCode, contactDetailRowID, contactDetailReported, caseDescription, createdByPosition) {
+    createNovaTT(customerRowID, billingAccountNumber, billingAccountRowID, symptomCode, symptomType,
+                 contactDetailRowID, contactDetailReported, caseDescription, createdByPosition) {
         return Axios.post(url + '/siebel_eai/nova/create-TT', {
             "customerRowID": customerRowID,
             "billingAccountNumber": billingAccountNumber,
@@ -171,7 +171,7 @@ const CreateCaseService = {
             "product": "",
             "source": "SPICE",
             "symptomCode": symptomCode,
-            "category": "Performance",
+            "category": symptomType,
             "owner": "",
             "serviceRowID": "",
             "preferredAcknowledgement": "",
@@ -192,7 +192,7 @@ const CreateCaseService = {
             "notedID": "",
             "createdBy": "",
             "noteDescription": caseDescription,
-            "createdByPosition": "EAI"
+            "createdByPosition": createdByPosition
         }).then(res => {
             return res
         }).catch(err => {
