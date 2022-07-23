@@ -61,7 +61,7 @@ function Loginbox(props) {
 				setSuccessLogin(false)
 				setIsValidating(false);
 				setAlertStatus(true);
-				setAlertMessage('Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!');
+				setAlertMessage('If you are a first time logger then click "First Time Logger". If not, the please click "Login Using email and password".');
 				return;
 			}
 			localStorage.setItem('userData', JSON.stringify(res.data.userAttribute));
@@ -76,7 +76,7 @@ function Loginbox(props) {
 			}
 			setIsValidating(false);
 			setAlertStatus(true)
-			setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
+			setAlertMessage('Your email are not register to GOTH application. Please click "First Time Logger".');
 			return;
 		})
 	}
