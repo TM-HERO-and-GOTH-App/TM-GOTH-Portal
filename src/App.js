@@ -52,7 +52,7 @@ function App() {
         <Route path="/login" component={Loginbox} />
         <Route path="/forgotpassword" component={Forgot} />
         <Route path="/signup" component={SignUp} />
-        <Route path="/activate-ldap-profile" component={ActivateAccount} />
+        <Route path="email-login" component={ActivateAccount} />
         <Route path="/chat/1" component={ChatPage} />
         <Route path='/non-technical-case' component={NonTechnicalCase} />
         <Route path='/technical-case' component={TechnicalCase} />

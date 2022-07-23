@@ -133,83 +133,6 @@ function Loginbox(props) {
 		});
 	};
 
-	// GOTH Login
-	// function auth(email, password) {
-	// 	LoginService.requestToken(email).then((res, err) => {
-	// 		// console.log(Object.values(res.data[0])[0]);
-	// 		console.log(res.data)
-	// 		if (err) {
-	// 			console.log(err);
-	// 			setIsValidating(false);
-	// 			setAlertStatus(true);
-	// 			setAlertMessage(err);
-	// 			return;
-	// 		}
-	// 		if (Object.values(res.data[0])[0] === '') {
-	// 			console.log(err);
-	// 			setIsValidating(false);
-	// 			setAlertStatus(true);
-	// 			setAlertMessage('Authentication token creation failed!!')
-	// 			return;
-	// 		}
-	// 		const authToken = Object.values(res.data[0])[0];
-	// 		sessionStorage.setItem("userToken", JSON.stringify(authToken));
-	// 		// if(window.confirm('Testing')) return signIn(authToken, email, password)
-	// 		return signIn(authToken, email, password)
-	// 	})
-	// 		.catch(e => {
-	// 			setIsValidating(false);
-	// 			console.log(e);
-	// 		})
-	// };
-
-	// function signIn(authToken, email, password) {
-	// 	LoginService.signIn(authToken, email, password).then((res, err) => {
-	// 		// console.log(res.data);
-	// 		// console.log(Object.values(res.data[0])[0])
-	// 		// setIsValidating(false);
-	// 		if (err) {
-	// 			setAlertStatus(true);
-	// 			setAlertMessage("An error has occured");
-	// 			setIsValidating(false);
-	// 			return;
-	// 		}
-	// 		if (res.data === undefined || Object.values(res.data[0])[0] === 0) {
-	// 			setAlertStatus(true);
-	// 			setAlertMessage("Email or Password does not match.");
-	// 			setIsValidating(false);
-	// 			return;
-	// 		}
-	// 		return getLoggerProfile(authToken);
-	// 	});
-	// };
-
-	// function getLoggerProfile(authToken) {
-	// 	const userToken = JSON.parse(sessionStorage.getItem('userToken'))
-	// 	LoginService.getUserProfile(authToken).then((res) => {
-	// 		// console.log(res.data[0]);
-	// 		// setIsValidating(false);
-	// 		const data = res.data[0]
-	// 		if (data.category !== "STAKEHOLDER") {
-	// 			setAlertStatus(true);
-	// 			setAlertMessage("Your account is not yet registered as Stakeholder");
-	// 			setIsValidating(false);
-	// 			return;
-	// 		} else {
-	// 			sessionStorage.setItem("UserData", JSON.stringify(data));
-	// 			return getLov(authToken);
-	// 		}
-	// 	});
-	// };
-
-	// function getLov(authToken) {
-	// 	LoginService.getSystemLOV(authToken).then((res) => {
-	// 		sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
-	// 		props.history.replace("/");
-	// 		setIsValidating(false);
-	// 	});
-	// };
-
 	return (
 		// We make props so that the styling is apply
 		<LoginTheme>
@@ -285,12 +208,12 @@ function Loginbox(props) {
 						successLogin === false && <div className="toolbar clearfix">
 							<div />
 							<div>
-								<a href="/activate-ldap-profile" data-target="#activate-box" className="user-signup-link">
+								<a href="/email-login" data-target="#activate-box" className="user-signup-link">
 									<i class="ace-icon fa fa-unlock" /> {' '}
-									Activate Account
+									Login Using email and password
 								</a>
 								<a href='#' onCick={createLdapProfile} className="user-signup-link">
-									Merge Non-TM Email with LDAP System {' '}
+									First time logger {' '}
 									<i class="ace-icon fa fa-arrow-right" />
 								</a>
 							</div>

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 function ActivateAccount(props) {
     const [isValidating, setIsValidating] = useState(false);
     let [emailInput, setEmailInput] = useState('');
+    const [userPassword, setUserPassword] = useState("");
     let [activationCodeInput, setActivationCodeInput] = useState('');
     let [activationCode, setActivationCode] = useState('');
     let ldapEmail = props.history.location?.state?.email
@@ -42,67 +43,82 @@ function ActivateAccount(props) {
         return setAlert(true, true, 'Wrong activation code!!');
     }
 
-    function verifyEmail(email) {
-		LoginService.validateAccount('check-email', email, '').then(res => {
-            console.log(res, 'verify email')
-			if (res.data[0].response !== 'OK') {
+    // GOTH Login
+    function auth(email, password) {
+        LoginService.requestToken(email).then((res, err) => {
+            // console.log(Object.values(res.data[0])[0]);
+            console.log(res.data, 'Auth Token')
+            if (err) {
+                console.log(err);
                 setIsValidating(false);
-                setAlertStatus(true)
-                setAlertMessage('Email is not registered in DB!! Please click the two button below for "First-Time Logger" and "Non-TM Email Merger!!"');
+                setAlertStatus(true);
+                setAlertMessage(err);
                 return;
-			}
-            return auth(email)
-		})
-	}
+            }
+            if (Object.values(res.data[0])[0] === '') {
+                console.log(err);
+                setIsValidating(false);
+                setAlertStatus(true);
+                setAlertMessage('Authentication token creation failed!!')
+                return;
+            }
+            const authToken = Object.values(res.data[0])[0];
+            sessionStorage.setItem("userToken", JSON.stringify(authToken));
+            // if(window.confirm('Testing')) return signIn(authToken, email, password)
+            return signIn(authToken, email, password)
+        })
+            .catch(e => {
+                setIsValidating(false);
+                console.log(e);
+            })
+    };
 
-    const auth = (email, password) => {
-		LoginService.requestToken(email).then((res, err) => {
-			console.log(Object.values(res.data[0])[0]);
-			console.log(res.data)
-			if (err) {
-				console.log(err);
-				setIsValidating(false);
-				setAlertStatus(true);
-                setAlertMessage(err)
-				return;
-			}
-			if (Object.values(res.data[0])[0] === '') {
-				console.log(err);
-				setIsValidating(false);
-				setAlertStatus(true);
-				setAlertMessage('Authentication token creation failed!!')
-				return;
-			}
-			const authToken = Object.values(res.data[0])[0];
-			sessionStorage.setItem("userToken", JSON.stringify(authToken));
-			return getLoggerProfile(authToken)
-		})
-	};
+    function signIn(authToken, email, password) {
+        LoginService.signIn(authToken, email, password).then((res, err) => {
+            console.log(res.data, 'Sign In');
+            // console.log(Object.values(res.data[0])[0])
+            // setIsValidating(false);
+            if (err) {
+                setAlertStatus(true);
+                setAlertMessage("An error has occured");
+                setIsValidating(false);
+                return;
+            }
+            if (res.data === undefined || Object.values(res.data[0])[0] === 0) {
+                setAlertStatus(true);
+                setAlertMessage("Email or Password does not match.");
+                setIsValidating(false);
+                return;
+            }
+            return getLoggerProfile(authToken);
+        });
+    };
 
-	const getLoggerProfile = (authToken) => {
-		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
-		LoginService.getUserProfile(authToken).then((res) => {
-			console.log(res.data[0]);
-			// setIsValidating(false);
-			const data = res.data[0]
-			if (data.category !== "TM") {
-				setAlertStatus(true);
-				setAlertMessage("Your account is not yet registered as TM Staff");
-				setIsValidating(false);
-			} else {
-				sessionStorage.setItem("UserData", JSON.stringify(data));
-				getLov(authToken);
-			}
-		});
-	};
+    function getLoggerProfile(authToken) {
+        const userToken = JSON.parse(sessionStorage.getItem('userToken'))
+        LoginService.getUserProfile(authToken).then((res) => {
+            console.log(res.data, 'Get Logger profile');
+            // setIsValidating(false);
+            const data = res.data[0]
+            if (data.category !== "STAKEHOLDER") {
+                setAlertStatus(true);
+                setAlertMessage("Your account is not yet registered as Stakeholder");
+                setIsValidating(false);
+                return;
+            } else {
+                sessionStorage.setItem("UserData", JSON.stringify(data));
+                return getLov(authToken);
+            }
+        });
+    };
 
-	const getLov = (authToken) => {
-		LoginService.getSystemLOV(authToken).then((res) => {
-			sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
-			props.history.replace("/");
-			setIsValidating(false);
-		});
-	};
+    function getLov(authToken) {
+        LoginService.getSystemLOV(authToken).then((res) => {
+            sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
+            props.history.replace("/");
+            setIsValidating(false);
+        });
+    };
 
     return (
         <LoginTheme>
@@ -115,9 +131,9 @@ function ActivateAccount(props) {
                         </h4>
                         <div className="space-6" />
                         <div>
-                            <h4>Have LDAP Profile but not using TM email, Please insert Non-TM email and Login immediately</h4>
+                            <h4>Has LDAP profile but not using TM email, Please insert Non-TM email and click 'Check Email' button</h4>
                         </div>
-                        <form onSubmit={checkCode}>
+                        <form onSubmit={() => auth(emailInput, userPassword)}>
                             <fieldset>
                                 {alertStatus && (
                                     <div className={`alert alert-${alertSuccess === true ? 'success' : 'danger'}`}>
@@ -149,12 +165,12 @@ function ActivateAccount(props) {
                                 <label className="block clearfix">
                                     <span className="block input-icon input-icon-right">
                                         <input
-                                            type="text"
+                                            type="password"
                                             className="form-control"
-                                            name="activation_code"
-                                            placeholder="Please enter your activation code here"
-                                            value={activationCodeInput}
-                                            onChange={(e) => setActivationCodeInput(e.target.value)}
+                                            name="password"
+                                            placeholder="Please enter your Pasword here"
+                                            value={userPassword}
+                                            onChange={(e) => setUserPassword(e.target.value)}
                                             required
                                         />
                                         <i className="ace-icon fa fa-lock" />
@@ -162,14 +178,14 @@ function ActivateAccount(props) {
                                 </label>
                                 <div className="space" />
                                 <div className='clearfix'>
-                                    <button onClick={() => verifyEmail(emailInput)} className='btn btn-sm bt-primary' type='button'>Check email</button>
+                                    <button onClick={mergeAccount} className='btn btn-sm bt-primary' type='button'>Check email</button>
                                     <button className="width-35 pull-right btn btn-sm btn-primary" type='submit'>
-                                        {/* {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5} /> : */}
-                                        <>
-                                            <i className="ace-icon fa fa-key" />
-                                            <span className="bigger-110">Sign In</span>
-                                        </>
-                                        {/* } */}
+                                        {isValidating === true ? <CircularProgress color="inherit" size={20} thickness={5} /> :
+                                            <>
+                                                <i className="ace-icon fa fa-key" />
+                                                <span className="bigger-110">Sign In</span>
+                                            </>
+                                        }
                                     </button>
                                 </div>
                                 <div className="space-4" />
@@ -178,16 +194,13 @@ function ActivateAccount(props) {
                     </div>
                     {/* /.widget-main */}
 
-                    <div className="toolbar clearfix">
+                    <div className="toolbar center">
                         <div style={{ color: 'white' }}>
                             <Link to="/login" data-target="#login-box" className="btn btn-sm btn-warning">
-                                <i class="ace-icon fa fa-arrow-left"/>
+                                <i class="ace-icon fa fa-arrow-left" />
                                 {' '}
                                 Back to Sign In
                             </Link>
-                        </div>
-                        <div>
-                            <button type='button' className="width-50 pull-right btn btn-sm btn-danger" onClick={generateCode}>Send Activation Code</button>
                         </div>
                     </div>
                 </div>
