@@ -35,7 +35,7 @@ function Loginbox(props) {
 
 	function createLdapProfile(email) {
 		LoginService.validateAccount('first-time-login', '', email).then(res => {
-			if (res.data[0].message === 'OK') {
+			if (res.data[0].response === 'OK') {
 				return auth(email)
 			}
 			setSuccessLogin(false)
@@ -83,13 +83,12 @@ function Loginbox(props) {
 
 	const auth = (email, password) => {
 		LoginService.requestToken(email).then((err, res) => {
-			console.log(Object.values(res.data[0])[0]);
-			console.log(res.data)
+			// console.log(Object.values(res.data[0])[0]);
+			// console.log(res.data)
 			if (err) {
 				console.log(err);
 				setIsValidating(false);
 				setAlertStatus(true);
-				setAlertMessage(err)
 				return;
 			}
 			if (Object.values(res.data[0])[0] === '') {
@@ -103,6 +102,10 @@ function Loginbox(props) {
 			sessionStorage.setItem("userToken", JSON.stringify(authToken));
 			return getLoggerProfile(authToken)
 		})
+			.catch(e => {
+				setIsValidating(false);
+				console.log(e);
+			})
 	};
 
 	const getLoggerProfile = (authToken) => {
@@ -159,7 +162,7 @@ function Loginbox(props) {
 	// 			console.log(e);
 	// 		})
 	// };
-	//
+
 	// function signIn(authToken, email, password) {
 	// 	LoginService.signIn(authToken, email, password).then((res, err) => {
 	// 		// console.log(res.data);
@@ -180,7 +183,7 @@ function Loginbox(props) {
 	// 		return getLoggerProfile(authToken);
 	// 	});
 	// };
-	//
+
 	// function getLoggerProfile(authToken) {
 	// 	const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 	// 	LoginService.getUserProfile(authToken).then((res) => {
@@ -198,7 +201,7 @@ function Loginbox(props) {
 	// 		}
 	// 	});
 	// };
-	//
+
 	// function getLov(authToken) {
 	// 	LoginService.getSystemLOV(authToken).then((res) => {
 	// 		sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
@@ -282,14 +285,14 @@ function Loginbox(props) {
 						successLogin === false && <div className="toolbar clearfix">
 							<div />
 							<div>
-								<a href="/activate-ldap-profile" data-target="#activate-box" class="user-signup-link">
+								<a href="/activate-ldap-profile" data-target="#activate-box" className="user-signup-link">
 									<i class="ace-icon fa fa-unlock" /> {' '}
 									Activate Account
 								</a>
-								<button onCick={createLdapProfile} class="user-signup-link">
+								<a href='#' onCick={createLdapProfile} className="user-signup-link">
 									Merge Non-TM Email with LDAP System {' '}
 									<i class="ace-icon fa fa-arrow-right" />
-								</button>
+								</a>
 							</div>
 						</div>
 					}

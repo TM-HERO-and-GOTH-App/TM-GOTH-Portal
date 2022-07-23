@@ -319,21 +319,21 @@ function CreateCase() {
                         </div>
                     }
 
-                    {/*/!*Button Added for api testing*!/*/}
-                    <div className="hb-input-group">
-                        <button className='btn btn-sm' onClick={createICPSR}>
-                            createICPSR
-                        </button>
-                        <button className='btn btn-sm' onClick={createICPTT}>
-                            createICPTT
-                        </button>
-                        <button className='btn btn-sm' onClick={createNovaSR}>
-                            createNovaSR
-                        </button>
-                        <button className='btn btn-sm' onClick={createNovaTT}>
-                            createNovaTT
-                        </button>
-                    </div>
+					{/*/!*Button Added for api testing*!/*/}
+					{/* <div className="hb-input-group">
+						<button className='btn btn-sm' onClick={createICPSR}>
+							createICPSR
+						</button>
+						<button className='btn btn-sm' onClick={createICPTT}>
+							createICPTT
+						</button>
+						<button className='btn btn-sm' onClick={createNovaSR}>
+							createNovaSR
+						</button>
+						<button className='btn btn-sm' onClick={createNovaTT}>
+							createNovaTT
+						</button>
+					</div> */}
 
                     <div align="right" className="row row-cols-auto">
                         <div align="center" className='cc-search-container'>
