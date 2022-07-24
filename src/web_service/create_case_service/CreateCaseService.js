@@ -110,11 +110,12 @@ const CreateCaseService = {
         })
     },
 
-    autoCreateCTT(serviceNumber, faultCode, mobileNumber) {
+    autoCreateCTT(serviceNumber, faultCode, mobileNumber, cToken) {
         return Axios.post(url + '/siebel_eai/icp/auto-create-ctt-DEL', {
             "serviceNumber": serviceNumber,
             "faultCode": faultCode,
-            "customerMobileNumber": mobileNumber
+            "customerMobileNumber": mobileNumber,
+            "cToken": cToken
         }).then(res => {
             return res
         }).catch(err => {

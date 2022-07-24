@@ -115,7 +115,7 @@ function TechnicalCase() {
 		if (searchBarType === 'icp') {
 			CreateCaseService.getCustomerProfileFromICP(serviceID, customerID).then((res, err) => {
 				console.log(res, 'getCustomerProfileFromICP');
-				nextCheckNetwork() // TODO: check if this flow is correct
+				nextCheckNetwork()
 				if (err || typeof res.data === 'undefined') {
 					alertPopUp(false, true, res.message)
 					setIsLoading(false);
@@ -197,9 +197,9 @@ function TechnicalCase() {
 				formData.append('imgCollection', pictureInput)
 				formData.append('longitude', '')
 				formData.append('latitude', '')
-				CreateCaseService.attachImage(formData).then((res, err) => {
-					if (err || res.request.status !== 200) {
-						return submitProgress(100, `Image Upload Failed (${res?.name}) . . .`, false, false)
+				CreateCaseService.attachImage(formData).then((resImg, errImg) => {
+					if (errImg || resImg.request.status !== 200) {
+						return submitProgress(100, `Image Upload Failed (${resImg?.name}) . . .`, false, false)
 					}
 				})
 			}
@@ -207,11 +207,11 @@ function TechnicalCase() {
 			// autoCreateCTT (run only if the case is detected as pure DEL)
 			if (isPureDEL) {
 				submitProgress(60, 'Requesting SIEBEL to create SR/TT for DEL . . . ', true, true)
-				CreateCaseService.autoCreateCTT(serviceID, symptomSelect, customerMobileNumberInput).then((err, res) => {
-					if (err) {
+				CreateCaseService.autoCreateCTT(serviceID, symptomSelect, customerMobileNumberInput, res.data.caseToken).then((_res, _err) =>{
+					if (_err) {
 						return submitProgress(60, 'Something went wrong during SR and TT Creation', false)
 					}
-					console.log(res)
+					console.log(_res)
 					submitProgress(70, 'SR and TT number has been successfully created.', true)
 				});
 			}

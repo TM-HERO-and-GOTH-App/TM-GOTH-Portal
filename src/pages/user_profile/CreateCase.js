@@ -2,6 +2,8 @@ import React, {useState, useRef, useEffect} from 'react';
 import Layout from '../Layout';
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 import CircularProgress from '@mui/material/CircularProgress'
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 function CreateCase() {
     // Session Data
@@ -34,7 +36,7 @@ function CreateCase() {
     const [areaType, setAreaType] = useState('0');
     const [subAreaSelect, setSubAreaSelect] = useState('0');
     const [symptomSelect, setSymptomSelect] = useState('0');
-    const [symptomType, setSymptomType] = useState(null)
+    const [symptomCategory, setsymptomCategory] = useState(null)
     const [siebelTargetSystemSelect, setSiebelTargetSystemSelect] = useState('0');
     const [externalSystemInput, setExternalSystemInput] = useState('');
     const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
@@ -42,6 +44,9 @@ function CreateCase() {
     const [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
     const [caseToken, setCaseToken] = useState([]);
     const [srData, setSRData] = useState({})
+
+    // if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
+    let [isPureDEL, setIsPureDEL] = useState(false);
 
     // Spinner
     const [searchingCustomer, setSearchingCustomer] = useState(false);
@@ -55,7 +60,7 @@ function CreateCase() {
             setSearchingCustomer(false);
             return;
         }
-        if (siebelTargetSystemSelect === '662') {
+        if (siebelTargetSystemSelect === '662') { // NOVA
             if (serviceID === '') {
                 setAlert(true, false, 'Please fill in your Service ID...')
                 setSearchingCustomer(false);
@@ -80,7 +85,7 @@ function CreateCase() {
                 setStateType(lovData.filter(data => data.L_NAME.toUpperCase() === res.data.result.ServiceInfo[0].ServiceAddress.State).map(data => data.L_ID))
                 return setSearchingCustomer(false);
             })
-        } else {
+        } else { // ICP
             if (serviceID === '' || nricInput === '') {
                 setAlert(true, false, 'Please fill in your Service ID/ NRIC...')
                 setSearchingCustomer(false);
@@ -107,6 +112,16 @@ function CreateCase() {
                         res.data.result.ServiceInfo[0].ServiceAddress.State :
                         res.data.result.ServiceInfo.ServiceAddress.State
                 )).map(data => data.L_ID))
+                setIsPureDEL(() => {
+                    if (Array.isArray(res.data.result.ServiceInfo) === false) {
+                        if (res.data.result.ServiceInfo.Product === 'Home Line') {
+                            return true
+                        }
+                    }
+                    return false
+                })
+                setProductType(isPureDEL === true ? '581' : '0')
+                setSymptomSelect(isPureDEL === true ? '658' : '0')
                 setSearchingCustomer(false);
             })
         }
@@ -132,9 +147,21 @@ function CreateCase() {
                     if (siebelTargetSystemSelect === '660') return createICPSR();
                     if (siebelTargetSystemSelect === '662') return createNovaSR();
                 }
+                setAlert(true, true, 'Successfully Create Case');
+
+                if (isPureDEL) {
+                    CreateCaseService.autoCreateCTT(serviceID, symptomSelect, mobileNumberInput, caseToken).then((err, res) => {
+                        if (err) {
+                            return setAlert(true, false, `Case Created but\nSomething went wrong during SR and TT Creation`);
+                        }
+                        console.log(res)
+                        setAlert(true, true, 'SR and TT number has been successfully created.')
+                    });
+                }
+
                 setIsCreateCase(false)
                 resetForm();
-                return setAlert(true, true, 'Successfully Create Case');
+                return setAlert(true, true, 'Case creation process finished.');
             })
     }
 
@@ -236,7 +263,7 @@ function CreateCase() {
             lovData.filter(filter => filter.L_ID === areaType).map(data => data.L_NAME)[0],
             lovData.filter(filter => filter.L_ID === subAreaSelect).map(data => data.L_NAME)[0],
             'wifi@unifi', // to be removed
-            'SPICE', // temp source naming
+            'GOTH', // temp source naming // TODO: check if value is valid
             customerProfileFromNova.ServiceInfo[0].ServiceRowID,
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
@@ -263,8 +290,7 @@ function CreateCase() {
             )
             // console.log(res.data.response.SRNumber)
             setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
-            // return createNovaTT();
-            return;
+            return createNovaTT();
         })
     }
 
@@ -274,7 +300,7 @@ function CreateCase() {
             customerProfileFromNova.CustInfo.CustomerRowID,
             Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountNo : customerProfileFromNova.BillInfo.BillingAccountNo,
             Array.isArray(customerProfileFromNova.BillInfo) ? customerProfileFromNova.BillInfo[0].BillingAccountRowID : customerProfileFromNova.BillInfo.BillingAccountRowID,
-            lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0], symptomType,
+            lovData.filter(filter => filter.L_ID === symptomSelect).map(data => data.L_NAME)[0], symptomCategory,
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
             customerProfileFromNova.CustInfo.PrimaryContactRowID,
             caseDescriptionInput, 'EAI'
@@ -369,6 +395,15 @@ function CreateCase() {
                                 <i className="ace-icon fa fa-save align-top bigger-125"/>
                                 Save New Case
                             </button>
+                            {
+                                siebelTargetSystemSelect === '660' &&
+                                <FormControlLabel
+                                    sx={{position: 'absolute', right: '0', marginTop: '10px', marginRight: '45px'}}
+                                    disabled
+                                    control={<Switch checked={isPureDEL} color="error" size="small"/>}
+                                    label="Is Pure DEL?"
+                                />
+                            }
                         </div>
                         <div className="space-6"/>
                         <div className="row">
@@ -643,7 +678,7 @@ function CreateCase() {
                                                         value={symptomSelect}
                                                         onChange={(e) => {
                                                             setSymptomSelect(parseFloat(e.target.value))
-                                                            setSymptomType(document.querySelector('#symptomType option:checked').parentElement.label)
+                                                            setsymptomCategory(document.querySelector('#symptomType option:checked').parentElement.label)
                                                         }}>
                                                     <option value='0' disabled>Choose a Symptom Type</option>
                                                     {

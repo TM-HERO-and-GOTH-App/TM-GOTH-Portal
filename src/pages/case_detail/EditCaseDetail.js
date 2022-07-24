@@ -3,6 +3,7 @@ import Layout from "../Layout";
 import CaseDetailService from "../../web_service/case_detail_service/CaseDetailService";
 import CreateCaseService from '../../web_service/create_case_service/CreateCaseService';
 import {Link} from "react-router-dom";
+import moment from "moment";
 
 function EditCaseDetail(props) {
     let caseDetail = useRef({});
@@ -111,7 +112,7 @@ function EditCaseDetail(props) {
         setSubAreaCode(caseDetailData.SUB_AREA)
         setCustomerLoginID(caseDetailData.LOGIN_ID)
         setAmbassador(caseDetailData.VIP)
-        setSiebelSystem(caseDetailData?.SIEBEL_SYSTEM)
+        setSiebelSystem(caseDetailData?.SYSTEM_TARGET)
     }
 
     const reset = () => {
@@ -369,7 +370,7 @@ function EditCaseDetail(props) {
                     )}
                     <br/>
                     <div className="space-10"/>
-                    <div className="col-sm-4">
+                    <div className="col-sm-7">
                         <Link
                             className="btn btn-primary"
                             to={`/case-detail/${caseToken}`}
@@ -378,7 +379,7 @@ function EditCaseDetail(props) {
                             Back to Case Detail
                         </Link>
                     </div>
-                    <div className='col-sm-5' align='right'>
+                    <div className='col-sm-5' style={{paddingRight: '40px'}} align='right'>
                         {/* <button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP
 						</button>
 						<button className='btn btn-danger' type='button' onClick={createICPTT}>Create TT for ICP
@@ -556,7 +557,7 @@ function EditCaseDetail(props) {
                                     <div className="profile-info-name">Created Date</div>
                                     <div className="profile-info-value">
 										<span className="editable" id="about">
-											{caseDetailData.CREATED_DATE}
+                                            {moment(caseDetailData.CREATED_DATE).format('MMMM Do YYYY, h:mm:ss a')}
 										</span>
                                     </div>
                                 </div>
@@ -566,7 +567,7 @@ function EditCaseDetail(props) {
                                         <div className="profile-info-name">Closed Date</div>
                                         <div className="profile-info-value">
 											<span className="editable" id="about">
-												{caseDetailData.CLOSED_DATE}
+                                                {moment(caseDetailData.CLOSED_DATE).format('MMMM Do YYYY, h:mm:ss a')}
 											</span>
                                         </div>
                                     </div>
@@ -770,7 +771,7 @@ function EditCaseDetail(props) {
                                     <div className="profile-info-name">Segment Code</div>
                                     <div className="profile-info-value">
 										<span className="editable" id="login">
-											{caseDetailData.SEGMENT_CODE === null ? ' N / A' : caseDetailData.SEGMENT_CODE}
+                                            {caseDetailData.SEGMENT_CODE === null ? <span style={{color: "gray"}}>N/A</span> : caseDetailData.SEGMENT_CODE}
 										</span>
                                     </div>
                                 </div>
@@ -1039,8 +1040,7 @@ function EditCaseDetail(props) {
                                                     onChange={(e) => setSiebelSystem(e.target.value)}>
 												<option value='0'>Choose a Target System</option>
                                                 {lovData.filter((filter) => filter.L_GROUP === 'SYSTEM-TARGET').map((data, key) => {
-                                                    return <option key={key}
-                                                                   value={data.L_ID}>{data.L_NAME}</option>
+                                                    return <option key={key} value={data.L_ID}>{data.L_NAME}</option>
                                                 })
                                                 }
 											</select>
