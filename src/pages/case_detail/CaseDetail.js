@@ -115,7 +115,7 @@ function CaseDetail(props) {
     }
 
     function checkSRAndTTStatusForICP() {
-        CreateCaseService.checkSRAndTTForICP('00326919370', '', 'Y', 'N', '').then(res => {
+        CreateCaseService.checkSRAndTTForICP(caseData?.SERVICE_ID, caseData?.SR_NUM, 'Y', 'N', caseData?.TT_NUM).then(res => {
             console.log(res.data.SRInfo);
             setOpenModal(true);
             setSrAndTtStatus(res.data.SRInfo);
@@ -123,187 +123,187 @@ function CaseDetail(props) {
     }
 
     function checkSRAndTTStatusForNova() {
-        CreateCaseService.checkSRAndTTForNova('1-6133114884', '', 'Y', 'N').then(res => {
+        CreateCaseService.checkSRAndTTForNova(caseData?.SERVICE_ID, caseData?.SR_NUM, 'Y', 'N').then(res => {
             // console.log(res.data);
             setOpenModal(true);
         })
     }
 
-    const getCustomerProfile = (e) => {
-    	e.preventDefault();
-    	setSearchingCustomer(true);
-    	if (caseData?.SYSTEM_TARGET === 'NOVA') {
-    		CreateCaseService.getCustomerProfileFromNova(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
-    			console.log(res, 'getCustomerProfileFromNova');
-    			if (err || typeof res.data === 'undefined') {
-    				setAlertStatus(true);
-    				setAlertMessage(res.message);
-    				setSearchingCustomer(false);
-    			}
-    			if (res.data.message !== 'Success') {
-    				setAlertStatus(true);
-    				setAlertMessage(`Error during searching customer.. (${res.data.message})`);
-    				setSearchingCustomer(false);
-    				return;
-    			}
-    			setAlertStatus(true);
-    			setAlertMessage('Query user info success.');
-    			setCustomerProfileFromNova(res.data.result)
-    			return setSearchingCustomer(false);
-    		})
-    	} else {
-    		CreateCaseService.getCustomerProfileFromICP(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
-    			console.log(res, 'getCustomerProfileFromICP');
-    			if (err || typeof res.data === 'undefined') {
-    				setAlertStatus(true);
-    				setAlertMessage(res.message);
-    				setSearchingCustomer(false);
-    			}
-    			if (res.data.message !== 'Success') {
-    				setAlertStatus(true);
-    				setAlertMessage(`Error during searching customer.. (${res?.data.message})`);
-    				setSearchingCustomer(false);
-    				return;
-    			}
-    			setAlertStatus(true);
-    			setAlertMessage('Query user info success.');
-    			setCustomerProfileFromICP(res.response)
-    			setSearchingCustomer(false);
-                return createICPSR();
-    		})
-    	}
-    }
+    // const getCustomerProfile = (e) => {
+    // 	e.preventDefault();
+    // 	setSearchingCustomer(true);
+    // 	if (caseData?.SYSTEM_TARGET === 'NOVA') {
+    // 		CreateCaseService.getCustomerProfileFromNova(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
+    // 			console.log(res, 'getCustomerProfileFromNova');
+    // 			if (err || typeof res.data === 'undefined') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(res.message);
+    // 				setSearchingCustomer(false);
+    // 			}
+    // 			if (res.data.message !== 'Success') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(`Error during searching customer.. (${res.data.message})`);
+    // 				setSearchingCustomer(false);
+    // 				return;
+    // 			}
+    // 			setAlertStatus(true);
+    // 			setAlertMessage('Query user info success.');
+    // 			setCustomerProfileFromNova(res.data.result)
+    // 			return setSearchingCustomer(false);
+    // 		})
+    // 	} else {
+    // 		CreateCaseService.getCustomerProfileFromICP(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
+    // 			console.log(res, 'getCustomerProfileFromICP');
+    // 			if (err || typeof res.data === 'undefined') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(res.message);
+    // 				setSearchingCustomer(false);
+    // 			}
+    // 			if (res.data.message !== 'Success') {
+    // 				setAlertStatus(true);
+    // 				setAlertMessage(`Error during searching customer.. (${res?.data.message})`);
+    // 				setSearchingCustomer(false);
+    // 				return;
+    // 			}
+    // 			setAlertStatus(true);
+    // 			setAlertMessage('Query user info success.');
+    // 			setCustomerProfileFromICP(res.response)
+    // 			setSearchingCustomer(false);
+    //             return createICPSR();
+    // 		})
+    // 	}
+    // }
 
-    const createICPSR = () => {
-        getCustomerProfile();
-		CreateCaseService.createICPSR(
-			customerProfileFromNova.CustInfo.CustomerRowID,
-			'AIMAN',
-			caseData?.AREA_CODE,
-			caseData?.SUB_AREA,
-			'X1002408',
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo.BillingAccountRowID,
-			customerProfileFromNova.BillInfo.BillingAccountNo,
-			caseData?.CASE_CONTENT,
-			customerProfileFromNova.ServiceInfo.ServiceRowID
-		).then(res => {
-            setCreateSiebelSRAndTT(true);
-			console.log(res.data, 'createICPSR')
-			// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
-			if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
-				setCreateSiebelSRAndTT(false);
-				setAlert(true, false, 'Successfully create SR for ICP!!');
-				return;
-			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					return console.log('Successfully save SR in DB!!')
-				}
-			)
-            setCreateSiebelSRAndTT(false);
-			setAlert(true, true, 'Successfully create SR for ICP!!');
-			return;
-		})
-	}
+    // const createICPSR = () => {
+    //     getCustomerProfile();
+	// 	CreateCaseService.createICPSR(
+	// 		customerProfileFromNova.CustInfo.CustomerRowID,
+	// 		'AIMAN',
+	// 		caseData?.AREA_CODE,
+	// 		caseData?.SUB_AREA,
+	// 		'X1002408',
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.BillInfo.BillingAccountRowID,
+	// 		customerProfileFromNova.BillInfo.BillingAccountNo,
+	// 		caseData?.CASE_CONTENT,
+	// 		customerProfileFromNova.ServiceInfo.ServiceRowID
+	// 	).then(res => {
+    //         setCreateSiebelSRAndTT(true);
+	// 		console.log(res.data, 'createICPSR')
+	// 		// console.log(customerProfileFromNova.ServiceInfo[1].ServiceRowID, 'createICPSR')
+	// 		if (res.data === undefined || res.data?.Header?.Header?.ErrorCode === '1') {
+	// 			setCreateSiebelSRAndTT(false);
+	// 			setAlert(true, false, 'Successfully create SR for ICP!!');
+	// 			return;
+	// 		}
+	// 		CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+	// 			(res, err) => {
+	// 				if (err) { console.log(err, 'Insert SR Number Failed'); }
+	// 				return console.log('Successfully save SR in DB!!')
+	// 			}
+	// 		)
+    //         setCreateSiebelSRAndTT(false);
+	// 		setAlert(true, true, 'Successfully create SR for ICP!!');
+	// 		return;
+	// 	})
+	// }
 
-    const createICPTT = () => {
-        getCustomerProfile();
-		CreateCaseService.createICPTT(
-			customerProfileFromNova.CustInfo.CustomerRowID,
-			caseData?.CASE_CONTENT,
-			'DSL_Slow_Physical',
-			customerProfileFromNova.ServiceInfo.ServiceRowID,
-			'AIMAN',
-			caseData?.SERVICE_ID,
-			customerProfileFromNova.BillInfo.BillingAccountNo,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo.BillingAccountRowID
-		).then(res => {
-            setCreateSiebelSRAndTT(true);
-			// console.log(res.data, 'createICPTT');
-			if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
-                setCreateSiebelSRAndTT(false);
-				return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
-			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.response.SRNumber).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					return console.log('Successfully save TT in DB!!')
-				}
-			)
-            setCreateSiebelSRAndTT(false);
-			return setAlert(true, true, 'TT creation has been successful!!');
-		})
-	}
+    // const createICPTT = () => {
+    //     getCustomerProfile();
+	// 	CreateCaseService.createICPTT(
+	// 		customerProfileFromNova.CustInfo.CustomerRowID,
+	// 		caseData?.CASE_CONTENT,
+	// 		'DSL_Slow_Physical',
+	// 		customerProfileFromNova.ServiceInfo.ServiceRowID,
+	// 		'AIMAN',
+	// 		caseData?.SERVICE_ID,
+	// 		customerProfileFromNova.BillInfo.BillingAccountNo,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.BillInfo.BillingAccountRowID
+	// 	).then(res => {
+    //         setCreateSiebelSRAndTT(true);
+	// 		// console.log(res.data, 'createICPTT');
+	// 		if (res.data === undefined || res.data?.Header?.ErrorCode === '1') {
+    //             setCreateSiebelSRAndTT(false);
+	// 			return setAlert(true, false, `TT Creation for NOVA failed!! [${res.data.Header.ErrorMessage}]`);
+	// 		}
+	// 		CreateCaseService.updateTTNumber(caseToken, res.data.response.SRNumber).then(
+	// 			(res, err) => {
+	// 				if (err) { console.log(err, 'Insert TT Number Failed'); }
+	// 				return console.log('Successfully save TT in DB!!')
+	// 			}
+	// 		)
+    //         setCreateSiebelSRAndTT(false);
+	// 		return setAlert(true, true, 'TT creation has been successful!!');
+	// 	})
+	// }
 
-    const createNovaSR = () => {
-		CreateCaseService.createNovaSR(
-			customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
-			caseData?.AREA_CODE,
-			caseData?.SUB_AREA,
-			caseData?.PRODUCT_NAME, // to be removed
-			'SPICE', // temp source naming
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			caseData?.CASE_CONTENT, userData.stakeholderName, userData.stakeholderName,
-			userData.stakeholderName, caseData?.CASE_CONTENT, 'EAI'
-		).then(res => {
-            setCreateSiebelSRAndTT(true);
-			// console.log(res.data, 'createSR');
-			if (res.message) {
-                setCreateSiebelSRAndTT(false);
-				return setAlert(true, false, res.message);
-			}
-			if (res.data.message !== 'Success') {
-                setCreateSiebelSRAndTT(false);
-				return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
-			}
-			CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert SR Number Failed'); }
-					return console.log('Successfully save SR in DB!!')
-				}
-			)
-            setCreateSiebelSRAndTT(false);
-			setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
-			return;
-		})
-	}
+    // const createNovaSR = () => {
+	// 	CreateCaseService.createNovaSR(
+	// 		customerProfileFromNova.CustInfo.CustomerRowID, 'Fault',
+	// 		caseData?.AREA_CODE,
+	// 		caseData?.SUB_AREA,
+	// 		caseData?.PRODUCT_NAME, // to be removed
+	// 		'SPICE', // temp source naming
+	// 		customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+	// 		customerProfileFromNova.BillInfo[0].BillingAccountNo,
+	// 		caseData?.CASE_CONTENT, userData.stakeholderName, userData.stakeholderName,
+	// 		userData.stakeholderName, caseData?.CASE_CONTENT, 'EAI'
+	// 	).then(res => {
+    //         setCreateSiebelSRAndTT(true);
+	// 		// console.log(res.data, 'createSR');
+	// 		if (res.message) {
+    //             setCreateSiebelSRAndTT(false);
+	// 			return setAlert(true, false, res.message);
+	// 		}
+	// 		if (res.data.message !== 'Success') {
+    //             setCreateSiebelSRAndTT(false);
+	// 			return setAlert(true, false, `SR Creation for NOVA Failed (${res.data.message})`);
+	// 		}
+	// 		CreateCaseService.updateSRNumber(caseToken, res.data.response.SRNumber).then(
+	// 			(res, err) => {
+	// 				if (err) { console.log(err, 'Insert SR Number Failed'); }
+	// 				return console.log('Successfully save SR in DB!!')
+	// 			}
+	// 		)
+    //         setCreateSiebelSRAndTT(false);
+	// 		setAlert(true, true, `${res.data.message} Create SR for NOVA!!`);
+	// 		return;
+	// 	})
+	// }
 
-    const createNovaTT = () => {
-		CreateCaseService.createNovaTT(
-			customerProfileFromNova.CustInfo.CustomerRowID,
-			customerProfileFromNova.BillInfo[0].BillingAccountNo,
-			customerProfileFromNova.BillInfo[0].BillingAccountRowID,
-			'Error',
-			customerProfileFromNova.ServiceInfo[0].ServiceRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			customerProfileFromNova.CustInfo.PrimaryContactRowID,
-			caseData?.CASE_CONTENT, userData.stakeholderName
-		).then((res, err) => {
-            setCreateSiebelSRAndTT(true);
-			console.log(res, 'createTT');
-			if (res.data === undefined || err) {
-                setCreateSiebelSRAndTT(false);
-				return setAlert(true, false, 'TT Creation for NOVA failed!!');
-			}
-			CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
-				(res, err) => {
-					if (err) { console.log(err, 'Insert TT Number Failed'); }
-					return console.log('Successfully save TT in DB!!')
-				}
-			)
-            setCreateSiebelSRAndTT(false);
-			return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
-		})
-	}
+    // const createNovaTT = () => {
+	// 	CreateCaseService.createNovaTT(
+	// 		customerProfileFromNova.CustInfo.CustomerRowID,
+	// 		customerProfileFromNova.BillInfo[0].BillingAccountNo,
+	// 		customerProfileFromNova.BillInfo[0].BillingAccountRowID,
+	// 		'Error',
+	// 		customerProfileFromNova.ServiceInfo[0].ServiceRowID,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		customerProfileFromNova.CustInfo.PrimaryContactRowID,
+	// 		caseData?.CASE_CONTENT, userData.stakeholderName
+	// 	).then((res, err) => {
+    //         setCreateSiebelSRAndTT(true);
+	// 		console.log(res, 'createTT');
+	// 		if (res.data === undefined || err) {
+    //             setCreateSiebelSRAndTT(false);
+	// 			return setAlert(true, false, 'TT Creation for NOVA failed!!');
+	// 		}
+	// 		CreateCaseService.updateTTNumber(caseToken, res.data.TicketID).then(
+	// 			(res, err) => {
+	// 				if (err) { console.log(err, 'Insert TT Number Failed'); }
+	// 				return console.log('Successfully save TT in DB!!')
+	// 			}
+	// 		)
+    //         setCreateSiebelSRAndTT(false);
+	// 		return setAlert(true, true, `${res.data.message} create TT for NOVA!!`);
+	// 	})
+	// }
 
     return (
         <Layout
@@ -329,7 +329,9 @@ function CaseDetail(props) {
                                 </h3>
                             </div>
                             <div style={{display: 'flex', paddingLeft: '10%' }}>
-                                {srAndTTStatus.map(data => {
+                                {(srAndTTStatus === [] || srAndTTStatus === undefined || srAndTTStatus === null) ? 
+                                <h4>No SR or CTT data</h4>
+                                : srAndTTStatus.map(data => {
                                     return <ul>
                                         <li>SR Number: {data.SRNumber}</li>
                                         <li>Ticket ID: {data.TicketID}</li>
@@ -385,7 +387,7 @@ function CaseDetail(props) {
                                         </Link>
                                     }
 
-                                    {
+                                    {/* {
                                         caseData?.SYSTEM_TARGET === 'ICP' ?
                                             caseData?.SR_NUM === null ?
                                                 (<button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP</button>)
@@ -400,7 +402,7 @@ function CaseDetail(props) {
                                                     (caseData?.TT_NUM === null &&
                                                         <button className='btn btn-danger' type='button'>Create TT for NOVA</button>)
                                                 : null
-                                    }
+                                    } */}
                                 </div>)
                             }
 
