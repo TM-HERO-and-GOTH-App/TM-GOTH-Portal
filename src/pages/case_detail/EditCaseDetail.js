@@ -112,7 +112,7 @@ function EditCaseDetail(props) {
         setSubAreaCode(caseDetailData.SUB_AREA)
         setCustomerLoginID(caseDetailData.LOGIN_ID)
         setAmbassador(caseDetailData.VIP)
-        setSiebelSystem(caseDetailData?.SYSTEM_TARGET)
+        setSiebelSystem(caseDetailData?.SYSTEM_TARGET_CODE)
     }
 
     const reset = () => {

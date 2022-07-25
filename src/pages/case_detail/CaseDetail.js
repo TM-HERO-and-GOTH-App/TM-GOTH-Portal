@@ -426,17 +426,17 @@ function CaseDetail(props) {
                             <div className="col-sm-5" style={{paddingRight: '40px'}}
                                  align={(caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED") ? "" : "right"}>
                                 {
-                                    (caseData?.PRODUCT_NAME === "Telephony" && caseData?.SiebelTargetSystem === 'ICP') &&
+                                    (caseData?.PRODUCT_NAME === "Telephony" && caseData?.TARGET_SYSTEM === 'ICP') &&
                                     <button className='btn btn-success' type='button'
                                             onClick={autoCreateSRTT}><i
                                         className="ace-icon fa fa-plus-circle icon-on-right"/>{` Auto Create SR/TT Number (PureDEL)`}
                                     </button>
                                 }
                                 {
-                                    caseData?.SiebelTargetSystem !== null &&
+                                    caseData?.TARGET_SYSTEM !== null &&
                                     <button className='btn btn-success' type='button'
                                             onClick={checkSRAndTTStatus}>
-                                        <i className="ace-icon fa fa-search icon-on-right"/>{` SR/TT Status (${caseData?.SiebelTargetSystem})`}
+                                        <i className="ace-icon fa fa-search icon-on-right"/>{` SR/TT Status (${caseData?.TARGET_SYSTEM})`}
                                     </button>
                                 }
                                 <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
@@ -634,10 +634,10 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="siebelTargetSystem">
                                                 {
-                                                    caseData?.SiebelTargetSystem === null ?
+                                                    caseData?.TARGET_SYSTEM === null ?
                                                         <span
                                                             style={{color: "gray"}}>n/a
-                                                        </span> : caseData?.SiebelTargetSystem.toUpperCase()
+                                                        </span> : caseData?.TARGET_SYSTEM
                                                 }
                                             </span>
                                         </div>
@@ -730,8 +730,9 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="serviceAddress">
                                                 {
-                                                    caseData?.SERVICE_ADDRESS != null ? caseData?.SERVICE_ADDRESS :
-                                                        <span style={{color: "gray"}}>n/a</span>
+                                                    (caseData?.SERVICE_ADDRESS === null || caseData?.SERVICE_ADDRESS === "") ?
+                                                        <span style={{color: "gray"}}>n/a</span> :
+                                                        caseData?.SERVICE_ADDRESS
                                                 }
                                             </span>
                                         </div>
@@ -791,7 +792,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="area">
                                                 {
-                                                    caseData?.Area !== null ? caseData?.Area :
+                                                    caseData?.AREA !== null ? caseData?.AREA :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -804,7 +805,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="subArea">
                                                 {
-                                                    caseData?.SubArea !== null ? caseData?.SubArea:
+                                                    caseData?.SUB_AREA !== null ? caseData?.SUB_AREA :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
