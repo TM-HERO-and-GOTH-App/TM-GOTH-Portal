@@ -50,6 +50,13 @@ function Loginbox(props) {
 	function ldapAuth(id, password) {
 		LoginService.ldapLogin(id, password).then((res, err) => {
 			console.log(res)
+			if(res.response.status === '502' || res.response.statusText === "Bad Gateway") {
+				setSuccessLogin(false)
+				setIsValidating(false);
+				setAlertStatus(true);
+				setAlertMessage('Your Password has expired!!');
+				return;
+			}
 			if (err && res === {} && res === undefined && res === null) {
 				setSuccessLogin(false)
 				setIsValidating(false);
