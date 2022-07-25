@@ -81,7 +81,7 @@ function Loginbox(props) {
 		})
 	}
 
-	const auth = (email, password) => {
+	function auth(email, password) {
 		LoginService.requestToken(email).then((err, res) => {
 			// console.log(Object.values(res.data[0])[0]);
 			// console.log(res.data)
@@ -108,7 +108,7 @@ function Loginbox(props) {
 			})
 	};
 
-	const getLoggerProfile = (authToken) => {
+	function getLoggerProfile(authToken) {
 		const userToken = JSON.parse(sessionStorage.getItem('userToken'))
 		LoginService.getUserProfile(authToken).then((res) => {
 			// console.log(res.data[0]);
@@ -125,7 +125,7 @@ function Loginbox(props) {
 		});
 	};
 
-	const getLov = (authToken) => {
+	function getLov(authToken) {
 		LoginService.getSystemLOV(authToken).then((res) => {
 			sessionStorage.setItem("LovData", JSON.stringify(res.data[0]));
 			props.history.replace("/");

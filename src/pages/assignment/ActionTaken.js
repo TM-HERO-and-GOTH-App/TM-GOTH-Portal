@@ -67,13 +67,11 @@ function ActionTaken(props) {
     const setRemarks = (e) => {
         e.preventDefault();
         ActionTakenService.setRemark(token, caseToken, userData.hID, closureTypeID, caseStatus, remark)
-            .then((err, res) => {
+            .then((res, err) => {
                 console.log(res, 'Remark')
                 if (err) return alertPopUp(true, 'danger', 'Action cannot be implemented')
-                if (res) {
-                    if (res.status === 202) return alertPopUp(true, 'danger', 'Action cannot be implemented (Failed to Update)')
-                    return alertPopUp(true, 'success', 'Action has been implemented')
-                }
+                if (res.status === 202) return alertPopUp(true, 'danger', 'Action cannot be implemented (Failed to Update)')
+                return alertPopUp(true, 'success', 'Action has been implemented')
             })
     }
 
