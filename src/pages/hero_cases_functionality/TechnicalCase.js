@@ -9,7 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import unifiFormPageData from "./dataForUnifiBuddy";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import axios from "axios";
+import moment from 'moment';
 
 function TechnicalCase() {
 	let styles = {
@@ -95,8 +95,10 @@ function TechnicalCase() {
 		setSubmitIsLoading(loading)
 	}
 
+	console.log(moment().unix())
+
 	const nextCheckNetwork = () => {
-		NextService.checkNetworkOutage('HERO-20220425-0002', serviceID).then((res, err) => {
+		NextService.checkNetworkOutage(serviceID).then((res, err) => {
 			if (err) return console.log(err);
 			console.log(res)
 			setNextResponses(res.data)
@@ -168,6 +170,19 @@ function TechnicalCase() {
 		isPureDEL === true ? setTargetSystem('icp') : setTargetSystem('')
 	}
 
+	function resetForm() {
+		setCustomerNameInput('')
+		setCustomerMobileNumberInput('');
+		setLoggerMobileNumber('');
+		setDescription('');
+		setProduct('0');
+		setArea('0');
+		setSubArea('0');
+		setSymptom('0');
+		setLocation('0');
+		setPicture(null);
+	}
+
 	const createTechnicalCase = (e) => {
 		e.preventDefault();
 		setShowSubmitLoading(true)
@@ -216,7 +231,9 @@ function TechnicalCase() {
 				});
 			}
 			alertPopUp(true, true, 'Case has been created successfully');
-			return submitProgress(100, 'Case has been created successfully', true, false)
+			submitProgress(99, 'Case has been created successfully', true, true)
+			submitProgress(100, 'Case has been created successfully', false, false)
+			return resetForm();
 		})
 	}
 
@@ -491,7 +508,7 @@ function TechnicalCase() {
 						</div>
 
 						<div className="hb-button">
-							{showSubmitLoading === true &&
+							{showSubmitLoading &&
 									<>
 										<CircularProgress
 												size={16}
@@ -513,7 +530,7 @@ function TechnicalCase() {
 							/>
 							<input className="hb-submit" type="submit" title="Submit" disabled={submitIsLoading}
 							       style={submitIsLoading ? {opacity: .5} : {opacity: 1}}/>
-							{showSubmitLoading === true &&
+							{showSubmitLoading &&
 									<LinearProgress sx={{width: 'calc(100% - 10px)', marginLeft: '5px', marginTop: '10px'}}
 									                color={submitStatus === true ? 'primary' : 'error'}
 									                variant="determinate" value={progress}

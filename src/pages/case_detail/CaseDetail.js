@@ -128,13 +128,13 @@ function CaseDetail(props) {
 
     function checkSRAndTTStatus() {
         if (caseData?.SERVICE_ID !== null) {
-            if (caseData?.SiebelTargetSystem === "ICP") {
+            if (caseData?.TARGET_SYSTEM === "ICP") {
                 CreateCaseService.checkSRAndTTForICP(caseData?.SERVICE_ID, caseData?.SR_NUM, 'Y', 'N', caseData?.TT_NUM).then(res => {
                     setOpenModal(true);
                     setSrAndTtStatus(res.data.SRInfo);
                 })
             }
-            if (caseData?.SiebelTargetSystem === "NOVA") {
+            if (caseData?.TARGET_SYSTEM === "NOVA") {
                 CreateCaseService.checkSRAndTTForNova(caseData?.SERVICE_ID, caseData?.SR_NUM, 'Y', 'N').then(res => {
                     setOpenModal(true);
                     setSrAndTtStatus(res.data.SRInfo);
@@ -148,7 +148,7 @@ function CaseDetail(props) {
     // const getCustomerProfile = (e) => {
     // 	e.preventDefault();
     // 	setSearchingCustomer(true);
-    // 	if (caseData?.SYSTEM_TARGET === 'NOVA') {
+    // 	if (caseData?.TARGET_SYSTEM === 'NOVA') {
     // 		CreateCaseService.getCustomerProfileFromNova(caseData?.SERVICE_ID, caseData?.NRIC_NUM).then((res, err) => {
     // 			console.log(res, 'getCustomerProfileFromNova');
     // 			if (err || typeof res.data === 'undefined') {
@@ -405,14 +405,14 @@ function CaseDetail(props) {
                                     }
 
                                     {/* {
-                                        caseData?.SYSTEM_TARGET === 'ICP' ?
+                                        caseData?.TARGET_SYSTEM === 'ICP' ?
                                             caseData?.SR_NUM === null ?
                                                 (<button className='btn btn-danger' type='button' onClick={createICPSR}>Create SR for ICP</button>)
                                                 :
                                                 caseData?.TT_NUM === null &&
                                                 (<button className='btn btn-danger' type='button' onClick={createICPTT}>Create TT for ICP</button>)
                                             :
-                                            caseData?.SYSTEM_TARGET === 'NOVA' ?
+                                            caseData?.TARGET_SYSTEM === 'NOVA' ?
                                                 caseData?.SR_NUM === null ?
                                                     (<button className='btn btn-danger' type='button'>Create SR for NOVA</button>)
                                                     :
