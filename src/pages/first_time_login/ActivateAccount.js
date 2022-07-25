@@ -43,6 +43,12 @@ function ActivateAccount(props) {
         return setAlert(true, true, 'Wrong activation code!!');
     }
 
+    const handleSubmit = (email, password) => e => {
+		e.preventDefault();
+		setIsValidating(true);
+		return auth(email, password);
+	};
+
     // GOTH Login
     function auth(email, password) {
         LoginService.requestToken(email).then((res, err) => {
@@ -133,7 +139,7 @@ function ActivateAccount(props) {
                         <div>
                             <h4>Has LDAP profile but not using TM email, Please insert Non-TM email and click 'Check Email' button</h4>
                         </div>
-                        <form onSubmit={() => auth(emailInput, userPassword)}>
+                        <form onSubmit={handleSubmit(emailInput, userPassword)}>
                             <fieldset>
                                 {alertStatus && (
                                     <div className={`alert alert-${alertSuccess === true ? 'success' : 'danger'}`}>
@@ -194,7 +200,7 @@ function ActivateAccount(props) {
                     </div>
                     {/* /.widget-main */}
 
-                    <div className="toolbar center">
+                    <div className="toolbar clearfix">
                         <div style={{ color: 'white' }}>
                             <Link to="/login" data-target="#login-box" className="btn btn-sm btn-warning">
                                 <i class="ace-icon fa fa-arrow-left" />

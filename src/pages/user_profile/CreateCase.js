@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-function CreateCase() {
+function CreateCase(props) {
     // Session Data
     const userData = JSON.parse(sessionStorage.getItem('UserData'));
     const lovData = JSON.parse(sessionStorage.getItem('LovData'));
@@ -161,7 +161,8 @@ function CreateCase() {
 
                 setIsCreateCase(false)
                 resetForm();
-                return setAlert(true, true, 'Case creation process finished.');
+                setAlert(true, true, 'Successfully Create Case');
+                return props.history.replace(`/case-detail/${res.data.caseToken}`);
             })
     }
 
