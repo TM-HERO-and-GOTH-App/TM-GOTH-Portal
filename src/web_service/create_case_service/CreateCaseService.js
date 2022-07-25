@@ -38,7 +38,7 @@ const CreateCaseService = {
             symptomID: symptomSelect,
             siebelTargetSystem: siebelTargetSystemSelect,
             'createdAt': 'GOTH',
-            'loggerPhoneNumber': ''
+            'loggerPhoneNumber': null
         }).then(res => {
             return res
         }).catch(err => {

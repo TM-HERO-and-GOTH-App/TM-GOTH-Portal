@@ -42,7 +42,7 @@ function CreateCase(props) {
     const [stakeholderReferenceSelect, setStakeholderReferenceSelect] = useState('');
     const [customerID, setCustomerID] = useState('');
     const [customerProfileFromNova, setCustomerProfileFromNova] = useState({});
-    const [caseToken, setCaseToken] = useState([]);
+    const [caseToken, setCaseToken] = useState('');
     const [srData, setSRData] = useState({})
 
     // if pure DEL, targetSystem set to 'ICP', otherwise targetSystem set to ''
@@ -141,9 +141,10 @@ function CreateCase(props) {
                     setIsCreateCase(false);
                     return setAlert(true, false, `Case Creation Failed. (${res.data})`);
                 }
-                setCaseToken(res.data.caseToken)
                 if (res.message !== null) {
                     setAlert(true, true, res.data.message);
+                    setCaseToken(res.data.caseToken)
+                    console.log(caseToken);
                     if (siebelTargetSystemSelect === '660') return createICPSR();
                     if (siebelTargetSystemSelect === '662') return createNovaSR();
                 }
@@ -482,7 +483,7 @@ function CreateCase(props) {
                                             <div className="profile-info-value">
                                                 <select className='chosen-select form-control' name='caseTypeID'
                                                     value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-                                                    <option value='0' hidden>Choose a Case Type</option>
+                                                    <option value='0'>Choose a Case Type</option>
                                                     {
                                                         lovData.filter(filter => filter.L_GROUP === 'CASE-TYPE').map((data, key) => {
                                                             return <option key={key}
@@ -601,14 +602,18 @@ function CreateCase(props) {
                                                     onChange={(e) => setSiebelCaseType(parseFloat(e.target.value))}>
                                                     <option value='0'>Choose a Type</option>
                                                     {
-                                                        lovData.filter(filter => filter.L_GROUP === 'TYPE').map((data, key) => {
-                                                            return caseType == data.PARENT_ID ? <option key={key}
-                                                                value={data.L_ID}>{data.L_NAME}</option>
-                                                                :
-                                                                caseType === '0' &&
-                                                                <option key={key}
+                                                        (siebelTargetSystemSelect === '660' && caseType === '37') ?
+                                                            <option value={694}>Enquiries</option> :
+                                                        (siebelTargetSystemSelect === '662' && caseType === '37') ?
+                                                            <option value={692}>Inquiry</option> :
+                                                            lovData.filter(filter => filter.L_GROUP === 'TYPE').map((data, key) => {
+                                                                return caseType == data.PARENT_ID ? <option key={key}
                                                                     value={data.L_ID}>{data.L_NAME}</option>
-                                                        })
+                                                                    :
+                                                                    caseType === '0' &&
+                                                                    <option key={key}
+                                                                        value={data.L_ID}>{data.L_NAME}</option>
+                                                            })
                                                     }
                                                 </select>
                                             </div>
