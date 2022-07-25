@@ -116,8 +116,8 @@ function CaseDetail(props) {
     }
 
     const autoCreateSRTT = () => {
-        if (caseData?.SERVICE_ID !== null && caseData?.SYMPTOM !== null && caseData?.MOBILE_NUM !== null) {
-            CreateCaseService.autoCreateCTT(caseData?.SERVICE_ID, caseData?.SYMPTOM, caseData?.MOBILE_NUM, caseToken).then((_res, _err) => {
+        if (caseData?.SERVICE_ID !== null && caseData?.symptom !== null && caseData?.MOBILE_NUM !== null) {
+            CreateCaseService.autoCreateCTT(caseData?.SERVICE_ID, caseData?.symptom, caseData?.MOBILE_NUM, caseToken).then((_res, _err) => {
                 if (_err) return setAlert(true, false, 'Something went wrong during SR and TT Creation')
                 setAlert(true, true, 'SR and TT number has been successfully requested.')
             })
@@ -128,13 +128,13 @@ function CaseDetail(props) {
 
     function checkSRAndTTStatus() {
         if (caseData?.SERVICE_ID !== null) {
-            if (caseData?.SYSTEM_TARGET === "660") {
+            if (caseData?.SiebelTargetSystem === "ICP") {
                 CreateCaseService.checkSRAndTTForICP(caseData?.SERVICE_ID, caseData?.SR_NUM, 'Y', 'N', caseData?.TT_NUM).then(res => {
                     setOpenModal(true);
                     setSrAndTtStatus(res.data.SRInfo);
                 })
             }
-            if (caseData?.SYSTEM_TARGET === "662") {
+            if (caseData?.SiebelTargetSystem === "NOVA") {
                 CreateCaseService.checkSRAndTTForNova(caseData?.SERVICE_ID, caseData?.SR_NUM, 'Y', 'N').then(res => {
                     setOpenModal(true);
                     setSrAndTtStatus(res.data.SRInfo);
@@ -426,17 +426,17 @@ function CaseDetail(props) {
                             <div className="col-sm-5" style={{paddingRight: '40px'}}
                                  align={(caseData?.CASE_STATUS === "CLOSED" || caseData?.CASE_STATUS === "CANCELLED") ? "" : "right"}>
                                 {
-                                    (caseData?.PRODUCT_NAME === "Telephony" && caseData?.SYSTEM_TARGET === '660') &&
+                                    (caseData?.PRODUCT_NAME === "Telephony" && caseData?.SiebelTargetSystem === 'ICP') &&
                                     <button className='btn btn-success' type='button'
                                             onClick={autoCreateSRTT}><i
                                         className="ace-icon fa fa-plus-circle icon-on-right"/>{` Auto Create SR/TT Number (PureDEL)`}
                                     </button>
                                 }
                                 {
-                                    (caseData?.SYSTEM_TARGET !== null || caseData?.SYSTEM_TARGET !== '0') &&
+                                    caseData?.SiebelTargetSystem !== null &&
                                     <button className='btn btn-success' type='button'
                                             onClick={checkSRAndTTStatus}>
-                                        <i className="ace-icon fa fa-search icon-on-right"/>{` SR/TT Status (${caseData?.SYSTEM_TARGET_NAME})`}
+                                        <i className="ace-icon fa fa-search icon-on-right"/>{` SR/TT Status (${caseData?.SiebelTargetSystem})`}
                                     </button>
                                 }
                                 <Link className="btn btn-primary" to={`/action-taken/${caseToken}`}>
@@ -633,10 +633,12 @@ function CaseDetail(props) {
 
                                         <div className="profile-info-value">
                                             <span className="editable" id="siebelTargetSystem">
-                                                {typeof caseData.SYSTEM_TARGET_NAME === "undefined" ? null :
-                                                    caseData?.SYSTEM_TARGET_NAME === null || caseData?.SYSTEM_TARGET_NAME === '0' ?
+                                                {
+                                                    caseData?.SiebelTargetSystem === null ?
                                                         <span
-                                                            style={{color: "gray"}}>n/a</span> : caseData?.SYSTEM_TARGET_NAME.toUpperCase()}
+                                                            style={{color: "gray"}}>n/a
+                                                        </span> : caseData?.SiebelTargetSystem.toUpperCase()
+                                                }
                                             </span>
                                         </div>
                                     </div>
@@ -789,7 +791,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="area">
                                                 {
-                                                    caseData?.AREA_NAME != null ? caseData?.AREA_NAME :
+                                                    caseData?.Area !== null ? caseData?.Area :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -802,7 +804,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="subArea">
                                                 {
-                                                    caseData?.SUB_AREA_NAME != null ? caseData?.SUB_AREA_NAME :
+                                                    caseData?.SubArea !== null ? caseData?.SubArea:
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
@@ -815,7 +817,7 @@ function CaseDetail(props) {
                                         <div className="profile-info-value">
                                             <span className="editable" id="symptom">
                                                 {
-                                                    caseData?.SYMPTOM != null ? caseData?.SYMPTOM :
+                                                    caseData?.Symptom != null ? caseData?.Symptom :
                                                         <span style={{color: "gray"}}>n/a</span>
                                                 }
                                             </span>
